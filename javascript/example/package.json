@@ -1,0 +1,14 @@
+{
+  "name": "liminal.market.example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "liminal.market.core": "^1.0.0"
+  }
+}
