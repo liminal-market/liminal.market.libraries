@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Liminal Market</title>
+    <link
+      rel="shortcut icon"
+      href="https://app.liminal.market/img/logos/default_logo.png"
+    />
+    <link rel="stylesheet" href="./css/pico/pico.css" />
+    <link href="css/style.css?d=7" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta
+      property="og:title"
+      content="Liminal.market - Stocks and ETFs tokenized on blockchain"
+    />
+    <meta
+      property="og:description"
+      content="Liminal.market is bridge for stocks and ETFs into blockchain, tokenizing stocks. Giving you transparency, security and releases you from platform lock-in"
+    />
+    <meta property="og:url" content="https://app.liminal.market" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://app.liminal.market/img/social.jpg?d=1"
+    />
+    <script>
+      if (window.location.host.indexOf("localhost") == -1) {
+        let script = document.createElement("script");
+        script.setAttribute(
+          "integrity",
+          "sha384-KXjn4K+AYjp1cparCXazrB+5HKdi69IUYz8glD3ySH3fnDgMX3Wg6VTMvXUGr4KB"
+        );
+        script.setAttribute("crossorigin", "anonymous");
+        script.src = "https://browser.sentry-cdn.com/7.31.1/bundle.min.js";
+        script.onload = () => {
+          if (Sentry) {
+            Sentry.init({
+              dsn: "https://1237a6f4596f43f1889ad827ead1a46f@o1074405.ingest.sentry.io/6074136",
+              // integrations: [new Integrations.BrowserTracing()],
+              tracesSampleRate: 1.0,
+            });
+          }
+        };
+        document.head.appendChild(script);
+      }
+    </script>
+  </head>
+  <body>
+    <main class="container" id="main_container">
+      <div class="loading">Loading...</div>
+    </main>
+    <div id="error_info" class="d-none"></div>
+    <script src="./js/external/handlebars.min.js"></script>
+    <script type="module" src="./js/bundle.js?d=63"></script>
+
+    <script>
+      if (window.location.host.indexOf("localhost") == -1) {
+        let script = document.createElement("script");
+        script.setAttribute(
+          "data-cf-beacon",
+          '{"token": "89aeea2757bf4ee1974d575bf253ecb3"}'
+        );
+        script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+        document.head.appendChild(script);
+
+        (function (h, o, t, j, a, r) {
+          h.hj =
+            h.hj ||
+            function () {
+              (h.hj.q = h.hj.q || []).push(arguments);
+            };
+          h._hjSettings = {
+            hjid: 2728440,
+            hjsv: 6,
+          };
+          a = o.getElementsByTagName("head")[0];
+          r = o.createElement("script");
+          r.async = 1;
+          r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+          a.appendChild(r);
+        })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+      }
+    </script>
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+  </body>
+</html>

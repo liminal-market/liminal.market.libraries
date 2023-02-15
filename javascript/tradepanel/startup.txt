@@ -1,0 +1,11 @@
+#website
+npm run server
+
+#build ts code
+npm run build
+
+#monitor cloud function file localhost
+moralis-admin-cli watch-cloud-file --moralisSubdomain om9bgoayltsu.usemoralis.com --autoSave 1 --moralisCloudFile C:\Users\ingig\source\repos\liminal-app-vanilla\app\js\bundle.js
+
+#monitor cloud function file test
+moralis-admin-cli watch-cloud-file --moralisSubdomain vddgndqknj3a.usemoralis.com --autoSave 1 --moralisCloudFile C:\Users\ingig\source\repos\liminal-app-vanilla\app\js\bundle.js
