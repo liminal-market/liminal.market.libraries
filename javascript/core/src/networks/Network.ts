@@ -1,7 +1,4 @@
-import mumbaiNetwork from "./mumbaiNetwork";
-import localhostNetwork from "./localhostNetwork";
-
-export default class Network {
+export default abstract class Network {
     ServerUrl = "";
     ChainId = 0;
     Name = "";
@@ -21,28 +18,14 @@ export default class Network {
     LM_ADDRESS = '';
     SERVICE_CONTRACT_ADDRESS = '';
     EXTERNAL_SERVICE_CONTRACT_ADDRESS = '';
-    static networkInfos : any = [localhostNetwork, mumbaiNetwork];
 
-    constructor() {
+    static RpcUrl = '';
+
+    protected constructor() {
     }
 
     public get ChainIdHex() {
         return '0x' + this.ChainId.toString(16)
     }
 
-    public static getInstance(provider : any) {
-        const chainId = parseInt(provider.chainId, 16);
-        return this.getNetworkByChainId(chainId);
-    }
-
-    private static getNetworkByChainId(chainId: number) {
-        let networkInfo: Network | undefined = undefined;
-        this.networkInfos.forEach((networkInfoType : any) => {
-            let tmp = new networkInfoType();
-            if (tmp.ChainId == chainId) {
-                networkInfo = tmp;
-            }
-        });
-        return networkInfo;
-    }
 }

@@ -1,6 +1,6 @@
-import mumbaiNetworkDefaults from "./mumbaiNetworkDefaults";
+import MumbaiNetworkDefaults from "./MumbaiNetworkDefaults";
 
-export default class mumbaiNetwork extends mumbaiNetworkDefaults {
+export default class MumbaiNetwork extends MumbaiNetworkDefaults {
 
     override KYC_ADDRESS = "0x9e2B28D9F841300bE3B64e505dEcA36c35250609";
     override AUSD_ADDRESS = "0x38F2B1E9F11937dD276D64521535b15280A7F137";
@@ -10,4 +10,7 @@ export default class mumbaiNetwork extends mumbaiNetworkDefaults {
     override SERVICE_CONTRACT_ADDRESS = '';
     override EXTERNAL_SERVICE_CONTRACT_ADDRESS = '';
 
+    constructor() {
+        super();
+    }
 }
