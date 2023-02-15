@@ -56,16 +56,18 @@ export default class TradePanel {
     buyTradeInput.setOtherTradePanelInput(sellTradeInput);
 
     let tradeSwitch = new TradeSwitch();
+    let executeOrderButton = new ExecuteOrderButton(
+      sellTradeInput,
+      buyTradeInput
+    );
 
     let sellInput = sellTradeInput.renderToString();
     let buyInput = buyTradeInput.renderToString();
     let switchHtml = tradeSwitch.renderToString();
+    let executeOrderButtonHtml = executeOrderButton.renderToString();
 
     element.innerHTML =
-      sellInput +
-      switchHtml +
-      buyInput +
-      "<button id='liminal_market_execute_trade'></button>";
+      sellInput + switchHtml + buyInput + executeOrderButtonHtml;
 
     await sellTradeInput.loadBalance();
     await buyTradeInput.loadBalance();

@@ -9,7 +9,7 @@ import SecurityTokenService from "../../../services/blockchain/SecurityTokenServ
 import LiminalMarketService from "../../../services/blockchain/LiminalMarketService";
 import { AddressZero, showBar } from "../../../util/Helper";
 import TradePanelInput from "./TradePanelInput";
-import ExecuteTradeButtonHtml from "../../../html/elements/tradepanel/ExecuteTradeButton.html";
+import ExecuteOrderButtonHtml from "../../../html/elements/tradepanel/ExecuteOrderButton.html";
 import BlockchainError from "../../../errors/BlockchainError";
 import NativeTokenNeeded from "../../modals/NativeTokenNeeded";
 import BigNumber from "bignumber.js";
@@ -31,18 +31,22 @@ export default class ExecuteOrderButton {
     this.sellTradeInput = sellTradeInput;
     this.buyTradeInput = buyTradeInput;
     this.authenticateService = new AuthenticateService();
-    this.template = Handlebars.compile(ExecuteTradeButtonHtml);
+    this.template = Handlebars.compile(ExecuteOrderButtonHtml);
     this.button = document.getElementById(
-      "liminal_market_execute_trade"
+      "liminal_market_execute_order"
     ) as HTMLInputElement;
 
     ExecuteOrderButton.Instance = this;
   }
 
+  public renderToString(): string {
+    return this.template(this);
+  }
+
   public async renderButton() {
     this.button.outerHTML = this.button.outerHTML;
     this.button = document.getElementById(
-      "liminal_market_execute_trade"
+      "liminal_market_execute_order"
     ) as HTMLInputElement;
 
     this.loadingButton(this.button);
