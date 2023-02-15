@@ -1,6 +1,7 @@
 import User from "./dto/User";
 import Network from "./networks/Network";
 import NetworkInfo from "./networks/NetworkInfo";
+import EventService from "./services/backend/EventService";
 import TradePanel from "./ui/elements/TradePanel";
 
 export default class TradePanelWidget {
@@ -14,6 +15,7 @@ export default class TradePanelWidget {
       TradePanelWidget.Network.ChainId,
       ""
     );
+    EventService.register();
   }
 
   public async render(

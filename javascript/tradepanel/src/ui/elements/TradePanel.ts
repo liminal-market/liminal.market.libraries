@@ -67,7 +67,7 @@ export default class TradePanel {
     let executeOrderButtonHtml = executeOrderButton.renderToString();
 
     element.innerHTML =
-      sellInput + switchHtml + buyInput + executeOrderButtonHtml;
+      sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
 
     await sellTradeInput.loadBalance();
     await buyTradeInput.loadBalance();
@@ -77,20 +77,16 @@ export default class TradePanel {
     sellTradeInput.bindEvents();
     buyTradeInput.bindEvents();
 
-    let executeTradeButton = new ExecuteOrderButton(
-      sellTradeInput,
-      buyTradeInput
-    );
-    await executeTradeButton.renderButton();
+    await executeOrderButton.renderButton();
 
-    tradeSwitch.bindEvents(sellTradeInput, buyTradeInput, executeTradeButton);
+    tradeSwitch.bindEvents(sellTradeInput, buyTradeInput, executeOrderButton);
     sellTradeInput.onUpdate = () => {
       if (buyTradeInput.isDirty) buyTradeInput.updatePanel();
-      executeTradeButton.renderButton();
+      executeOrderButton.renderButton();
     };
     buyTradeInput.onUpdate = () => {
       if (sellTradeInput.isDirty) sellTradeInput.updatePanel();
-      executeTradeButton.renderButton();
+      executeOrderButton.renderButton();
     };
   }
   public formatBuyPanel(

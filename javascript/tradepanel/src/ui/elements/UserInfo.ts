@@ -229,7 +229,7 @@ export default class UserInfo {
   }
 
   private ifTradePage() {
-    let btn = document.getElementById("liminal_market_execute_trade");
+    let btn = document.getElementById("liminal_market_execute_order");
     if (!btn) return;
 
     ExecuteOrderButton.Instance.renderButton();

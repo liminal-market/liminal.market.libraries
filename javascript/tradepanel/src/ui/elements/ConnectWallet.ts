@@ -45,7 +45,7 @@ export default class ConnectWallet {
           let userInfo = new UserInfo(this.providerInfo);
           await userInfo.render("user_header_info");
 
-          if (document.getElementById("liminal_market_execute_trade")) {
+          if (document.getElementById("liminal_market_execute_order")) {
             // let page = new TradePage();
             // await page.load();
           }

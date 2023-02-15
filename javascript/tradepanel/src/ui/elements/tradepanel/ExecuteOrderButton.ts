@@ -32,11 +32,10 @@ export default class ExecuteOrderButton {
     this.buyTradeInput = buyTradeInput;
     this.authenticateService = new AuthenticateService();
     this.template = Handlebars.compile(ExecuteOrderButtonHtml);
+    ExecuteOrderButton.Instance = this;
     this.button = document.getElementById(
       "liminal_market_execute_order"
     ) as HTMLInputElement;
-
-    ExecuteOrderButton.Instance = this;
   }
 
   public renderToString(): string {
@@ -44,7 +43,9 @@ export default class ExecuteOrderButton {
   }
 
   public async renderButton() {
-    this.button.outerHTML = this.button.outerHTML;
+    if (this.button) {
+      this.button.outerHTML = this.button.outerHTML;
+    }
     this.button = document.getElementById(
       "liminal_market_execute_order"
     ) as HTMLInputElement;
@@ -52,7 +53,7 @@ export default class ExecuteOrderButton {
     this.loadingButton(this.button);
 
     //wallet connected
-    if (!this.walletIsConnected(this.button)) {
+    if (!(await this.walletIsConnected(this.button))) {
       return;
     }
     //user logged in
@@ -189,7 +190,10 @@ export default class ExecuteOrderButton {
     button.removeAttribute("aria-busy");
   }
 
-  private walletIsConnected(button: HTMLElement) {
+  private async walletIsConnected(button: HTMLElement) {
+    let authenticationService = new AuthenticateService();
+    await authenticationService.isAuthenticated();
+
     if (TradePanelWidget.User.provider) return true;
 
     button.innerHTML = "Connect wallet";
