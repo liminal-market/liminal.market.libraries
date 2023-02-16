@@ -4,66 +4,52 @@ import HttpRequest from "./http/HttpRequest";
 import NetworkType from "./networks/NetworkType";
 import TestNetwork from "./networks/TestNetwork";
 import {Account} from "./dto/Account";
-import BlockchainError from "./error/BlockchainError";
 import KycStatus from "./dto/KycStatus";
 import AccountService from "./services/AccountService";
 import BlockchainService from "./services/BlockchainService";
+import Abis from "./abis";
 
-export default class LiminalMarketCore {
+export default class LiminalMarket {
     httpRequest : HttpRequest;
     blockchainService : BlockchainService;
     accountService : AccountService;
+    account : Account;
     static Wallet : Wallet;
     static ServiceContractAddress : string;
     static Network : Network;
     static WalletAddress : string;
     static Bearer? : string;
-    public static Instance : LiminalMarketCore;
+    public static Instance : LiminalMarket;
     private constructor() {
         this.httpRequest = new HttpRequest();
         this.blockchainService = new BlockchainService();
         this.accountService = new AccountService();
+        this.account = {} as Account;
     }
 
     public static async getInstance(wallet : any, serviceContractAddress? : string | undefined) {
         if (this.Instance) return this.Instance;
 
-        let liminalMarketCore = new LiminalMarketCore();
+        let liminalMarket = new LiminalMarket();
 
         let network = await wallet.provider.detectNetwork();
-        LiminalMarketCore.Network = NetworkType.getInstance(network.chainId) ?? new TestNetwork();
-        if (LiminalMarketCore.Network.ChainId == 0) {
-            throw new Error('Network is not supported. Using chainId ' + wallet.provider.chainId + '. Try switching to different Mumbai network');
+        LiminalMarket.Network = NetworkType.getInstance(network.chainId) ?? new TestNetwork();
+        if (LiminalMarket.Network.ChainId == 0) {
+            throw new Error('Network is not supported. Using chainId ' + wallet.provider.chainId + '. Try switching to different network, e.g. Mumbai');
         }
 
-        LiminalMarketCore.ServiceContractAddress = serviceContractAddress ?? LiminalMarketCore.Network.EXTERNAL_SERVICE_CONTRACT_ADDRESS;
-        if (!LiminalMarketCore.ServiceContractAddress) {
+        LiminalMarket.ServiceContractAddress = serviceContractAddress ?? LiminalMarket.Network.EXTERNAL_SERVICE_CONTRACT_ADDRESS;
+        if (!LiminalMarket.ServiceContractAddress) {
             throw new Error('ServiceContractAddress cannot be empty. You can get service contract address by signing contract at https://liminal.market/contract.html. No cost (except gas)')
         }
-        LiminalMarketCore.Wallet = wallet;
-        LiminalMarketCore.WalletAddress = wallet.address;
-        this.Instance = liminalMarketCore;
-        return liminalMarketCore;
-    }
+        LiminalMarket.Wallet = wallet;
+        LiminalMarket.WalletAddress = wallet.address;
 
+        liminalMarket.account = await liminalMarket.accountService.login();
 
-    /**
-     * Get the balance of aUSD token.
-     * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
-     */
-    public async getAUSDBalance(address? : string | undefined) : Promise<BigNumber> {
-        if (!address) address = LiminalMarketCore.WalletAddress;
-        return await this.getBalance(LiminalMarketCore.Network.AUSD_ADDRESS, address)
-    }
+        this.Instance = liminalMarket;
 
-    /**
-     * Get the balance of a security token.
-     * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
-     */
-    public async getSecurityTokenQuantity(symbol : string, address? : string | undefined) : Promise<BigNumberish> {
-        if (!address) address = LiminalMarketCore.WalletAddress;
-        let tokenAddress = await this.getSecurityTokenAddress(symbol);
-        return await this.getBalance(tokenAddress, address);
+        return liminalMarket;
     }
 
     /**
@@ -71,6 +57,14 @@ export default class LiminalMarketCore {
      */
     public async isMarketOpen() : Promise<boolean> {
         return await this.httpRequest.get('isOpen');
+    }
+
+    /**
+     * Returns true if the user has been created at the broker, false if he does not exist at broker
+     * If it returns false, you can call createSandboxAccount to create the user at broker.
+     */
+    public hasAccount() : boolean {
+        return this.account.brokerId !== undefined;
     }
 
     /**
@@ -93,10 +87,53 @@ export default class LiminalMarketCore {
     }
 
     /**
+     * Funds wallets sandbox account. There are limitation on how frequently you can fund your account.
+     **/
+    public async fundSandboxAccount(accountFunded : (obj : any) => Promise<void> | undefined) {
+        return await this.accountService.fundSandboxAccount(accountFunded)
+    }
+
+    /**
+     * Get the balance of aUSD token.
+     * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
+     */
+    public async getAUSDBalance(address? : string | undefined) : Promise<BigNumber> {
+        if (!address) address = LiminalMarket.WalletAddress;
+        return await this.getBalance(LiminalMarket.Network.AUSD_ADDRESS, address)
+    }
+
+    /**
+     * Return all symbols available in the system.
+     */
+    public async getSymbols() {
+        return await this.httpRequest.get('https://liminal.market/securities')
+    }
+
+    /**
+     * Returns the position wallet address has. It is also possible to query any wallet address
+     * @param address
+     */
+    public async getPositions(address? : string) {
+        if (!address) address = LiminalMarket.WalletAddress;
+        return await this.httpRequest.get('positions', {address:address})
+    }
+
+
+
+    /**
+     * Get the balance of a security token.
+     * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
+     */
+    public async getSecurityTokenQuantity(symbol : string, address? : string | undefined) : Promise<BigNumberish> {
+        if (!address) address = LiminalMarket.WalletAddress;
+        let tokenAddress = await this.getSecurityTokenAddress(symbol);
+        return await this.getBalance(tokenAddress, address);
+    }
+    /**
      * Get the balance of a token by tokenAddress and wallet address
      */
     public async getBalance(tokenAddress : string, address : string) {
-        const contract = new ethers.Contract(tokenAddress, this.balanceOfAbi, LiminalMarketCore.Wallet.provider);
+        const contract = new ethers.Contract(tokenAddress, Abis.balanceOfAbi, LiminalMarket.Wallet.provider);
         return await contract['balanceOf'](address);
     }
 
@@ -104,9 +141,10 @@ export default class LiminalMarketCore {
      * Get the address of a security token (symbol)
      */
     public async getSecurityTokenAddress(symbol: string) : Promise<string> {
-        const contract = new ethers.Contract(LiminalMarketCore.Network.LIMINAL_MARKET_ADDRESS, this.getSecurityTokenAbi, LiminalMarketCore.Wallet.provider);
+        const contract = new ethers.Contract(LiminalMarket.Network.LIMINAL_MARKET_ADDRESS, Abis.getSecurityTokenAbi, LiminalMarket.Wallet.provider);
         return await contract['getSecurityToken'](symbol);
     }
+
 
     /**
      * Send the command to buy a security token
@@ -134,59 +172,7 @@ export default class LiminalMarketCore {
         return await this.blockchainService.executeOrder('sellSecurityToken', symbol, quantity, orderExecutedEvent);
     }
 
-    /**
-     Sends a login request to liminal.market. Returns Account object.
-     **/
-    public async login() : Promise<Account> {
-        return await this.accountService.login();
-    }
-
-    /**
-     Funds wallets sandbox account. There are limitation on how frequently you can fund your account.
-     **/
-    public async fundSandboxAccount(accountFunded : (obj : any) => Promise<void> | undefined) {
-        return await this.accountService.fundSandboxAccount(accountFunded)
-    }
 
 
-
-    balanceOfAbi = [{
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            }
-        ],
-        "name": "balanceOf",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    }]
-    getSecurityTokenAbi = [{
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            }
-        ],
-        "name": "getSecurityToken",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    }]
 
 }

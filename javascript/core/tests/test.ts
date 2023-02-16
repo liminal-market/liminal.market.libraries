@@ -1,4 +1,4 @@
-import LiminalMarketCore from "../src/index";
+import LiminalMarket from "../src/index";
 import {ethers, Wallet} from "ethers";
 import LocalhostNetworkDefaults from "../src/networks/LocalhostNetworkDefaults";
 import MumbaiNetworkDefaults from "../src/networks/MumbaiNetworkDefaults";
@@ -16,23 +16,27 @@ export default class Test {
         let provider = new ethers.providers.JsonRpcProvider(providerUrl);
         let wallet = new Wallet(privateKey, provider)
 
-        let liminalMarketCore = await LiminalMarketCore.getInstance(wallet, serviceContractAddress);
-        let account = await liminalMarketCore.login();
-        if (!account.brokerId) {
+        let liminalMarket = await LiminalMarket.getInstance(wallet);
+
+        //lets check if this wallet has an account.
+        if (!liminalMarket.hasAccount()) {
             //Create account with broker
-            await liminalMarketCore.createSandboxAccount('Ron', 'Swanson', 'ron.swanson+1@parkandrec.org',
+            await liminalMarket.createSandboxAccount('Ron', 'Swanson', 'ron.swanson+1@parkandrec.org',
                 async () => {
-                    let aUsdBalance = await liminalMarketCore.getAUSDBalance();
+                    let aUsdBalance = await liminalMarket.getAUSDBalance();
                     console.log('aUsdBalance:', aUsdBalance.toString());
                 });
         }
 
-        let isValidKyc = await liminalMarketCore.isValidKyc();
+        //check if the account has valid KYC. Not trades can be done until it's valid
+        let isValidKyc = await liminalMarket.isValidKyc();
         console.log('isValidKyc', isValidKyc);
 
-        let aUsdBalance = await liminalMarketCore.getAUSDBalance();
+        //check the USD balance amount at the broker, represented in the aUSD token.
+        let aUsdBalance = await liminalMarket.getAUSDBalance();
         if (aUsdBalance.eq(0)) {
-            let response = await liminalMarketCore.fundSandboxAccount(async (obj) => {
+            //Since we are on sandbox we can fund our account with some fake money
+            let response = await liminalMarket.fundSandboxAccount(async (obj) => {
                 console.log('funded', obj)
             })
 
@@ -40,7 +44,7 @@ export default class Test {
         } else {
             console.log('send buy order')
             let amount = '23' + '0'.repeat(18)
-            let buyResponse = await liminalMarketCore.buySecurityToken('MSFT', amount, async (recipient, symbol, tsl, filledQty, filledAvgPrice, side, filledAt, totalServiceFee, aUsdBalance, spender) => {
+            let buyResponse = await liminalMarket.buySecurityToken('MSFT', amount, async (recipient, symbol, tsl, filledQty, filledAvgPrice, side, filledAt, totalServiceFee, aUsdBalance, spender) => {
                 console.log(recipient, symbol, tsl, filledQty, filledAvgPrice, side, filledAt, totalServiceFee, aUsdBalance, spender);
             }).catch((e: any) => {
                 console.log(e.message);
