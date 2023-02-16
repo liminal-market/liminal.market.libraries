@@ -11,8 +11,7 @@ import Modal from "../../modals/Modal";
 import WalletHelper from "../../../util/WalletHelper";
 import TradeExecutedHtml from "../../../html/elements/tradepanel/TradeExecuted.html";
 import OrderProgress from "./OrderProgress";
-
-const confetti = require("canvas-confetti");
+import * as confetti from "canvas-confetti";
 
 export default class OrderExecutedModal {
   public async show(object: any) {

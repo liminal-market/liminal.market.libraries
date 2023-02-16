@@ -2,7 +2,6 @@
 import Handlebars from "handlebars";
 
 declare global {
-      // @ts-ignore
-    export const Handlebars: Handlebars;
+  // @ts-ignore
+  export const Handlebars: Handlebars;
 }
-

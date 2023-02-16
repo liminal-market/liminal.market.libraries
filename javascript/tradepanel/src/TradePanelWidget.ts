@@ -25,6 +25,7 @@ export default class TradePanelWidget {
     logo?: string,
     address?: string
   ) {
+    console.log("xxxxx", GUSTAVO);
     new TradePanel().render(elementId, symbol, name, logo, address);
   }
 }
