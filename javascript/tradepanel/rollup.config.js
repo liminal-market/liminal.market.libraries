@@ -6,43 +6,44 @@ import externalPeer from "rollup-plugin-peer-deps-external";
 import typescript from "rollup-plugin-typescript2";
 import html from "rollup-plugin-html";
 import multi from "@rollup/plugin-multi-entry";
-import nodePolyfills from "rollup-plugin-polyfill-node";
+import nodePolyfills from "rollup-plugin-node-polyfills";
+import globals from "rollup-plugin-node-globals";
 
 export default {
   input: ["./src/main.ts"],
   output: [
     {
       file: pkg.main,
-      format: "es",
-      // format: "iife",
+      format: "esm",
       exports: "named",
       strict: true,
       name: "TradePanel",
+      intro: "import Handlebars from 'handlebars/dist/cjs/handlebars.js';",
     },
   ],
   external: ["js-sha3"],
   plugins: [
-    multi(),
-    nodePolyfills(/* options */),
+    resolve({
+      browser: false,
+      preferBuiltins: true,
+    }),
+    nodePolyfills(),
+    externalPeer(),
+    globals(),
+    commonjs({
+      include: "node_modules/**",
+    }),
     babel({
       babelHelpers: "bundled",
       exclude: "node_modules/**",
     }),
-    resolve({
-      browser: true,
-      preferBuiltins: true,
-    }),
-    commonjs({
-      // defaultIsModuleExports: true,
-      // include: "node_modules/**",
-    }),
+    multi(),
     typescript({
       tsconfig: "./tsconfig.json",
     }),
     html({
       include: "**/*.html",
     }),
-    externalPeer(),
   ],
   onwarn(warning, warn) {
     if (warning.code === "THIS_IS_UNDEFINED") return;

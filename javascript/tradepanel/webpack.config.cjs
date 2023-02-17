@@ -50,7 +50,7 @@ module.exports = {
     publicPath: "app/js",
     filename: "bundle.js",
     path: path.resolve(__dirname, "app/js"),
-    libraryTarget: "umd",
+    libraryTarget: "esm",
     libraryExport: "var",
   },
   devServer: {

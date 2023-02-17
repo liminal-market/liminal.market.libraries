@@ -1,8 +1,7 @@
-// import TradePageHtml from "./html/pages/trade.html";
 import TradePanelWidget from "./TradePanelWidget";
-
 export { TradePanelWidget };
 
+// import TradePageHtml from "./html/pages/trade.html";
 // export default class App {
 //   constructor() {
 //     //this is required by many places

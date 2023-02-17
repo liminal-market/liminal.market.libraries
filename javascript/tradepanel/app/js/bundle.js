@@ -1,29 +1,6 @@
+import Handlebars from 'handlebars/dist/cjs/handlebars.js';
+
 import sha3 from 'js-sha3';
-
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __awaiter$9(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
 
 var WalletType;
 (function (WalletType) {
@@ -36,13 +13,15 @@ var WalletType;
 })(WalletType || (WalletType = {}));
 
 class ProviderInfo {
+    web3Provider;
+    ProviderName = 'unknown';
+    WalletName = '';
+    WalletUrl = '';
+    WalletType = WalletType.Unknown;
+    UserAddress = '';
+    InternalWallet = false;
+    static Instance;
     constructor(web3Provider) {
-        this.ProviderName = 'unknown';
-        this.WalletName = '';
-        this.WalletUrl = '';
-        this.WalletType = WalletType.Unknown;
-        this.UserAddress = '';
-        this.InternalWallet = false;
         if (!web3Provider || !web3Provider.provider)
             return;
         this.web3Provider = web3Provider;
@@ -68,11 +47,10 @@ class ProviderInfo {
         this.UserAddress = walletConnectionInfo.provider.selectedAddress;
     }
     loadWalletConnect(walletConnectionInfo) {
-        var _a;
         let wc = walletConnectionInfo.provider.wc;
         this.ProviderName = "walletConnect";
         this.WalletName = wc._peerMeta.name;
-        this.WalletUrl = (_a = wc._peerMeta.url) !== null && _a !== void 0 ? _a : '';
+        this.WalletUrl = wc._peerMeta.url ?? '';
         this.WalletType = WalletType.WalletConnect;
     }
     loadCustom(provider) {
@@ -90,6 +68,7 @@ class ProviderInfo {
 }
 
 class CookieHelper {
+    document;
     constructor(doc) {
         this.document = (doc) ? doc : document;
     }
@@ -99,8 +78,7 @@ class CookieHelper {
         this.document.cookie = name + "=" + value + "; expires=Mon, 2 Dec " + (date.getFullYear() + 1) + " 12:00:00 UTC;path=/;SameSite=Strict;";
     }
     getCookieValue(name) {
-        var _a;
-        return ((_a = this.document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')) === null || _a === void 0 ? void 0 : _a.pop()) || '';
+        return this.document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
     }
     setCookieProvider(providerName) {
         this.setCookie("provider", providerName);
@@ -111,9 +89,19 @@ class CookieHelper {
 }
 
 class User {
+    provider;
+    chainId;
+    ether;
+    email;
+    providerInfo;
+    alpacaId;
+    address;
+    magic;
+    connector;
+    _token = '';
+    isLoggedIn = false;
+    signer;
     constructor(provider, address, chainId, ether) {
-        this._token = '';
-        this.isLoggedIn = false;
         this.provider = provider;
         this.address = address;
         this.chainId = chainId;
@@ -141,18 +129,16 @@ var SwitchNetworkHtml = "<div id=\"switchNetworkInfo\">\n    You can choose any 
 var ModalHtml = "<dialog id=\"liminal_market_modal_div\" data-title=\"{{{title}}}\">\n    <article>\n        <header>\n            <span>{{title}}</span>\n            <a href=\"#close\" aria-label=\"Close\" class=\"close\" id=\"liminal_market_modal_close\"></a>\n        </header>\n        {{{content}}}\n    </article>\n\n</dialog>";
 
 class Modal {
-    constructor() {
-        this.modalId = 'liminal_market_modal_div';
-    }
+    modalId = 'liminal_market_modal_div';
+    onHide;
     hideModal() {
         let modalDiv = document.getElementById(this.modalId);
-        modalDiv === null || modalDiv === void 0 ? void 0 : modalDiv.removeAttribute('open');
+        modalDiv?.removeAttribute('open');
         if (this.onHide) {
             this.onHide();
         }
     }
     showModal(title, content, reuseModalIfSameTitle = false, onHide, hideOnOutsideClick = true) {
-        var _a;
         let modalDiv = document.getElementById(this.modalId);
         if (modalDiv) {
             let modalTitle = modalDiv.dataset.title;
@@ -182,7 +168,7 @@ class Modal {
         let liminal_market_modal_close = document.getElementById('liminal_market_modal_close');
         if (liminal_market_modal_close)
             liminal_market_modal_close.style.display = 'block';
-        (_a = document.getElementById('liminal_market_modal_close')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (evt) => {
+        document.getElementById('liminal_market_modal_close')?.addEventListener('click', (evt) => {
             evt.preventDefault();
             this.hideModal();
         });
@@ -192,70 +178,66 @@ class Modal {
 }
 
 class Security {
+    Class = "";
+    Exchange = "";
+    Symbol = "";
+    Name = "";
+    Status = "";
+    Tradable = false;
+    Fractionable = false;
+    Logo = "";
+    Favorite = 0;
+    LogoPath = "/img/logos/";
     constructor() {
-        this.Class = "";
-        this.Exchange = "";
-        this.Symbol = "";
-        this.Name = "";
-        this.Status = "";
-        this.Tradable = false;
-        this.Fractionable = false;
-        this.Logo = "";
-        this.Favorite = 0;
-        this.LogoPath = "/img/logos/";
         this.LogoPath = "/img/logos/";
     }
 }
 
 class BaseService {
     constructor() { }
-    get(path, data, options) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let url = "";
-            let method = "GET";
-            if (!options || !options.relativeUrl) {
-                url = TradePanelWidget.Network.ServerUrl;
-            }
-            let params = new URLSearchParams(data);
-            if (!params.has("chainId")) {
-                params.set("chainId", TradePanelWidget.Network.ChainId.toString());
-            }
-            if (!params.has("address")) {
-                params.set("address", TradePanelWidget.User.address);
-            }
-            let response = yield fetch(this.getUrl(url, path) + "?" + params.toString(), {
-                method: method,
-                headers: {
-                    Authentication: "Bearer: " + TradePanelWidget.User.token,
-                    "Content-Type": "application/json",
-                },
-            });
-            let obj = yield response.json();
-            return obj.result ? obj.result : undefined;
+    async get(path, data, options) {
+        let url = "";
+        let method = "GET";
+        if (!options || !options.relativeUrl) {
+            url = TradePanelWidget.Network.ServerUrl;
+        }
+        let params = new URLSearchParams(data);
+        if (!params.has("chainId")) {
+            params.set("chainId", TradePanelWidget.Network.ChainId.toString());
+        }
+        if (!params.has("address")) {
+            params.set("address", TradePanelWidget.User.address);
+        }
+        let response = await fetch(this.getUrl(url, path) + "?" + params.toString(), {
+            method: method,
+            headers: {
+                Authentication: "Bearer: " + TradePanelWidget.User.token,
+                "Content-Type": "application/json",
+            },
         });
+        let obj = await response.json();
+        return obj.result ? obj.result : undefined;
     }
-    post(path, data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!data) {
-                data = {};
-            }
-            data.chainId = data.chainId
-                ? data.chainId
-                : TradePanelWidget.Network.ChainId;
-            data.address = data.address ? data.address : TradePanelWidget.User.address;
-            let response = yield fetch(this.getUrl(TradePanelWidget.Network.ServerUrl, path), {
-                method: "POST",
-                headers: {
-                    Authentication: "Bearer: " + TradePanelWidget.User.token,
-                    "Content-Type": "application/json;charset=UTF-8",
-                },
-                body: JSON.stringify(data),
-            });
-            let obj = yield response.json();
-            if (obj.success)
-                return obj.result;
-            throw new Error(obj.error);
+    async post(path, data) {
+        if (!data) {
+            data = {};
+        }
+        data.chainId = data.chainId
+            ? data.chainId
+            : TradePanelWidget.Network.ChainId;
+        data.address = data.address ? data.address : TradePanelWidget.User.address;
+        let response = await fetch(this.getUrl(TradePanelWidget.Network.ServerUrl, path), {
+            method: "POST",
+            headers: {
+                Authentication: "Bearer: " + TradePanelWidget.User.token,
+                "Content-Type": "application/json;charset=UTF-8",
+            },
+            body: JSON.stringify(data),
         });
+        let obj = await response.json();
+        if (obj.success)
+            return obj.result;
+        throw new Error(obj.error);
     }
     getUrl(ServerUrl, path) {
         if (path.startsWith("/"))
@@ -265,83 +247,75 @@ class BaseService {
 }
 
 class SecuritiesService extends BaseService {
+    securities = new Map();
+    securitiesArray;
+    static instance;
+    page;
+    symbols = ["MSFT", "AAPL", "AMZN", "TSLA", "GOOGL", "GOOG", "GME", "META", "NVDA", "BRK.B", "JPM", "HD", "JNJ", "UNH", "PG", "BAC", "V", "ADBE", "NFLX", "CRM", "PFE", "DIS", "MA", "XOM", "TMO", "COST"];
     constructor() {
         super();
         this.securities = new Map();
-        this.symbols = ["MSFT", "AAPL", "AMZN", "TSLA", "GOOGL", "GOOG", "GME", "META", "NVDA", "BRK.B", "JPM", "HD", "JNJ", "UNH", "PG", "BAC", "V", "ADBE", "NFLX", "CRM", "PFE", "DIS", "MA", "XOM", "TMO", "COST"];
-        this.securities = new Map();
         this.page = 1;
     }
-    static getInstance() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!SecuritiesService.instance) {
-                SecuritiesService.instance = new SecuritiesService();
-                SecuritiesService.instance.securities = yield SecuritiesService.instance.getSecurities();
-            }
-            return SecuritiesService.instance;
-        });
+    static async getInstance() {
+        if (!SecuritiesService.instance) {
+            SecuritiesService.instance = new SecuritiesService();
+            SecuritiesService.instance.securities = await SecuritiesService.instance.getSecurities();
+        }
+        return SecuritiesService.instance;
     }
-    getSecurities() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (this.securities.size != 0)
-                return this.securities;
-            const results = yield (yield fetch('/securities/securities.json')).json();
-            for (let i = 0; i < results.length; i++) {
-                this.securities.set(results[i].Symbol, Object.assign(new Security, results[i]));
-            }
-            this.securitiesArray = Array.from(this.securities);
+    async getSecurities() {
+        if (this.securities.size != 0)
             return this.securities;
-        });
+        const results = await (await fetch('/securities/securities.json')).json();
+        for (let i = 0; i < results.length; i++) {
+            this.securities.set(results[i].Symbol, Object.assign(new Security, results[i]));
+        }
+        this.securitiesArray = Array.from(this.securities);
+        return this.securities;
     }
-    getSecurityBySymbol(symbol) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securities = yield this.getSecurities();
+    async getSecurityBySymbol(symbol) {
+        let securities = await this.getSecurities();
+        let security = securities.get(symbol);
+        return (security) ? security : new Security();
+    }
+    async getTopSecurities() {
+        let securities = await this.getSecurities();
+        let topSecurities = new Array();
+        for (const symbol of this.symbols) {
             let security = securities.get(symbol);
-            return (security) ? security : new Security();
-        });
-    }
-    getTopSecurities() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securities = yield this.getSecurities();
-            let topSecurities = new Array();
-            for (const symbol of this.symbols) {
-                let security = securities.get(symbol);
-                if (security) {
-                    topSecurities.push(security);
-                }
+            if (security) {
+                topSecurities.push(security);
             }
-            return topSecurities;
-        });
+        }
+        return topSecurities;
     }
-    getPaginatingSecurities(page) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (page == 0)
-                return this.getTopSecurities();
-            let securitiesOnPage = new Array();
-            let i = page * this.symbols.length;
-            let pageCount = i + 10;
-            for (; i < pageCount && i < this.securitiesArray.length; i++) {
-                securitiesOnPage.push(this.securitiesArray[i][1]);
+    async getPaginatingSecurities(page) {
+        if (page == 0)
+            return this.getTopSecurities();
+        let securitiesOnPage = new Array();
+        let i = page * this.symbols.length;
+        let pageCount = i + 10;
+        for (; i < pageCount && i < this.securitiesArray.length; i++) {
+            securitiesOnPage.push(this.securitiesArray[i][1]);
+        }
+        return securitiesOnPage;
+    }
+    async find(search) {
+        let results = new Array();
+        search = search.toLocaleLowerCase();
+        this.securities.forEach(function (security) {
+            if (security.Symbol.toLowerCase().indexOf(search) != -1 ||
+                security.Name.toLowerCase().indexOf(search) != -1) {
+                results.push(security);
             }
-            return securitiesOnPage;
         });
-    }
-    find(search) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let results = new Array();
-            search = search.toLocaleLowerCase();
-            this.securities.forEach(function (security) {
-                if (security.Symbol.toLowerCase().indexOf(search) != -1 ||
-                    security.Name.toLowerCase().indexOf(search) != -1) {
-                    results.push(security);
-                }
-            });
-            return results;
-        });
+        return results;
     }
 }
 
 class LoadingHelper {
+    static lastElement = undefined;
     static setLoading(element) {
         if (LoadingHelper.lastElement) {
             LoadingHelper.lastElement.removeAttribute('aria-busy');
@@ -357,9 +331,14 @@ class LoadingHelper {
         }
     }
 }
-LoadingHelper.lastElement = undefined;
 
 class GeneralError extends Error {
+    code;
+    message;
+    headers;
+    error;
+    stack;
+    callback;
     constructor(e) {
         super();
         this.code = 0;
@@ -389,59 +368,58 @@ class GeneralError extends Error {
 }
 
 class WalletHelper {
+    static addTokenFallbackLoaded = undefined;
     constructor() { }
     getAUsdAsset() {
         return {
             Logo: "../ausd.png",
         };
     }
-    addTokenToWallet(address, symbol, fallbackTimeout) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securitiesService = yield SecuritiesService.getInstance();
-            const asset = symbol == "aUSD"
-                ? this.getAUsdAsset()
-                : yield securitiesService.getSecurityBySymbol(symbol);
-            let connector = yield AuthenticateService.enableWeb3();
-            if (!connector || !connector.provider || !connector.provider.request) {
-                fallbackTimeout();
-                return;
+    async addTokenToWallet(address, symbol, fallbackTimeout) {
+        let securitiesService = await SecuritiesService.getInstance();
+        const asset = symbol == "aUSD"
+            ? this.getAUsdAsset()
+            : await securitiesService.getSecurityBySymbol(symbol);
+        let connector = await AuthenticateService.enableWeb3();
+        if (!connector || !connector.provider || !connector.provider.request) {
+            fallbackTimeout();
+            return;
+        }
+        let timeout = WalletHelper.addTokenFallbackLoaded === undefined ? 2 * 1000 : 200;
+        setTimeout(() => {
+            if (WalletHelper.addTokenFallbackLoaded !== false) {
+                WalletHelper.addTokenFallbackLoaded = true;
+                if (fallbackTimeout)
+                    fallbackTimeout();
             }
-            let timeout = WalletHelper.addTokenFallbackLoaded === undefined ? 2 * 1000 : 200;
-            setTimeout(() => {
-                if (WalletHelper.addTokenFallbackLoaded !== false) {
-                    WalletHelper.addTokenFallbackLoaded = true;
-                    if (fallbackTimeout)
-                        fallbackTimeout();
-                }
-            }, timeout);
-            // @ts-ignore
-            let eth = window.ethereum ? window.ethereum : connector.provider;
-            const wasAdded = yield eth
-                .request({
-                method: "wallet_watchAsset",
-                params: {
-                    type: "ERC20",
-                    options: {
-                        address: address,
-                        symbol: symbol,
-                        decimals: 18,
-                        image: "https://app.liminal.market/img/logos/" + asset.Logo,
-                    },
+        }, timeout);
+        // @ts-ignore
+        let eth = window.ethereum ? window.ethereum : connector.provider;
+        const wasAdded = await eth
+            .request({
+            method: "wallet_watchAsset",
+            params: {
+                type: "ERC20",
+                options: {
+                    address: address,
+                    symbol: symbol,
+                    decimals: 18,
+                    image: "https://app.liminal.market/img/logos/" + asset.Logo,
                 },
-            })
-                .then((result) => {
-                WalletHelper.addTokenFallbackLoaded = false;
-                return true;
-            })
-                .catch((error) => {
-                console.log(error);
-                return false;
-            })
-                .finally(() => {
-                LoadingHelper.removeLoading();
-            });
-            return wasAdded;
+            },
+        })
+            .then((result) => {
+            WalletHelper.addTokenFallbackLoaded = false;
+            return true;
+        })
+            .catch((error) => {
+            console.log(error);
+            return false;
+        })
+            .finally(() => {
+            LoadingHelper.removeLoading();
         });
+        return wasAdded;
     }
     static isWebview() {
         let ua = navigator.userAgent;
@@ -460,66 +438,62 @@ class WalletHelper {
         let webviewRegExp = new RegExp("(" + rules.join("|") + ")", "ig");
         return !!ua.match(webviewRegExp);
     }
-    isMagic() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!TradePanelWidget.User.magic || !TradePanelWidget.User.magic.connect)
-                return false;
-            let walletInfo = yield TradePanelWidget.User.magic.connect.getWalletInfo();
-            if (walletInfo) {
-                return walletInfo.walletType == "magic";
-            }
+    async isMagic() {
+        if (!TradePanelWidget.User.magic || !TradePanelWidget.User.magic.connect)
             return false;
-        });
+        let walletInfo = await TradePanelWidget.User.magic.connect.getWalletInfo();
+        if (walletInfo) {
+            return walletInfo.walletType == "magic";
+        }
+        return false;
     }
-    switchNetwork(network) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            // @ts-ignore
-            let eth = window.ethereum;
-            if (!eth || (yield this.isMagic())) {
-                NetworkInfo.setNetworkByChainId(network.ChainId);
-                return true;
-            }
-            return yield eth
-                .request({
-                method: "wallet_switchEthereumChain",
-                params: [{ chainId: "0x" + network.ChainId.toString(16) }],
-            })
-                .then((result) => {
-                console.log("switch result:", result);
-                return true;
-            })
-                .catch((err) => __awaiter$9(this, void 0, void 0, function* () {
-                // This error code indicates that the chain has not been added to MetaMask
-                if (err.code === 4902) {
-                    return yield eth
-                        .request({
-                        method: "wallet_addEthereumChain",
-                        params: [
-                            {
-                                chainName: network.ChainName,
-                                chainId: "0x" + network.ChainId.toString(16),
-                                nativeCurrency: {
-                                    name: network.NativeCurrencyName,
-                                    decimals: network.NativeDecimal,
-                                    symbol: network.NativeSymbol,
-                                },
-                                rpcUrls: [network.RpcUrl],
+    async switchNetwork(network) {
+        // @ts-ignore
+        let eth = window.ethereum;
+        if (!eth || (await this.isMagic())) {
+            NetworkInfo.setNetworkByChainId(network.ChainId);
+            return true;
+        }
+        return await eth
+            .request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x" + network.ChainId.toString(16) }],
+        })
+            .then((result) => {
+            console.log("switch result:", result);
+            return true;
+        })
+            .catch(async (err) => {
+            // This error code indicates that the chain has not been added to MetaMask
+            if (err.code === 4902) {
+                return await eth
+                    .request({
+                    method: "wallet_addEthereumChain",
+                    params: [
+                        {
+                            chainName: network.ChainName,
+                            chainId: "0x" + network.ChainId.toString(16),
+                            nativeCurrency: {
+                                name: network.NativeCurrencyName,
+                                decimals: network.NativeDecimal,
+                                symbol: network.NativeSymbol,
                             },
-                        ],
-                    })
-                        .then((result) => {
-                        console.log("addChain result:" + result);
-                        return true;
-                    })
-                        .catch((error) => {
-                        console.log("error on addNetwork:", error);
-                        throw new GeneralError(error);
-                    });
-                }
-                else {
-                    throw new GeneralError(err);
-                }
-            }));
+                            rpcUrls: [network.RpcUrl],
+                        },
+                    ],
+                })
+                    .then((result) => {
+                    console.log("addChain result:" + result);
+                    return true;
+                })
+                    .catch((error) => {
+                    console.log("error on addNetwork:", error);
+                    throw new GeneralError(error);
+                });
+            }
+            else {
+                throw new GeneralError(err);
+            }
         });
     }
     static hideMagicWallet() {
@@ -534,7 +508,6 @@ class WalletHelper {
         });
     }
 }
-WalletHelper.addTokenFallbackLoaded = undefined;
 
 var NetworkType;
 (function (NetworkType) {
@@ -543,6 +516,7 @@ var NetworkType;
 })(NetworkType || (NetworkType = {}));
 
 class SwitchNetworkModal {
+    selectedNetwork;
     constructor() {
     }
     show() {
@@ -554,14 +528,14 @@ class SwitchNetworkModal {
         modal.showModal('Switch network', content, false, undefined, false);
         let setNetworkLinks = document.querySelectorAll('.setNetwork');
         setNetworkLinks.forEach(setNetworkLink => {
-            setNetworkLink.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+            setNetworkLink.addEventListener('click', async (evt) => {
                 evt.preventDefault();
                 let dataset = evt.target.dataset;
                 this.selectedNetwork = NetworkInfo.getNetworkInfoByChainId(parseInt(dataset.chainid));
                 if (!this.selectedNetwork)
                     throw new GeneralError('Could not find chainId:' + dataset.chainid);
                 let walletHelper = new WalletHelper();
-                let successAddingNetwork = yield walletHelper.switchNetwork(this.selectedNetwork)
+                let successAddingNetwork = await walletHelper.switchNetwork(this.selectedNetwork)
                     .catch((error) => {
                     let jsSwitchNetworkNotWorking = document.getElementById('jsSwitchNetworkNotWorking');
                     if (!jsSwitchNetworkNotWorking)
@@ -583,7 +557,7 @@ class SwitchNetworkModal {
                     location.href = location.origin + '/#/chain/' + NetworkInfo.getInstance().Name;
                     location.reload();
                 }
-            }));
+            });
         });
     }
 }
@@ -624,7 +598,11 @@ var bn = {
   set exports(v){ bnExports = v; },
 };
 
-var global$1 = (typeof global !== "undefined" ? global :
+var global$2 = (typeof global$1 !== "undefined" ? global$1 :
+            typeof self !== "undefined" ? self :
+            typeof window !== "undefined" ? window : {});
+
+var global$1 = (typeof global$2 !== "undefined" ? global$2 :
   typeof self !== "undefined" ? self :
   typeof window !== "undefined" ? window : {});
 
@@ -825,7 +803,7 @@ function write (buffer, value, offset, isLE, mLen, nBytes) {
 
 var toString = {}.toString;
 
-var isArray = Array.isArray || function (arr) {
+var isArray$1 = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
@@ -962,8 +940,6 @@ Buffer.from = function (value, encodingOrOffset, length) {
 if (Buffer.TYPED_ARRAY_SUPPORT) {
   Buffer.prototype.__proto__ = Uint8Array.prototype;
   Buffer.__proto__ = Uint8Array;
-  if (typeof Symbol !== 'undefined' && Symbol.species &&
-      Buffer[Symbol.species] === Buffer) ;
 }
 
 function assertSize (size) {
@@ -1107,7 +1083,7 @@ function fromObject (that, obj) {
       return fromArrayLike(that, obj)
     }
 
-    if (obj.type === 'Buffer' && isArray(obj.data)) {
+    if (obj.type === 'Buffer' && isArray$1(obj.data)) {
       return fromArrayLike(that, obj.data)
     }
   }
@@ -1131,7 +1107,7 @@ function SlowBuffer (length) {
   }
   return Buffer.alloc(+length)
 }
-Buffer.isBuffer = isBuffer;
+Buffer.isBuffer = isBuffer$1;
 function internalIsBuffer (b) {
   return !!(b != null && b._isBuffer)
 }
@@ -1179,7 +1155,7 @@ Buffer.isEncoding = function isEncoding (encoding) {
 };
 
 Buffer.concat = function concat (list, length) {
-  if (!isArray(list)) {
+  if (!isArray$1(list)) {
     throw new TypeError('"list" argument must be an Array of Buffers')
   }
 
@@ -2597,7 +2573,7 @@ function isnan (val) {
 // the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
 // The _isBuffer check is for Safari 5-7 support, because it's missing
 // Object.prototype.constructor. Remove this eventually
-function isBuffer(obj) {
+function isBuffer$1(obj) {
   return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj))
 }
 
@@ -2610,16 +2586,16 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
 }
 
-var _polyfillNode_buffer = /*#__PURE__*/Object.freeze({
+var bufferEs6 = /*#__PURE__*/Object.freeze({
     __proto__: null,
     Buffer: Buffer,
     INSPECT_MAX_BYTES: INSPECT_MAX_BYTES,
     SlowBuffer: SlowBuffer,
-    isBuffer: isBuffer,
+    isBuffer: isBuffer$1,
     kMaxLength: _kMaxLength
 });
 
-var require$$0 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
+var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
 
 (function (module) {
 	(function (module, exports) {
@@ -2676,7 +2652,7 @@ var require$$0 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
 	    if (typeof window !== 'undefined' && typeof window.Buffer !== 'undefined') {
 	      Buffer = window.Buffer;
 	    } else {
-	      Buffer = require$$0.Buffer;
+	      Buffer = require$$0$1.Buffer;
 	    }
 	  } catch (e) {
 	  }
@@ -5974,7 +5950,7 @@ var require$$0 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_buffer);
 
 var BN$1 = bnExports;
 
-const version$i = "logger/5.7.0";
+const version$j = "logger/5.7.0";
 
 let _permanentCensorErrors = false;
 let _censorErrors = false;
@@ -6289,7 +6265,7 @@ class Logger {
     }
     static globalLogger() {
         if (!_globalLogger) {
-            _globalLogger = new Logger(version$i);
+            _globalLogger = new Logger(version$j);
         }
         return _globalLogger;
     }
@@ -6325,9 +6301,9 @@ class Logger {
 Logger.errors = ErrorCode;
 Logger.levels = LogLevel;
 
-const version$h = "bytes/5.7.0";
+const version$i = "bytes/5.7.0";
 
-const logger$p = new Logger(version$h);
+const logger$p = new Logger(version$i);
 ///////////////////////////////
 function isHexable(value) {
     return !!(value.toHexString);
@@ -6725,10 +6701,10 @@ function splitSignature(signature) {
     return result;
 }
 
-const version$g = "bignumber/5.7.0";
+const version$h = "bignumber/5.7.0";
 
 var BN = BN$1.BN;
-const logger$o = new Logger(version$g);
+const logger$o = new Logger(version$h);
 const _constructorGuard$3 = {};
 const MAX_SAFE = 0x1fffffffffffff;
 function isBigNumberish(value) {
@@ -7016,7 +6992,7 @@ function _base36To16(value) {
     return (new BN(value, 36)).toString(16);
 }
 
-const logger$n = new Logger(version$g);
+const logger$n = new Logger(version$h);
 const _constructorGuard$2 = {};
 const Zero$2 = BigNumber$2.from(0);
 const NegativeOne$2 = BigNumber$2.from(-1);
@@ -7370,7 +7346,7 @@ class FixedNumber {
 const ONE = FixedNumber.from(1);
 const BUMP = FixedNumber.from("0.5");
 
-const version$f = "properties/5.7.0";
+const version$g = "properties/5.7.0";
 
 var __awaiter$8 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -7381,7 +7357,7 @@ var __awaiter$8 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const logger$m = new Logger(version$f);
+const logger$m = new Logger(version$g);
 function defineReadOnly(object, name, value) {
     Object.defineProperty(object, name, {
         enumerable: true,
@@ -7495,9 +7471,9 @@ class Description {
     }
 }
 
-const version$e = "abi/5.7.0";
+const version$f = "abi/5.7.0";
 
-const logger$l = new Logger(version$e);
+const logger$l = new Logger(version$f);
 const _constructorGuard$1 = {};
 let ModifiersBytes = { calldata: true, memory: true, storage: true };
 let ModifiersNest = { calldata: true, memory: true };
@@ -8345,7 +8321,7 @@ function splitNesting(value) {
     return result;
 }
 
-const logger$k = new Logger(version$e);
+const logger$k = new Logger(version$f);
 function checkResultErrors(result) {
     // Find the first error (if any)
     const errors = [];
@@ -8490,9 +8466,9 @@ function keccak256(data) {
     return '0x' + sha3.keccak_256(arrayify(data));
 }
 
-const version$d = "rlp/5.7.0";
+const version$e = "rlp/5.7.0";
 
-const logger$j = new Logger(version$d);
+const logger$j = new Logger(version$e);
 function arrayifyInteger(value) {
     const result = [];
     while (value) {
@@ -8607,9 +8583,9 @@ function decode$2(data) {
     return decoded.result;
 }
 
-const version$c = "address/5.7.0";
+const version$d = "address/5.7.0";
 
-const logger$i = new Logger(version$c);
+const logger$i = new Logger(version$d);
 function getChecksumAddress(address) {
     if (!isHexString(address, 20)) {
         logger$i.throwArgumentError("invalid address", "address", address);
@@ -8749,7 +8725,7 @@ class AnonymousCoder extends Coder {
     }
 }
 
-const logger$h = new Logger(version$e);
+const logger$h = new Logger(version$f);
 function pack(writer, coders, values) {
     let arrayValues = null;
     if (Array.isArray(values)) {
@@ -9082,9 +9058,9 @@ class NumberCoder extends Coder {
     }
 }
 
-const version$b = "strings/5.7.0";
+const version$c = "strings/5.7.0";
 
-const logger$g = new Logger(version$b);
+const logger$g = new Logger(version$c);
 ///////////////////////////////
 var UnicodeNormalizationForm;
 (function (UnicodeNormalizationForm) {
@@ -9367,7 +9343,7 @@ class TupleCoder extends Coder {
     }
 }
 
-const logger$f = new Logger(version$e);
+const logger$f = new Logger(version$f);
 const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
 const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
 class AbiCoder {
@@ -9450,7 +9426,7 @@ function id(text) {
     return keccak256(toUtf8Bytes(text));
 }
 
-const version$a = "hash/5.7.0";
+const version$b = "hash/5.7.0";
 
 function decode$1(textData) {
     textData = atob(textData);
@@ -9890,7 +9866,7 @@ function consume_emoji_reversed(cps, eaten) {
     return emoji;
 }
 
-const logger$e = new Logger(version$a);
+const logger$e = new Logger(version$b);
 const Zeros = new Uint8Array(32);
 Zeros.fill(0);
 function checkComponent(comp) {
@@ -9955,7 +9931,7 @@ var __awaiter$7 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const logger$d = new Logger(version$a);
+const logger$d = new Logger(version$b);
 const padding = new Uint8Array(32);
 padding.fill(0);
 const NegativeOne = BigNumber$2.from(-1);
@@ -10379,7 +10355,7 @@ class TypedDataEncoder {
     }
 }
 
-const logger$c = new Logger(version$e);
+const logger$c = new Logger(version$f);
 class LogDescription extends Description {
 }
 class TransactionDescription extends Description {
@@ -10976,7 +10952,7 @@ class Interface {
     }
 }
 
-const version$9 = "abstract-provider/5.7.0";
+const version$a = "abstract-provider/5.7.0";
 
 var __awaiter$6 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -10987,7 +10963,7 @@ var __awaiter$6 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const logger$b = new Logger(version$9);
+const logger$b = new Logger(version$a);
 //export type CallTransactionable = {
 //    call(transaction: TransactionRequest): Promise<TransactionResponse>;
 //};
@@ -11038,7 +11014,7 @@ class Provider {
     }
 }
 
-const version$8 = "abstract-signer/5.7.0";
+const version$9 = "abstract-signer/5.7.0";
 
 var __awaiter$5 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -11049,7 +11025,7 @@ var __awaiter$5 = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const logger$a = new Logger(version$8);
+const logger$a = new Logger(version$9);
 const allowedTransactionKeys$1 = [
     "accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"
 ];
@@ -11353,6 +11329,236 @@ assert$b.equal = function assertEqual(l, r, msg) {
     throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
 };
 
+var inheritsExports = {};
+var inherits$3 = {
+  get exports(){ return inheritsExports; },
+  set exports(v){ inheritsExports = v; },
+};
+
+// shim for using process in browser
+// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+var cachedSetTimeout = defaultSetTimout;
+var cachedClearTimeout = defaultClearTimeout;
+if (typeof global$1.setTimeout === 'function') {
+    cachedSetTimeout = setTimeout;
+}
+if (typeof global$1.clearTimeout === 'function') {
+    cachedClearTimeout = clearTimeout;
+}
+
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+function nextTick(fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+}
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+var title = 'browser';
+var platform = 'browser';
+var browser = true;
+var env = {};
+var argv = [];
+var version$8 = ''; // empty string to avoid regexp issues
+var versions = {};
+var release = {};
+var config = {};
+
+function noop() {}
+
+var on$1 = noop;
+var addListener = noop;
+var once = noop;
+var off = noop;
+var removeListener = noop;
+var removeAllListeners = noop;
+var emit = noop;
+
+function binding(name) {
+    throw new Error('process.binding is not supported');
+}
+
+function cwd () { return '/' }
+function chdir (dir) {
+    throw new Error('process.chdir is not supported');
+}function umask() { return 0; }
+
+// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+var performance = global$1.performance || {};
+var performanceNow =
+  performance.now        ||
+  performance.mozNow     ||
+  performance.msNow      ||
+  performance.oNow       ||
+  performance.webkitNow  ||
+  function(){ return (new Date()).getTime() };
+
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
+function hrtime(previousTimestamp){
+  var clocktime = performanceNow.call(performance)*1e-3;
+  var seconds = Math.floor(clocktime);
+  var nanoseconds = Math.floor((clocktime%1)*1e9);
+  if (previousTimestamp) {
+    seconds = seconds - previousTimestamp[0];
+    nanoseconds = nanoseconds - previousTimestamp[1];
+    if (nanoseconds<0) {
+      seconds--;
+      nanoseconds += 1e9;
+    }
+  }
+  return [seconds,nanoseconds]
+}
+
+var startTime = new Date();
+function uptime() {
+  var currentTime = new Date();
+  var dif = currentTime - startTime;
+  return dif / 1000;
+}
+
+var browser$1 = {
+  nextTick: nextTick,
+  title: title,
+  browser: browser,
+  env: env,
+  argv: argv,
+  version: version$8,
+  versions: versions,
+  on: on$1,
+  addListener: addListener,
+  once: once,
+  off: off,
+  removeListener: removeListener,
+  removeAllListeners: removeAllListeners,
+  emit: emit,
+  binding: binding,
+  cwd: cwd,
+  chdir: chdir,
+  umask: umask,
+  hrtime: hrtime,
+  platform: platform,
+  release: release,
+  config: config,
+  uptime: uptime
+};
+
+var process$1 = browser$1;
+
 var inherits$1;
 if (typeof Object.create === 'function'){
   inherits$1 = function inherits(ctor, superCtor) {
@@ -11378,15 +11584,645 @@ if (typeof Object.create === 'function'){
 }
 var inherits$2 = inherits$1;
 
-var _polyfillNode_inherits = /*#__PURE__*/Object.freeze({
+var formatRegExp = /%[sdj%]/g;
+function format(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+}
+
+// Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+function deprecate(fn, msg) {
+  // Allow for deprecating things in the process of starting up.
+  if (isUndefined(global$1.process)) {
+    return function() {
+      return deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  if (process$1.noDeprecation === true) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (process$1.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process$1.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+}
+
+var debugs = {};
+var debugEnviron;
+function debuglog(set) {
+  if (isUndefined(debugEnviron))
+    debugEnviron = process$1.env.NODE_DEBUG || '';
+  set = set.toUpperCase();
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = 0;
+      debugs[set] = function() {
+        var msg = format.apply(null, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function() {};
+    }
+  }
+  return debugs[set];
+}
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    _extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  array.forEach(function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  }
+
+  // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  if (isError(value)
+      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var length = output.reduce(function(prev, cur) {
+    if (cur.indexOf('\n') >= 0) ;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+
+function isNull(arg) {
+  return arg === null;
+}
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+
+function isError(e) {
+  return isObject(e) &&
+      (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+
+function isBuffer(maybeBuf) {
+  return Buffer.isBuffer(maybeBuf);
+}
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+function log() {
+  console.log('%s - %s', timestamp(), format.apply(null, arguments));
+}
+
+function _extend(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+}
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+var util = {
+  inherits: inherits$2,
+  _extend: _extend,
+  log: log,
+  isBuffer: isBuffer,
+  isPrimitive: isPrimitive,
+  isFunction: isFunction,
+  isError: isError,
+  isDate: isDate,
+  isObject: isObject,
+  isRegExp: isRegExp,
+  isUndefined: isUndefined,
+  isSymbol: isSymbol,
+  isString: isString,
+  isNumber: isNumber,
+  isNullOrUndefined: isNullOrUndefined,
+  isNull: isNull,
+  isBoolean: isBoolean,
+  isArray: isArray,
+  inspect: inspect,
+  deprecate: deprecate,
+  format: format,
+  debuglog: debuglog
+};
+
+var util$1 = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    default: inherits$2
+    _extend: _extend,
+    debuglog: debuglog,
+    default: util,
+    deprecate: deprecate,
+    format: format,
+    inherits: inherits$2,
+    inspect: inspect,
+    isArray: isArray,
+    isBoolean: isBoolean,
+    isBuffer: isBuffer,
+    isDate: isDate,
+    isError: isError,
+    isFunction: isFunction,
+    isNull: isNull,
+    isNullOrUndefined: isNullOrUndefined,
+    isNumber: isNumber,
+    isObject: isObject,
+    isPrimitive: isPrimitive,
+    isRegExp: isRegExp,
+    isString: isString,
+    isSymbol: isSymbol,
+    isUndefined: isUndefined,
+    log: log
 });
 
-var require$$1 = /*@__PURE__*/getAugmentedNamespace(_polyfillNode_inherits);
+var require$$0 = /*@__PURE__*/getAugmentedNamespace(util$1);
+
+var inherits_browserExports = {};
+var inherits_browser$1 = {
+  get exports(){ return inherits_browserExports; },
+  set exports(v){ inherits_browserExports = v; },
+};
+
+var hasRequiredInherits_browser;
+
+function requireInherits_browser () {
+	if (hasRequiredInherits_browser) return inherits_browserExports;
+	hasRequiredInherits_browser = 1;
+	if (typeof Object.create === 'function') {
+	  // implementation from standard node.js 'util' module
+	  inherits_browser$1.exports = function inherits(ctor, superCtor) {
+	    if (superCtor) {
+	      ctor.super_ = superCtor;
+	      ctor.prototype = Object.create(superCtor.prototype, {
+	        constructor: {
+	          value: ctor,
+	          enumerable: false,
+	          writable: true,
+	          configurable: true
+	        }
+	      });
+	    }
+	  };
+	} else {
+	  // old school shim for old browsers
+	  inherits_browser$1.exports = function inherits(ctor, superCtor) {
+	    if (superCtor) {
+	      ctor.super_ = superCtor;
+	      var TempCtor = function () {};
+	      TempCtor.prototype = superCtor.prototype;
+	      ctor.prototype = new TempCtor();
+	      ctor.prototype.constructor = ctor;
+	    }
+	  };
+	}
+	return inherits_browserExports;
+}
+
+(function (module) {
+	try {
+	  var util = require$$0;
+	  /* istanbul ignore next */
+	  if (typeof util.inherits !== 'function') throw '';
+	  module.exports = util.inherits;
+	} catch (e) {
+	  /* istanbul ignore next */
+	  module.exports = requireInherits_browser();
+	}
+} (inherits$3));
 
 var assert$a = minimalisticAssert$1;
-var inherits = require$$1;
+var inherits = inheritsExports;
 
 utils$9.inherits = inherits;
 
@@ -20833,12 +21669,6 @@ EventEmitter.prototype.removeListener =
 
       return this;
     };
-    
-// Alias for removeListener added in NodeJS 10.0
-// https://nodejs.org/api/events.html#events_emitter_off_eventname_listener
-EventEmitter.prototype.off = function(type, listener){
-    return this.removeListener(type, listener);
-};
 
 EventEmitter.prototype.removeAllListeners =
     function removeAllListeners(type) {
@@ -20989,12 +21819,13 @@ const ConnectorEvents = Object.freeze({
  * - network: the network type that is used (eg. 'evm')
  */
 class AbstractWeb3Connector extends EventEmitter {
+    type = 'abstract';
+    network = 'evm';
+    account = null;
+    chainId = null;
+    provider;
     constructor() {
         super();
-        this.type = 'abstract';
-        this.network = 'evm';
-        this.account = null;
-        this.chainId = null;
         this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
         this.handleChainChanged = this.handleChainChanged.bind(this);
         this.handleConnect = this.handleConnect.bind(this);
@@ -21023,10 +21854,8 @@ class AbstractWeb3Connector extends EventEmitter {
      * - chainId(optional): the chainId that has been connected to (in hex format)
      * - account(optional): the address that is connected to the provider
      */
-    activate() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            throw new Error('Not implemented: activate()');
-        });
+    async activate() {
+        throw new Error('Not implemented: activate()');
     }
     /**
      * Updates account and emit event, on EIP-1193 accountsChanged events
@@ -21054,14 +21883,13 @@ class AbstractWeb3Connector extends EventEmitter {
     /**
      * Cleans all active listners, connections and stale references
      */
-    deactivate() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            this.unsubscribeToEvents(this.provider);
-            this.account = null;
-            this.chainId = null;
-        });
+    async deactivate() {
+        this.unsubscribeToEvents(this.provider);
+        this.account = null;
+        this.chainId = null;
     }
 }
+var AbstractWeb3Connector$1 = AbstractWeb3Connector;
 
 var a=(n=>(n.MissingApiKey="MISSING_API_KEY",n.ModalNotReady="MODAL_NOT_READY",n.MalformedResponse="MALFORMED_RESPONSE",n.InvalidArgument="INVALID_ARGUMENT",n.ExtensionNotInitialized="EXTENSION_NOT_INITIALIZED",n.IncompatibleExtensions="INCOMPATIBLE_EXTENSIONS",n))(a||{}),m$1=(_=>(_.SyncWeb3Method="SYNC_WEB3_METHOD",_.DuplicateIframe="DUPLICATE_IFRAME",_.ReactNativeEndpointConfiguration="REACT_NATIVE_ENDPOINT_CONFIGURATION",_.DeprecationNotice="DEPRECATION_NOTICE",_))(m$1||{}),p=(e=>(e[e.ParseError=-32700]="ParseError",e[e.InvalidRequest=-32600]="InvalidRequest",e[e.MethodNotFound=-32601]="MethodNotFound",e[e.InvalidParams=-32602]="InvalidParams",e[e.InternalError=-32603]="InternalError",e[e.MagicLinkFailedVerification=-1e4]="MagicLinkFailedVerification",e[e.MagicLinkExpired=-10001]="MagicLinkExpired",e[e.MagicLinkRateLimited=-10002]="MagicLinkRateLimited",e[e.MagicLinkInvalidRedirectURL=-10006]="MagicLinkInvalidRedirectURL",e[e.UserAlreadyLoggedIn=-10003]="UserAlreadyLoggedIn",e[e.UpdateEmailFailed=-10004]="UpdateEmailFailed",e[e.UserRequestEditEmail=-10005]="UserRequestEditEmail",e[e.InactiveRecipient=-10010]="InactiveRecipient",e[e.AccessDeniedToUser=-10011]="AccessDeniedToUser",e))(p||{});var u=(t=>(t.LoginWithSms="magic_auth_login_with_sms",t.LoginWithEmailOTP="magic_auth_login_with_email_otp",t.LoginWithMagicLink="magic_auth_login_with_magic_link",t.LoginWithCredential="magic_auth_login_with_credential",t.GetIdToken="magic_auth_get_id_token",t.GenerateIdToken="magic_auth_generate_id_token",t.GetMetadata="magic_auth_get_metadata",t.IsLoggedIn="magic_auth_is_logged_in",t.Logout="magic_auth_logout",t.UpdateEmail="magic_auth_update_email",t.UserSettings="magic_auth_settings",t.UserSettingsTestMode="magic_auth_settings_testing_mode",t.LoginWithSmsTestMode="magic_auth_login_with_sms_testing_mode",t.LoginWithEmailOTPTestMode="magic_auth_login_with_email_otp_testing_mode",t.LoginWithMagicLinkTestMode="magic_login_with_magic_link_testing_mode",t.LoginWithCredentialTestMode="magic_auth_login_with_credential_testing_mode",t.GetIdTokenTestMode="magic_auth_get_id_token_testing_mode",t.GenerateIdTokenTestMode="magic_auth_generate_id_token_testing_mode",t.GetMetadataTestMode="magic_auth_get_metadata_testing_mode",t.IsLoggedInTestMode="magic_auth_is_logged_in_testing_mode",t.LogoutTestMode="magic_auth_logout_testing_mode",t.UpdateEmailTestMode="magic_auth_update_email_testing_mode",t.IntermediaryEvent="magic_intermediary_event",t))(u||{});var g$1=(i=>(i.MAGIC_HANDLE_RESPONSE="MAGIC_HANDLE_RESPONSE",i.MAGIC_OVERLAY_READY="MAGIC_OVERLAY_READY",i.MAGIC_SHOW_OVERLAY="MAGIC_SHOW_OVERLAY",i.MAGIC_HIDE_OVERLAY="MAGIC_HIDE_OVERLAY",i.MAGIC_HANDLE_EVENT="MAGIC_HANDLE_EVENT",i))(g$1||{}),o=(s=>(s.MAGIC_HANDLE_REQUEST="MAGIC_HANDLE_REQUEST",s))(o||{});var l$1=(s=>(s.Harmony="HARMONY",s))(l$1||{});
 
@@ -21075,53 +21903,50 @@ var Zr=Object.create;var De=Object.defineProperty;var qr=Object.getOwnPropertyDe
 
 var s=(t=>(t.GetWalletInfo="mc_get_wallet_info",t.ShowWallet="mc_wallet",t.RequestUserInfo="mc_request_user_info",t.Disconnect="mc_disconnect",t))(s||{});var l=class extends S.Internal{constructor(){super(...arguments);this.name="connect";this.config={mc:!0};}getWalletInfo(){let e=this.utils.createJsonRpcRequestPayload("mc_get_wallet_info");return this.request(e)}showWallet(){let e=this.utils.createJsonRpcRequestPayload("mc_wallet");return this.request(e)}requestUserInfo(e){let n=this.utils.createJsonRpcRequestPayload("mc_request_user_info",e?[e]:[]);return this.request(n)}disconnect(){let e=this.utils.createJsonRpcRequestPayload("mc_disconnect");return this.request(e)}};
 
-class MagicWeb3Connector extends AbstractWeb3Connector {
-    constructor() {
-        super(...arguments);
-        this.type = "MagicLink";
-        this.ether = null;
-        this.deactivate = () => __awaiter$9(this, void 0, void 0, function* () {
-            this.unsubscribeToEvents(this.provider);
-            if (this.magic) {
-                yield this.magic.connect.disconnect().catch((e) => {
-                    console.error("error to disconnect:", e);
-                });
-            }
-            this.account = null;
-            this.chainId = null;
-            this.provider = null;
+/* global window */
+class MagicWeb3Connector extends AbstractWeb3Connector$1 {
+    type = "MagicLink";
+    magic;
+    ether = null;
+    async activate() {
+        let networkInfo = TradePanelWidget.Network;
+        let network = {
+            rpcUrl: networkInfo.RpcUrl,
+            chainId: networkInfo.ChainId,
+        };
+        this.magic = new _t("pk_live_EA9DDC458FE21B24", {
+            extensions: [new l()],
+            network: network,
         });
+        this.ether = new Web3Provider(this.magic.rpcProvider);
+        let accounts = await this.ether.listAccounts();
+        console.log("accounts after new Magic", accounts);
+        // Assign Constants
+        this.account = accounts[0];
+        this.provider = this.ether.provider;
+        this.chainId = networkInfo.ChainId;
+        console.log("walletInfo:", await this.magic.connect.getWalletInfo());
+        this.subscribeToEvents(this.provider);
+        return {
+            provider: this.provider,
+            account: this.account,
+            chainId: this.chainId,
+            ether: this.ether,
+            magic: this.magic,
+            signer: this.ether.getSigner(),
+        };
     }
-    activate() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let networkInfo = TradePanelWidget.Network;
-            let network = {
-                rpcUrl: networkInfo.RpcUrl,
-                chainId: networkInfo.ChainId,
-            };
-            this.magic = new _t("pk_live_EA9DDC458FE21B24", {
-                extensions: [new l()],
-                network: network,
+    deactivate = async () => {
+        this.unsubscribeToEvents(this.provider);
+        if (this.magic) {
+            await this.magic.connect.disconnect().catch((e) => {
+                console.error("error to disconnect:", e);
             });
-            this.ether = new Web3Provider(this.magic.rpcProvider);
-            let accounts = yield this.ether.listAccounts();
-            console.log("accounts after new Magic", accounts);
-            // Assign Constants
-            this.account = accounts[0];
-            this.provider = this.ether.provider;
-            this.chainId = networkInfo.ChainId;
-            console.log("walletInfo:", yield this.magic.connect.getWalletInfo());
-            this.subscribeToEvents(this.provider);
-            return {
-                provider: this.provider,
-                account: this.account,
-                chainId: this.chainId,
-                ether: this.ether,
-                magic: this.magic,
-                signer: this.ether.getSigner(),
-            };
-        });
-    }
+        }
+        this.account = null;
+        this.chainId = null;
+        this.provider = null;
+    };
 }
 
 /*
@@ -24054,188 +24879,170 @@ class AuthenticateService extends BaseService {
     constructor() {
         super();
     }
-    static enableWeb3() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (TradePanelWidget.User.connector)
-                return TradePanelWidget.User.connector;
-            let magicWeb3Connector = new MagicWeb3Connector();
-            let connector = yield magicWeb3Connector.activate();
-            TradePanelWidget.User.connector = connector;
-            TradePanelWidget.User.magic = connector.magic;
-            TradePanelWidget.User.provider = connector.provider;
-            TradePanelWidget.User.ether = connector.ether;
-            TradePanelWidget.User.signer = connector.signer;
-            return connector;
-        });
+    static async enableWeb3() {
+        if (TradePanelWidget.User.connector)
+            return TradePanelWidget.User.connector;
+        let magicWeb3Connector = new MagicWeb3Connector();
+        let connector = await magicWeb3Connector.activate();
+        TradePanelWidget.User.connector = connector;
+        TradePanelWidget.User.magic = connector.magic;
+        TradePanelWidget.User.provider = connector.provider;
+        TradePanelWidget.User.ether = connector.ether;
+        TradePanelWidget.User.signer = connector.signer;
+        return connector;
     }
-    logOut() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let cookieHelper = new CookieHelper(document);
+    async logOut() {
+        let cookieHelper = new CookieHelper(document);
+        cookieHelper.deleteCookie("validate");
+        if (!TradePanelWidget.User.ether) {
+            let connection = await AuthenticateService.enableWeb3();
+            TradePanelWidget.User.magic = connection.magic;
+        }
+        TradePanelWidget.User.magic.connect.disconnect();
+        TradePanelWidget.User = new User(null, "", TradePanelWidget.Network.ChainId, "");
+    }
+    async login() {
+        let connector = await AuthenticateService.enableWeb3();
+        TradePanelWidget.User = new User(connector.provider, connector.account, connector.chainId, connector.ether);
+        TradePanelWidget.User.magic = connector.magic;
+        TradePanelWidget.User.signer = connector.signer;
+        TradePanelWidget.User.isLoggedIn = true;
+    }
+    async isAuthenticated() {
+        let cookieHelper = new CookieHelper();
+        let validate = cookieHelper.getCookieValue("validate");
+        if (!validate)
+            return false;
+        try {
+            let obj = JSON.parse(atob(validate));
+            TradePanelWidget.User.token = obj.token;
+            let result = await this.post("/me/jwt");
+            if (!result.jwt) {
+                await this.logOut();
+                return false;
+            }
+            await AuthenticateService.enableWeb3();
+            TradePanelWidget.User.address = result.address;
+            TradePanelWidget.User.alpacaId = result.alpacaId;
+            TradePanelWidget.User.chainId = result.chainId;
+            TradePanelWidget.User.isLoggedIn = true;
+            return true;
+        }
+        catch (e) {
             cookieHelper.deleteCookie("validate");
-            if (!TradePanelWidget.User.ether) {
-                let connection = yield AuthenticateService.enableWeb3();
-                TradePanelWidget.User.magic = connection.magic;
-            }
-            TradePanelWidget.User.magic.connect.disconnect();
-            TradePanelWidget.User = new User(null, "", TradePanelWidget.Network.ChainId, "");
-        });
+            console.info(e);
+            return false;
+        }
     }
-    login() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let connector = yield AuthenticateService.enableWeb3();
-            TradePanelWidget.User = new User(connector.provider, connector.account, connector.chainId, connector.ether);
-            TradePanelWidget.User.magic = connector.magic;
-            TradePanelWidget.User.signer = connector.signer;
-            TradePanelWidget.User.isLoggedIn = true;
-        });
-    }
-    isAuthenticated() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let cookieHelper = new CookieHelper();
-            let validate = cookieHelper.getCookieValue("validate");
-            if (!validate)
-                return false;
-            try {
-                let obj = JSON.parse(atob(validate));
-                TradePanelWidget.User.token = obj.token;
-                let result = yield this.post("/me/jwt");
-                if (!result.jwt) {
-                    yield this.logOut();
-                    return false;
-                }
-                yield AuthenticateService.enableWeb3();
-                TradePanelWidget.User.address = result.address;
-                TradePanelWidget.User.alpacaId = result.alpacaId;
-                TradePanelWidget.User.chainId = result.chainId;
-                TradePanelWidget.User.isLoggedIn = true;
-                return true;
-            }
-            catch (e) {
-                cookieHelper.deleteCookie("validate");
-                console.info(e);
-                return false;
-            }
-        });
-    }
-    authenticateUser(enableWeb3Callback, authenticatedCallback) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let connector = yield AuthenticateService.enableWeb3();
-            if (enableWeb3Callback && connector.provider) {
-                enableWeb3Callback(connector.provider);
-            }
-            if (connector.chainId != TradePanelWidget.Network.ChainId) {
-                let userNetwork = NetworkInfo.getNetworkInfoByChainId(connector.chainId);
-                if (userNetwork) {
-                    NetworkInfo.setNetworkByChainId(connector.chainId);
-                }
-                else {
-                    let modal = new SwitchNetworkModal();
-                    modal.show();
-                    return;
-                }
-            }
-            let response = yield this.post("/me/nonce", {
-                address: connector.account,
-            });
-            let obj = {
-                signingMessage: "You are logging into Liminal.market.\n\nNonce:" + response.nonce,
-                connector: MagicWeb3Connector,
-            };
-            console.log("isWebview", WalletHelper.isWebview());
-            // @ts-ignore
-            console.log("win.Ethereum", window.ethereum);
-            //        console.log('Ethereum', ethereum);
-            console.log("connector.ether", connector.ether);
-            console.log("network", TradePanelWidget.Network);
-            // @ts-ignore
-            if (window.ethereum) {
-                console.log("Ethereum", 
-                // @ts-ignore
-                window.ethereum.networkVersion, 
-                // @ts-ignore
-                window.ethereum.chainId, TradePanelWidget.Network.ChainIdHex);
-                if (WalletHelper.isWebview()) ;
-            }
-            console.log("calling signMessage");
-            const signedMessage = yield connector.ether
-                .getSigner()
-                .signMessage(obj.signingMessage)
-                .then((result) => {
-                console.log("then signMessage:", result);
-                return result;
-            })
-                .catch((e) => __awaiter$9(this, void 0, void 0, function* () {
-                console.log(e);
-                yield this.logOut();
-                if (e.message &&
-                    e.message.toLowerCase().indexOf("wrong network") != -1) {
-                    yield this.authenticateUser(enableWeb3Callback, authenticatedCallback);
-                    //showBar('Your wallet is on wrong network. I expect you to be on ' + TradePanelWidget.Network.Name + '(chainId:' + TradePanelWidget.Network.ChainId + ') network');
-                }
-                else {
-                    showBar("Error signing in:" + e.message);
-                    return;
-                }
-            }));
-            if (!signedMessage)
-                return;
-            let loginResponse = yield this.post("me/validate", {
-                address: connector.account,
-                signedMessage,
-            });
-            if (!loginResponse.address) {
-                yield this.logOut();
-                return;
-            }
-            TradePanelWidget.User.setValidate(loginResponse);
-            TradePanelWidget.User.token = loginResponse.token;
-            TradePanelWidget.User.alpacaId = loginResponse.alpacaId;
-            TradePanelWidget.User.address = loginResponse.address;
-            TradePanelWidget.User.isLoggedIn = true;
-            if (authenticatedCallback) {
-                authenticatedCallback();
+    async authenticateUser(enableWeb3Callback, authenticatedCallback) {
+        let connector = await AuthenticateService.enableWeb3();
+        if (enableWeb3Callback && connector.provider) {
+            enableWeb3Callback(connector.provider);
+        }
+        if (connector.chainId != TradePanelWidget.Network.ChainId) {
+            let userNetwork = NetworkInfo.getNetworkInfoByChainId(connector.chainId);
+            if (userNetwork) {
+                NetworkInfo.setNetworkByChainId(connector.chainId);
             }
             else {
-                location.reload();
+                let modal = new SwitchNetworkModal();
+                modal.show();
+                return;
+            }
+        }
+        let response = await this.post("/me/nonce", {
+            address: connector.account,
+        });
+        let obj = {
+            signingMessage: "You are logging into Liminal.market.\n\nNonce:" + response.nonce,
+            connector: MagicWeb3Connector,
+        };
+        console.log("isWebview", WalletHelper.isWebview());
+        // @ts-ignore
+        console.log("win.Ethereum", window.ethereum);
+        //        console.log('Ethereum', ethereum);
+        console.log("connector.ether", connector.ether);
+        console.log("network", TradePanelWidget.Network);
+        // @ts-ignore
+        if (window.ethereum) {
+            console.log("Ethereum", 
+            // @ts-ignore
+            window.ethereum.networkVersion, 
+            // @ts-ignore
+            window.ethereum.chainId, TradePanelWidget.Network.ChainIdHex);
+            if (WalletHelper.isWebview()) ;
+        }
+        console.log("calling signMessage");
+        const signedMessage = await connector.ether
+            .getSigner()
+            .signMessage(obj.signingMessage)
+            .then((result) => {
+            console.log("then signMessage:", result);
+            return result;
+        })
+            .catch(async (e) => {
+            console.log(e);
+            await this.logOut();
+            if (e.message &&
+                e.message.toLowerCase().indexOf("wrong network") != -1) {
+                await this.authenticateUser(enableWeb3Callback, authenticatedCallback);
+                //showBar('Your wallet is on wrong network. I expect you to be on ' + TradePanelWidget.Network.Name + '(chainId:' + TradePanelWidget.Network.ChainId + ') network');
+            }
+            else {
+                showBar("Error signing in:" + e.message);
+                return;
             }
         });
+        if (!signedMessage)
+            return;
+        let loginResponse = await this.post("me/validate", {
+            address: connector.account,
+            signedMessage,
+        });
+        if (!loginResponse.address) {
+            await this.logOut();
+            return;
+        }
+        TradePanelWidget.User.setValidate(loginResponse);
+        TradePanelWidget.User.token = loginResponse.token;
+        TradePanelWidget.User.alpacaId = loginResponse.alpacaId;
+        TradePanelWidget.User.address = loginResponse.address;
+        TradePanelWidget.User.isLoggedIn = true;
+        if (authenticatedCallback) {
+            authenticatedCallback();
+        }
+        else {
+            location.reload();
+        }
     }
 }
 
 class localhostContractAddresses {
-    constructor() {
-        this.KYC_ADDRESS = "0xA700528a2B9Bd3126c96378b76f2c99f5F0e0F76";
-        this.AUSD_ADDRESS = "0x7ad1630b2E9F0e5401f220A33B473C7E5551dd3e";
-        this.LIMINAL_MARKET_ADDRESS = "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18";
-        this.MARKET_CALENDAR_ADDRESS = "0x12bA221061255c11EA4895C363633bD43F28F9c3";
-    }
+    KYC_ADDRESS = "0xA700528a2B9Bd3126c96378b76f2c99f5F0e0F76";
+    AUSD_ADDRESS = "0x7ad1630b2E9F0e5401f220A33B473C7E5551dd3e";
+    LIMINAL_MARKET_ADDRESS = "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18";
+    MARKET_CALENDAR_ADDRESS = "0x12bA221061255c11EA4895C363633bD43F28F9c3";
 }
 
 class mumbaiContractAddresses {
-    constructor() {
-        this.KYC_ADDRESS = "0x9e2B28D9F841300bE3B64e505dEcA36c35250609";
-        this.AUSD_ADDRESS = "0x38F2B1E9F11937dD276D64521535b15280A7F137";
-        this.LIMINAL_MARKET_ADDRESS = "0x6e9C29e416dc9F7A6A03ffebaB3f02Ef62a1baE4";
-        this.MARKET_CALENDAR_ADDRESS = "0xc6B29dfd4FD756EF94b3A3FF7a531F4467BDDA75";
-    }
+    KYC_ADDRESS = "0x9e2B28D9F841300bE3B64e505dEcA36c35250609";
+    AUSD_ADDRESS = "0x38F2B1E9F11937dD276D64521535b15280A7F137";
+    LIMINAL_MARKET_ADDRESS = "0x6e9C29e416dc9F7A6A03ffebaB3f02Ef62a1baE4";
+    MARKET_CALENDAR_ADDRESS = "0xc6B29dfd4FD756EF94b3A3FF7a531F4467BDDA75";
 }
 
 class fujiContractAddresses {
-    constructor() {
-        this.KYC_ADDRESS = "0x0594D04FDB5C98Fb7F777a799139424Ae2414AaD";
-        this.AUSD_ADDRESS = "0xbAc482aE0b0d652854df377be566445984A021ED";
-        this.LIMINAL_MARKET_ADDRESS = "0x098A512B017408008a23ECe22843788799CDebFd";
-        this.MARKET_CALENDAR_ADDRESS = "0x77E6A62Be8398B18d2dA81CDB6Eb097bD8132ccB";
-    }
+    KYC_ADDRESS = "0x0594D04FDB5C98Fb7F777a799139424Ae2414AaD";
+    AUSD_ADDRESS = "0xbAc482aE0b0d652854df377be566445984A021ED";
+    LIMINAL_MARKET_ADDRESS = "0x098A512B017408008a23ECe22843788799CDebFd";
+    MARKET_CALENDAR_ADDRESS = "0x77E6A62Be8398B18d2dA81CDB6Eb097bD8132ccB";
 }
 
 class polygonContractAddresses {
-    constructor() {
-        this.KYC_ADDRESS = "0xc7dA98E282cc30BD4fe0a7dE38372F876DB577E4";
-        this.AUSD_ADDRESS = "0x9B780e71C2a8492E805e17616EB878f2e3874E21";
-        this.LIMINAL_MARKET_ADDRESS = "0x8B4fc0bcaED76a6569525d8Fe51E57cAd32FDd94";
-        this.MARKET_CALENDAR_ADDRESS = "0x77b54CbF3e1370af13da41196B4d99cd02eBcC44";
-    }
+    KYC_ADDRESS = "0xc7dA98E282cc30BD4fe0a7dE38372F876DB577E4";
+    AUSD_ADDRESS = "0x9B780e71C2a8492E805e17616EB878f2e3874E21";
+    LIMINAL_MARKET_ADDRESS = "0x8B4fc0bcaED76a6569525d8Fe51E57cAd32FDd94";
+    MARKET_CALENDAR_ADDRESS = "0x77b54CbF3e1370af13da41196B4d99cd02eBcC44";
 }
 
 class ContractInfo {
@@ -24255,95 +25062,8 @@ class ContractInfo {
 }
 
 let EventService$1 = class EventService {
+    contracts;
     constructor() {
-        this.lmAbi = [
-            {
-                anonymous: false,
-                inputs: [
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "walletAddress",
-                        type: "address",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "uint256",
-                        name: "amount",
-                        type: "uint256",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "string",
-                        name: "accountId",
-                        type: "string",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "tokenAddress",
-                        type: "address",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "spender",
-                        type: "address",
-                    },
-                ],
-                name: "BuyWithAUsd",
-                type: "event",
-            },
-            {
-                anonymous: false,
-                inputs: [
-                    {
-                        indexed: false,
-                        internalType: "string",
-                        name: "accountId",
-                        type: "string",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "walletAddress",
-                        type: "address",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "aUsdAddress",
-                        type: "address",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "uint256",
-                        name: "amount",
-                        type: "uint256",
-                    },
-                    {
-                        indexed: false,
-                        internalType: "address",
-                        name: "spender",
-                        type: "address",
-                    },
-                ],
-                name: "SellSecurityToken",
-                type: "event",
-            },
-        ];
         this.contracts = ContractInfo.getContractInfo(TradePanelWidget.Network.Name);
     }
     subscribeToBuy(hash) {
@@ -24392,132 +25112,210 @@ let EventService$1 = class EventService {
             window.localStorage.setItem("hashes", JSON.stringify(hashes));
         }
     }
+    lmAbi = [
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "walletAddress",
+                    type: "address",
+                },
+                {
+                    indexed: false,
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                },
+                {
+                    indexed: false,
+                    internalType: "string",
+                    name: "accountId",
+                    type: "string",
+                },
+                {
+                    indexed: false,
+                    internalType: "string",
+                    name: "symbol",
+                    type: "string",
+                },
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "tokenAddress",
+                    type: "address",
+                },
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                },
+            ],
+            name: "BuyWithAUsd",
+            type: "event",
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: "string",
+                    name: "accountId",
+                    type: "string",
+                },
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "walletAddress",
+                    type: "address",
+                },
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "aUsdAddress",
+                    type: "address",
+                },
+                {
+                    indexed: false,
+                    internalType: "string",
+                    name: "symbol",
+                    type: "string",
+                },
+                {
+                    indexed: false,
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                },
+                {
+                    indexed: false,
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                },
+            ],
+            name: "SellSecurityToken",
+            type: "event",
+        },
+    ];
 };
 
 class BlockchainService extends BaseService {
+    network;
+    contracts;
     constructor() {
         super();
-        this.balanceOfAbi = [
-            {
-                inputs: [
-                    {
-                        internalType: "address",
-                        name: "account",
-                        type: "address",
-                    },
-                ],
-                name: "balanceOf",
-                outputs: [
-                    {
-                        internalType: "uint256",
-                        name: "",
-                        type: "uint256",
-                    },
-                ],
-                stateMutability: "view",
-                type: "function",
-            },
-        ];
-        this.transferAbi = ["function transfer(address to, uint amount)"];
         this.network = TradePanelWidget.Network;
         this.contracts = ContractInfo.getContractInfo(this.network.Name);
     }
-    getBalanceOf(tokenAddress, ethAddress) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            yield this.loadEther();
-            if (!TradePanelWidget.User.ether) {
-                return new BigNumber$1(0);
-            }
-            const contract = new Contract(tokenAddress, this.balanceOfAbi, TradePanelWidget.User.ether);
-            return yield contract.balanceOf(ethAddress);
-        });
+    async getBalanceOf(tokenAddress, ethAddress) {
+        await this.loadEther();
+        if (!TradePanelWidget.User.ether) {
+            return new BigNumber$1(0);
+        }
+        const contract = new Contract(tokenAddress, this.balanceOfAbi, TradePanelWidget.User.ether);
+        return await contract.balanceOf(ethAddress);
     }
-    transferInner(tokenAddress, to, qty) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            yield this.loadEther();
-            let qtyWei = parseUnits(qty.toString(), "ether");
-            console.log("transferInner", qtyWei.toString(), tokenAddress, to);
-            const contract = new Contract(tokenAddress, this.transferAbi, TradePanelWidget.User.signer);
-            let result = yield contract.transfer(to, qtyWei);
-            let eventService = new EventService$1();
-            if (tokenAddress == this.contracts.AUSD_ADDRESS) {
-                eventService.subscribeToBuy(result.hash);
-            }
-            else {
-                eventService.subscribeToSell(result.hash);
-            }
-            console.log("transfer result", result);
-            return result;
-        });
+    async transferInner(tokenAddress, to, qty) {
+        await this.loadEther();
+        let qtyWei = parseUnits(qty.toString(), "ether");
+        console.log("transferInner", qtyWei.toString(), tokenAddress, to);
+        const contract = new Contract(tokenAddress, this.transferAbi, TradePanelWidget.User.signer);
+        let result = await contract.transfer(to, qtyWei);
+        let eventService = new EventService$1();
+        if (tokenAddress == this.contracts.AUSD_ADDRESS) {
+            eventService.subscribeToBuy(result.hash);
+        }
+        else {
+            eventService.subscribeToSell(result.hash);
+        }
+        console.log("transfer result", result);
+        return result;
     }
-    loadEther() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (TradePanelWidget.User.ether)
-                return;
-            yield AuthenticateService.enableWeb3();
-        });
+    async loadEther() {
+        if (TradePanelWidget.User.ether)
+            return;
+        await AuthenticateService.enableWeb3();
     }
-    getNativeBalance() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            const balanceInWei = yield TradePanelWidget.User.ether.getBalance(TradePanelWidget.User.address);
-            const balanceInEther = formatEther(balanceInWei);
-            return balanceInEther;
-        });
+    async getNativeBalance() {
+        const balanceInWei = await TradePanelWidget.User.ether.getBalance(TradePanelWidget.User.address);
+        const balanceInEther = formatEther(balanceInWei);
+        return balanceInEther;
     }
+    balanceOfAbi = [
+        {
+            inputs: [
+                {
+                    internalType: "address",
+                    name: "account",
+                    type: "address",
+                },
+            ],
+            name: "balanceOf",
+            outputs: [
+                {
+                    internalType: "uint256",
+                    name: "",
+                    type: "uint256",
+                },
+            ],
+            stateMutability: "view",
+            type: "function",
+        },
+    ];
+    transferAbi = ["function transfer(address to, uint amount)"];
 }
 
 class Network {
+    ServerUrl = "";
+    AppId = "";
+    ChainId = 0;
+    Name = "";
+    ChainName = '';
+    NativeCurrencyName = "";
+    NativeSymbol = "";
+    NativeDecimal = 18;
+    RpcUrl = '';
+    BlockExplorer = '';
+    TestNetwork = true;
+    FaucetUrl = '';
+    BuyUrl = '';
     constructor() {
-        this.ServerUrl = "";
-        this.AppId = "";
-        this.ChainId = 0;
-        this.Name = "";
-        this.ChainName = '';
-        this.NativeCurrencyName = "";
-        this.NativeSymbol = "";
-        this.NativeDecimal = 18;
-        this.RpcUrl = '';
-        this.BlockExplorer = '';
-        this.TestNetwork = true;
-        this.FaucetUrl = '';
-        this.BuyUrl = '';
     }
     get ChainIdHex() {
         return '0x' + this.ChainId.toString(16);
     }
-    addNetworkToWallet() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            const web3 = yield AuthenticateService.enableWeb3();
-            if (!web3 || !web3.provider.request)
-                return;
-            web3.provider.request({
-                method: 'wallet_addEthereumChain',
-                params: [{
-                        chainId: '0x' + this.ChainId.toString(16),
-                        chainName: this.ChainName,
-                        nativeCurrency: {
-                            name: this.NativeCurrencyName,
-                            symbol: this.NativeSymbol,
-                            decimals: this.NativeDecimal
-                        },
-                        rpcUrls: [this.RpcUrl],
-                        blockExplorerUrls: [this.BlockExplorer]
-                    }]
-            }).catch((error) => {
-                console.log(error);
-            });
+    async addNetworkToWallet() {
+        const web3 = await AuthenticateService.enableWeb3();
+        if (!web3 || !web3.provider.request)
+            return;
+        web3.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+                    chainId: '0x' + this.ChainId.toString(16),
+                    chainName: this.ChainName,
+                    nativeCurrency: {
+                        name: this.NativeCurrencyName,
+                        symbol: this.NativeSymbol,
+                        decimals: this.NativeDecimal
+                    },
+                    rpcUrls: [this.RpcUrl],
+                    blockExplorerUrls: [this.BlockExplorer]
+                }]
+        }).catch((error) => {
+            console.log(error);
         });
     }
-    hasEnoughNativeTokens() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let blockchainService = new BlockchainService();
-            let balanceNative = yield blockchainService.getNativeBalance();
-            const balance = parseFloat(balanceNative);
-            if (balance < 0.005) {
-                return false;
-            }
-            return true;
-        });
+    async hasEnoughNativeTokens() {
+        let blockchainService = new BlockchainService();
+        let balanceNative = await blockchainService.getNativeBalance();
+        const balance = parseFloat(balanceNative);
+        if (balance < 0.005) {
+            return false;
+        }
+        return true;
     }
     ;
 }
@@ -24564,6 +25362,7 @@ class mumbaiNetwork extends TestNetwork {
 
 const networkInfos = [localhostNetwork, mumbaiNetwork];
 class NetworkInfo {
+    static instance;
     constructor() {
     }
     static getInstance() {
@@ -24666,23 +25465,20 @@ class MarketService extends BaseService {
     constructor() {
         super();
     }
-    isMarketOpen() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.get('isOpen');
-        });
+    async isMarketOpen() {
+        return await this.get('isOpen');
     }
 }
 
 class UserService extends BaseService {
+    static signedMessage = "signedMessage";
     constructor() {
         super();
     }
-    isMarketOpenOrUserOffHours() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let marketService = new MarketService();
-            let response = yield marketService.isMarketOpen();
-            return response.marketIsOpen;
-        });
+    async isMarketOpenOrUserOffHours() {
+        let marketService = new MarketService();
+        let response = await marketService.isMarketOpen();
+        return response.marketIsOpen;
     }
     getUser() {
         let cookieHelper = new CookieHelper(document);
@@ -24695,97 +25491,70 @@ class UserService extends BaseService {
         TradePanelWidget.User = new User(null, signingAddress, TradePanelWidget.Network.ChainId, null);
         return TradePanelWidget.User;
     }
-    load(address) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let response = yield fetch("/user", { body: address });
-            yield response.json();
-        });
+    async load(address) {
+        let response = await fetch("/user", { body: address });
+        await response.json();
     }
-    getAlpacaId() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let user = yield this.getUser();
-            if (user.alpacaId)
-                return user.alpacaId;
-            let result = (yield fetch(""));
-            user.alpacaId = result.alpacaId;
+    async getAlpacaId() {
+        let user = await this.getUser();
+        if (user.alpacaId)
             return user.alpacaId;
-        });
+        let result = (await fetch(""));
+        user.alpacaId = result.alpacaId;
+        return user.alpacaId;
     }
-    getAccount() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.get("account");
-        });
+    async getAccount() {
+        return await this.get("account");
     }
     getEthAddress() {
         return TradePanelWidget.User.address;
     }
-    kycActionRequired() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let kycResults = (yield this.get("kycActionRequired"));
-            return kycResults;
+    async kycActionRequired() {
+        let kycResults = (await this.get("kycActionRequired"));
+        return kycResults;
+    }
+    async updateName(given_name, middle_name, family_name) {
+        return await this.post("updateName", {
+            given_name: given_name,
+            middle_name: middle_name,
+            family_name: family_name,
         });
     }
-    updateName(given_name, middle_name, family_name) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("updateName", {
-                given_name: given_name,
-                middle_name: middle_name,
-                family_name: family_name,
-            });
+    async updateContact(data) {
+        return await this.post("updateContact", data);
+    }
+    async updateTrustedContact(data) {
+        return await this.post("updateTrustedContact", data);
+    }
+    async createAchRelationship(account_owner_name, bank_account_type, bank_account_number, bank_routing_number) {
+        return await this.post("createAchRelationship", {
+            account_owner_name,
+            bank_account_type,
+            bank_account_number,
+            bank_routing_number,
         });
     }
-    updateContact(data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("updateContact", data);
+    async getBankRelationship() {
+        return (await this.get("getBankRelationship"));
+    }
+    async getLatestTransfers(direction) {
+        return (await this.get("getTransfers", {
+            direction: direction,
+        }));
+    }
+    async createTransfer(amount, direction) {
+        return await this.post("createTransfer", {
+            amount: amount,
+            direction: direction,
         });
     }
-    updateTrustedContact(data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("updateTrustedContact", data);
-        });
+    async deleteTransfer(id) {
+        return await this.post("deleteTransfer", { id: id });
     }
-    createAchRelationship(account_owner_name, bank_account_type, bank_account_number, bank_routing_number) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("createAchRelationship", {
-                account_owner_name,
-                bank_account_type,
-                bank_account_number,
-                bank_routing_number,
-            });
-        });
-    }
-    getBankRelationship() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return (yield this.get("getBankRelationship"));
-        });
-    }
-    getLatestTransfers(direction) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return (yield this.get("getTransfers", {
-                direction: direction,
-            }));
-        });
-    }
-    createTransfer(amount, direction) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("createTransfer", {
-                amount: amount,
-                direction: direction,
-            });
-        });
-    }
-    deleteTransfer(id) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("deleteTransfer", { id: id });
-        });
-    }
-    registerWireTransferRelationship(params) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("createWireRelationship", params);
-        });
+    async registerWireTransferRelationship(params) {
+        return await this.post("createWireRelationship", params);
     }
 }
-UserService.signedMessage = "signedMessage";
 
 var UserInfoElement = "<div id=\"userMenuPanel\">\n    <a href=\"#\" id=\"userInfoAction\" aria-expanded=\"false\">\n        <img src=\"https://effigy.im/a/{{ethAddress}}.png\" width=\"24\">\n        <span id=\"user_info_ethAddress\">{{shortEthAddress}}</span>\n    </a>\n\n    <div id=\"userInfoDropdown\" class=\"d-none\">\n        <div class=\"grid account_info\">\n            <h6>Account</h6>\n            <a id=\"disconnectFromNetwork\" href=\"#\">Disconnect</a>\n\n        </div>\n        <div class=\"edit_account\">\n            <a id=\"editName\" href=\"#\">Edit name</a><br>\n            <a id=\"editContact\" href=\"#\">Edit contact info</a><br>\n            <a id=\"editTrustedContact\" href=\"#\">Edit trusted contact</a>\n        </div>\n        <hr>\n        <div class=\"grid\">\n            <div>\n                <img src=\"https://effigy.im/a/{{ethAddress}}.png\">\n            </div>\n            <div>\n                <strong class=\"d-block\"><a href=\"{{blockchainExplorer}}{{ethAddress}}\" target=\"_blank\">{{shortEthAddress}}</a></strong>\n                <br>\n                {{#if isMagic}}\n                <a href=\"#\" id=\"wallet\">Open my wallet</a>\n                {{/if}}\n                <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View\n                    positions</a>\n            </div>\n        </div>\n        <hr>\n        <div class=\"hidden\" id=\"userInfoAUsdBalance\">\n            <div class=\"grid\">\n                <div><img src=\"https://app.liminal.market/img/ausd.png\"></div>\n                <div>\n                    <strong class=\"d-block\">aUSD <span id=\"user_info_ausd_balance\"></span></strong>\n                    <a href=\"\" class=\"add_aUSD_to_wallet\">Add aUSD to wallet</a>\n                </div>\n            </div>\n            <div id=\"fund_account_options\">\n                <h6>Fund your account</h6>\n                <div class=\"grid\">\n                    <a href=\"#\" class=\"fund_account\">Fund my account</a>\n                    <!--\n                    <a href=\"#\" id=\"withdraw_from_account\">Withdraw from account</a>\n                    -->\n                </div>\n            </div>\n            <hr>\n        </div>\n        <div class=\"grid\">\n            <strong class=\"d-block\">Network</strong>\n            <small>{{networkName}}<br>\n                <!--\n                <a href=\"#\" id=\"switch_network\">Change network</a>\n                -->\n            </small>\n        </div>\n\n    </div>\n\n</div>";
 
@@ -24798,29 +25567,27 @@ class StringHelper {
 }
 
 class KycEditNameForm {
+    modal;
     constructor() {
         this.modal = new Modal();
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let kycEditNameError = document.getElementById('kycEditNameError');
-            if (kycEditNameError)
-                kycEditNameError.style.display = 'none';
-            let userService = new UserService();
-            let account = yield userService.getAccount();
-            let given_name = account.identity.given_name;
-            let middle_name = account.identity.middle_name;
-            let family_name = account.identity.family_name;
-            let template = Handlebars.compile(KycEditNameHtml);
-            let content = template({ given_name: given_name, middle_name: middle_name, family_name: family_name });
-            this.modal.showModal('Edit name', content);
-            this.bindEvents();
-        });
+    async show() {
+        let kycEditNameError = document.getElementById('kycEditNameError');
+        if (kycEditNameError)
+            kycEditNameError.style.display = 'none';
+        let userService = new UserService();
+        let account = await userService.getAccount();
+        let given_name = account.identity.given_name;
+        let middle_name = account.identity.middle_name;
+        let family_name = account.identity.family_name;
+        let template = Handlebars.compile(KycEditNameHtml);
+        let content = template({ given_name: given_name, middle_name: middle_name, family_name: family_name });
+        this.modal.showModal('Edit name', content);
+        this.bindEvents();
     }
     bindEvents() {
         let kycEditNameConfirm = document.getElementById('kycEditNameConfirm');
-        kycEditNameConfirm === null || kycEditNameConfirm === void 0 ? void 0 : kycEditNameConfirm.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
-            var _a, _b;
+        kycEditNameConfirm?.addEventListener('click', async (evt) => {
             let given_name = document.getElementById('given_name');
             document.getElementById('middle_name');
             let family_name = document.getElementById('family_name');
@@ -24839,14 +25606,13 @@ class KycEditNameForm {
                 return;
             }
             label_confirm_name.innerHTML = 'Please type in the full name "' + full_name + '" in the box below to confirm. You WILL NOT be able to change it again.';
-            (_a = document.getElementById('confirmNameFieldset')) === null || _a === void 0 ? void 0 : _a.classList.remove('hidden');
-            (_b = document.getElementById('kycEditName')) === null || _b === void 0 ? void 0 : _b.classList.add('hidden');
-        }));
+            document.getElementById('confirmNameFieldset')?.classList.remove('hidden');
+            document.getElementById('kycEditName')?.classList.add('hidden');
+        });
         let kycEditNameBack = document.getElementById('kycEditNameBack');
-        kycEditNameBack === null || kycEditNameBack === void 0 ? void 0 : kycEditNameBack.addEventListener('click', (evt) => {
-            var _a, _b;
-            (_a = document.getElementById('confirmNameFieldset')) === null || _a === void 0 ? void 0 : _a.classList.add('hidden');
-            (_b = document.getElementById('kycEditName')) === null || _b === void 0 ? void 0 : _b.classList.remove('hidden');
+        kycEditNameBack?.addEventListener('click', (evt) => {
+            document.getElementById('confirmNameFieldset')?.classList.add('hidden');
+            document.getElementById('kycEditName')?.classList.remove('hidden');
         });
         let confirm_name = document.getElementById('confirm_name');
         if (!confirm_name) {
@@ -24866,7 +25632,7 @@ class KycEditNameForm {
                 kycEditNameSave.disabled = true;
             }
         });
-        kycEditNameSave === null || kycEditNameSave === void 0 ? void 0 : kycEditNameSave.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        kycEditNameSave?.addEventListener('click', async (evt) => {
             let confirm_name = document.getElementById('confirm_name');
             if (confirm_name && confirm_name.value != this.getFullName()) {
                 alert(confirm_name.value + ' is not same as ' + this.getFullName() + '. Go over the name and make sure it is identical');
@@ -24877,7 +25643,7 @@ class KycEditNameForm {
             let family_name = document.getElementById('family_name');
             LoadingHelper.setLoading(kycEditNameSave);
             let userService = new UserService();
-            yield userService.updateName(given_name.value, middle_name.value, family_name.value)
+            await userService.updateName(given_name.value, middle_name.value, family_name.value)
                 .then((response) => {
                 if (response.message) {
                     this.showError(response.message);
@@ -24894,7 +25660,7 @@ class KycEditNameForm {
             }).finally(() => {
                 LoadingHelper.removeLoading();
             });
-        }));
+        });
     }
     showError(message) {
         let kycEditNameError = document.getElementById('kycEditNameError');
@@ -24979,39 +25745,38 @@ class FormHelper {
 }
 
 class KycEditContactForm {
+    modal;
     constructor() {
         this.modal = new Modal();
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userService = new UserService();
-            let account = yield userService.getAccount();
-            let usa = account.identity.country_of_tax_residence == 'USA';
-            let template = Handlebars.compile(KycEditContactFormHtml);
-            this.modal.showModal('Edit contact information', template({ usa: usa }));
-            let contactProperties = Object.getOwnPropertyNames(account.contact);
-            FormHelper.fillInputs(contactProperties, account.contact);
-            this.bindEvents();
-        });
+    async show() {
+        let userService = new UserService();
+        let account = await userService.getAccount();
+        let usa = account.identity.country_of_tax_residence == 'USA';
+        let template = Handlebars.compile(KycEditContactFormHtml);
+        this.modal.showModal('Edit contact information', template({ usa: usa }));
+        let contactProperties = Object.getOwnPropertyNames(account.contact);
+        FormHelper.fillInputs(contactProperties, account.contact);
+        this.bindEvents();
     }
     bindEvents() {
         let kycEditContactSave = document.getElementById('kycEditContactSave');
-        kycEditContactSave === null || kycEditContactSave === void 0 ? void 0 : kycEditContactSave.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        kycEditContactSave?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             if (!this.validate())
                 return;
             LoadingHelper.setLoading(kycEditContactSave);
             let data = FormHelper.getParams('#kycEditContactForm');
             let userService = new UserService();
-            yield userService.updateContact(data).then((response) => {
+            await userService.updateContact(data).then((response) => {
                 if (response.message) {
                     this.showError(response.message);
                     return;
                 }
                 let accountInfo = response;
                 let email_address = document.getElementById('email_address');
-                if (accountInfo.contact.email_address != (email_address === null || email_address === void 0 ? void 0 : email_address.value)) {
-                    this.showError('Email was not changed. The email ' + (email_address === null || email_address === void 0 ? void 0 : email_address.value) + ' is already registered under different account.');
+                if (accountInfo.contact.email_address != email_address?.value) {
+                    this.showError('Email was not changed. The email ' + email_address?.value + ' is already registered under different account.');
                     return;
                 }
                 this.modal.hideModal();
@@ -25025,7 +25790,7 @@ class KycEditContactForm {
             }).finally(() => {
                 LoadingHelper.removeLoading();
             });
-        }));
+        });
     }
     showError(message) {
         let kycEditNameError = document.getElementById('kycEditContactError');
@@ -25055,319 +25820,318 @@ class KycEditContactForm {
 var KycEditTrustedContactHtml = "<fieldset class=\"kycTrustedContact\">\n    <div class=\"warningBar\">\n        <strong>Warning</strong><br>\n        After you change this information a new KYC process will be started, and you will NOT be able to do any\n        trades until it has been approved.\n    </div>\n\n    <form id=\"kycTrustedContactForm\" method=\"post\">\n        <div class=\"explain\">\n            A trusted contact is a person you authorize your financial firm to contact in limited circumstances,\n            such as if there is a concern about activity in your account and they have been unable to get in touch with\n            you.\n            <br><br>\n            A trusted contact may be a family member, attorney, accountant or another third-party who you believe would\n            respect your privacy and know how to handle the responsibility.\n            The trusted person should be 18 years old or older.\n        </div>\n        <div>\n            <label for=\"given_name\">Legal given name of trusted contact</label>\n            <input required id=\"given_name\" name=\"given_name\">\n        </div>\n        <div>\n            <label for=\"family_name\">Legal family name of trusted contact</label>\n            <input required id=\"family_name\" name=\"family_name\">\n        </div>\n        <div>\n            If you fill in name, you are required to fill in one of the following, email, phone or address\n        </div>\n        <div class=\"input_error\" id=\"contact_missing_info\"></div>\n        <div>\n            <label for=\"email_address\">Email of trusted contact</label>\n            <input id=\"email_address\" type=\"email\" name=\"email_address\">\n        </div>\n        <div>\n            <label for=\"phone_number\">Phone of trusted contact</label>\n            <input id=\"phone_number\" type=\"tel\" name=\"phone_number\">\n        </div>\n        <div>\n            <label for=\"street_address\">Address of trusted contact</label>\n            <input id=\"street_address\" name=\"street_address\">\n        </div>\n        <div>\n            <label for=\"city\">City of trusted contact</label>\n            <input id=\"city\" name=\"city\">\n        </div>\n        <div>\n            <label for=\"state\">State of trusted contact</label>\n            <input id=\"state\" name=\"state\">\n        </div>\n        <div>\n            <label for=\"postal_code\">Postal code of trusted contact</label>\n            <input id=\"postal_code\" name=\"postal_code\">\n        </div>\n        <div>\n            <label for=\"country\">Country of trusted contact</label>\n            <select required id=\"country\" required name=\"country\">\n                <option value=\"\"></option>\n                {{#each countries}}\n                <option value=\"{{code}}\">{{name}}</option>\n                {{/each}}\n            </select>\n        </div>\n        <div class=\"input_error\" id=\"kycEditNameError\"></div>\n        <div class=\"buttons\">\n            <button type=\"submit\" id=\"trustedContactSubmit\">Submit</button>\n        </div>\n    </form>\n</fieldset>";
 
 class CountryHelper {
+    static Countries = [
+        { "name": "United States of America", "code": "USA" },
+        { "name": "United Kingdom", "code": "GBR" },
+        { "name": "Afghanistan", "code": "AFG" }, { "name": "Albania", "code": "ALB" }, {
+            "name": "Algeria",
+            "code": "DZA"
+        }, { "name": "American Samoa", "code": "ASM" }, { "name": "Andorra", "code": "AND" }, {
+            "name": "Angola",
+            "code": "AGO"
+        }, { "name": "Anguilla", "code": "AIA" }, { "name": "Antarctica", "code": "ATA" }, {
+            "name": "Antigua and Barbuda",
+            "code": "ATG"
+        }, { "name": "Argentina", "code": "ARG" }, { "name": "Armenia", "code": "ARM" }, {
+            "name": "Aruba",
+            "code": "ABW"
+        }, { "name": "Australia", "code": "AUS" }, { "name": "Austria", "code": "AUT" }, {
+            "name": "Azerbaijan",
+            "code": "AZE"
+        }, { "name": "Åland Islands", "code": "ALA" }, { "name": "Bahamas", "code": "BHS" }, {
+            "name": "Bahrain",
+            "code": "BHR"
+        }, { "name": "Bangladesh", "code": "BGD" }, { "name": "Barbados", "code": "BRB" }, {
+            "name": "Belarus",
+            "code": "BLR"
+        }, { "name": "Belgium", "code": "BEL" }, { "name": "Belize", "code": "BLZ" }, {
+            "name": "Benin",
+            "code": "BEN"
+        }, { "name": "Bermuda", "code": "BMU" }, {
+            "name": "Bhutan",
+            "code": "BTN"
+        }, { "name": "Bolivia (Plurinational State of)", "code": "BOL" }, {
+            "name": "Bonaire, Sint Eustatius and Saba",
+            "code": "BES"
+        }, { "name": "Bosnia and Herzegovina", "code": "BIH" }, {
+            "name": "Botswana",
+            "code": "BWA"
+        }, { "name": "Bouvet Island", "code": "BVT" }, {
+            "name": "Brazil",
+            "code": "BRA"
+        }, { "name": "British Indian Ocean Territory", "code": "IOT" }, {
+            "name": "Brunei Darussalam",
+            "code": "BRN"
+        }, { "name": "Bulgaria", "code": "BGR" }, { "name": "Burkina Faso", "code": "BFA" }, {
+            "name": "Burundi",
+            "code": "BDI"
+        }, { "name": "Cabo Verde", "code": "CPV" }, { "name": "Cambodia", "code": "KHM" }, {
+            "name": "Cameroon",
+            "code": "CMR"
+        }, { "name": "Canada", "code": "CAN" }, {
+            "name": "Cayman Islands",
+            "code": "CYM"
+        }, { "name": "Central African Republic", "code": "CAF" }, { "name": "Chad", "code": "TCD" }, {
+            "name": "Chile",
+            "code": "CHL"
+        }, { "name": "China", "code": "CHN" }, {
+            "name": "Christmas Island",
+            "code": "CXR"
+        }, { "name": "Cocos (Keeling) Islands", "code": "CCK" }, { "name": "Colombia", "code": "COL" }, {
+            "name": "Comoros",
+            "code": "COM"
+        }, { "name": "Congo (the Democratic Republic of the)", "code": "COD" }, {
+            "name": "Congo",
+            "code": "COG"
+        }, { "name": "Cook Islands", "code": "COK" }, { "name": "Costa Rica", "code": "CRI" }, {
+            "name": "Croatia",
+            "code": "HRV"
+        }, { "name": "Cuba", "code": "CUB" }, { "name": "Curaçao", "code": "CUW" }, {
+            "name": "Cyprus",
+            "code": "CYP"
+        }, { "name": "Czechia", "code": "CZE" }, { "name": "Côte d'Ivoire", "code": "CIV" }, {
+            "name": "Denmark",
+            "code": "DNK"
+        }, { "name": "Djibouti", "code": "DJI" }, { "name": "Dominica", "code": "DMA" }, {
+            "name": "Dominican Republic",
+            "code": "DOM"
+        }, { "name": "Ecuador", "code": "ECU" }, { "name": "Egypt", "code": "EGY" }, {
+            "name": "El Salvador",
+            "code": "SLV"
+        }, { "name": "Equatorial Guinea", "code": "GNQ" }, { "name": "Eritrea", "code": "ERI" }, {
+            "name": "Estonia",
+            "code": "EST"
+        }, { "name": "Eswatini", "code": "SWZ" }, {
+            "name": "Ethiopia",
+            "code": "ETH"
+        }, { "name": "Falkland Islands [Malvinas]", "code": "FLK" }, {
+            "name": "Faroe Islands",
+            "code": "FRO"
+        }, { "name": "Fiji", "code": "FJI" }, { "name": "Finland", "code": "FIN" }, {
+            "name": "France",
+            "code": "FRA"
+        }, { "name": "French Guiana", "code": "GUF" }, {
+            "name": "French Polynesia",
+            "code": "PYF"
+        }, { "name": "French Southern Territories", "code": "ATF" }, { "name": "Gabon", "code": "GAB" }, {
+            "name": "Gambia",
+            "code": "GMB"
+        }, { "name": "Georgia", "code": "GEO" }, { "name": "Germany", "code": "DEU" }, {
+            "name": "Ghana",
+            "code": "GHA"
+        }, { "name": "Gibraltar", "code": "GIB" }, { "name": "Greece", "code": "GRC" }, {
+            "name": "Greenland",
+            "code": "GRL"
+        }, { "name": "Grenada", "code": "GRD" }, { "name": "Guadeloupe", "code": "GLP" }, {
+            "name": "Guam",
+            "code": "GUM"
+        }, { "name": "Guatemala", "code": "GTM" }, { "name": "Guernsey", "code": "GGY" }, {
+            "name": "Guinea",
+            "code": "GIN"
+        }, { "name": "Guinea-Bissau", "code": "GNB" }, { "name": "Guyana", "code": "GUY" }, {
+            "name": "Haiti",
+            "code": "HTI"
+        }, { "name": "Heard Island and McDonald Islands", "code": "HMD" }, {
+            "name": "Holy See",
+            "code": "VAT"
+        }, { "name": "Honduras", "code": "HND" }, { "name": "Hong Kong", "code": "HKG" }, {
+            "name": "Hungary",
+            "code": "HUN"
+        }, { "name": "Iceland", "code": "ISL" }, { "name": "India", "code": "IND" }, {
+            "name": "Indonesia",
+            "code": "IDN"
+        }, { "name": "Iran (Islamic Republic of)", "code": "IRN" }, { "name": "Iraq", "code": "IRQ" }, {
+            "name": "Ireland",
+            "code": "IRL"
+        }, { "name": "Isle of Man", "code": "IMN" }, { "name": "Israel", "code": "ISR" }, {
+            "name": "Italy",
+            "code": "ITA"
+        }, { "name": "Jamaica", "code": "JAM" }, { "name": "Japan", "code": "JPN" }, {
+            "name": "Jersey",
+            "code": "JEY"
+        }, { "name": "Jordan", "code": "JOR" }, { "name": "Kazakhstan", "code": "KAZ" }, {
+            "name": "Kenya",
+            "code": "KEN"
+        }, { "name": "Kiribati", "code": "KIR" }, {
+            "name": "Korea (the Democratic People's Republic of)",
+            "code": "PRK"
+        }, { "name": "Korea (the Republic of)", "code": "KOR" }, { "name": "Kuwait", "code": "KWT" }, {
+            "name": "Kyrgyzstan",
+            "code": "KGZ"
+        }, { "name": "Lao People's Democratic Republic", "code": "LAO" }, {
+            "name": "Latvia",
+            "code": "LVA"
+        }, { "name": "Lebanon", "code": "LBN" }, { "name": "Lesotho", "code": "LSO" }, {
+            "name": "Liberia",
+            "code": "LBR"
+        }, { "name": "Libya", "code": "LBY" }, { "name": "Liechtenstein", "code": "LIE" }, {
+            "name": "Lithuania",
+            "code": "LTU"
+        }, { "name": "Luxembourg", "code": "LUX" }, { "name": "Macao", "code": "MAC" }, {
+            "name": "Madagascar",
+            "code": "MDG"
+        }, { "name": "Malawi", "code": "MWI" }, { "name": "Malaysia", "code": "MYS" }, {
+            "name": "Maldives",
+            "code": "MDV"
+        }, { "name": "Mali", "code": "MLI" }, { "name": "Malta", "code": "MLT" }, {
+            "name": "Marshall Islands",
+            "code": "MHL"
+        }, { "name": "Martinique", "code": "MTQ" }, { "name": "Mauritania", "code": "MRT" }, {
+            "name": "Mauritius",
+            "code": "MUS"
+        }, { "name": "Mayotte", "code": "MYT" }, {
+            "name": "Mexico",
+            "code": "MEX"
+        }, { "name": "Micronesia (Federated States of)", "code": "FSM" }, {
+            "name": "Moldova (the Republic of)",
+            "code": "MDA"
+        }, { "name": "Monaco", "code": "MCO" }, { "name": "Mongolia", "code": "MNG" }, {
+            "name": "Montenegro",
+            "code": "MNE"
+        }, { "name": "Montserrat", "code": "MSR" }, { "name": "Morocco", "code": "MAR" }, {
+            "name": "Mozambique",
+            "code": "MOZ"
+        }, { "name": "Myanmar", "code": "MMR" }, { "name": "Namibia", "code": "NAM" }, {
+            "name": "Nauru",
+            "code": "NRU"
+        }, { "name": "Nepal", "code": "NPL" }, { "name": "Netherlands", "code": "NLD" }, {
+            "name": "New Caledonia",
+            "code": "NCL"
+        }, { "name": "New Zealand", "code": "NZL" }, { "name": "Nicaragua", "code": "NIC" }, {
+            "name": "Niger",
+            "code": "NER"
+        }, { "name": "Nigeria", "code": "NGA" }, { "name": "Niue", "code": "NIU" }, {
+            "name": "Norfolk Island",
+            "code": "NFK"
+        }, { "name": "Northern Mariana Islands", "code": "MNP" }, { "name": "Norway", "code": "NOR" }, {
+            "name": "Oman",
+            "code": "OMN"
+        }, { "name": "Pakistan", "code": "PAK" }, { "name": "Palau", "code": "PLW" }, {
+            "name": "Palestine, State of",
+            "code": "PSE"
+        }, { "name": "Panama", "code": "PAN" }, { "name": "Papua New Guinea", "code": "PNG" }, {
+            "name": "Paraguay",
+            "code": "PRY"
+        }, { "name": "Peru", "code": "PER" }, { "name": "Philippines", "code": "PHL" }, {
+            "name": "Pitcairn",
+            "code": "PCN"
+        }, { "name": "Poland", "code": "POL" }, { "name": "Portugal", "code": "PRT" }, {
+            "name": "Puerto Rico",
+            "code": "PRI"
+        }, { "name": "Qatar", "code": "QAT" }, { "name": "Republic of North Macedonia", "code": "MKD" }, {
+            "name": "Romania",
+            "code": "ROU"
+        }, { "name": "Russian Federation", "code": "RUS" }, { "name": "Rwanda", "code": "RWA" }, {
+            "name": "Réunion",
+            "code": "REU"
+        }, { "name": "Saint Barthélemy", "code": "BLM" }, {
+            "name": "Saint Helena, Ascension and Tristan da Cunha",
+            "code": "SHN"
+        }, { "name": "Saint Kitts and Nevis", "code": "KNA" }, {
+            "name": "Saint Lucia",
+            "code": "LCA"
+        }, { "name": "Saint Martin (French part)", "code": "MAF" }, {
+            "name": "Saint Pierre and Miquelon",
+            "code": "SPM"
+        }, { "name": "Saint Vincent and the Grenadines", "code": "VCT" }, {
+            "name": "Samoa",
+            "code": "WSM"
+        }, { "name": "San Marino", "code": "SMR" }, {
+            "name": "Sao Tome and Principe",
+            "code": "STP"
+        }, { "name": "Saudi Arabia", "code": "SAU" }, { "name": "Senegal", "code": "SEN" }, {
+            "name": "Serbia",
+            "code": "SRB"
+        }, { "name": "Seychelles", "code": "SYC" }, { "name": "Sierra Leone", "code": "SLE" }, {
+            "name": "Singapore",
+            "code": "SGP"
+        }, { "name": "Sint Maarten (Dutch part)", "code": "SXM" }, {
+            "name": "Slovakia",
+            "code": "SVK"
+        }, { "name": "Slovenia", "code": "SVN" }, { "name": "Solomon Islands", "code": "SLB" }, {
+            "name": "Somalia",
+            "code": "SOM"
+        }, { "name": "South Africa", "code": "ZAF" }, {
+            "name": "South Georgia and the South Sandwich Islands",
+            "code": "SGS"
+        }, { "name": "South Sudan", "code": "SSD" }, { "name": "Spain", "code": "ESP" }, {
+            "name": "Sri Lanka",
+            "code": "LKA"
+        }, { "name": "Sudan", "code": "SDN" }, { "name": "Suriname", "code": "SUR" }, {
+            "name": "Svalbard and Jan Mayen",
+            "code": "SJM"
+        }, { "name": "Sweden", "code": "SWE" }, { "name": "Switzerland", "code": "CHE" }, {
+            "name": "Syrian Arab Republic",
+            "code": "SYR"
+        }, { "name": "Taiwan (Province of China)", "code": "TWN" }, {
+            "name": "Tajikistan",
+            "code": "TJK"
+        }, { "name": "Tanzania, United Republic of", "code": "TZA" }, {
+            "name": "Thailand",
+            "code": "THA"
+        }, { "name": "Timor-Leste", "code": "TLS" }, { "name": "Togo", "code": "TGO" }, {
+            "name": "Tokelau",
+            "code": "TKL"
+        }, { "name": "Tonga", "code": "TON" }, { "name": "Trinidad and Tobago", "code": "TTO" }, {
+            "name": "Tunisia",
+            "code": "TUN"
+        }, { "name": "Turkey", "code": "TUR" }, {
+            "name": "Turkmenistan",
+            "code": "TKM"
+        }, { "name": "Turks and Caicos Islands", "code": "TCA" }, { "name": "Tuvalu", "code": "TUV" }, {
+            "name": "Uganda",
+            "code": "UGA"
+        }, { "name": "Ukraine", "code": "UKR" }, {
+            "name": "United Arab Emirates",
+            "code": "ARE"
+        }, {
+            "name": "United Kingdom of Great Britain and Northern Ireland",
+            "code": "GBR"
+        }, { "name": "United States Minor Outlying Islands", "code": "UMI" }, {
+            "name": "United States of America",
+            "code": "USA"
+        }, { "name": "Uruguay", "code": "URY" }, { "name": "Uzbekistan", "code": "UZB" }, {
+            "name": "Vanuatu",
+            "code": "VUT"
+        }, { "name": "Venezuela (Bolivarian Republic of)", "code": "VEN" }, {
+            "name": "Viet Nam",
+            "code": "VNM"
+        }, { "name": "Virgin Islands (British)", "code": "VGB" }, {
+            "name": "Virgin Islands (U.S.)",
+            "code": "VIR"
+        }, { "name": "Wallis and Futuna", "code": "WLF" }, { "name": "Western Sahara", "code": "ESH" }, {
+            "name": "Yemen",
+            "code": "YEM"
+        }, { "name": "Zambia", "code": "ZMB" }, { "name": "Zimbabwe", "code": "ZWE" }
+    ];
 }
-CountryHelper.Countries = [
-    { "name": "United States of America", "code": "USA" },
-    { "name": "United Kingdom", "code": "GBR" },
-    { "name": "Afghanistan", "code": "AFG" }, { "name": "Albania", "code": "ALB" }, {
-        "name": "Algeria",
-        "code": "DZA"
-    }, { "name": "American Samoa", "code": "ASM" }, { "name": "Andorra", "code": "AND" }, {
-        "name": "Angola",
-        "code": "AGO"
-    }, { "name": "Anguilla", "code": "AIA" }, { "name": "Antarctica", "code": "ATA" }, {
-        "name": "Antigua and Barbuda",
-        "code": "ATG"
-    }, { "name": "Argentina", "code": "ARG" }, { "name": "Armenia", "code": "ARM" }, {
-        "name": "Aruba",
-        "code": "ABW"
-    }, { "name": "Australia", "code": "AUS" }, { "name": "Austria", "code": "AUT" }, {
-        "name": "Azerbaijan",
-        "code": "AZE"
-    }, { "name": "Åland Islands", "code": "ALA" }, { "name": "Bahamas", "code": "BHS" }, {
-        "name": "Bahrain",
-        "code": "BHR"
-    }, { "name": "Bangladesh", "code": "BGD" }, { "name": "Barbados", "code": "BRB" }, {
-        "name": "Belarus",
-        "code": "BLR"
-    }, { "name": "Belgium", "code": "BEL" }, { "name": "Belize", "code": "BLZ" }, {
-        "name": "Benin",
-        "code": "BEN"
-    }, { "name": "Bermuda", "code": "BMU" }, {
-        "name": "Bhutan",
-        "code": "BTN"
-    }, { "name": "Bolivia (Plurinational State of)", "code": "BOL" }, {
-        "name": "Bonaire, Sint Eustatius and Saba",
-        "code": "BES"
-    }, { "name": "Bosnia and Herzegovina", "code": "BIH" }, {
-        "name": "Botswana",
-        "code": "BWA"
-    }, { "name": "Bouvet Island", "code": "BVT" }, {
-        "name": "Brazil",
-        "code": "BRA"
-    }, { "name": "British Indian Ocean Territory", "code": "IOT" }, {
-        "name": "Brunei Darussalam",
-        "code": "BRN"
-    }, { "name": "Bulgaria", "code": "BGR" }, { "name": "Burkina Faso", "code": "BFA" }, {
-        "name": "Burundi",
-        "code": "BDI"
-    }, { "name": "Cabo Verde", "code": "CPV" }, { "name": "Cambodia", "code": "KHM" }, {
-        "name": "Cameroon",
-        "code": "CMR"
-    }, { "name": "Canada", "code": "CAN" }, {
-        "name": "Cayman Islands",
-        "code": "CYM"
-    }, { "name": "Central African Republic", "code": "CAF" }, { "name": "Chad", "code": "TCD" }, {
-        "name": "Chile",
-        "code": "CHL"
-    }, { "name": "China", "code": "CHN" }, {
-        "name": "Christmas Island",
-        "code": "CXR"
-    }, { "name": "Cocos (Keeling) Islands", "code": "CCK" }, { "name": "Colombia", "code": "COL" }, {
-        "name": "Comoros",
-        "code": "COM"
-    }, { "name": "Congo (the Democratic Republic of the)", "code": "COD" }, {
-        "name": "Congo",
-        "code": "COG"
-    }, { "name": "Cook Islands", "code": "COK" }, { "name": "Costa Rica", "code": "CRI" }, {
-        "name": "Croatia",
-        "code": "HRV"
-    }, { "name": "Cuba", "code": "CUB" }, { "name": "Curaçao", "code": "CUW" }, {
-        "name": "Cyprus",
-        "code": "CYP"
-    }, { "name": "Czechia", "code": "CZE" }, { "name": "Côte d'Ivoire", "code": "CIV" }, {
-        "name": "Denmark",
-        "code": "DNK"
-    }, { "name": "Djibouti", "code": "DJI" }, { "name": "Dominica", "code": "DMA" }, {
-        "name": "Dominican Republic",
-        "code": "DOM"
-    }, { "name": "Ecuador", "code": "ECU" }, { "name": "Egypt", "code": "EGY" }, {
-        "name": "El Salvador",
-        "code": "SLV"
-    }, { "name": "Equatorial Guinea", "code": "GNQ" }, { "name": "Eritrea", "code": "ERI" }, {
-        "name": "Estonia",
-        "code": "EST"
-    }, { "name": "Eswatini", "code": "SWZ" }, {
-        "name": "Ethiopia",
-        "code": "ETH"
-    }, { "name": "Falkland Islands [Malvinas]", "code": "FLK" }, {
-        "name": "Faroe Islands",
-        "code": "FRO"
-    }, { "name": "Fiji", "code": "FJI" }, { "name": "Finland", "code": "FIN" }, {
-        "name": "France",
-        "code": "FRA"
-    }, { "name": "French Guiana", "code": "GUF" }, {
-        "name": "French Polynesia",
-        "code": "PYF"
-    }, { "name": "French Southern Territories", "code": "ATF" }, { "name": "Gabon", "code": "GAB" }, {
-        "name": "Gambia",
-        "code": "GMB"
-    }, { "name": "Georgia", "code": "GEO" }, { "name": "Germany", "code": "DEU" }, {
-        "name": "Ghana",
-        "code": "GHA"
-    }, { "name": "Gibraltar", "code": "GIB" }, { "name": "Greece", "code": "GRC" }, {
-        "name": "Greenland",
-        "code": "GRL"
-    }, { "name": "Grenada", "code": "GRD" }, { "name": "Guadeloupe", "code": "GLP" }, {
-        "name": "Guam",
-        "code": "GUM"
-    }, { "name": "Guatemala", "code": "GTM" }, { "name": "Guernsey", "code": "GGY" }, {
-        "name": "Guinea",
-        "code": "GIN"
-    }, { "name": "Guinea-Bissau", "code": "GNB" }, { "name": "Guyana", "code": "GUY" }, {
-        "name": "Haiti",
-        "code": "HTI"
-    }, { "name": "Heard Island and McDonald Islands", "code": "HMD" }, {
-        "name": "Holy See",
-        "code": "VAT"
-    }, { "name": "Honduras", "code": "HND" }, { "name": "Hong Kong", "code": "HKG" }, {
-        "name": "Hungary",
-        "code": "HUN"
-    }, { "name": "Iceland", "code": "ISL" }, { "name": "India", "code": "IND" }, {
-        "name": "Indonesia",
-        "code": "IDN"
-    }, { "name": "Iran (Islamic Republic of)", "code": "IRN" }, { "name": "Iraq", "code": "IRQ" }, {
-        "name": "Ireland",
-        "code": "IRL"
-    }, { "name": "Isle of Man", "code": "IMN" }, { "name": "Israel", "code": "ISR" }, {
-        "name": "Italy",
-        "code": "ITA"
-    }, { "name": "Jamaica", "code": "JAM" }, { "name": "Japan", "code": "JPN" }, {
-        "name": "Jersey",
-        "code": "JEY"
-    }, { "name": "Jordan", "code": "JOR" }, { "name": "Kazakhstan", "code": "KAZ" }, {
-        "name": "Kenya",
-        "code": "KEN"
-    }, { "name": "Kiribati", "code": "KIR" }, {
-        "name": "Korea (the Democratic People's Republic of)",
-        "code": "PRK"
-    }, { "name": "Korea (the Republic of)", "code": "KOR" }, { "name": "Kuwait", "code": "KWT" }, {
-        "name": "Kyrgyzstan",
-        "code": "KGZ"
-    }, { "name": "Lao People's Democratic Republic", "code": "LAO" }, {
-        "name": "Latvia",
-        "code": "LVA"
-    }, { "name": "Lebanon", "code": "LBN" }, { "name": "Lesotho", "code": "LSO" }, {
-        "name": "Liberia",
-        "code": "LBR"
-    }, { "name": "Libya", "code": "LBY" }, { "name": "Liechtenstein", "code": "LIE" }, {
-        "name": "Lithuania",
-        "code": "LTU"
-    }, { "name": "Luxembourg", "code": "LUX" }, { "name": "Macao", "code": "MAC" }, {
-        "name": "Madagascar",
-        "code": "MDG"
-    }, { "name": "Malawi", "code": "MWI" }, { "name": "Malaysia", "code": "MYS" }, {
-        "name": "Maldives",
-        "code": "MDV"
-    }, { "name": "Mali", "code": "MLI" }, { "name": "Malta", "code": "MLT" }, {
-        "name": "Marshall Islands",
-        "code": "MHL"
-    }, { "name": "Martinique", "code": "MTQ" }, { "name": "Mauritania", "code": "MRT" }, {
-        "name": "Mauritius",
-        "code": "MUS"
-    }, { "name": "Mayotte", "code": "MYT" }, {
-        "name": "Mexico",
-        "code": "MEX"
-    }, { "name": "Micronesia (Federated States of)", "code": "FSM" }, {
-        "name": "Moldova (the Republic of)",
-        "code": "MDA"
-    }, { "name": "Monaco", "code": "MCO" }, { "name": "Mongolia", "code": "MNG" }, {
-        "name": "Montenegro",
-        "code": "MNE"
-    }, { "name": "Montserrat", "code": "MSR" }, { "name": "Morocco", "code": "MAR" }, {
-        "name": "Mozambique",
-        "code": "MOZ"
-    }, { "name": "Myanmar", "code": "MMR" }, { "name": "Namibia", "code": "NAM" }, {
-        "name": "Nauru",
-        "code": "NRU"
-    }, { "name": "Nepal", "code": "NPL" }, { "name": "Netherlands", "code": "NLD" }, {
-        "name": "New Caledonia",
-        "code": "NCL"
-    }, { "name": "New Zealand", "code": "NZL" }, { "name": "Nicaragua", "code": "NIC" }, {
-        "name": "Niger",
-        "code": "NER"
-    }, { "name": "Nigeria", "code": "NGA" }, { "name": "Niue", "code": "NIU" }, {
-        "name": "Norfolk Island",
-        "code": "NFK"
-    }, { "name": "Northern Mariana Islands", "code": "MNP" }, { "name": "Norway", "code": "NOR" }, {
-        "name": "Oman",
-        "code": "OMN"
-    }, { "name": "Pakistan", "code": "PAK" }, { "name": "Palau", "code": "PLW" }, {
-        "name": "Palestine, State of",
-        "code": "PSE"
-    }, { "name": "Panama", "code": "PAN" }, { "name": "Papua New Guinea", "code": "PNG" }, {
-        "name": "Paraguay",
-        "code": "PRY"
-    }, { "name": "Peru", "code": "PER" }, { "name": "Philippines", "code": "PHL" }, {
-        "name": "Pitcairn",
-        "code": "PCN"
-    }, { "name": "Poland", "code": "POL" }, { "name": "Portugal", "code": "PRT" }, {
-        "name": "Puerto Rico",
-        "code": "PRI"
-    }, { "name": "Qatar", "code": "QAT" }, { "name": "Republic of North Macedonia", "code": "MKD" }, {
-        "name": "Romania",
-        "code": "ROU"
-    }, { "name": "Russian Federation", "code": "RUS" }, { "name": "Rwanda", "code": "RWA" }, {
-        "name": "Réunion",
-        "code": "REU"
-    }, { "name": "Saint Barthélemy", "code": "BLM" }, {
-        "name": "Saint Helena, Ascension and Tristan da Cunha",
-        "code": "SHN"
-    }, { "name": "Saint Kitts and Nevis", "code": "KNA" }, {
-        "name": "Saint Lucia",
-        "code": "LCA"
-    }, { "name": "Saint Martin (French part)", "code": "MAF" }, {
-        "name": "Saint Pierre and Miquelon",
-        "code": "SPM"
-    }, { "name": "Saint Vincent and the Grenadines", "code": "VCT" }, {
-        "name": "Samoa",
-        "code": "WSM"
-    }, { "name": "San Marino", "code": "SMR" }, {
-        "name": "Sao Tome and Principe",
-        "code": "STP"
-    }, { "name": "Saudi Arabia", "code": "SAU" }, { "name": "Senegal", "code": "SEN" }, {
-        "name": "Serbia",
-        "code": "SRB"
-    }, { "name": "Seychelles", "code": "SYC" }, { "name": "Sierra Leone", "code": "SLE" }, {
-        "name": "Singapore",
-        "code": "SGP"
-    }, { "name": "Sint Maarten (Dutch part)", "code": "SXM" }, {
-        "name": "Slovakia",
-        "code": "SVK"
-    }, { "name": "Slovenia", "code": "SVN" }, { "name": "Solomon Islands", "code": "SLB" }, {
-        "name": "Somalia",
-        "code": "SOM"
-    }, { "name": "South Africa", "code": "ZAF" }, {
-        "name": "South Georgia and the South Sandwich Islands",
-        "code": "SGS"
-    }, { "name": "South Sudan", "code": "SSD" }, { "name": "Spain", "code": "ESP" }, {
-        "name": "Sri Lanka",
-        "code": "LKA"
-    }, { "name": "Sudan", "code": "SDN" }, { "name": "Suriname", "code": "SUR" }, {
-        "name": "Svalbard and Jan Mayen",
-        "code": "SJM"
-    }, { "name": "Sweden", "code": "SWE" }, { "name": "Switzerland", "code": "CHE" }, {
-        "name": "Syrian Arab Republic",
-        "code": "SYR"
-    }, { "name": "Taiwan (Province of China)", "code": "TWN" }, {
-        "name": "Tajikistan",
-        "code": "TJK"
-    }, { "name": "Tanzania, United Republic of", "code": "TZA" }, {
-        "name": "Thailand",
-        "code": "THA"
-    }, { "name": "Timor-Leste", "code": "TLS" }, { "name": "Togo", "code": "TGO" }, {
-        "name": "Tokelau",
-        "code": "TKL"
-    }, { "name": "Tonga", "code": "TON" }, { "name": "Trinidad and Tobago", "code": "TTO" }, {
-        "name": "Tunisia",
-        "code": "TUN"
-    }, { "name": "Turkey", "code": "TUR" }, {
-        "name": "Turkmenistan",
-        "code": "TKM"
-    }, { "name": "Turks and Caicos Islands", "code": "TCA" }, { "name": "Tuvalu", "code": "TUV" }, {
-        "name": "Uganda",
-        "code": "UGA"
-    }, { "name": "Ukraine", "code": "UKR" }, {
-        "name": "United Arab Emirates",
-        "code": "ARE"
-    }, {
-        "name": "United Kingdom of Great Britain and Northern Ireland",
-        "code": "GBR"
-    }, { "name": "United States Minor Outlying Islands", "code": "UMI" }, {
-        "name": "United States of America",
-        "code": "USA"
-    }, { "name": "Uruguay", "code": "URY" }, { "name": "Uzbekistan", "code": "UZB" }, {
-        "name": "Vanuatu",
-        "code": "VUT"
-    }, { "name": "Venezuela (Bolivarian Republic of)", "code": "VEN" }, {
-        "name": "Viet Nam",
-        "code": "VNM"
-    }, { "name": "Virgin Islands (British)", "code": "VGB" }, {
-        "name": "Virgin Islands (U.S.)",
-        "code": "VIR"
-    }, { "name": "Wallis and Futuna", "code": "WLF" }, { "name": "Western Sahara", "code": "ESH" }, {
-        "name": "Yemen",
-        "code": "YEM"
-    }, { "name": "Zambia", "code": "ZMB" }, { "name": "Zimbabwe", "code": "ZWE" }
-];
 
 class KycEditTrustedContact {
+    modal;
     constructor() {
         this.modal = new Modal();
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userService = new UserService();
-            let account = yield userService.getAccount();
-            let template = Handlebars.compile(KycEditTrustedContactHtml);
-            this.modal.showModal('Edit trusted contact', template({ countries: CountryHelper.Countries }));
-            if (account.trusted_contact) {
-                let contactProperties = Object.getOwnPropertyNames(account.trusted_contact);
-                FormHelper.fillInputs(contactProperties, account.trusted_contact);
-            }
-            this.bindEvents();
-        });
+    async show() {
+        let userService = new UserService();
+        let account = await userService.getAccount();
+        let template = Handlebars.compile(KycEditTrustedContactHtml);
+        this.modal.showModal('Edit trusted contact', template({ countries: CountryHelper.Countries }));
+        if (account.trusted_contact) {
+            let contactProperties = Object.getOwnPropertyNames(account.trusted_contact);
+            FormHelper.fillInputs(contactProperties, account.trusted_contact);
+        }
+        this.bindEvents();
     }
     bindEvents() {
         let trustedContactSubmit = document.getElementById('trustedContactSubmit');
-        trustedContactSubmit === null || trustedContactSubmit === void 0 ? void 0 : trustedContactSubmit.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        trustedContactSubmit?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             if (!FormHelper.validate('#kycTrustedContactForm'))
                 return;
             LoadingHelper.setLoading(trustedContactSubmit);
             let params = FormHelper.getParams('#kycTrustedContactForm');
             let userService = new UserService();
-            yield userService.updateTrustedContact(params).then((response) => {
+            await userService.updateTrustedContact(params).then((response) => {
                 if (response.message) {
                     this.showError(response.message);
                     return;
@@ -25383,7 +26147,7 @@ class KycEditTrustedContact {
             }).finally(() => {
                 LoadingHelper.removeLoading();
             });
-        }));
+        });
     }
     showError(message) {
         let kycEditNameError = document.getElementById('kycEditNameError');
@@ -25414,47 +26178,41 @@ class DateHelper {
 }
 
 class AUSDService extends BlockchainService {
+    static AUSDInfo;
+    static lastUpdate;
+    static aUSDAmount;
+    static onAUsdLoad = [];
     constructor() {
         super();
     }
-    getAUSDBalanceOf(ethAddress) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (AUSDService.lastUpdate && AUSDService.aUSDAmount &&
-                !DateHelper.isOlderThen(AUSDService.lastUpdate, 5)) {
-                return AUSDService.aUSDAmount;
-            }
-            let balanceOf = yield this.getBalanceOf(this.contracts.AUSD_ADDRESS, ethAddress);
-            let amount = formatEther(balanceOf.toString());
-            AUSDService.aUSDAmount = new BigNumber$1(amount);
-            AUSDService.lastUpdate = new Date();
-            for (let i = 0; i < AUSDService.onAUsdLoad.length; i++) {
-                AUSDService.onAUsdLoad[i]();
-            }
+    async getAUSDBalanceOf(ethAddress) {
+        if (AUSDService.lastUpdate && AUSDService.aUSDAmount &&
+            !DateHelper.isOlderThen(AUSDService.lastUpdate, 5)) {
             return AUSDService.aUSDAmount;
-        });
+        }
+        let balanceOf = await this.getBalanceOf(this.contracts.AUSD_ADDRESS, ethAddress);
+        let amount = formatEther(balanceOf.toString());
+        AUSDService.aUSDAmount = new BigNumber$1(amount);
+        AUSDService.lastUpdate = new Date();
+        for (let i = 0; i < AUSDService.onAUsdLoad.length; i++) {
+            AUSDService.onAUsdLoad[i]();
+        }
+        return AUSDService.aUSDAmount;
     }
-    transfer(symbolAddress, qty) {
-        const _super = Object.create(null, {
-            transferInner: { get: () => super.transferInner }
-        });
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let result = yield _super.transferInner.call(this, this.contracts.AUSD_ADDRESS, symbolAddress, qty);
-            AUSDService.aUSDAmount = undefined;
-            AUSDService.lastUpdate = undefined;
-            return result;
-        });
+    async transfer(symbolAddress, qty) {
+        let result = await super.transferInner(this.contracts.AUSD_ADDRESS, symbolAddress, qty);
+        AUSDService.aUSDAmount = undefined;
+        AUSDService.lastUpdate = undefined;
+        return result;
     }
-    getAUsdAbi() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (AUSDService.AUSDInfo)
-                return AUSDService.AUSDInfo.abi;
-            let response = yield fetch('../abi/aUSD.json');
-            AUSDService.AUSDInfo = yield response.json();
+    async getAUsdAbi() {
+        if (AUSDService.AUSDInfo)
             return AUSDService.AUSDInfo.abi;
-        });
+        let response = await fetch('../abi/aUSD.json');
+        AUSDService.AUSDInfo = await response.json();
+        return AUSDService.AUSDInfo.abi;
     }
 }
-AUSDService.onAUsdLoad = [];
 
 var FakeFundingHtml = "<article>\n    <div id=\"beforeFunding\">\n        To use liminal.market you need some aUSD. aUSD is the same value as USD.\n        We can give you some aUSD (this is all fake money), so you can play with the system.\n\n        First, you need to add aUSD to you wallet.\n\n        <button id=\"addTokenToWallet\">Add aUSD to wallet</button>\n        <blockquote id=\"needToCopy\" class=\"d-none\">\n            If the button didn't work, you can copy the address here and import it into your wallet\n            <input value=\"{{aUSDAddress}}\">\n        </blockquote>\n        When you have aUSD to you wallet, you can request some money to trade with.\n\n        <button id=\"requestFakeAUSD\">Request some aUSD</button>\n        <div class=\"warningBar notificationBar d-none\" id=\"fundingError\"></div>\n    </div>\n    <div id=\"afterFunding\" class=\"d-none center\">\n        We have now sending aUSD to your wallet. This usually takes few minutes, so lets wait.\n        <br><br>\n        When you have the aUSD in you wallet, we will tell you.\n        <div>\n            <h3>Current aUSD balance</h3>\n            <div id=\"currentAUSDBalance\"></div>\n        </div>\n        <div class=\"hidden center\" id=\"fake_funding_writing_to_ausd\">\n            <strong aria-busy=\"true\">Writing amount to aUSD token. Few more seconds...</strong>\n        </div>\n    </div>\n    <div id=\"errorAfterTryFunding\" class=\"d-none\">\n        We had an error while trying to fund you. We'll be cracking at the issue soon to fix it.\n        Try again in few minutes. If not, try again in few hours.\n    </div>\n\n</article>";
 
@@ -25462,16 +26220,15 @@ class FundingService extends BaseService {
     constructor() {
         super();
     }
-    requestFakeFunding() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post('fundUser');
-        });
+    async requestFakeFunding() {
+        return await this.post('fundUser');
     }
 }
 
 var SelectFundingTypeHtml = "<p>Setup your bank relationship with Liminal.market. Please choose the type of transfer you want to make</p>\n<ul class=\"funding_type\">\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"ach_transfer\" value=\"1\"> ACH bank transfer (US)</label>\n    </li>\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"wire_transfer\" value=\"2\"> Wire transfer\n        (International)</label></li>\n</ul>\n<div id=\"selectFundingTypeError\" class=\"input_error\"></div>\n<button id=\"next_bank_information\">Next: Bank information</button>\n";
 
 class SelectFundingType {
+    aUsdFund;
     constructor(aUsdFund) {
         this.aUsdFund = aUsdFund;
     }
@@ -25482,14 +26239,14 @@ class SelectFundingType {
     }
     bindEvent() {
         let next_bank_information = document.getElementById('next_bank_information');
-        next_bank_information === null || next_bank_information === void 0 ? void 0 : next_bank_information.addEventListener('click', (evt) => {
+        next_bank_information?.addEventListener('click', (evt) => {
             this.aUsdFund.hideError('selectFundingTypeError');
             let ach_transfer = document.getElementById('ach_transfer');
-            if (ach_transfer === null || ach_transfer === void 0 ? void 0 : ach_transfer.checked) {
+            if (ach_transfer?.checked) {
                 this.aUsdFund.achRelationship.show();
             }
             let wire_transfer = document.getElementById('wire_transfer');
-            if (wire_transfer === null || wire_transfer === void 0 ? void 0 : wire_transfer.checked) {
+            if (wire_transfer?.checked) {
                 this.aUsdFund.wireTransferRelationship.show();
             }
             this.aUsdFund.showError('selectFundingTypeError', 'Please select funding type');
@@ -25506,6 +26263,7 @@ var TransferDirectionEnum;
 })(TransferDirectionEnum || (TransferDirectionEnum = {}));
 
 class RelationshipBase {
+    aUsdFund;
     constructor(aUsdFund) {
         this.aUsdFund = aUsdFund;
     }
@@ -25514,36 +26272,34 @@ class RelationshipBase {
         this.aUsdFund.modal.showModal(title, template(param));
         this.bindEvents();
     }
-    handleErrorResponse(reason) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!reason.message) {
-                alert(reason);
-                return;
-            }
-            let obj = JSON.parse(reason.message);
-            let errorElement = document.getElementById('relationshipError');
-            if (!errorElement) {
-                let message = (obj.serverError) ? obj.serverError.message : reason.message;
-                alert(message);
-                return;
-            }
-            if (obj.serverError.message.indexOf('only one bank association') != -1) {
-                let userService = new UserService();
-                let bankRelationship = yield userService.getBankRelationship();
-                if (!bankRelationship) {
-                    errorElement.innerText = 'We cannot create the bank connection. Something is not working as it should. Please contact us at <a href="mailto:info@liminal.market">info@liminal.market</a>';
-                    errorElement.style.display = 'block';
-                }
-                else {
-                    let transfers = yield userService.getLatestTransfers(TransferDirectionEnum.Incoming);
-                    yield this.aUsdFund.transferNotification.show(bankRelationship, transfers);
-                }
-            }
-            else {
-                errorElement.innerText = obj.serverError.message;
+    async handleErrorResponse(reason) {
+        if (!reason.message) {
+            alert(reason);
+            return;
+        }
+        let obj = JSON.parse(reason.message);
+        let errorElement = document.getElementById('relationshipError');
+        if (!errorElement) {
+            let message = (obj.serverError) ? obj.serverError.message : reason.message;
+            alert(message);
+            return;
+        }
+        if (obj.serverError.message.indexOf('only one bank association') != -1) {
+            let userService = new UserService();
+            let bankRelationship = await userService.getBankRelationship();
+            if (!bankRelationship) {
+                errorElement.innerText = 'We cannot create the bank connection. Something is not working as it should. Please contact us at <a href="mailto:info@liminal.market">info@liminal.market</a>';
                 errorElement.style.display = 'block';
             }
-        });
+            else {
+                let transfers = await userService.getLatestTransfers(TransferDirectionEnum.Incoming);
+                await this.aUsdFund.transferNotification.show(bankRelationship, transfers);
+            }
+        }
+        else {
+            errorElement.innerText = obj.serverError.message;
+            errorElement.style.display = 'block';
+        }
     }
 }
 
@@ -25556,7 +26312,7 @@ class ACHRelationship extends RelationshipBase {
     }
     bindEvents() {
         let ach_next = document.getElementById('ach_next');
-        ach_next === null || ach_next === void 0 ? void 0 : ach_next.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        ach_next?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             if (!this.validate())
                 return;
@@ -25566,12 +26322,12 @@ class ACHRelationship extends RelationshipBase {
                 .then(result => {
                 this.aUsdFund.firstTransferSetup.show(result);
             })
-                .catch((reason) => __awaiter$9(this, void 0, void 0, function* () {
-                yield this.handleErrorResponse(reason);
-            }));
-        }));
+                .catch(async (reason) => {
+                await this.handleErrorResponse(reason);
+            });
+        });
         let ach_previous = document.getElementById('ach_previous');
-        ach_previous === null || ach_previous === void 0 ? void 0 : ach_previous.addEventListener('click', (evt) => {
+        ach_previous?.addEventListener('click', (evt) => {
             evt.preventDefault();
             this.aUsdFund.selectFundingType.show();
         });
@@ -25612,21 +26368,19 @@ class HandlebarHelpers {
 }
 
 class TransfersList {
+    userService;
     constructor() {
         this.userService = new UserService();
     }
-    render(direction, transfers) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            HandlebarHelpers.registerHelpers();
-            let transfersTemplate = Handlebars.compile(TransfersListHtml);
-            return transfersTemplate({ Direction: direction, transfers: transfers });
-        });
+    async render(direction, transfers) {
+        HandlebarHelpers.registerHelpers();
+        let transfersTemplate = Handlebars.compile(TransfersListHtml);
+        return transfersTemplate({ Direction: direction, transfers: transfers });
     }
     bindEvents() {
-        var _a;
         let deleteTransfers = document.querySelectorAll('.deleteTransfer');
         for (let i = 0; i < deleteTransfers.length; i++) {
-            (_a = deleteTransfers[i]) === null || _a === void 0 ? void 0 : _a.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+            deleteTransfers[i]?.addEventListener('click', async (evt) => {
                 evt.preventDefault();
                 if (!confirm('Are you sure you want to cancel this withdraw request?')) {
                     return;
@@ -25635,21 +26389,23 @@ class TransfersList {
                 if (!id)
                     return;
                 let userService = new UserService();
-                yield userService.deleteTransfer(id)
+                await userService.deleteTransfer(id)
                     .then(() => {
                     let statusTd = document.getElementById('status_' + id);
                     if (statusTd) {
                         statusTd.innerText = 'CANCELED';
                     }
                     let deleteTd = document.getElementById('delete_' + id);
-                    deleteTd === null || deleteTd === void 0 ? void 0 : deleteTd.remove();
+                    deleteTd?.remove();
                 });
-            }));
+            });
         }
     }
 }
 
 class FirstTransferSetupBase {
+    bankRelationship;
+    aUsdFund;
     constructor(aUsdFund, bankRelationship) {
         this.aUsdFund = aUsdFund;
         this.bankRelationship = bankRelationship;
@@ -25682,7 +26438,7 @@ class MoneyTransferred extends FirstTransferSetupBase {
     }
     bindEvents() {
         let notifyTransfer = document.getElementById('notifyTransfer');
-        notifyTransfer === null || notifyTransfer === void 0 ? void 0 : notifyTransfer.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        notifyTransfer?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             this.aUsdFund.hideError('transferError');
             let amount = document.getElementById('amount');
@@ -25691,7 +26447,7 @@ class MoneyTransferred extends FirstTransferSetupBase {
             }
             LoadingHelper.setLoading(notifyTransfer);
             let userService = new UserService();
-            yield userService.createTransfer(amount.value, 'INCOMING')
+            await userService.createTransfer(amount.value, 'INCOMING')
                 .then(() => {
                 this.aUsdFund.transferNotified.show(this.bankRelationship, amount.value);
             })
@@ -25702,34 +26458,35 @@ class MoneyTransferred extends FirstTransferSetupBase {
                 .finally(() => {
                 LoadingHelper.removeLoading();
             });
-        }));
+        });
     }
 }
 
 class TransferNotification {
+    aUsdFund;
+    bankRelationship;
+    transfersList;
+    moneyTransferred;
     constructor(aUsdFund) {
         this.aUsdFund = aUsdFund;
         this.transfersList = new TransfersList();
     }
-    show(bankRelationship, transfers) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            this.bankRelationship = bankRelationship;
-            let template = Handlebars.compile(TransferNotificationHtml);
-            let transfersListHtml = yield this.transfersList.render(TransferDirectionEnum.Incoming, transfers);
-            this.moneyTransferred = new MoneyTransferred(this.aUsdFund, this.bankRelationship);
-            this.aUsdFund.modal.showModal('Create transfer notification', template({
-                moneyTransferred: this.moneyTransferred.render(),
-                transfers: transfersListHtml
-            }));
-            this.bindEvents();
-        });
+    async show(bankRelationship, transfers) {
+        this.bankRelationship = bankRelationship;
+        let template = Handlebars.compile(TransferNotificationHtml);
+        let transfersListHtml = await this.transfersList.render(TransferDirectionEnum.Incoming, transfers);
+        this.moneyTransferred = new MoneyTransferred(this.aUsdFund, this.bankRelationship);
+        this.aUsdFund.modal.showModal('Create transfer notification', template({
+            moneyTransferred: this.moneyTransferred.render(),
+            transfers: transfersListHtml
+        }));
+        this.bindEvents();
     }
     bindEvents() {
-        var _a;
-        (_a = this.moneyTransferred) === null || _a === void 0 ? void 0 : _a.bindEvents();
+        this.moneyTransferred?.bindEvents();
         this.transfersList.bindEvents();
         let first_transfer_setup = document.getElementById('first_transfer_setup');
-        first_transfer_setup === null || first_transfer_setup === void 0 ? void 0 : first_transfer_setup.addEventListener('click', (evt) => {
+        first_transfer_setup?.addEventListener('click', (evt) => {
             evt.preventDefault();
             this.aUsdFund.firstTransferSetup.show(this.bankRelationship);
         });
@@ -25747,25 +26504,25 @@ class WireTransferRelationship extends RelationshipBase {
     }
     bindEvents() {
         let wire_transfer_previous = document.getElementById('wire_transfer_previous');
-        wire_transfer_previous === null || wire_transfer_previous === void 0 ? void 0 : wire_transfer_previous.addEventListener('click', (evt) => {
+        wire_transfer_previous?.addEventListener('click', (evt) => {
             this.aUsdFund.selectFundingType.show();
         });
         let save_international_bank_information = document.getElementById('save_international_bank_information');
-        save_international_bank_information === null || save_international_bank_information === void 0 ? void 0 : save_international_bank_information.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        save_international_bank_information?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             if (!this.validate())
                 return;
             let params = FormHelper.getParams('#wireTransferForm');
             let userService = new UserService();
-            yield userService.registerWireTransferRelationship(params)
-                .then((bankRelationship) => __awaiter$9(this, void 0, void 0, function* () {
-                let transfers = yield userService.getLatestTransfers(TransferDirectionEnum.Incoming);
-                yield this.aUsdFund.transferNotification.show(bankRelationship, transfers);
-            }))
-                .catch((reason) => __awaiter$9(this, void 0, void 0, function* () {
-                yield this.handleErrorResponse(reason);
-            }));
-        }));
+            await userService.registerWireTransferRelationship(params)
+                .then(async (bankRelationship) => {
+                let transfers = await userService.getLatestTransfers(TransferDirectionEnum.Incoming);
+                await this.aUsdFund.transferNotification.show(bankRelationship, transfers);
+            })
+                .catch(async (reason) => {
+                await this.handleErrorResponse(reason);
+            });
+        });
     }
     validate() {
         let swift_error = document.getElementById('swift_error');
@@ -25791,6 +26548,7 @@ class WireTransferRelationship extends RelationshipBase {
 var TransferInfoHtml = "<h2>You should transfer your money now</h2>\n\n<ul>\n    <li>Amount: {{amount}}</li>\n    <li>From Account: {{account_number}}</li>\n</ul>";
 
 class TransferNotified {
+    aUsdFund;
     constructor(aUsdFund) {
         this.aUsdFund = aUsdFund;
     }
@@ -25822,13 +26580,13 @@ class WireTransferMoney extends FirstTransferSetupBase {
     }
     bindEvents() {
         let next = document.getElementById('next_wire_transfer_money');
-        next === null || next === void 0 ? void 0 : next.addEventListener('click', (evt) => {
+        next?.addEventListener('click', (evt) => {
             evt.preventDefault();
             let moneyTransferred = new MoneyTransferred(this.aUsdFund, this.bankRelationship);
             moneyTransferred.show();
         });
         let prev = document.getElementById('prev_wire_transfer_money');
-        prev === null || prev === void 0 ? void 0 : prev.addEventListener('click', (evt) => {
+        prev?.addEventListener('click', (evt) => {
             evt.preventDefault();
             let transferSetup = new FirstTransferSetup(this.aUsdFund);
             transferSetup.show(this.bankRelationship);
@@ -25849,7 +26607,7 @@ class ACHTransferAccountNumber extends FirstTransferSetupBase {
     }
     bindEvents() {
         let next = document.getElementById('next_ach_account_number');
-        next === null || next === void 0 ? void 0 : next.addEventListener('click', (evt) => {
+        next?.addEventListener('click', (evt) => {
             evt.preventDefault();
             let moneyTransferred = new MoneyTransferred(this.aUsdFund, this.bankRelationship);
             moneyTransferred.show();
@@ -25872,7 +26630,7 @@ class BankInfo extends FirstTransferSetupBase {
     }
     bindEvents() {
         let next = document.getElementById('bank_info_next');
-        next === null || next === void 0 ? void 0 : next.addEventListener('click', (evt) => {
+        next?.addEventListener('click', (evt) => {
             evt.preventDefault();
             if (this.bankRelationship.transfer_type == 'wire') {
                 let wireTransferMoney = new WireTransferMoney(this.aUsdFund, this.bankRelationship);
@@ -25887,6 +26645,8 @@ class BankInfo extends FirstTransferSetupBase {
 }
 
 class FirstTransferSetup {
+    aUsdFund;
+    bankRelationship;
     constructor(aUsdFund) {
         this.aUsdFund = aUsdFund;
     }
@@ -25900,6 +26660,13 @@ class FirstTransferSetup {
 }
 
 class AUSDFund {
+    modal;
+    selectFundingType;
+    achRelationship;
+    wireTransferRelationship;
+    firstTransferSetup;
+    transferNotification;
+    transferNotified;
     constructor() {
         this.modal = new Modal();
         this.selectFundingType = new SelectFundingType(this);
@@ -25909,23 +26676,21 @@ class AUSDFund {
         this.transferNotification = new TransferNotification(this);
         this.transferNotified = new TransferNotified(this);
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userService = new UserService();
-            let bankRelationship = yield userService.getBankRelationship();
-            if (bankRelationship) {
-                let transfers = yield userService.getLatestTransfers(TransferDirectionEnum.Incoming);
-                if (transfers.length > 0) {
-                    yield this.transferNotification.show(bankRelationship, transfers);
-                }
-                else {
-                    this.firstTransferSetup.show(bankRelationship);
-                }
+    async show() {
+        let userService = new UserService();
+        let bankRelationship = await userService.getBankRelationship();
+        if (bankRelationship) {
+            let transfers = await userService.getLatestTransfers(TransferDirectionEnum.Incoming);
+            if (transfers.length > 0) {
+                await this.transferNotification.show(bankRelationship, transfers);
             }
             else {
-                this.selectFundingType.show();
+                this.firstTransferSetup.show(bankRelationship);
             }
-        });
+        }
+        else {
+            this.selectFundingType.show();
+        }
     }
     showError(elementId, reason) {
         let element = document.getElementById(elementId);
@@ -25943,6 +26708,8 @@ class AUSDFund {
 }
 
 class FakeAUSDFund {
+    currentBalance;
+    modal;
     constructor() {
         this.currentBalance = new BigNumber$1(-1);
         this.modal = new Modal();
@@ -25953,7 +26720,7 @@ class FakeAUSDFund {
     }
     static writingToChain() {
         let element = document.getElementById("fake_funding_writing_to_ausd");
-        element === null || element === void 0 ? void 0 : element.classList.remove("hidden");
+        element?.classList.remove("hidden");
     }
     showAUSDFakeFund() {
         let networkInfo = TradePanelWidget.Network;
@@ -25966,26 +26733,26 @@ class FakeAUSDFund {
         let content = template({ aUSDAddress: contractInfo.AUSD_ADDRESS });
         this.modal.showModal("Fund my account (Fake money)", content);
         let addToWallet = document.getElementById("addTokenToWallet");
-        addToWallet === null || addToWallet === void 0 ? void 0 : addToWallet.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        addToWallet?.addEventListener("click", async (evt) => {
             let contractInfo = ContractInfo.getContractInfo();
             let walletHelper = new WalletHelper();
-            let result = yield walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, "aUSD", () => {
+            let result = await walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, "aUSD", () => {
                 this.showCopyField();
             });
             if (!result)
                 this.showCopyField();
-        }));
+        });
         let registerBankInfo = document.getElementById("registerBankInfo");
-        registerBankInfo === null || registerBankInfo === void 0 ? void 0 : registerBankInfo.addEventListener("click", (evt) => {
+        registerBankInfo?.addEventListener("click", (evt) => {
             this.modal.hideModal();
             let aUsdFund = new AUSDFund();
             aUsdFund.show();
         });
         let requestFakeAUSD = document.getElementById("requestFakeAUSD");
-        requestFakeAUSD === null || requestFakeAUSD === void 0 ? void 0 : requestFakeAUSD.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        requestFakeAUSD?.addEventListener("click", async (evt) => {
             requestFakeAUSD.setAttribute("aria-busy", "true");
             let fundingService = new FundingService();
-            let result = yield fundingService.requestFakeFunding().catch((reason) => {
+            let result = await fundingService.requestFakeFunding().catch((reason) => {
                 this.errorWhileFunding({});
             });
             if (!result)
@@ -26006,7 +26773,7 @@ class FakeAUSDFund {
                 let afterFunding = document.getElementById("afterFunding");
                 if (!beforeFunding || !afterFunding)
                     return;
-                yield this.loadAUSDBalance();
+                await this.loadAUSDBalance();
                 beforeFunding.classList.add("d-none");
                 afterFunding.classList.remove("d-none");
             }
@@ -26014,34 +26781,32 @@ class FakeAUSDFund {
                 this.errorWhileFunding(result);
             }
             //callback();
-        }));
-    }
-    loadAUSDBalance() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let currentAUSDBalance = document.getElementById("currentAUSDBalance");
-            if (!currentAUSDBalance)
-                return;
-            let aUSDService = new AUSDService();
-            let userService = new UserService();
-            let ethAddress = userService.getEthAddress();
-            let amount = new BigNumber$1(0);
-            if (ethAddress) {
-                AUSDService.lastUpdate = undefined;
-                amount = yield aUSDService.getAUSDBalanceOf(ethAddress);
-            }
-            currentAUSDBalance.innerHTML = "$" + roundBigNumber(amount).toString();
-            if (this.currentBalance.eq(-1)) {
-                this.currentBalance = amount;
-            }
-            if (this.currentBalance.eq(amount)) {
-                setTimeout(() => __awaiter$9(this, void 0, void 0, function* () {
-                    yield this.loadAUSDBalance();
-                }), 5 * 1000);
-            }
-            else {
-                window.location.reload();
-            }
         });
+    }
+    async loadAUSDBalance() {
+        let currentAUSDBalance = document.getElementById("currentAUSDBalance");
+        if (!currentAUSDBalance)
+            return;
+        let aUSDService = new AUSDService();
+        let userService = new UserService();
+        let ethAddress = userService.getEthAddress();
+        let amount = new BigNumber$1(0);
+        if (ethAddress) {
+            AUSDService.lastUpdate = undefined;
+            amount = await aUSDService.getAUSDBalanceOf(ethAddress);
+        }
+        currentAUSDBalance.innerHTML = "$" + roundBigNumber(amount).toString();
+        if (this.currentBalance.eq(-1)) {
+            this.currentBalance = amount;
+        }
+        if (this.currentBalance.eq(amount)) {
+            setTimeout(async () => {
+                await this.loadAUSDBalance();
+            }, 5 * 1000);
+        }
+        else {
+            window.location.reload();
+        }
     }
     showCopyField() {
         let needToCopy = document.getElementById("needToCopy");
@@ -26065,51 +26830,54 @@ class FakeAUSDFund {
 var WithdrawModalHtml = "<fieldset id=\"withdrawInput\">\n\n    {{#if bank.bank_code_type}}\n    Your money will be sent to {{bank.name}} to account number {{bank.account_number}}.\n    <br><br>\n    Outgoing International Wire Transfers cost is ${{transferCost}}.<br>\n    Fees will be deducted from the amount.\n    {{/if}}\n    {{#unless bank.bank_code_type}}\n    Your money will be sent to account number {{bank.bank_account_number}}.\n    <br><br>\n    ACH transfer costs is ${{transferCost}}. Fees will be deducted from the amount.\n    {{/unless}}\n    <form id=\"withdrawForm\">\n        <label>Amount to withdraw\n            <input type=\"tel\" name=\"amount\" id=\"amount\">\n        </label>\n        <div class=\"input_error\" id=\"withdrawAmountError\">The amount is lower than the cost of transfer</div>\n        <button id=\"confirmWithdraw\">Confirm withdraw</button>\n    </form>\n    {{{Transfers}}}\n</fieldset>\n\n<fieldset id=\"withdrawConfirm\" class=\"hidden\">\n    You are about to withdraw $<span id=\"withdrawAmountText\"></span> from your account\n    <div class=\"warningBar\">\n        Warning: The fee of this transaction will be $<span id=\"feeWarning\"></span>\n        and is <span id=\"feePercentage\"></span>% of the amount.\n    </div>\n    <div class=\"input_error\" id=\"withdrawError\"></div>\n    <button id=\"confirmWithdrawButton\">Execute transfer</button>\n</fieldset>";
 
 class WithdrawModal {
+    userService;
+    bankInfo;
+    wireTransferCost = 50;
+    achTransferCost = 25;
+    transferCost;
+    currentBalance;
+    transfersList;
     constructor() {
-        this.wireTransferCost = 50;
-        this.achTransferCost = 25;
         this.userService = new UserService();
         this.transferCost = this.wireTransferCost;
         this.transfersList = new TransfersList();
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let modal = new Modal();
-            let bankRelationships = yield this.userService.getBankRelationship();
-            if (!bankRelationships) {
-                modal.showModal('Withdraw information', "You haven't setup bank connection. You cannot withdraw from without bank connection");
-                return;
-            }
-            let transfers = yield this.userService.getLatestTransfers(TransferDirectionEnum.Outgoing);
-            let transfersHtml = yield this.transfersList.render(TransferDirectionEnum.Outgoing, transfers);
-            let ethAddress = this.userService.getEthAddress();
-            let ausdService = new AUSDService();
-            this.currentBalance = new BigNumber$1(0);
-            if (ethAddress) {
-                this.currentBalance = yield ausdService.getAUSDBalanceOf(ethAddress);
-            }
-            if (this.currentBalance.eq(0)) {
-                let tmp = Handlebars.compile("Your current balance is $0. There is nothing to withdraw. {{{transfers}}}");
-                modal.showModal('Withdraw information', tmp({ transfers: transfersHtml }));
-                return;
-            }
-            let withdrawTemplate = Handlebars.compile(WithdrawModalHtml);
-            this.bankInfo = bankRelationships;
-            this.transferCost = (this.bankInfo.bank_code_type) ? this.wireTransferCost : this.achTransferCost;
-            let obj = {
-                amount: this.currentBalance,
-                transferCost: this.transferCost,
-                Transfers: transfersHtml,
-                bank: this.bankInfo
-            };
-            modal.showModal('Withdraw information', withdrawTemplate(obj));
-            this.bindEvents();
-            this.transfersList.bindEvents();
-        });
+    async show() {
+        let modal = new Modal();
+        let bankRelationships = await this.userService.getBankRelationship();
+        if (!bankRelationships) {
+            modal.showModal('Withdraw information', "You haven't setup bank connection. You cannot withdraw from without bank connection");
+            return;
+        }
+        let transfers = await this.userService.getLatestTransfers(TransferDirectionEnum.Outgoing);
+        let transfersHtml = await this.transfersList.render(TransferDirectionEnum.Outgoing, transfers);
+        let ethAddress = this.userService.getEthAddress();
+        let ausdService = new AUSDService();
+        this.currentBalance = new BigNumber$1(0);
+        if (ethAddress) {
+            this.currentBalance = await ausdService.getAUSDBalanceOf(ethAddress);
+        }
+        if (this.currentBalance.eq(0)) {
+            let tmp = Handlebars.compile("Your current balance is $0. There is nothing to withdraw. {{{transfers}}}");
+            modal.showModal('Withdraw information', tmp({ transfers: transfersHtml }));
+            return;
+        }
+        let withdrawTemplate = Handlebars.compile(WithdrawModalHtml);
+        this.bankInfo = bankRelationships;
+        this.transferCost = (this.bankInfo.bank_code_type) ? this.wireTransferCost : this.achTransferCost;
+        let obj = {
+            amount: this.currentBalance,
+            transferCost: this.transferCost,
+            Transfers: transfersHtml,
+            bank: this.bankInfo
+        };
+        modal.showModal('Withdraw information', withdrawTemplate(obj));
+        this.bindEvents();
+        this.transfersList.bindEvents();
     }
     bindEvents() {
         let confirmWithdraw = document.getElementById('confirmWithdraw');
-        confirmWithdraw === null || confirmWithdraw === void 0 ? void 0 : confirmWithdraw.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        confirmWithdraw?.addEventListener('click', async (evt) => {
             evt.preventDefault();
             if (!this.bankInfo)
                 return;
@@ -26128,16 +26896,16 @@ class WithdrawModal {
                 amount.setAttribute('aria-invalid', 'false');
             }
             this.showWithdrawConfirmation();
-        }));
+        });
     }
     showWithdrawConfirmation() {
         if (!this.bankInfo)
             return;
         let amount = document.getElementById('amount');
         let withdrawInput = document.getElementById('withdrawInput');
-        withdrawInput === null || withdrawInput === void 0 ? void 0 : withdrawInput.classList.add('hidden');
+        withdrawInput?.classList.add('hidden');
         let withdrawConfirm = document.getElementById('withdrawConfirm');
-        withdrawConfirm === null || withdrawConfirm === void 0 ? void 0 : withdrawConfirm.classList.remove('hidden');
+        withdrawConfirm?.classList.remove('hidden');
         let withdrawAmountText = document.getElementById('withdrawAmountText');
         let feeWarning = document.getElementById('feeWarning');
         let feePercentage = document.getElementById('feePercentage');
@@ -26145,14 +26913,14 @@ class WithdrawModal {
         feeWarning.innerText = this.transferCost.toString();
         feePercentage.innerText = roundNumber((this.transferCost / parseFloat(amount.value)) * 100).toString();
         let confirmWithdrawButton = document.getElementById('confirmWithdrawButton');
-        confirmWithdrawButton === null || confirmWithdrawButton === void 0 ? void 0 : confirmWithdrawButton.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        confirmWithdrawButton?.addEventListener('click', async (evt) => {
             evt.preventDefault();
-            yield this.userService.createTransfer(amount.value, TransferDirectionEnum.Outgoing)
-                .then((response) => __awaiter$9(this, void 0, void 0, function* () {
-                let transfers = yield this.userService.getLatestTransfers(TransferDirectionEnum.Outgoing);
-                withdrawConfirm.innerHTML = yield this.transfersList.render(TransferDirectionEnum.Outgoing, transfers);
+            await this.userService.createTransfer(amount.value, TransferDirectionEnum.Outgoing)
+                .then(async (response) => {
+                let transfers = await this.userService.getLatestTransfers(TransferDirectionEnum.Outgoing);
+                withdrawConfirm.innerHTML = await this.transfersList.render(TransferDirectionEnum.Outgoing, transfers);
                 this.transfersList.bindEvents();
-            }))
+            })
                 .catch(reason => {
                 let withdrawError = document.getElementById('withdrawError');
                 if (!withdrawError)
@@ -26166,7 +26934,7 @@ class WithdrawModal {
                 }
                 withdrawError.style.display = 'block';
             });
-        }));
+        });
     }
 }
 
@@ -26174,41 +26942,37 @@ var AddToWalletHtml = "<article>\n    Some wallets detect automatically the coin
 
 class AUsdBalance {
     constructor() { }
-    static forceLoadAUSDBalanceUI() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let ui = new AUsdBalance();
-            AUSDService.lastUpdate = undefined;
-            yield ui.loadAUSDBalanceUI();
-        });
+    static async forceLoadAUSDBalanceUI() {
+        let ui = new AUsdBalance();
+        AUSDService.lastUpdate = undefined;
+        await ui.loadAUSDBalanceUI();
     }
-    loadAUSDBalanceUI() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!TradePanelWidget.User.ether) {
-                yield AuthenticateService.enableWeb3();
-                if (!TradePanelWidget.User.ether)
-                    return;
-            }
-            let aUSDService = new AUSDService();
-            let aUsdValueWei = yield aUSDService.getAUSDBalanceOf(TradePanelWidget.User.address);
-            this.updateUIBalance(aUsdValueWei);
-            this.bindEvents();
-        });
+    async loadAUSDBalanceUI() {
+        if (!TradePanelWidget.User.ether) {
+            await AuthenticateService.enableWeb3();
+            if (!TradePanelWidget.User.ether)
+                return;
+        }
+        let aUSDService = new AUSDService();
+        let aUsdValueWei = await aUSDService.getAUSDBalanceOf(TradePanelWidget.User.address);
+        this.updateUIBalance(aUsdValueWei);
+        this.bindEvents();
     }
     bindEvents() {
         let networkInfo = TradePanelWidget.Network;
         let add_aUSD_to_wallet = document.querySelectorAll(".add_aUSD_to_wallet");
         add_aUSD_to_wallet.forEach((element) => {
-            element.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+            element.addEventListener("click", async (evt) => {
                 evt.preventDefault();
                 let contractInfo = ContractInfo.getContractInfo(networkInfo.Name);
                 let walletHelper = new WalletHelper();
-                yield walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, "aUSD", () => {
+                await walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, "aUSD", () => {
                     let template = Handlebars.compile(AddToWalletHtml);
                     let obj = { symbol: "aUSD", address: contractInfo.AUSD_ADDRESS };
                     let modal = new Modal();
                     modal.showModal("Add aUSD token", template(obj));
                 });
-            }));
+            });
         });
         let fund_accountButtons = document.querySelectorAll(".fund_account");
         fund_accountButtons.forEach((element) => {
@@ -26221,19 +26985,19 @@ class AUsdBalance {
                 });
             }
             else {
-                element.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+                element.addEventListener("click", async (evt) => {
                     evt.preventDefault();
                     let aUsdFund = new AUSDFund();
-                    yield aUsdFund.show();
-                }));
+                    await aUsdFund.show();
+                });
             }
         });
         let withdraw_from_account = document.getElementById("withdraw_from_account");
-        withdraw_from_account === null || withdraw_from_account === void 0 ? void 0 : withdraw_from_account.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        withdraw_from_account?.addEventListener("click", async (evt) => {
             evt.preventDefault();
             let withdrawModal = new WithdrawModal();
-            yield withdrawModal.show();
-        }));
+            await withdrawModal.show();
+        });
     }
     updateUIBalance(aUsdValueWei) {
         let aUsdValue = roundBigNumber(aUsdValueWei);
@@ -26245,17 +27009,17 @@ class AUsdBalance {
         }
         if (aUsdValue.isLessThan(10)) {
             let frontpage_fund_account = document.getElementById("frontpage_fund_account");
-            frontpage_fund_account === null || frontpage_fund_account === void 0 ? void 0 : frontpage_fund_account.classList.remove("hidden");
+            frontpage_fund_account?.classList.remove("hidden");
         }
         let userInfoAUsdBalance = document.getElementById("userInfoAUsdBalance");
         let frontpageAUsdBalance = document.getElementById("frontpageAUsdBalance");
         if (!TradePanelWidget.User.alpacaId) {
-            frontpageAUsdBalance === null || frontpageAUsdBalance === void 0 ? void 0 : frontpageAUsdBalance.classList.add("hidden");
-            userInfoAUsdBalance === null || userInfoAUsdBalance === void 0 ? void 0 : userInfoAUsdBalance.classList.add("hidden");
+            frontpageAUsdBalance?.classList.add("hidden");
+            userInfoAUsdBalance?.classList.add("hidden");
         }
         else {
-            frontpageAUsdBalance === null || frontpageAUsdBalance === void 0 ? void 0 : frontpageAUsdBalance.classList.remove("hidden");
-            userInfoAUsdBalance === null || userInfoAUsdBalance === void 0 ? void 0 : userInfoAUsdBalance.classList.remove("hidden");
+            frontpageAUsdBalance?.classList.remove("hidden");
+            userInfoAUsdBalance?.classList.remove("hidden");
         }
         let frontpageAUSDBalance = document.getElementById("front_page_aUSD_balance");
         if (frontpageAUSDBalance)
@@ -26269,23 +27033,26 @@ class AUsdBalance {
 var TestNetworkBannerHtml = "<div class=\"errorBar\">You are running on testnet. No real trades will be executed.\n    <!--<a href=\"#\" id=\"switch_from_test_network\">Switch to mainnet</a>-->\n</div>";
 
 class UserInfo {
+    authenticationService;
+    userService;
+    providerInfo;
+    walletHelper;
+    walletLoaded = false;
+    static onUserLoggedIn = [];
     constructor(providerInfo) {
-        this.walletLoaded = false;
         this.authenticationService = new AuthenticateService();
         this.userService = new UserService();
         this.providerInfo = providerInfo;
         this.walletHelper = new WalletHelper();
     }
-    render(elementId) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            this.listenForWalletChanges();
-            this.loadUserMenuUI(elementId);
-            this.loadIfTestNetwork();
-            this.ifTradePage();
-            LoadingHelper.removeLoading();
-            let aUsdBalance = new AUsdBalance();
-            yield aUsdBalance.loadAUSDBalanceUI();
-        });
+    async render(elementId) {
+        this.listenForWalletChanges();
+        this.loadUserMenuUI(elementId);
+        this.loadIfTestNetwork();
+        this.ifTradePage();
+        LoadingHelper.removeLoading();
+        let aUsdBalance = new AUsdBalance();
+        await aUsdBalance.loadAUSDBalanceUI();
     }
     listenForWalletChanges() {
         /*
@@ -26305,55 +27072,53 @@ class UserInfo {
     
              */
     }
-    loadUserMenuUI(elementId) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userInfoDiv = document.getElementById(elementId);
-            if (!userInfoDiv)
-                return;
-            let networkInfo = TradePanelWidget.Network;
-            let obj = {
-                ethAddress: TradePanelWidget.User.address,
-                shortEthAddress: shortEth(TradePanelWidget.User.address),
-                walletName: this.providerInfo.WalletName,
-                networkName: networkInfo.ChainName +
-                    (networkInfo.TestNetwork ? " - (Test network)" : ""),
-                blockchainExplorer: networkInfo.BlockExplorer + "/address/",
-                isMagic: yield this.walletHelper.isMagic(),
-                chainId: networkInfo.ChainId,
-            };
-            let template = Handlebars.compile(UserInfoElement);
-            let html = template(obj);
-            userInfoDiv.innerHTML = html;
-            this.bindEvents();
-            this.bindUserActionEvents();
-            for (let i = 0; i < UserInfo.onUserLoggedIn.length; i++) {
-                UserInfo.onUserLoggedIn[i]();
-            }
-            if (networkInfo.TestNetwork || !TradePanelWidget.User.alpacaId) {
-                let edit_account = document.querySelector(".edit_account");
-                edit_account === null || edit_account === void 0 ? void 0 : edit_account.classList.add("hidden");
-            }
-        });
+    async loadUserMenuUI(elementId) {
+        let userInfoDiv = document.getElementById(elementId);
+        if (!userInfoDiv)
+            return;
+        let networkInfo = TradePanelWidget.Network;
+        let obj = {
+            ethAddress: TradePanelWidget.User.address,
+            shortEthAddress: shortEth(TradePanelWidget.User.address),
+            walletName: this.providerInfo.WalletName,
+            networkName: networkInfo.ChainName +
+                (networkInfo.TestNetwork ? " - (Test network)" : ""),
+            blockchainExplorer: networkInfo.BlockExplorer + "/address/",
+            isMagic: await this.walletHelper.isMagic(),
+            chainId: networkInfo.ChainId,
+        };
+        let template = Handlebars.compile(UserInfoElement);
+        let html = template(obj);
+        userInfoDiv.innerHTML = html;
+        this.bindEvents();
+        this.bindUserActionEvents();
+        for (let i = 0; i < UserInfo.onUserLoggedIn.length; i++) {
+            UserInfo.onUserLoggedIn[i]();
+        }
+        if (networkInfo.TestNetwork || !TradePanelWidget.User.alpacaId) {
+            let edit_account = document.querySelector(".edit_account");
+            edit_account?.classList.add("hidden");
+        }
     }
     bindUserActionEvents() {
         let editName = document.getElementById("editName");
-        editName === null || editName === void 0 ? void 0 : editName.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        editName?.addEventListener("click", async (evt) => {
             evt.preventDefault();
             let kycModal = new KycEditNameForm();
-            yield kycModal.show();
-        }));
+            await kycModal.show();
+        });
         let editContact = document.getElementById("editContact");
-        editContact === null || editContact === void 0 ? void 0 : editContact.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        editContact?.addEventListener("click", async (evt) => {
             evt.preventDefault();
             let kycModal = new KycEditContactForm();
-            yield kycModal.show();
-        }));
+            await kycModal.show();
+        });
         let editTrustedContact = document.getElementById("editTrustedContact");
-        editTrustedContact === null || editTrustedContact === void 0 ? void 0 : editTrustedContact.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        editTrustedContact?.addEventListener("click", async (evt) => {
             evt.preventDefault();
             let kycModal = new KycEditTrustedContact();
-            yield kycModal.show();
-        }));
+            await kycModal.show();
+        });
     }
     bindEvents() {
         let userInfoDropdown = document.getElementById("userInfoDropdown");
@@ -26367,23 +27132,23 @@ class UserInfo {
             }
         });
         let userInfoAction = document.getElementById("userInfoAction");
-        userInfoAction === null || userInfoAction === void 0 ? void 0 : userInfoAction.addEventListener("click", (evt) => {
+        userInfoAction?.addEventListener("click", (evt) => {
             evt.preventDefault();
             evt.stopPropagation();
-            userInfoDropdown === null || userInfoDropdown === void 0 ? void 0 : userInfoDropdown.classList.toggle("d-none");
-            userInfoDropdown === null || userInfoDropdown === void 0 ? void 0 : userInfoDropdown.addEventListener("click", (evt) => {
+            userInfoDropdown?.classList.toggle("d-none");
+            userInfoDropdown?.addEventListener("click", (evt) => {
                 evt.stopPropagation();
             });
             WalletHelper.hideMagicWallet();
         });
         let disconnectFromNetwork = document.getElementById("disconnectFromNetwork");
-        disconnectFromNetwork === null || disconnectFromNetwork === void 0 ? void 0 : disconnectFromNetwork.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        disconnectFromNetwork?.addEventListener("click", async (evt) => {
             evt.preventDefault();
-            yield this.authenticationService.logOut();
+            await this.authenticationService.logOut();
             window.location.reload();
-        }));
+        });
         let wallet = document.getElementById("wallet");
-        wallet === null || wallet === void 0 ? void 0 : wallet.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        wallet?.addEventListener("click", async (evt) => {
             evt.preventDefault();
             LoadingHelper.setLoading(evt.target);
             if (this.walletLoaded) {
@@ -26391,33 +27156,33 @@ class UserInfo {
                 if (magicIframe)
                     magicIframe.style.display = "block";
                 LoadingHelper.removeLoading();
-                userInfoDropdown === null || userInfoDropdown === void 0 ? void 0 : userInfoDropdown.classList.add("d-none");
+                userInfoDropdown?.classList.add("d-none");
                 return;
             }
-            TradePanelWidget.User.magic.connect.showWallet().catch((e) => __awaiter$9(this, void 0, void 0, function* () {
+            TradePanelWidget.User.magic.connect.showWallet().catch(async (e) => {
                 this.walletLoaded = false;
                 if (e.message.indexOf("User denied account access") != -1) {
-                    yield this.authenticationService.logOut();
+                    await this.authenticationService.logOut();
                     alert("You have been logged out of you wallet and need to log back in. We will now reload the page and you can log in.");
                     location.reload();
                     return;
                 }
                 throw e;
-            }));
+            });
             let closeMenuInterval = setInterval(() => {
                 let magicIframe = document.querySelector(".magic-iframe");
                 if (!magicIframe)
                     clearInterval(closeMenuInterval);
                 if (magicIframe && magicIframe.style.display == "block") {
                     LoadingHelper.removeLoading();
-                    userInfoDropdown === null || userInfoDropdown === void 0 ? void 0 : userInfoDropdown.classList.add("d-none");
+                    userInfoDropdown?.classList.add("d-none");
                     this.walletLoaded = true;
                     clearInterval(closeMenuInterval);
                 }
             }, 1000);
-        }));
+        });
         let switch_network = document.getElementById("switch_network");
-        switch_network === null || switch_network === void 0 ? void 0 : switch_network.addEventListener("click", (evt) => {
+        switch_network?.addEventListener("click", (evt) => {
             evt.preventDefault();
             let switchNetworkModal = new SwitchNetworkModal();
             switchNetworkModal.show();
@@ -26434,7 +27199,7 @@ class UserInfo {
         let template = Handlebars.compile(TestNetworkBannerHtml);
         header.insertAdjacentHTML("beforebegin", template({}));
         let switch_from_test_network = document.getElementById("switch_from_test_network");
-        switch_from_test_network === null || switch_from_test_network === void 0 ? void 0 : switch_from_test_network.addEventListener("click", (evt) => {
+        switch_from_test_network?.addEventListener("click", (evt) => {
             let switchNetworkModal = new SwitchNetworkModal();
             switchNetworkModal.show();
         });
@@ -26446,7 +27211,6 @@ class UserInfo {
         ExecuteOrderButton.Instance.renderButton();
     }
 }
-UserInfo.onUserLoggedIn = [];
 
 var walletButton = "<button class=\"liminal_market_connect_wallet outline\">Connect wallet</button>";
 
@@ -26474,7 +27238,7 @@ class InfoBar {
         infoBar.classList.add(type);
         if (timeoutInSeconds > 0) {
             setTimeout(() => {
-                infoBar === null || infoBar === void 0 ? void 0 : infoBar.classList.add('hidden');
+                infoBar?.classList.add('hidden');
             }, timeoutInSeconds * 1000);
         }
     }
@@ -26483,14 +27247,14 @@ class InfoBar {
 var WalletMissingHtml = "\nYou need to set up a wallet in your browser before you can use liminal.market.\n<br><br>\nTo make it simple, we would like to suggest two options. In your browser or your phone.\n<ul>\n    <li>For the browser we recommend <a href=\"https://metamask.io/download/\" target=\"_blank\">Metamask</a>.\n    </li>\n    <li>\n        For your phone, we like <a href=\"https://www.tokenpocket.pro/en/download/app\" target=\"_blank\">Token Poket</a>\n    </li>\n</ul>\n<br>\nBut, you have <a href=\"https://ethereum.org/en/wallets/\" target=\"_blank\">many options</a> if you want to learn more.";
 
 class PredefinedErrorHandlers {
+    errorMessageMapping = new Map();
+    SentLoginRequest = "We have sent request to you wallet to login. Open your wallet to login";
     constructor() {
-        this.errorMessageMapping = new Map();
-        this.SentLoginRequest = "We have sent request to you wallet to login. Open your wallet to login";
         this.errorMessageMapping.set("chain not supported", () => {
             let div = 'Network is not supported. <a href="" id="switchNetworkLink">Click me to switch to supported network</a>';
             InfoBar.show(div, InfoBarType.Warning, 120);
             let switchNetworkLink = document.getElementById("switchNetworkLink");
-            switchNetworkLink === null || switchNetworkLink === void 0 ? void 0 : switchNetworkLink.addEventListener("click", (evt) => {
+            switchNetworkLink?.addEventListener("click", (evt) => {
                 evt.preventDefault();
                 let modal = new SwitchNetworkModal();
                 modal.show();
@@ -26507,11 +27271,11 @@ class PredefinedErrorHandlers {
                 return;
             }
         });
-        this.errorMessageMapping.set("user rejected the request", () => __awaiter$9(this, void 0, void 0, function* () {
+        this.errorMessageMapping.set("user rejected the request", async () => {
             let authenticationService = new AuthenticateService();
-            yield authenticationService.logOut();
+            await authenticationService.logOut();
             window.location.reload();
-        }));
+        });
         this.errorMessageMapping.set("Non ethereum enabled browser", () => {
             let modal = new Modal();
             let template = Handlebars.compile(WalletMissingHtml);
@@ -26539,6 +27303,7 @@ class PredefinedErrorHandlers {
 }
 
 class ErrorInfo {
+    errorInfo;
     constructor(errorInfo) {
         this.errorInfo = errorInfo;
     }
@@ -26575,6 +27340,8 @@ class ErrorInfo {
 }
 
 class ConnectWallet {
+    static Provider;
+    providerInfo;
     constructor() {
         this.providerInfo = new ProviderInfo(null);
     }
@@ -26584,34 +27351,32 @@ class ConnectWallet {
         document.getElementById(elementId).innerHTML = walletButton;
         LoadingHelper.removeLoading();
         let elements = document.querySelectorAll(".liminal_market_connect_wallet");
-        elements.forEach((el) => __awaiter$9(this, void 0, void 0, function* () {
-            el.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        elements.forEach(async (el) => {
+            el.addEventListener("click", async (evt) => {
                 evt.preventDefault();
-                yield this.connectWallet(evt.target);
-            }));
-        }));
-    }
-    connectWallet(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            LoadingHelper.setLoading(button);
-            let magicIframe = document.querySelector(".magic-iframe");
-            if (magicIframe && magicIframe.style.display == "none")
-                magicIframe.style.display = "block";
-            let authenticationService = new AuthenticateService();
-            yield authenticationService
-                .authenticateUser((walletConnectionInfo) => {
-                this.web3EnabledResult(walletConnectionInfo);
-            }, () => __awaiter$9(this, void 0, void 0, function* () {
-                let userInfo = new UserInfo(this.providerInfo);
-                yield userInfo.render("user_header_info");
-                if (document.getElementById("liminal_market_execute_order")) ;
-            }))
-                .catch((reason) => {
-                ErrorInfo.report(reason);
-            })
-                .finally(() => {
-                LoadingHelper.removeLoading();
+                await this.connectWallet(evt.target);
             });
+        });
+    }
+    async connectWallet(button) {
+        LoadingHelper.setLoading(button);
+        let magicIframe = document.querySelector(".magic-iframe");
+        if (magicIframe && magicIframe.style.display == "none")
+            magicIframe.style.display = "block";
+        let authenticationService = new AuthenticateService();
+        await authenticationService
+            .authenticateUser((walletConnectionInfo) => {
+            this.web3EnabledResult(walletConnectionInfo);
+        }, async () => {
+            let userInfo = new UserInfo(this.providerInfo);
+            await userInfo.render("user_header_info");
+            if (document.getElementById("liminal_market_execute_order")) ;
+        })
+            .catch((reason) => {
+            ErrorInfo.report(reason);
+        })
+            .finally(() => {
+            LoadingHelper.removeLoading();
         });
     }
     web3EnabledResult(walletConnectionInfo) {
@@ -26622,6 +27387,10 @@ class ConnectWallet {
 var MarketIsClosedHtml = "<div class=\"center\">\n    The stock market is currently closed.<br>\nIt is usually open monday to friday between 9:30 AM and 4:00 PM EST (9:30 - 16:00 EST).\n    <br><br>\nToday is {{dayOfWeek}}\n<br><br>\nYour current time is {{currentTime}} ({{GMT}})\n    <br><br>\nThat means the market is open your time between\n{{openFrom}} - {{openTo}}\n</div>";
 
 class BlockchainError extends GeneralError {
+    static ErrorFromContract = -1;
+    static UserCancelled = 1;
+    static AddressIsNotValidKYC = 2;
+    static MarketIsClosed = 3;
     constructor(e) {
         super(e);
         this.message = e.toString();
@@ -26670,161 +27439,138 @@ class BlockchainError extends GeneralError {
         modal.showModal('Market is closed', template(obj));
     }
 }
-BlockchainError.ErrorFromContract = -1;
-BlockchainError.UserCancelled = 1;
-BlockchainError.AddressIsNotValidKYC = 2;
-BlockchainError.MarketIsClosed = 3;
 
 class KYCService extends BlockchainService {
+    static KYCInfo;
+    static KycResponse;
     constructor() {
         super();
     }
-    getKYCAbi() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (KYCService.KYCInfo)
-                return KYCService.KYCInfo.abi;
-            const response = yield fetch("../abi/KYC.json");
-            KYCService.KYCInfo = yield response.json();
+    async getKYCAbi() {
+        if (KYCService.KYCInfo)
             return KYCService.KYCInfo.abi;
-        });
+        const response = await fetch("../abi/KYC.json");
+        KYCService.KYCInfo = await response.json();
+        return KYCService.KYCInfo.abi;
     }
-    hasValidKYC() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (KYCService.KycResponse && KYCService.KycResponse.isValidKyc)
-                return KYCService.KycResponse;
-            KYCService.KycResponse = (yield this.get("isValidKyc").catch((reason) => {
-                let blockchainError = new BlockchainError(reason);
-                if (blockchainError.addressIsNotValidKYC()) {
-                    return false;
-                }
-                ErrorInfo.report(blockchainError);
-                return false;
-            }));
-            if (KYCService.KycResponse.alpacaId) {
-                TradePanelWidget.User.alpacaId = KYCService.KycResponse.alpacaId;
-                let aUsdBalance = new AUsdBalance();
-                yield aUsdBalance.loadAUSDBalanceUI();
-            }
+    async hasValidKYC() {
+        if (KYCService.KycResponse && KYCService.KycResponse.isValidKyc)
             return KYCService.KycResponse;
+        KYCService.KycResponse = (await this.get("isValidKyc").catch((reason) => {
+            let blockchainError = new BlockchainError(reason);
+            if (blockchainError.addressIsNotValidKYC()) {
+                return false;
+            }
+            ErrorInfo.report(blockchainError);
+            return false;
+        }));
+        if (KYCService.KycResponse.alpacaId) {
+            TradePanelWidget.User.alpacaId = KYCService.KycResponse.alpacaId;
+            let aUsdBalance = new AUsdBalance();
+            await aUsdBalance.loadAUSDBalanceUI();
+        }
+        return KYCService.KycResponse;
+    }
+    async sandboxCreateAccount(firstName, lastName, email) {
+        return await this.post("sandboxCreateAccount", {
+            given_name: firstName,
+            family_name: lastName,
+            email_address: email,
         });
     }
-    sandboxCreateAccount(firstName, lastName, email) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("sandboxCreateAccount", {
-                given_name: firstName,
-                family_name: lastName,
-                email_address: email,
-            });
-        });
+    async saveKYCInfo(data) {
+        return await this.post("kycRegistration", data);
     }
-    saveKYCInfo(data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("kycRegistration", data);
-        });
-    }
-    updateKYCInfo(data) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("updateAccount", data);
-        });
+    async updateKYCInfo(data) {
+        return await this.post("updateAccount", data);
     }
     isValidAccountId(str) {
         const regex = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$");
         return regex.test(str);
     }
-    updateDocuments(params) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            return yield this.post("kycActionRequiredUpdate", params);
-        });
+    async updateDocuments(params) {
+        return await this.post("kycActionRequiredUpdate", params);
     }
 }
 
 class LiminalMarketService extends BlockchainService {
+    static LiminalMarketInfo;
     constructor() {
         super();
-        this.getSecurityTokenAbi = [
-            {
-                inputs: [
-                    {
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                ],
-                name: "getSecurityToken",
-                outputs: [
-                    {
-                        internalType: "address",
-                        name: "",
-                        type: "address",
-                    },
-                ],
-                stateMutability: "view",
-                type: "function",
-            },
-        ];
-        this.createTokenAbi = [
-            {
-                inputs: [
-                    {
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                ],
-                name: "createToken",
-                outputs: [
-                    {
-                        internalType: "contract SecurityToken",
-                        name: "",
-                        type: "address",
-                    },
-                ],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-        ];
     }
-    getSymbolContractAddress(symbol) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            yield this.loadEther();
-            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.getSecurityTokenAbi, TradePanelWidget.User.ether);
-            return yield contract.getSecurityToken(symbol);
-        });
+    async getSymbolContractAddress(symbol) {
+        await this.loadEther();
+        const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.getSecurityTokenAbi, TradePanelWidget.User.ether);
+        return await contract.getSecurityToken(symbol);
     }
-    createToken(symbol, creatingToken) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.createTokenAbi, TradePanelWidget.User.signer);
-            let result = yield contract.createToken(symbol);
-            creatingToken();
-            console.log("createToken result:", result);
-            yield result.wait();
-            return yield this.getSymbolContractAddress(symbol);
-        });
+    async createToken(symbol, creatingToken) {
+        const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.createTokenAbi, TradePanelWidget.User.signer);
+        let result = await contract.createToken(symbol);
+        creatingToken();
+        console.log("createToken result:", result);
+        await result.wait();
+        return await this.getSymbolContractAddress(symbol);
     }
+    getSecurityTokenAbi = [
+        {
+            inputs: [
+                {
+                    internalType: "string",
+                    name: "symbol",
+                    type: "string",
+                },
+            ],
+            name: "getSecurityToken",
+            outputs: [
+                {
+                    internalType: "address",
+                    name: "",
+                    type: "address",
+                },
+            ],
+            stateMutability: "view",
+            type: "function",
+        },
+    ];
+    createTokenAbi = [
+        {
+            inputs: [
+                {
+                    internalType: "string",
+                    name: "symbol",
+                    type: "string",
+                },
+            ],
+            name: "createToken",
+            outputs: [
+                {
+                    internalType: "contract SecurityToken",
+                    name: "",
+                    type: "address",
+                },
+            ],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+    ];
 }
 
 class SecurityTokenService extends BlockchainService {
+    static SecurityTokenInfo;
     constructor() {
         super();
     }
-    getQuantityByAddress(symbol, ethAddress) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let liminalMarketService = new LiminalMarketService();
-            let symbolAddress = yield liminalMarketService.getSymbolContractAddress(symbol);
-            if (symbolAddress === AddressZero)
-                return new BigNumber$1(0);
-            let qty = yield this.getBalanceOf(symbolAddress, ethAddress);
-            return new BigNumber$1(formatEther(qty.toString()));
-        });
+    async getQuantityByAddress(symbol, ethAddress) {
+        let liminalMarketService = new LiminalMarketService();
+        let symbolAddress = await liminalMarketService.getSymbolContractAddress(symbol);
+        if (symbolAddress === AddressZero)
+            return new BigNumber$1(0);
+        let qty = await this.getBalanceOf(symbolAddress, ethAddress);
+        return new BigNumber$1(formatEther(qty.toString()));
     }
-    transfer(symbolAddress, qty) {
-        const _super = Object.create(null, {
-            transferInner: { get: () => super.transferInner }
-        });
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let result = _super.transferInner.call(this, symbolAddress, this.contracts.AUSD_ADDRESS, qty);
-            return result;
-        });
+    async transfer(symbolAddress, qty) {
+        let result = super.transferInner(symbolAddress, this.contracts.AUSD_ADDRESS, qty);
+        return result;
     }
 }
 
@@ -26835,8 +27581,10 @@ var FakeNativeTokenNeededHtml = "You need to have {{symbol}} currency in your wa
 var NativeTokenNeededHtml = "You need to have {{symbol}} currency in your wallet. You use {{symbol}} to pay for using the blockchain.\n\nTo get some {{symbol}} currency\n<ol>\n    <li>Copy your address shown below\n        <input value=\"{{ethAddress}}\">\n    </li>\n    <li>Open <a href=\"{{buyUrl}}\" target=\"_blank\">{{buyUrl}}</a></li>\n    <li>Paste in your address you just copied and click the submit button</li>\n</ol>\n\n\n\n\n\n\n";
 
 class NativeTokenNeeded {
+    onNativeTokenArrived;
+    timeOut = undefined;
+    modal;
     constructor(onNativeTokenArrived) {
-        this.timeOut = undefined;
         this.onNativeTokenArrived = onNativeTokenArrived;
         this.modal = new Modal();
     }
@@ -26869,28 +27617,26 @@ class NativeTokenNeeded {
         let link = document.getElementById("getNativeTokens");
         if (!link)
             return;
-        link.addEventListener("click", () => __awaiter$9(this, void 0, void 0, function* () {
+        link.addEventListener("click", async () => {
             let waitingForNativeToken = document.getElementById("waitingForNativeToken");
-            waitingForNativeToken === null || waitingForNativeToken === void 0 ? void 0 : waitingForNativeToken.classList.remove("d-none");
-            yield this.checkForNativeTokens();
-        }));
+            waitingForNativeToken?.classList.remove("d-none");
+            await this.checkForNativeTokens();
+        });
     }
     cancelTimer() {
         if (this.timeOut)
             clearTimeout(this.timeOut);
     }
-    checkForNativeTokens() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let networkInfo = TradePanelWidget.Network;
-            let hasEnoughNativeTokens = yield networkInfo.hasEnoughNativeTokens();
-            if (hasEnoughNativeTokens) {
-                this.modal.hideModal();
-                this.onNativeTokenArrived();
-            }
-            else {
-                this.timeOut = setTimeout(() => this.checkForNativeTokens(), 5 * 1000);
-            }
-        });
+    async checkForNativeTokens() {
+        let networkInfo = TradePanelWidget.Network;
+        let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
+        if (hasEnoughNativeTokens) {
+            this.modal.hideModal();
+            this.onNativeTokenArrived();
+        }
+        else {
+            this.timeOut = setTimeout(() => this.checkForNativeTokens(), 5 * 1000);
+        }
     }
 }
 
@@ -26927,10 +27673,12 @@ var W8BEN_CORRECTION = "<fieldset>\n    Identifying information submitted by the
 var FileUploadHtml = "<div>\n    <label for=\"{{inputId}}\">{{label}}</label>\n    <input type=\"file\" required id=\"{{inputId}}\" accept=\"{{accept}}\" capture=\"{{capture}}\">\n    <input type=\"hidden\" id=\"{{inputId}}_base64\" name=\"{{inputId}}_base64\">\n    <div class=\"error hidden\" id=\"{{inputId}}_error\"></div>\n</div>\n<div id=\"{{inputId}}_preview\">\n\n</div>";
 
 class FileUpload {
+    maxFileSize = 8 * 1024 * 1024 * 10; //10MB
+    inputId;
+    label;
+    accept = "image/*,.pdf";
+    capture = 'environment';
     constructor(inputId, label, accept = "image/png,image/jpeg,.pdf", capture = 'environment') {
-        this.maxFileSize = 8 * 1024 * 1024 * 10; //10MB
-        this.accept = "image/*,.pdf";
-        this.capture = 'environment';
         this.inputId = inputId;
         this.label = label;
         this.accept = accept;
@@ -26942,7 +27690,7 @@ class FileUpload {
     }
     bindEvents() {
         let fileInput = document.getElementById(this.inputId);
-        fileInput === null || fileInput === void 0 ? void 0 : fileInput.addEventListener('change', (evt) => {
+        fileInput?.addEventListener('change', (evt) => {
             this.processFile(fileInput);
         });
     }
@@ -26997,6 +27745,7 @@ class FileUpload {
             return;
         fileRelatedInfo.classList.add('hidden');
     }
+    static fileUploads = [];
     static registerHandler() {
         Handlebars.registerHelper('fileUpload', (id, label) => {
             let fileUpload = new FileUpload(id, label);
@@ -27005,9 +27754,9 @@ class FileUpload {
         });
     }
 }
-FileUpload.fileUploads = [];
 
 class FormValidator {
+    selector;
     constructor(selector) {
         this.selector = selector;
     }
@@ -27058,7 +27807,6 @@ class FormValidator {
         }
     }
     setMissingInfo(errorDivId, text, focusElementId) {
-        var _a, _b;
         let element = document.getElementById(errorDivId);
         if (!element)
             return;
@@ -27069,8 +27817,8 @@ class FormValidator {
         else {
             element.style.display = 'block';
             if (focusElementId) {
-                (_a = document.getElementById(focusElementId)) === null || _a === void 0 ? void 0 : _a.focus();
-                (_b = document.getElementById(focusElementId)) === null || _b === void 0 ? void 0 : _b.setAttribute('aria-invalid', 'true');
+                document.getElementById(focusElementId)?.focus();
+                document.getElementById(focusElementId)?.setAttribute('aria-invalid', 'true');
             }
         }
     }
@@ -27106,6 +27854,9 @@ class FormValidator {
 }
 
 class KycActionRequired {
+    modal;
+    templates;
+    executeTradeButton;
     constructor(executeTradeButton) {
         this.modal = new Modal();
         this.templates = new Map();
@@ -27126,51 +27877,49 @@ class KycActionRequired {
         this.templates.set('W8BEN_CORRECTION', W8BEN_CORRECTION);
         FileUpload.registerHandler();
     }
-    show() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userService = new UserService();
-            let kycResult = yield userService.kycActionRequired();
-            if (!kycResult)
-                return;
-            let kycInfo = this.getKycMessages(kycResult.messages);
-            let template = Handlebars.compile(KycActionRequiredHtml);
-            let content = template({
-                json: JSON.stringify(kycResult),
-                KycInfo: kycInfo,
-                Other: kycResult.additional_information,
-                SubmitData: kycInfo.indexOf('<input') != -1
-            });
-            this.modal.showModal('Action required', content, false, () => {
-            }, false);
-            let kycActionRequiredForm = document.getElementById('kycActionRequiredForm');
-            kycActionRequiredForm === null || kycActionRequiredForm === void 0 ? void 0 : kycActionRequiredForm.addEventListener('submit', (evt) => __awaiter$9(this, void 0, void 0, function* () {
-                evt.preventDefault();
-                this.hideError();
-                let submitBtn = document.getElementById('kycActionRequiredSubmit');
-                LoadingHelper.setLoading(submitBtn);
-                let formValidator = new FormValidator('#kycActionRequiredForm');
-                if (!formValidator.validateRequiredFields())
-                    return;
-                let params = FormHelper.getParams('#kycActionRequiredForm');
-                let kycService = new KYCService();
-                yield kycService.updateDocuments(params)
-                    .then(() => {
-                    let kycActionRequiredDiv = document.getElementById('kycActionRequiredDiv');
-                    kycActionRequiredDiv === null || kycActionRequiredDiv === void 0 ? void 0 : kycActionRequiredDiv.classList.add('hidden');
-                    let kycActionRequiredSubmittedDiv = document.getElementById('kycActionRequiredSubmittedDiv');
-                    kycActionRequiredSubmittedDiv === null || kycActionRequiredSubmittedDiv === void 0 ? void 0 : kycActionRequiredSubmittedDiv.classList.remove('hidden');
-                    this.executeTradeButton.renderButton();
-                })
-                    .catch(reason => {
-                    this.showError(reason);
-                }).finally(() => {
-                    LoadingHelper.removeLoading();
-                });
-            }));
-            for (let i = 0; i < FileUpload.fileUploads.length; i++) {
-                FileUpload.fileUploads[i].bindEvents();
-            }
+    async show() {
+        let userService = new UserService();
+        let kycResult = await userService.kycActionRequired();
+        if (!kycResult)
+            return;
+        let kycInfo = this.getKycMessages(kycResult.messages);
+        let template = Handlebars.compile(KycActionRequiredHtml);
+        let content = template({
+            json: JSON.stringify(kycResult),
+            KycInfo: kycInfo,
+            Other: kycResult.additional_information,
+            SubmitData: kycInfo.indexOf('<input') != -1
         });
+        this.modal.showModal('Action required', content, false, () => {
+        }, false);
+        let kycActionRequiredForm = document.getElementById('kycActionRequiredForm');
+        kycActionRequiredForm?.addEventListener('submit', async (evt) => {
+            evt.preventDefault();
+            this.hideError();
+            let submitBtn = document.getElementById('kycActionRequiredSubmit');
+            LoadingHelper.setLoading(submitBtn);
+            let formValidator = new FormValidator('#kycActionRequiredForm');
+            if (!formValidator.validateRequiredFields())
+                return;
+            let params = FormHelper.getParams('#kycActionRequiredForm');
+            let kycService = new KYCService();
+            await kycService.updateDocuments(params)
+                .then(() => {
+                let kycActionRequiredDiv = document.getElementById('kycActionRequiredDiv');
+                kycActionRequiredDiv?.classList.add('hidden');
+                let kycActionRequiredSubmittedDiv = document.getElementById('kycActionRequiredSubmittedDiv');
+                kycActionRequiredSubmittedDiv?.classList.remove('hidden');
+                this.executeTradeButton.renderButton();
+            })
+                .catch(reason => {
+                this.showError(reason);
+            }).finally(() => {
+                LoadingHelper.removeLoading();
+            });
+        });
+        for (let i = 0; i < FileUpload.fileUploads.length; i++) {
+            FileUpload.fileUploads[i].bindEvents();
+        }
     }
     getKycMessages(messages) {
         let kycInfo = '';
@@ -27210,12 +27959,14 @@ var KYCFormHtml = "<div id=\"kyc_reg\">\n\n    <form id=\"kyc_wizard_form\" name
 var KycContactHtml = "<fieldset class=\"kycContact hidden\" data-form=\"1\">\n    <div class=\"explain\">\n        To be able to trade on the stock market, we need to get your information.\n        This is a requirement from the financial regulators.\n    </div>\n    <div>\n        <label for=\"email_address\">Email</label>\n        <input type=\"email\" required class=\"form-control\" id=\"email_address\" name=\"email_address\" placeholder=\"name@example.com\" autocomplete=\"email\" value=\"\">\n    </div>\n    <div>\n        <label for=\"phone_number\">Phone</label>\n        <input type=\"tel\" class=\"form-control\" id=\"phone_number\" name=\"phone_number\" placeholder=\"+1-555-666-7788\" autocomplete=\"tel\" value=\"\">\n    </div>\n    <div>\n        <label for=\"street_address\">Permanent Residential Address</label>\n        <div class=\"explain\">It must be a physical address, not a PO box.</div>\n        <input required id=\"street_address\" name=\"street_address\" placeholder=\"20 N San Mateo Dr\" value=\"\" autocomplete=\"address-line1\">\n    </div>\n    <div>\n        <label for=\"unit\">Unit / Apt #</label>\n        <input id=\"unit\" name=\"unit\" value=\"\">\n    </div>\n    <div>\n        <label for=\"city\">City</label>\n        <input id=\"city\" name=\"city\" placeholder=\"Pawnee\" value=\"\" autocomplete=\"address-level2\">\n    </div>\n    <div>\n        <label for=\"postal_code\">Postal code</label>\n        <input required id=\"postal_code\" autocomplete=\"postal-code\" name=\"postal_code\" placeholder=\"94401\" value=\"\">\n    </div>\n    <div id=\"state_div\">\n        <label for=\"state\">State (2 letters)</label>\n        <input maxlength=\"2\" id=\"state\" name=\"state\" placeholder=\"NY\" value=\"\" autocomplete=\"address-level1\">\n    </div>\n    <div>\n        <label for=\"country_of_tax_residence\">Country of tax residence</label>\n        {{#if edit}}\n        <input name=\"country_of_tax_residence\" readonly=\"readonly\" id=\"country_of_tax_residence\">\n        {{/if}}\n        {{#unless edit}}\n        <select required id=\"country_of_tax_residence\" name=\"country_of_tax_residence\" autocomplete=\"country\">\n            <option value=\"\"></option>\n            {{#each countries}}\n            <option value=\"{{code}}\">{{name}}</option>\n            {{/each}}\n        </select>\n        {{/unless}}\n    </div>\n    <div class=\"buttons\">\n        <button type=\"button\" id=\"contact_next\">Next: Identity</button>\n    </div>\n</fieldset>\n";
 
 class KycValidatorError {
+    validValues = '';
+    inputName = '';
+    labelText = '';
+    message;
+    pattern = '';
+    onshow;
+    kycForm;
     constructor(error, kycForm) {
-        var _a, _b;
-        this.validValues = '';
-        this.inputName = '';
-        this.labelText = '';
-        this.pattern = '';
         let obj = {};
         this.kycForm = kycForm;
         try {
@@ -27225,8 +27976,8 @@ class KycValidatorError {
             else {
                 obj = error;
             }
-            this.message = (_a = obj.message) === null || _a === void 0 ? void 0 : _a.replace(/_/g, ' ');
-            this.validValues = (_b = obj.validValues) === null || _b === void 0 ? void 0 : _b.replace(/_/g, ' ');
+            this.message = obj.message?.replace(/_/g, ' ');
+            this.validValues = obj.validValues?.replace(/_/g, ' ');
             this.inputName = obj.inputName;
             this.labelText = obj.labelText;
             this.pattern = obj.pattern;
@@ -27303,12 +28054,12 @@ class KycValidatorError {
             let link = document.getElementById(this.onshow.id);
             if (!link)
                 return;
-            link.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+            link.addEventListener('click', async (evt) => {
                 evt.preventDefault();
                 //await this(this.onshow.functionName, this.onshow.params);
                 //TODO: fix send email
                 document.getElementById('input_error_' + this.inputName).innerHTML = 'Email has been sent to ' + this.onshow.params.email;
-            }));
+            });
         }
     }
     getDivToDisplayErrorMessage(input, counter = 1) {
@@ -27323,14 +28074,14 @@ class KycValidatorError {
 }
 
 class KycBase {
+    kycForm;
     constructor(kycForm) {
         this.kycForm = kycForm;
         FileUpload.registerHandler();
     }
     showFieldset(selector, header) {
-        var _a;
         this.hideFieldsets();
-        (_a = document.querySelector(selector)) === null || _a === void 0 ? void 0 : _a.classList.remove('hidden');
+        document.querySelector(selector)?.classList.remove('hidden');
         document.querySelector('#liminal_market_modal_div > article > header > span').innerHTML = header;
         document.querySelector('#liminal_market_modal_div > article').scrollTop = 0;
         this.kycForm.activeFieldsetSelector = selector;
@@ -27357,12 +28108,10 @@ class KycBase {
         }
     }
     setRequired(inputId) {
-        var _a;
-        (_a = document.getElementById(inputId)) === null || _a === void 0 ? void 0 : _a.setAttribute('required', 'required');
+        document.getElementById(inputId)?.setAttribute('required', 'required');
     }
     removeRequired(inputId) {
-        var _a;
-        (_a = document.getElementById(inputId)) === null || _a === void 0 ? void 0 : _a.removeAttribute('required');
+        document.getElementById(inputId)?.removeAttribute('required');
     }
     bind(selector, eventName, action) {
         let elements = document.querySelectorAll(selector);
@@ -27417,12 +28166,10 @@ class KycBase {
         return true;
     }
     showElement(elementId) {
-        var _a;
-        (_a = document.getElementById(elementId)) === null || _a === void 0 ? void 0 : _a.classList.remove('hidden');
+        document.getElementById(elementId)?.classList.remove('hidden');
     }
     hideElement(elementId) {
-        var _a;
-        (_a = document.getElementById(elementId)) === null || _a === void 0 ? void 0 : _a.classList.add('hidden');
+        document.getElementById(elementId)?.classList.add('hidden');
     }
     setLabel(elementId, text) {
         let element = document.getElementById('tax_id_label');
@@ -27446,7 +28193,6 @@ class KycBase {
         }
     }
     setMissingInfo(errorDivId, text, focusElementId) {
-        var _a, _b;
         let element = document.getElementById(errorDivId);
         if (!element)
             return;
@@ -27457,17 +28203,17 @@ class KycBase {
         else {
             element.style.display = 'block';
             if (focusElementId) {
-                (_a = document.getElementById(focusElementId)) === null || _a === void 0 ? void 0 : _a.focus();
-                (_b = document.getElementById(focusElementId)) === null || _b === void 0 ? void 0 : _b.setAttribute('aria-invalid', 'true');
+                document.getElementById(focusElementId)?.focus();
+                document.getElementById(focusElementId)?.setAttribute('aria-invalid', 'true');
             }
         }
     }
 }
 
 class KycContact extends KycBase {
+    usTaxResidence = false;
     constructor(kycForm) {
         super(kycForm);
-        this.usTaxResidence = false;
     }
     render(edit = false) {
         let template = Handlebars.compile(KycContactHtml);
@@ -27478,18 +28224,17 @@ class KycContact extends KycBase {
     }
     bindEvents() {
         this.bind('#country_of_tax_residence', 'change', (evt) => {
-            var _a, _b;
             let input = evt.target;
             this.usTaxResidence = (input.value.toUpperCase() == 'USA');
             if (this.usTaxResidence) {
-                (_a = document.getElementById('state_div')) === null || _a === void 0 ? void 0 : _a.classList.remove('hidden');
+                document.getElementById('state_div')?.classList.remove('hidden');
                 this.kycForm.setSteps(5);
                 this.setRequired('state');
             }
             else {
                 this.kycForm.setSteps(6);
                 this.removeRequired('state');
-                (_b = document.getElementById('state_div')) === null || _b === void 0 ? void 0 : _b.classList.add('hidden');
+                document.getElementById('state_div')?.classList.add('hidden');
             }
         });
         let showIdentityButton = document.getElementById('contact_next');
@@ -27506,9 +28251,9 @@ class KycContact extends KycBase {
 var KycIdentityHtml = "<fieldset class=\"kycIdentity hidden\" data-form=\"1\">\n    <div>\n        <label for=\"given_name\">Legal First name</label>\n        <input required id=\"given_name\" name=\"given_name\" placeholder=\"Ron\" value=\"\" autocomplete=\"given-name\">\n    </div>\n    <div>\n        <label for=\"middle_name\">Legal Middle name</label>\n        <input id=\"middle_name\" name=\"middle_name\" placeholder=\"\" value=\"\" autocomplete=\"additional-name\">\n    </div>\n    <div>\n        <label for=\"family_name\">Legal Last name</label>\n        <input required id=\"family_name\" name=\"family_name\" placeholder=\"Swanson\" value=\"\" autocomplete=\"family-name\">\n    </div>\n    {{#unless edit}}\n    <div>\n        <label for=\"date_of_birth\">Date of birth</label>\n        <input type=\"date\" required id=\"date_of_birth\" name=\"date_of_birth\" placeholder=\"1978-11-24\" pattern=\"\\d{4}-\\d{2}-\\d{2}\" value=\"\" autocomplete=\"bday\">\n    </div>\n\n    <div id=\"citizen_of_usa_question\" class=\"hidden\">\n        <label for=\"citizen_yes\">Are you a citizen of the United States?</label>\n        <fieldset>\n            <label>\n                <input type=\"radio\" id=\"citizen_yes\" name=\"citizen\" value=\"1\"> Yes\n            </label>\n            <label>\n                <input type=\"radio\" id=\"citizen_no\" name=\"citizen\" value=\"0\"> No\n            </label>\n            <fieldset id=\"citizen_no_type_options\" class=\"hidden\">\n                <label>\n                    <input type=\"radio\" name=\"permanent_resident\" id=\"citizen_no_type_options_1\" value=\"1\"> Green Card\n                    / Permanent Resident\n                </label>\n                <label><input type=\"radio\" name=\"permanent_resident\" id=\"citizen_no_type_options_2\" value=\"0\">\n                    Visa</label>\n            </fieldset>\n        </fieldset>\n    </div>\n    <div id=\"tax_id_type_options\">\n        <label for=\"tax_id_type\">Tax Id Type</label>\n        <select required id=\"tax_id_type\" name=\"tax_id_type\" placeholder=\"USA_SSN\">\n            <option value=\"USA_SSN\"></option>\n            <option value=\"ARG_AR_CUIT\">Argentina CUIT</option>\n            <option value=\"AUS_TFN\">Australian Tax File Number</option>\n            <option value=\"AUS_ABN\">Australian Business Number</option>\n            <option value=\"BOL_NIT\">Bolivia NIT</option>\n            <option value=\"BRA_CPF\">Brazil CPF</option>\n            <option value=\"CHL_RUT\">Chile RUT</option>\n            <option value=\"COL_NIT\">Colombia NIT</option>\n            <option value=\"CRI_NITE\">Costa Rica NITE</option>\n            <option value=\"DEU_TAX_ID\">Germany Tax ID (Identifikationsnummer)</option>\n            <option value=\"DOM_RNC\">Dominican Republic RNC</option>\n            <option value=\"ECU_RUC\">Ecuador RUC</option>\n            <option value=\"FRA_SPI\">France SPI (Reference Tax Number)</option>\n            <option value=\"GBR_UTR\">UK UTR (Unique Taxpayer Reference)</option>\n            <option value=\"GBR_NINO\">UK NINO (National Insurance Number)</option>\n            <option value=\"GTM_NIT\">Guatemala NIT</option>\n            <option value=\"HND_RTN\">Honduras RTN</option>\n            <option value=\"HUN_TIN\">Hungary TIN Number</option>\n            <option value=\"IDN_KTP\">Indonesia KTP</option>\n            <option value=\"IND_PAN\">India PAN Number</option>\n            <option value=\"ISR_TAX_ID\">Israel Tax ID (Teudat Zehut)</option>\n            <option value=\"ITA_TAX_ID\">Italy Tax ID (Codice Fiscale)</option>\n            <option value=\"JPN_TAX_ID\">Japan Tax ID (Koijin Bango)</option>\n            <option value=\"MEX_RFC\">Mexico RFC</option>\n            <option value=\"NIC_RUC\">Nicaragua RUC</option>\n            <option value=\"NLD_TIN\">Netherlands TIN Number</option>\n            <option value=\"PAN_RUC\">Panama RUC</option>\n            <option value=\"PER_RUC\">Peru RUC</option>\n            <option value=\"PRY_RUC\">Paraguay RUC</option>\n            <option value=\"SGP_NRIC\">Singapore NRIC</option>\n            <option value=\"SGP_FIN\">Singapore FIN</option>\n            <option value=\"SGP_ASGD\">Singapore ASGD</option>\n            <option value=\"SGP_ITR\">Singapore ITR</option>\n            <option value=\"SLV_NIT\">El Salvador NIT</option>\n            <option value=\"SWE_TAX_ID\">Sweden Tax ID (Personnummer)</option>\n            <option value=\"URY_RUT\">Uruguay RUT</option>\n            <option value=\"VEN_RIF\">Venezuela RIF</option>\n            <option value=\"NOT_SPECIFIED\">Other Tax IDs</option>\n        </select>\n    </div>\n    <div>\n        <label id=\"tax_id_label\" for=\"tax_id\">Tax Id (SSN)</label>\n        <input required id=\"tax_id\" name=\"tax_id\" placeholder=\"666-55-4321\" value=\"\">\n    </div>\n    <div id=\"country_of_birth_option\">\n        <label for=\"country_of_birth\">Country of birth</label>\n        <select id=\"country_of_birth\" name=\"country_of_birth\">\n            {{#each countries}}\n            <option value=\"{{code}}\">{{name}}</option>\n            {{/each}}\n        </select>\n    </div>\n    <div id=\"country_of_citizenship_option\">\n        <label for=\"country_of_citizenship\">Country of citizenship</label>\n        <select required id=\"country_of_citizenship\" name=\"country_of_citizenship\">\n            <option value=\"\"></option>\n            {{#each countries}}\n            <option value=\"{{code}}\">{{name}}</option>\n            {{/each}}\n        </select>\n    </div>\n    <div id=\"visa_type_option\" class=\"hidden\">\n        <div>\n            <label for=\"visa_type\">Visa type - <a href=\"https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/all-visa-categories.html\" target=\"_blank\">Visa\n                information</a></label>\n            <select id=\"visa_type\" name=\"visa_type\">\n                <option value=\"\"></option>\n                <option value=\"B1\" selected=\"selected\">USA Visa Category B-1</option>\n                <option value=\"B2\">USA Visa Category B-2</option>\n                <option value=\"DACA\">USA Visa Category DACA</option>\n                <option value=\"E1\">USA Visa Category E-1</option>\n                <option value=\"E2\">USA Visa Category E-2</option>\n                <option value=\"E3\">USA Visa Category E-3</option>\n                <option value=\"F1\">USA Visa Category F-1</option>\n                <option value=\"G4\">USA Visa Category G-4</option>\n                <option value=\"H1B\">USA Visa Category H-1B</option>\n                <option value=\"J1\">USA Visa Category J-1</option>\n                <option value=\"L1\">USA Visa Category L-1</option>\n                <option value=\"OTHER\">Any other USA Visa Category</option>\n                <option value=\"O1\">USA Visa Category O-1</option>\n                <option value=\"TN1\">USA Visa Category TN-1</option>\n            </select>\n        </div>\n        <div id=\"visa_expiration_date_option\">\n            <label for=\"visa_expiration_date\">Visa expiration date</label>\n            <input type=\"date\" id=\"visa_expiration_date\" name=\"visa_expiration_date\" placeholder=\"2028-05-01\" value=\"\">\n        </div>\n        <div id=\"date_of_departure_from_usa_option\">\n            <label for=\"date_of_departure_from_usa\">Date of departure from USA</label>\n            <input type=\"date\" id=\"date_of_departure_from_usa\" name=\"date_of_departure_from_usa\" placeholder=\"2028-05-01\" value=\"\">\n        </div>\n\n    </div>\n    <div>\n        <label for=\"annual_income\">Annual Household Income</label>\n        <div class=\"explain\">\n            Annual household income includes income from sources such as employment, alimony, social security,\n            investment income, etc.\n        </div>\n        <select name=\"annual_income\" id=\"annual_income\">\n            <option value=\"\"></option>\n            <option value=\"1\">0 - $20,000</option>\n            <option value=\"2\">$20,000 - $49,999</option>\n            <option value=\"3\">$50,000 - $99,999</option>\n            <option value=\"4\">$100,000 - $499,999</option>\n            <option value=\"5\">$500,000 - $999,999</option>\n            <option value=\"6\">$1,000,000 - $9,999,999</option>\n        </select>\n    </div>\n    <div>\n        <label for=\"liquid_net_worth\">Liquid Assets</label>\n        <div class=\"explain\">Liquid assets is your net worth minus assets that cannot be\n            converted quickly and easily into cash, such as real estate, business equity,\n            personal property and automobiles, expected inheritances, assets earmarked for\n            other purposes, and investments or accounts subject to substantial penalties\n            if they were sold or if assets were withdrawn from them.\n        </div>\n        <select name=\"liquid_net_worth\" required id=\"liquid_net_worth\">\n            <option value=\"\"></option>\n            <option value=\"1\">0 - $20,000</option>\n            <option value=\"2\">$20,000 - $49,999</option>\n            <option value=\"3\">$50,000 - $99,999</option>\n            <option value=\"4\">$100,000 - $499,999</option>\n            <option value=\"5\">$500,000 - $999,999</option>\n            <option value=\"1\">$1,000,000 - $9,999,999</option>\n        </select>\n    </div>\n\n    <div>\n        <label for=\"funding_source\">Funding source</label>\n        <select required id=\"funding_source\" name=\"funding_source\" multiple=\"multiple\" size=\"4\" aria-label=\"size 3 select\">\n            <option value=\"employment_income\">Employment income</option>\n            <option value=\"investments\">Investments</option>\n            <option value=\"inheritance\">Inheritance</option>\n            <option value=\"business_income\">Business income</option>\n            <option value=\"savings\">Savings</option>\n            <option value=\"family\">Family</option>\n        </select>\n    </div>\n    {{/unless}}\n    <div class=\"grid buttons\">\n        <button type=\"button\" id=\"identity_prev\">Previous: Contact</button>\n        <button type=\"button\" id=\"identity_next\">Next: Trusted contacts</button>\n    </div>\n</fieldset>";
 
 class KycIdentity extends KycBase {
+    edit = false;
     constructor(kycForm) {
         super(kycForm);
-        this.edit = false;
     }
     render(edit = false) {
         this.edit = edit;
@@ -27609,11 +28354,11 @@ class KycIdentity extends KycBase {
     }
     bindButtons() {
         let showContactButton = document.getElementById('identity_prev');
-        showContactButton === null || showContactButton === void 0 ? void 0 : showContactButton.addEventListener('click', (evt) => {
+        showContactButton?.addEventListener('click', (evt) => {
             this.kycForm.kycContact.show();
         });
         let showDisclosuresButton = document.getElementById('identity_next');
-        showDisclosuresButton === null || showDisclosuresButton === void 0 ? void 0 : showDisclosuresButton.addEventListener('click', (evt) => {
+        showDisclosuresButton?.addEventListener('click', (evt) => {
             if (!this.validateInputs())
                 return;
             if (!this.validateRequiredFields('.kycIdentity'))
@@ -27672,7 +28417,7 @@ class KycAffiliateOrControlled extends KycBase {
     bindEvents() {
         this.bindFileUploads();
         let company_country = document.getElementById('company_country');
-        company_country === null || company_country === void 0 ? void 0 : company_country.addEventListener('change', (evt) => {
+        company_country?.addEventListener('change', (evt) => {
             let select = evt.target;
             if (select.value === 'USA') {
                 this.setRequired('company_state');
@@ -27711,6 +28456,8 @@ class KycImmediateFamily extends KycBase {
 }
 
 class KycDisclosures extends KycBase {
+    kycAffiliatedOrControlled;
+    kycImmediateFamily;
     constructor(kycForm) {
         super(kycForm);
         this.kycAffiliatedOrControlled = new KycAffiliateOrControlled(this.kycForm);
@@ -27731,32 +28478,32 @@ class KycDisclosures extends KycBase {
     }
     bindEvents() {
         let is_affiliated_exchange_or_finra = document.getElementById('is_affiliated_exchange_or_finra');
-        is_affiliated_exchange_or_finra === null || is_affiliated_exchange_or_finra === void 0 ? void 0 : is_affiliated_exchange_or_finra.addEventListener('click', (evt) => {
+        is_affiliated_exchange_or_finra?.addEventListener('click', (evt) => {
             this.loadAffiliatedOrControlComponent('is_affiliated_exchange_or_finra');
         });
         let is_control_person = document.getElementById('is_control_person');
-        is_control_person === null || is_control_person === void 0 ? void 0 : is_control_person.addEventListener('click', (evt) => {
+        is_control_person?.addEventListener('click', (evt) => {
             this.loadAffiliatedOrControlComponent('is_control_person');
         });
         let immediate_family_exposed = document.getElementById('immediate_family_exposed');
-        immediate_family_exposed === null || immediate_family_exposed === void 0 ? void 0 : immediate_family_exposed.addEventListener('click', (evt) => {
+        immediate_family_exposed?.addEventListener('click', (evt) => {
             this.loadPep('immediate_family_exposed');
         });
         let is_politically_exposed = document.getElementById('is_politically_exposed');
-        is_politically_exposed === null || is_politically_exposed === void 0 ? void 0 : is_politically_exposed.addEventListener('click', (evt) => {
+        is_politically_exposed?.addEventListener('click', (evt) => {
             this.uncheck('immediate_family_exposed');
         });
         let none_above = document.getElementById('none_above');
-        none_above === null || none_above === void 0 ? void 0 : none_above.addEventListener('click', (evt) => {
+        none_above?.addEventListener('click', (evt) => {
             this.removeMissingInfo('none_above_error');
             none_above.removeAttribute('aria-invalid');
         });
         let prev = document.getElementById('disclosures_prev');
-        prev === null || prev === void 0 ? void 0 : prev.addEventListener('click', (evt) => {
+        prev?.addEventListener('click', (evt) => {
             this.kycForm.kycTrustedContact.show();
         });
         let next = document.getElementById('disclosures_next');
-        next === null || next === void 0 ? void 0 : next.addEventListener('click', (evt) => {
+        next?.addEventListener('click', (evt) => {
             if (!this.validateFields())
                 return;
             if (this.kycForm.steps == 5) {
@@ -27848,7 +28595,6 @@ class KycAccountAgreement extends KycBase {
         return template({ edit: edit });
     }
     show() {
-        var _a, _b;
         this.showFieldset(".kycAccountAgreement", "Agreements");
         if (this.kycForm.steps == 5) {
             document.getElementById("account_agreement_prev").innerText =
@@ -27859,15 +28605,15 @@ class KycAccountAgreement extends KycBase {
                 "Previous: Upload documents";
         }
         if (this.kycForm.kycContact.usTaxResidence) {
-            (_a = document.getElementById("w8disclosure_div")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
+            document.getElementById("w8disclosure_div")?.classList.add("hidden");
         }
         else {
-            (_b = document.getElementById("w8disclosure_div")) === null || _b === void 0 ? void 0 : _b.classList.remove("hidden");
+            document.getElementById("w8disclosure_div")?.classList.remove("hidden");
         }
     }
     bindEvents() {
         let account_agreement_prev = document.getElementById("account_agreement_prev");
-        account_agreement_prev === null || account_agreement_prev === void 0 ? void 0 : account_agreement_prev.addEventListener("click", (evt) => {
+        account_agreement_prev?.addEventListener("click", (evt) => {
             if (this.kycForm.steps == 5) {
                 this.kycForm.kycDisclosures.show();
             }
@@ -27881,7 +28627,7 @@ class KycAccountAgreement extends KycBase {
         let submitKYC = document.getElementById("submitKYC");
         if (!submitKYC)
             return;
-        submitKYC.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        submitKYC.addEventListener("click", async (evt) => {
             evt.preventDefault();
             if (!edit && !this.validate())
                 return;
@@ -27895,7 +28641,7 @@ class KycAccountAgreement extends KycBase {
             let networkInfo = TradePanelWidget.Network;
             params.chainId = networkInfo.ChainId;
             let kycService = new KYCService();
-            let result = yield kycService.saveKYCInfo(params).catch((reason) => {
+            let result = await kycService.saveKYCInfo(params).catch((reason) => {
                 if (account_agreement_prev)
                     account_agreement_prev.classList.remove("hidden");
                 LoadingHelper.removeLoading();
@@ -27917,11 +28663,11 @@ class KycAccountAgreement extends KycBase {
                     account_agreement_prev.classList.remove("hidden");
                 LoadingHelper.removeLoading();
             }
-        }));
+        });
     }
     validate() {
         let account_agreement = document.getElementById("account_agreement");
-        if (!(account_agreement === null || account_agreement === void 0 ? void 0 : account_agreement.checked)) {
+        if (!account_agreement?.checked) {
             this.setMissingInfo("account_agreement_error", "You need to agree to agreements", "account_agreement");
             return false;
         }
@@ -27929,7 +28675,7 @@ class KycAccountAgreement extends KycBase {
             this.removeMissingInfo("account_agreement_error", "account_agreement");
         }
         let customer_agreement = document.getElementById("customer_agreement");
-        if (!(customer_agreement === null || customer_agreement === void 0 ? void 0 : customer_agreement.checked)) {
+        if (!customer_agreement?.checked) {
             this.setMissingInfo("customer_agreement_error", "You need to agree to customer agrement", "customer_agreement");
             return false;
         }
@@ -27937,7 +28683,7 @@ class KycAccountAgreement extends KycBase {
             this.removeMissingInfo("customer_agreement_error", "customer_agreement");
         }
         let digital_signature = document.getElementById("digital_signature");
-        if (!(digital_signature === null || digital_signature === void 0 ? void 0 : digital_signature.checked)) {
+        if (!digital_signature?.checked) {
             this.setMissingInfo("digital_signature_error", "You need to sign", "digital_signature");
             return false;
         }
@@ -27951,9 +28697,9 @@ class KycAccountAgreement extends KycBase {
 var KycTrustedContactHtml = "<fieldset class=\"kycTrustedContact hidden\" data-form=\"1\">\n    <div class=\"explain\">\n        A trusted contact is a person you authorize your financial firm to contact in limited circumstances,\n        such as if there is a concern about activity in your account and they have been unable to get in touch with you.\n        <br><br>\n        A trusted contact may be a family member, attorney, accountant or another third-party who you believe would\n        respect your privacy and know how to handle the responsibility.\n        The trusted person should be 18 years old or older.\n    </div>\n    <div>\n        <label for=\"trusted_first_name\">Legal first name of trusted contact</label>\n        <input id=\"trusted_first_name\" name=\"trusted_first_name\">\n    </div>\n    <div>\n        <label for=\"trusted_last_name\">Legal last name of trusted contact</label>\n        <input id=\"trusted_last_name\" name=\"trusted_last_name\">\n    </div>\n    <div>\n        If you fill in name, you are required to fill in one of the following, email, phone or address\n    </div>\n    <div class=\"input_error\" id=\"trusted_contact_missing_info\"></div>\n    <div>\n        <label for=\"trusted_email\">Email of trusted contact</label>\n        <input id=\"trusted_email\" type=\"email\" name=\"trusted_email\">\n    </div>\n    <div>\n        <label for=\"trusted_phone\">Phone of trusted contact</label>\n        <input id=\"trusted_phone\" type=\"tel\" name=\"trusted_phone\">\n    </div>\n    <div>\n        <label for=\"trusted_street_address\">Address of trusted contact</label>\n        <input id=\"trusted_street_address\" name=\"trusted_street_address\">\n    </div>\n    <div>\n        <label for=\"trusted_city\">City of trusted contact</label>\n        <input id=\"trusted_city\" name=\"trusted_city\">\n    </div>\n    <div>\n        <label for=\"trusted_state\">State of trusted contact</label>\n        <input id=\"trusted_state\" name=\"trusted_state\">\n    </div>\n    <div>\n        <label for=\"trusted_postal_code\">Postal code of trusted contact</label>\n        <input id=\"trusted_postal_code\" name=\"trusted_postal_code\">\n    </div>\n    <div>\n        <label for=\"trusted_country\">Country of trusted contact</label>\n        <select required id=\"trusted_country\" required name=\"trusted_country\">\n            <option value=\"\"></option>\n            {{#each countries}}\n            <option value=\"{{code}}\">{{name}}</option>\n            {{/each}}\n        </select>\n    </div>\n    {{#unless edit}}\n    <div class=\"grid buttons\">\n        <button type=\"button\" id=\"trustedContact_prev\">Previous: Identity</button>\n        <button type=\"button\" id=\"trustedContact_next\">Next: Disclosures</button>\n    </div>\n    {{/unless}}\n    {{#if edit}}\n    <div class=\"grid buttons\">\n        <button type=\"button\" id=\"trustedContact_prev\">Previous: Identity</button>\n        <button type=\"submit\" id=\"submitKYC\">Update account</button>\n    </div>\n    <div class=\"alert alert-danger\" id=\"kycError\" role=\"alert\"></div>\n    {{/if}}\n</fieldset>";
 
 class KycTrustedContact extends KycBase {
+    edit = false;
     constructor(kycForm) {
         super(kycForm);
-        this.edit = false;
     }
     render(edit = false) {
         this.edit = edit;
@@ -27965,11 +28711,11 @@ class KycTrustedContact extends KycBase {
     }
     bindEvents() {
         let showPrev = document.getElementById('trustedContact_prev');
-        showPrev === null || showPrev === void 0 ? void 0 : showPrev.addEventListener('click', (evt) => {
+        showPrev?.addEventListener('click', (evt) => {
             this.kycForm.kycIdentity.show();
         });
         let showNext = document.getElementById('trustedContact_next');
-        showNext === null || showNext === void 0 ? void 0 : showNext.addEventListener('click', (evt) => {
+        showNext?.addEventListener('click', (evt) => {
             if (!this.validate())
                 return;
             this.kycForm.kycDisclosures.show();
@@ -28028,11 +28774,11 @@ class KycUpload extends KycBase {
     bindEvents() {
         this.bindFileUploads();
         let upload_prev = document.getElementById('upload_prev');
-        upload_prev === null || upload_prev === void 0 ? void 0 : upload_prev.addEventListener('click', (evt) => {
+        upload_prev?.addEventListener('click', (evt) => {
             this.kycForm.kycDisclosures.show();
         });
         let upload_next = document.getElementById('upload_next');
-        upload_next === null || upload_next === void 0 ? void 0 : upload_next.addEventListener('click', (evt) => {
+        upload_next?.addEventListener('click', (evt) => {
             if (!this.validateRequiredFields('.kycUpload'))
                 return;
             this.kycForm.kycAccountAgreement.show();
@@ -28045,6 +28791,7 @@ var RegistrationHtml = "<fieldset class=\"sandbox_registration\" data-form=\"1\"
 var WaitingHtml = "<div class=\"center\" id=\"sandbox_registration_waiting\">\n    We are registering your account at the broker and funding your account.\n    <br><br>\n    This will take couple of minutes.\n\n    <ol class=\"waiting_list\">\n        <li>We will update you here when it's done.</li>\n        <li>While you wait, <a href=\"#\" id=\"addTokenToWallet\">add aUSD to your wallet</a>\n            <blockquote id=\"needToCopy\" class=\"d-none\">\n                If the button didn't work, you can copy the address here and import it into your wallet\n                <input value=\"{{aUSDAddress}}\">\n            </blockquote>\n        </li>\n        <li aria-busy=\"true\" id=\"li_sandbox_account_status\">Account status: <span id=\"sandbox_account_status\">Being created</span>\n        </li>\n        <li id=\"li_sandbox_funding_status\">Funding status: <span id=\"sandbox_funding_status\">Not funded</span></li>\n    </ol>\n</div>\n";
 
 class Waiting {
+    modal;
     constructor() {
         this.modal = new Modal();
     }
@@ -28053,14 +28800,14 @@ class Waiting {
         let template = Handlebars.compile(WaitingHtml);
         this.modal.showModal('Sandbox registration - waiting', template({ aUSDAddress: contractInfo.AUSD_ADDRESS }), false, undefined, false);
         let addToWallet = document.getElementById('addTokenToWallet');
-        addToWallet === null || addToWallet === void 0 ? void 0 : addToWallet.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        addToWallet?.addEventListener('click', async (evt) => {
             let walletHelper = new WalletHelper();
-            let result = yield walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, 'aUSD', () => {
+            let result = await walletHelper.addTokenToWallet(contractInfo.AUSD_ADDRESS, 'aUSD', () => {
                 this.showCopyField();
             });
             if (!result)
                 this.showCopyField();
-        }));
+        });
     }
     showCopyField() {
         let needToCopy = document.getElementById('needToCopy');
@@ -28071,6 +28818,7 @@ class Waiting {
 }
 
 class Registration {
+    modal;
     constructor() {
         this.modal = new Modal();
     }
@@ -28086,7 +28834,7 @@ class Registration {
     }
     bindEvents() {
         let register_and_fund = document.getElementById("register_and_fund");
-        register_and_fund === null || register_and_fund === void 0 ? void 0 : register_and_fund.addEventListener("click", () => __awaiter$9(this, void 0, void 0, function* () {
+        register_and_fund?.addEventListener("click", async () => {
             this.hideError();
             LoadingHelper.setLoading(register_and_fund);
             let formValidator = new FormValidator("#sandbox_registration");
@@ -28098,7 +28846,7 @@ class Registration {
             let lastName = document.querySelector("#family_name");
             let email = document.querySelector("#email_address");
             let kycService = new KYCService();
-            let alpacaId = yield kycService
+            let alpacaId = await kycService
                 .sandboxCreateAccount(firstName.value, lastName.value, email.value)
                 .catch((reason) => {
                 let error = JSON.parse(reason.message);
@@ -28115,7 +28863,7 @@ class Registration {
                 let waiting = new Waiting();
                 waiting.show();
             }
-        }));
+        });
     }
     hideError() {
         let sandbox_reg_error = document.getElementById("sandbox_reg_error");
@@ -28134,10 +28882,18 @@ class Registration {
 }
 
 class KYCForm {
+    steps = 5;
+    modal;
+    timeout = undefined;
+    onHide;
+    activeFieldsetSelector = ".kycContact";
+    kycContact;
+    kycIdentity;
+    kycDisclosures;
+    kycTrustedContact;
+    kycUpload;
+    kycAccountAgreement;
     constructor(onHide) {
-        this.steps = 5;
-        this.timeout = undefined;
-        this.activeFieldsetSelector = ".kycContact";
         this.modal = new Modal();
         this.onHide = onHide;
         this.kycContact = new KycContact(this);
@@ -28210,6 +28966,8 @@ class KYCForm {
 }
 
 class KycStatusHandler {
+    kycResponse;
+    executeTradeButton;
     constructor(kycResponse, executeTradeButton) {
         this.kycResponse = kycResponse;
         this.executeTradeButton = executeTradeButton;
@@ -28258,10 +29016,10 @@ class KycStatusHandler {
                     "If this status has been for more than 1 day, and you haven't gotten any email from us. Please email us at " +
                     "<a target='_blank' href='mailto:info@liminal.market?subject=My application is being processed for to long&body=Hi, can you help me to find out what the problem is, the KYC process has not changed for some time? My name is _______ and I used the email _______ to register at liminal.market'>info@liminal.market</a>");
             case 'ACTION_REQUIRED':
-                return () => __awaiter$9(this, void 0, void 0, function* () {
+                return async () => {
                     let kycActionRequired = new KycActionRequired(executeTradeButton);
-                    yield kycActionRequired.show();
-                });
+                    await kycActionRequired.show();
+                };
             case 'REJECTED':
                 return this.showModal('Application was rejected', "Your application has been rejected during KYC process.<br /><br />" +
                     "We don't have the information on why that happened, but you can email us at " +
@@ -28285,9 +29043,9 @@ class KycStatusHandler {
                     'please email us at <a target="_blank" href="mailto:info@liminal.market?subject=KYC is being written to blockchain&body=Hi, can you help me to find out what the problem is? My name is _______ and I used the email _______ to register at liminal.market">info@liminal.market</a>');
         }
         return () => {
-            let kycForm = new KYCForm(() => __awaiter$9(this, void 0, void 0, function* () {
-                yield this.executeTradeButton.renderButton();
-            }));
+            let kycForm = new KYCForm(async () => {
+                await this.executeTradeButton.renderButton();
+            });
             kycForm.showKYCForm();
         };
     }
@@ -28307,7 +29065,7 @@ class KycApproved {
         let modal = new Modal();
         modal.showModal('Account approved', template({}));
         let fundAccount = document.getElementById('kycApprovedFund');
-        fundAccount === null || fundAccount === void 0 ? void 0 : fundAccount.addEventListener('click', (evt) => {
+        fundAccount?.addEventListener('click', (evt) => {
             modal.hideModal();
             let ausdFund = new FakeAUSDFund();
             ausdFund.showAUSDFakeFund();
@@ -28320,15 +29078,15 @@ class KycApproved {
 }
 
 class OrderProgress {
-    constructor() {
-        this.progressNr = 0;
-    }
+    progressNr = 0;
+    static instance = new OrderProgress();
+    constructor() { }
     static getInstance() {
         return this.instance;
     }
     clearProgressText() {
         let executingOrderProgress = document.getElementById("executing-order-progress");
-        executingOrderProgress === null || executingOrderProgress === void 0 ? void 0 : executingOrderProgress.classList.add("hidden");
+        executingOrderProgress?.classList.add("hidden");
         this.progressNr = 0;
     }
     setProgressText(progressNr, text, hash) {
@@ -28353,11 +29111,15 @@ class OrderProgress {
         this.progressNr = progressNr;
     }
 }
-OrderProgress.instance = new OrderProgress();
 
 class ExecuteOrderButton {
+    authenticateService;
+    sellTradeInput;
+    buyTradeInput;
+    template;
+    button;
+    static Instance;
     constructor(sellTradeInput, buyTradeInput) {
-        this.hasBuyingPower = false;
         this.sellTradeInput = sellTradeInput;
         this.buyTradeInput = buyTradeInput;
         this.authenticateService = new AuthenticateService();
@@ -28368,49 +29130,47 @@ class ExecuteOrderButton {
     renderToString() {
         return this.template(this);
     }
-    renderButton() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (this.button) {
-                this.button.outerHTML = this.button.outerHTML;
-            }
-            this.button = document.getElementById("liminal_market_execute_order");
-            this.loadingButton(this.button);
-            //wallet connected
-            if (!(yield this.walletIsConnected(this.button))) {
-                return;
-            }
-            //user logged in
-            if (!(yield this.userIsLoggedIn(this.button))) {
-                return;
-            }
-            //chain id correct
-            if (!this.chainIdIsCorrect(this.button)) {
-                return;
-            }
-            //native token is available
-            if (!(yield this.userHasNativeToken(this.button))) {
-                return;
-            }
-            //kyc is done
-            if (!(yield this.kycIsDone(this.button))) {
-                return;
-            }
-            //ausd is setup
-            if (!(yield this.userHasAUSD(this.button))) {
-                return;
-            }
-            //ausd > buy amount
-            if (!(yield this.userHasEnoughQty(this.button))) {
-                return;
-            }
-            if (!this.hasQuantityAndSymbol(this.button)) {
-                return;
-            }
-            if (!(yield this.isMarketOpen(this.button))) {
-                return;
-            }
-            this.enableExecuteOrder(this.button);
-        });
+    async renderButton() {
+        // if (this.button) {
+        //   this.button.outerHTML = this.button.outerHTML;
+        // }
+        this.button = document.getElementById("liminal_market_execute_order");
+        this.loadingButton(this.button);
+        //wallet connected
+        if (!(await this.walletIsConnected(this.button))) {
+            return;
+        }
+        //user logged in
+        if (!(await this.userIsLoggedIn(this.button))) {
+            return;
+        }
+        //chain id correct
+        if (!this.chainIdIsCorrect(this.button)) {
+            return;
+        }
+        //native token is available
+        if (!(await this.userHasNativeToken(this.button))) {
+            return;
+        }
+        //kyc is done
+        if (!(await this.kycIsDone(this.button))) {
+            return;
+        }
+        //ausd is setup
+        if (!(await this.userHasAUSD(this.button))) {
+            return;
+        }
+        //ausd > buy amount
+        if (!(await this.userHasEnoughQty(this.button))) {
+            return;
+        }
+        if (!this.hasQuantityAndSymbol(this.button)) {
+            return;
+        }
+        if (!(await this.isMarketOpen(this.button))) {
+            return;
+        }
+        this.enableExecuteOrder(this.button);
     }
     enableExecuteOrder(button) {
         //if (this.sellTradeInput.quantity.eq(0)) return;
@@ -28418,14 +29178,14 @@ class ExecuteOrderButton {
         button.innerHTML = "Execute trade";
         button.classList.replace("disabled", "enabled");
         this.stopLoadingButton(button);
-        button.addEventListener("click", () => __awaiter$9(this, void 0, void 0, function* () {
+        button.addEventListener("click", async () => {
             this.loadingButton(button);
             button.innerHTML = "Confirm transaction in your wallet";
             if (this.sellTradeInput.symbol == "aUSD") {
                 let liminalMarketService = new LiminalMarketService();
-                let symbolAddress = yield liminalMarketService.getSymbolContractAddress(this.buyTradeInput.symbol);
+                let symbolAddress = await liminalMarketService.getSymbolContractAddress(this.buyTradeInput.symbol);
                 if (symbolAddress === AddressZero) {
-                    let result = yield liminalMarketService
+                    let result = await liminalMarketService
                         .createToken(this.buyTradeInput.symbol, () => {
                         button.innerHTML = "Creating token. Give it few seconds";
                     })
@@ -28440,38 +29200,36 @@ class ExecuteOrderButton {
                     }
                     symbolAddress = result;
                 }
-                yield this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new AUSDService(), button);
+                await this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new AUSDService(), button);
             }
             else {
                 let liminalMarketService = new LiminalMarketService();
-                let symbolAddress = yield liminalMarketService.getSymbolContractAddress(this.sellTradeInput.symbol);
-                yield this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new SecurityTokenService(), button);
+                let symbolAddress = await liminalMarketService.getSymbolContractAddress(this.sellTradeInput.symbol);
+                await this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new SecurityTokenService(), button);
             }
-        }));
+        });
     }
-    executeTransfer(symbolAddress, quantity, service, button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            yield service
-                .transfer(symbolAddress, quantity)
-                .then((transaction) => {
+    async executeTransfer(symbolAddress, quantity, service, button) {
+        await service
+            .transfer(symbolAddress, quantity)
+            .then((transaction) => {
+            button.innerHTML = "Execute trade";
+            if (!transaction)
+                return;
+            OrderProgress.getInstance().setProgressText(0, "Sending to blockchain", transaction.hash);
+        })
+            .catch((reason) => {
+            let msg = reason.toString();
+            console.log("CATCH - contract.transfer", reason);
+            if (msg.indexOf("Market is closed") != -1) {
+                this.button.innerHTML = "Market is closed";
+            }
+            else {
                 button.innerHTML = "Execute trade";
-                if (!transaction)
-                    return;
-                OrderProgress.getInstance().setProgressText(0, "Sending to blockchain", transaction.hash);
-            })
-                .catch((reason) => {
-                let msg = reason.toString();
-                console.log("CATCH - contract.transfer", reason);
-                if (msg.indexOf("Market is closed") != -1) {
-                    this.button.innerHTML = "Market is closed";
-                }
-                else {
-                    button.innerHTML = "Execute trade";
-                }
-            })
-                .finally(() => {
-                this.stopLoadingButton(button);
-            });
+            }
+        })
+            .finally(() => {
+            this.stopLoadingButton(button);
         });
     }
     loadingButton(button) {
@@ -28480,32 +29238,28 @@ class ExecuteOrderButton {
     stopLoadingButton(button) {
         button.removeAttribute("aria-busy");
     }
-    walletIsConnected(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let authenticationService = new AuthenticateService();
-            yield authenticationService.isAuthenticated();
-            if (TradePanelWidget.User.provider)
-                return true;
-            button.innerHTML = "Connect wallet";
-            button.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
-                let connectWallet = new ConnectWallet();
-                yield connectWallet.connectWallet(evt.target);
-            }));
-            this.stopLoadingButton(button);
-            return false;
+    async walletIsConnected(button) {
+        let authenticationService = new AuthenticateService();
+        await authenticationService.isAuthenticated();
+        if (TradePanelWidget.User.provider)
+            return true;
+        button.innerHTML = "Connect wallet";
+        button.addEventListener("click", async (evt) => {
+            let connectWallet = new ConnectWallet();
+            await connectWallet.connectWallet(evt.target);
         });
+        this.stopLoadingButton(button);
+        return false;
     }
-    userIsLoggedIn(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (TradePanelWidget.User.isLoggedIn)
-                return true;
-            button.innerHTML = "Login";
-            button.addEventListener("click", () => __awaiter$9(this, void 0, void 0, function* () {
-                yield this.authenticateService.authenticateUser();
-            }));
-            this.stopLoadingButton(button);
-            return false;
+    async userIsLoggedIn(button) {
+        if (TradePanelWidget.User.isLoggedIn)
+            return true;
+        button.innerHTML = "Login";
+        button.addEventListener("click", async () => {
+            await this.authenticateService.authenticateUser();
         });
+        this.stopLoadingButton(button);
+        return false;
     }
     chainIdIsCorrect(button) {
         let chainId = TradePanelWidget.User.chainId;
@@ -28517,134 +29271,127 @@ class ExecuteOrderButton {
             return true;
         }
         button.innerHTML = "Switch Network";
-        button.addEventListener("click", () => __awaiter$9(this, void 0, void 0, function* () {
-            yield TradePanelWidget.Network.addNetworkToWallet();
-        }));
+        button.addEventListener("click", async () => {
+            await TradePanelWidget.Network.addNetworkToWallet();
+        });
         this.stopLoadingButton(button);
         return false;
     }
-    userHasNativeToken(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let networkInfo = TradePanelWidget.Network;
-            let hasEnoughNativeTokens = yield networkInfo.hasEnoughNativeTokens();
-            if (hasEnoughNativeTokens)
-                return true;
-            button.classList.replace("enabled", "disabled");
-            button.innerHTML =
-                "You need " +
-                    networkInfo.NativeCurrencyName +
-                    " tokens. Click me for some tokens";
-            button.addEventListener("click", () => {
-                let nativeTokenNeededModal = new NativeTokenNeeded(() => {
-                    this.renderButton();
-                });
-                nativeTokenNeededModal.show();
-            });
-            this.stopLoadingButton(button);
-            return false;
-        });
-    }
-    kycIsDone(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let kycService = new KYCService();
-            let kycResponse = yield kycService.hasValidKYC();
-            if (!kycResponse.isValidKyc) {
-                let kycStatusHandler = new KycStatusHandler(kycResponse, this);
-                button.innerHTML = kycStatusHandler.getButtonText();
-                button.addEventListener("click", kycStatusHandler.getButtonClickEvent(this));
-                if (kycResponse.status == "ACTIVE") {
-                    this.loadingButton(button);
-                    this.kycIdDoneTimeout = setInterval(() => __awaiter$9(this, void 0, void 0, function* () {
-                        kycResponse = yield kycService.hasValidKYC();
-                        if (kycResponse.isValidKyc) {
-                            this.hasBuyingPower = kycResponse.hasBuyingPower;
-                            if (!this.hasBuyingPower) {
-                                let kycApproved = new KycApproved();
-                                kycApproved.show();
-                            }
-                            clearInterval(this.kycIdDoneTimeout);
-                            yield this.renderButton();
-                        }
-                    }), 30 * 1000);
-                }
-                else {
-                    this.stopLoadingButton(button);
-                }
-                return false;
-            }
-            this.stopLoadingButton(button);
+    async userHasNativeToken(button) {
+        let networkInfo = TradePanelWidget.Network;
+        let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
+        if (hasEnoughNativeTokens)
             return true;
+        button.classList.replace("enabled", "disabled");
+        button.innerHTML =
+            "You need " +
+                networkInfo.NativeCurrencyName +
+                " tokens. Click me for some tokens";
+        button.addEventListener("click", () => {
+            let nativeTokenNeededModal = new NativeTokenNeeded(() => {
+                this.renderButton();
+            });
+            nativeTokenNeededModal.show();
         });
+        this.stopLoadingButton(button);
+        return false;
     }
-    userHasAUSD(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let ausdService = new AUSDService();
-            let balance = yield ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
-            if (balance.isGreaterThan(0))
-                return true;
-            if (this.hasBuyingPower) {
-                button.innerHTML = "We are funding your aUSD token";
-                this.checkBalanceInterval = setInterval(() => __awaiter$9(this, void 0, void 0, function* () {
-                    AUSDService.lastUpdate = undefined;
-                    let balance = yield ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
-                    if (balance.isGreaterThan(0)) {
-                        yield AUsdBalance.forceLoadAUSDBalanceUI();
-                        clearInterval(this.checkBalanceInterval);
-                        yield this.renderButton();
+    kycIdDoneTimeout;
+    async kycIsDone(button) {
+        let kycService = new KYCService();
+        let kycResponse = await kycService.hasValidKYC();
+        if (!kycResponse.isValidKyc) {
+            let kycStatusHandler = new KycStatusHandler(kycResponse, this);
+            button.innerHTML = kycStatusHandler.getButtonText();
+            button.addEventListener("click", kycStatusHandler.getButtonClickEvent(this));
+            if (kycResponse.status == "ACTIVE") {
+                this.loadingButton(button);
+                this.kycIdDoneTimeout = setInterval(async () => {
+                    kycResponse = await kycService.hasValidKYC();
+                    if (kycResponse.isValidKyc) {
+                        this.hasBuyingPower = kycResponse.hasBuyingPower;
+                        if (!this.hasBuyingPower) {
+                            let kycApproved = new KycApproved();
+                            kycApproved.show();
+                        }
+                        clearInterval(this.kycIdDoneTimeout);
+                        await this.renderButton();
                     }
-                }), 10 * 1000);
-                return false;
-            }
-            if (TradePanelWidget.Network.TestNetwork) {
-                button.innerHTML = "You need aUSD. Click here to get some";
+                }, 30 * 1000);
             }
             else {
-                button.innerHTML = "You need aUSD. Click here for instructions";
+                this.stopLoadingButton(button);
             }
+            return false;
+        }
+        this.stopLoadingButton(button);
+        return true;
+    }
+    checkBalanceInterval;
+    hasBuyingPower = false;
+    async userHasAUSD(button) {
+        let ausdService = new AUSDService();
+        let balance = await ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
+        if (balance.isGreaterThan(0))
+            return true;
+        if (this.hasBuyingPower) {
+            button.innerHTML = "We are funding your aUSD token";
+            this.checkBalanceInterval = setInterval(async () => {
+                AUSDService.lastUpdate = undefined;
+                let balance = await ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
+                if (balance.isGreaterThan(0)) {
+                    await AUsdBalance.forceLoadAUSDBalanceUI();
+                    clearInterval(this.checkBalanceInterval);
+                    await this.renderButton();
+                }
+            }, 10 * 1000);
+            return false;
+        }
+        if (TradePanelWidget.Network.TestNetwork) {
+            button.innerHTML = "You need aUSD. Click here to get some";
+        }
+        else {
+            button.innerHTML = "You need aUSD. Click here for instructions";
+        }
+        button.addEventListener("click", () => {
+            let ausdFund = new FakeAUSDFund();
+            ausdFund.showAUSDFakeFund();
+        });
+        this.stopLoadingButton(button);
+        return false;
+    }
+    async userHasEnoughQty(button) {
+        let ausdService = new AUSDService();
+        if (this.sellTradeInput.symbol == "aUSD") {
+            let balance = await ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
+            if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
+                return true;
+            button.innerHTML = "You don't have enough aUSD. Click for more funding";
             button.addEventListener("click", () => {
                 let ausdFund = new FakeAUSDFund();
                 ausdFund.showAUSDFakeFund();
             });
-            this.stopLoadingButton(button);
-            return false;
-        });
-    }
-    userHasEnoughQty(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let ausdService = new AUSDService();
-            if (this.sellTradeInput.symbol == "aUSD") {
-                let balance = yield ausdService.getAUSDBalanceOf(TradePanelWidget.User.address);
-                if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
-                    return true;
-                button.innerHTML = "You don't have enough aUSD. Click for more funding";
-                button.addEventListener("click", () => {
-                    let ausdFund = new FakeAUSDFund();
-                    ausdFund.showAUSDFakeFund();
-                });
-            }
-            else {
-                let securityTokenService = new SecurityTokenService();
-                let userQuantity = yield securityTokenService.getQuantityByAddress(this.sellTradeInput.symbol, TradePanelWidget.User.address);
-                if (this.sellTradeInput.quantity <= userQuantity)
-                    return true;
-                button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
-                button.classList.replace("disable", "enable");
-            }
-            this.stopLoadingButton(button);
-            return false;
-        });
-    }
-    isMarketOpen(button) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let userService = new UserService();
-            let isMarketOpen = yield userService.isMarketOpenOrUserOffHours();
-            if (isMarketOpen)
+        }
+        else {
+            let securityTokenService = new SecurityTokenService();
+            let userQuantity = await securityTokenService.getQuantityByAddress(this.sellTradeInput.symbol, TradePanelWidget.User.address);
+            if (this.sellTradeInput.quantity <= userQuantity)
                 return true;
-            button.innerHTML = "Market is closed";
-            button.classList.replace("enabled", "disabled");
-            this.stopLoadingButton(button);
-            return false;
-        });
+            button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
+            button.classList.replace("disable", "enable");
+        }
+        this.stopLoadingButton(button);
+        return false;
+    }
+    async isMarketOpen(button) {
+        let userService = new UserService();
+        let isMarketOpen = await userService.isMarketOpenOrUserOffHours();
+        if (isMarketOpen)
+            return true;
+        button.innerHTML = "Market is closed";
+        button.classList.replace("enabled", "disabled");
+        this.stopLoadingButton(button);
+        return false;
     }
     hasQuantityAndSymbol(button) {
         if (this.sellTradeInput.quantity.eq(0)) {
@@ -29300,44 +30047,41 @@ module.exports;
 var create = module.exports.create;
 
 class OrderExecutedModal {
-    show(object) {
-        var _a;
-        return __awaiter$9(this, void 0, void 0, function* () {
-            yield AUsdBalance.forceLoadAUSDBalanceUI();
-            OrderProgress.getInstance().clearProgressText();
-            let providerInfo = ProviderInfo.Instance;
-            let networkInfo = TradePanelWidget.Network;
-            let isBuy = object.side == "buy";
-            let obj = isBuy
-                ? this.getBuyingSharesObj(object)
-                : this.getSellSharesObj(object);
-            obj.walletName = (_a = providerInfo === null || providerInfo === void 0 ? void 0 : providerInfo.WalletName) !== null && _a !== void 0 ? _a : "";
-            obj.blockExplorerLink =
-                networkInfo.BlockExplorer + "/tx/" + object.transaction_hash;
-            let template = Handlebars.compile(TradeExecutedHtml);
-            let content = template(obj);
-            let modal = new Modal();
-            modal.showModal("Trade executed", content);
-            let myCanvas = document.createElement("canvas");
-            myCanvas.id = "confetti";
-            document.querySelector(".trade_executed").appendChild(myCanvas);
-            let myConfetti = create(myCanvas, {
-                resize: true,
-                useWorker: true,
-            });
-            myConfetti({ particleCount: 200, spread: 200 });
-            let addTokenToWallet = document.getElementById("addTokenToWallet");
-            if (!addTokenToWallet)
-                return;
-            addTokenToWallet.addEventListener("click", (evt) => {
-                let address = evt.target.dataset.address;
-                let walletHelper = new WalletHelper();
-                walletHelper.addTokenToWallet(address, obj.buyingSymbol, () => {
-                    let addTokenToWalletFailed = document.getElementById("addTokenToWalletFailed");
-                    if (!addTokenToWalletFailed)
-                        return;
-                    addTokenToWalletFailed.classList.remove("d-none");
-                });
+    async show(object) {
+        await AUsdBalance.forceLoadAUSDBalanceUI();
+        OrderProgress.getInstance().clearProgressText();
+        let providerInfo = ProviderInfo.Instance;
+        let networkInfo = TradePanelWidget.Network;
+        let isBuy = object.side == "buy";
+        let obj = isBuy
+            ? this.getBuyingSharesObj(object)
+            : this.getSellSharesObj(object);
+        obj.walletName = providerInfo?.WalletName ?? "";
+        obj.blockExplorerLink =
+            networkInfo.BlockExplorer + "/tx/" + object.transaction_hash;
+        let template = Handlebars.compile(TradeExecutedHtml);
+        let content = template(obj);
+        let modal = new Modal();
+        modal.showModal("Trade executed", content);
+        let myCanvas = document.createElement("canvas");
+        myCanvas.id = "confetti";
+        document.querySelector(".trade_executed").appendChild(myCanvas);
+        let myConfetti = create(myCanvas, {
+            resize: true,
+            useWorker: true,
+        });
+        myConfetti({ particleCount: 200, spread: 200 });
+        let addTokenToWallet = document.getElementById("addTokenToWallet");
+        if (!addTokenToWallet)
+            return;
+        addTokenToWallet.addEventListener("click", (evt) => {
+            let address = evt.target.dataset.address;
+            let walletHelper = new WalletHelper();
+            walletHelper.addTokenToWallet(address, obj.buyingSymbol, () => {
+                let addTokenToWalletFailed = document.getElementById("addTokenToWalletFailed");
+                if (!addTokenToWalletFailed)
+                    return;
+                addTokenToWalletFailed.classList.remove("d-none");
             });
         });
     }
@@ -29383,16 +30127,15 @@ class OrderExecutedModal {
 
 class EventService {
     static register() {
-        UserInfo.onUserLoggedIn.push(() => __awaiter$9(this, void 0, void 0, function* () {
+        UserInfo.onUserLoggedIn.push(async () => {
             let eventService = new EventService();
             eventService.listen();
-        }));
+        });
     }
     listen() {
         let network = TradePanelWidget.Network;
         let eventSource = new EventSource(network.ServerUrl + "/listenForChanges?jwt=" + TradePanelWidget.User.token);
-        eventSource.onmessage = (e) => __awaiter$9(this, void 0, void 0, function* () {
-            var _a;
+        eventSource.onmessage = async (e) => {
             let data = e.data;
             console.log(e);
             if (!data || data == "ok")
@@ -29407,10 +30150,10 @@ class EventService {
                 orderExecutedModal.show(obj);
             }
             else if (obj.methodName == "SendingToExchange") {
-                yield OrderProgress.getInstance().setProgressText(1, "Received order, sending to stock exchange", obj.hash);
+                await OrderProgress.getInstance().setProgressText(1, "Received order, sending to stock exchange", obj.hash);
             }
             else if (obj.methodName == "OrderExecutedWritingBlockchain") {
-                yield OrderProgress.getInstance().setProgressText(1, "Order executed, writing to blockchain", "");
+                await OrderProgress.getInstance().setProgressText(1, "Order executed, writing to blockchain", "");
             }
             else if (obj.methodName == "UpdateAUsdOnChain") {
                 FakeAUSDFund.writingToChain();
@@ -29430,7 +30173,7 @@ class EventService {
                 let aUsdBalance = new AUsdBalance();
                 let balance = formatEther(obj.balance);
                 aUsdBalance.updateUIBalance(new BigNumber$1(balance));
-                (_a = ExecuteOrderButton.Instance) === null || _a === void 0 ? void 0 : _a.renderButton();
+                ExecuteOrderButton.Instance?.renderButton();
             }
             else if (obj.methodName == "AccountValidated") {
                 if (TradePanelWidget.Network.TestNetwork) {
@@ -29460,7 +30203,7 @@ class EventService {
                     ExecuteOrderButton.Instance.renderButton();
                 }
             }
-        });
+        };
     }
 }
 
@@ -29499,22 +30242,20 @@ class CopyHelper {
             document.body.removeChild(textArea);
         }
     }
-    copyTextToClipboard(text) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!navigator.clipboard) {
-                return this.fallbackCopyTextToClipboard(text);
-            }
-            let result = yield navigator.clipboard.writeText(text).then(ble => {
-                console.log('ble', ble);
-                return true;
-            }).
-                catch(function (err) {
-                console.info(err);
-                return false;
-            });
-            console.log(result);
-            return result;
+    async copyTextToClipboard(text) {
+        if (!navigator.clipboard) {
+            return this.fallbackCopyTextToClipboard(text);
+        }
+        let result = await navigator.clipboard.writeText(text).then(ble => {
+            console.log('ble', ble);
+            return true;
+        }).
+            catch(function (err) {
+            console.info(err);
+            return false;
         });
+        console.log(result);
+        return result;
     }
 }
 
@@ -29523,33 +30264,31 @@ var AddressInfoHtml = "<article id=\"symbolInfoToCopy\">\n    This is the addres
 var ContractAddressNotFound = "<tr id=\"symbolInfoToCopy\">\n    <td colspan=\"4\">\n        <article>\n        This symbol has never been bought and does not exist. Buy this symbol and address will become available.\n        </article>\n    </td>\n</tr>";
 
 class SecuritiesList {
+    page;
+    tbodyId = 'liminal_market_securities_list';
+    loadmore;
+    onSelectSymbol = undefined;
     constructor() {
-        this.tbodyId = 'liminal_market_securities_list';
-        this.onSelectSymbol = undefined;
         this.page = 0;
         this.loadmore = true;
     }
-    render() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securitiesService = yield SecuritiesService.getInstance();
-            let securitiesCount = securitiesService.securitiesArray.length;
-            let securities = yield securitiesService.getPaginatingSecurities(this.page++);
-            Handlebars.registerPartial("securities", SecurityHtml);
-            let template = Handlebars.compile(SecuritiesListHtml);
-            let obj = {
-                tbodyId: this.tbodyId,
-                securities: securities,
-                securitiesCount: securitiesCount
-            };
-            return template(obj);
-        });
+    async render() {
+        let securitiesService = await SecuritiesService.getInstance();
+        let securitiesCount = securitiesService.securitiesArray.length;
+        let securities = await securitiesService.getPaginatingSecurities(this.page++);
+        Handlebars.registerPartial("securities", SecurityHtml);
+        let template = Handlebars.compile(SecuritiesListHtml);
+        let obj = {
+            tbodyId: this.tbodyId,
+            securities: securities,
+            securitiesCount: securitiesCount
+        };
+        return template(obj);
     }
-    bindEvents(onSelectSymbol) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            this.bindOnClickEvent(onSelectSymbol);
-            yield this.bindSearchEvent();
-            this.bindLoadMore();
-        });
+    async bindEvents(onSelectSymbol) {
+        this.bindOnClickEvent(onSelectSymbol);
+        await this.bindSearchEvent();
+        this.bindLoadMore();
     }
     bindOnClickEvent(onSelectSymbol) {
         let table = document.getElementById('liminal_market_securities_table');
@@ -29558,62 +30297,56 @@ class SecuritiesList {
             return;
         }
         this.onSelectSymbol = onSelectSymbol;
-        table.onclick = (evt) => __awaiter$9(this, void 0, void 0, function* () {
-            yield this.handleClick(evt);
+        table.onclick = async (evt) => {
+            await this.handleClick(evt);
+        };
+    }
+    async handleClick(evt) {
+        let element = evt.target;
+        if (element.tagName.toLocaleLowerCase() === 'a') {
+            await this.addToWalletOrGetAddress(evt, element);
+            return;
+        }
+        let parentTr = element.parentElement;
+        if (!parentTr)
+            return;
+        if (parentTr.tagName.toLocaleLowerCase() !== 'tr') {
+            parentTr = parentTr.parentElement;
+        }
+        let symbol = parentTr.dataset.symbol;
+        if (!symbol)
+            return;
+        let name = parentTr.dataset.name;
+        let logo = parentTr.dataset.logo;
+        if (this.onSelectSymbol) {
+            this.onSelectSymbol(symbol, name, logo);
+        }
+    }
+    async bindSearchEvent() {
+        let searchForSymbol = document.getElementById('search_for_symbol');
+        if (!searchForSymbol)
+            return;
+        let securitiesService = await SecuritiesService.getInstance();
+        let timeout = null;
+        searchForSymbol.addEventListener('keyup', async (evt) => {
+            if (timeout != null)
+                clearTimeout(timeout);
+            timeout = setTimeout(async () => {
+                let search = evt.target.value;
+                if (!search || search.length < 2) {
+                    this.loadmore = true;
+                    await this.showTopSecurities(securitiesService);
+                    return;
+                }
+                this.loadmore = false;
+                let securities = await securitiesService.find(search);
+                this.loadSecuritiesToDom(securities);
+            }, 500);
         });
     }
-    handleClick(evt) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let element = evt.target;
-            if (element.tagName.toLocaleLowerCase() === 'a') {
-                yield this.addToWalletOrGetAddress(evt, element);
-                return;
-            }
-            let parentTr = element.parentElement;
-            if (!parentTr)
-                return;
-            if (parentTr.tagName.toLocaleLowerCase() !== 'tr') {
-                parentTr = parentTr.parentElement;
-            }
-            let symbol = parentTr.dataset.symbol;
-            if (!symbol)
-                return;
-            let name = parentTr.dataset.name;
-            let logo = parentTr.dataset.logo;
-            if (this.onSelectSymbol) {
-                this.onSelectSymbol(symbol, name, logo);
-            }
-        });
-    }
-    bindSearchEvent() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let searchForSymbol = document.getElementById('search_for_symbol');
-            if (!searchForSymbol)
-                return;
-            let securitiesService = yield SecuritiesService.getInstance();
-            let timeout = null;
-            searchForSymbol.addEventListener('keyup', (evt) => __awaiter$9(this, void 0, void 0, function* () {
-                if (timeout != null)
-                    clearTimeout(timeout);
-                timeout = setTimeout(() => __awaiter$9(this, void 0, void 0, function* () {
-                    let search = evt.target.value;
-                    if (!search || search.length < 2) {
-                        this.loadmore = true;
-                        yield this.showTopSecurities(securitiesService);
-                        return;
-                    }
-                    this.loadmore = false;
-                    let securities = yield securitiesService.find(search);
-                    this.loadSecuritiesToDom(securities);
-                }), 500);
-            }));
-        });
-    }
-    showTopSecurities(securitiesService) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securities = yield securitiesService.getTopSecurities();
-            this.loadSecuritiesToDom(securities);
-        });
+    async showTopSecurities(securitiesService) {
+        let securities = await securitiesService.getTopSecurities();
+        this.loadSecuritiesToDom(securities);
     }
     loadSecuritiesToDom(securities) {
         let tbody = document.getElementById(this.tbodyId);
@@ -29628,83 +30361,75 @@ class SecuritiesList {
     }
     bindLoadMore() {
         const el = document.querySelector('#liminal_market_load_more');
-        const observer = new window.IntersectionObserver(([entry]) => __awaiter$9(this, void 0, void 0, function* () {
+        const observer = new window.IntersectionObserver(async ([entry]) => {
             if (entry.isIntersecting) {
-                yield this.loadMore();
+                await this.loadMore();
             }
-        }), {
+        }, {
             root: null,
             threshold: 0.1, // set offset 0.1 means trigger if atleast 10% of element in viewport
         });
         observer.observe(el);
     }
-    loadMore() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (!this.loadmore)
-                return;
-            let tbody = document.getElementById(this.tbodyId);
-            if (!tbody)
-                return;
-            let securitiesService = yield SecuritiesService.getInstance();
-            let securities = yield securitiesService.getPaginatingSecurities(this.page++);
-            let template = Handlebars.compile(SecurityHtml);
-            let obj = {
-                securities: securities
-            };
-            let content = template(obj);
-            tbody.insertAdjacentHTML('beforeend', content);
-        });
+    async loadMore() {
+        if (!this.loadmore)
+            return;
+        let tbody = document.getElementById(this.tbodyId);
+        if (!tbody)
+            return;
+        let securitiesService = await SecuritiesService.getInstance();
+        let securities = await securitiesService.getPaginatingSecurities(this.page++);
+        let template = Handlebars.compile(SecurityHtml);
+        let obj = {
+            securities: securities
+        };
+        let content = template(obj);
+        tbody.insertAdjacentHTML('beforeend', content);
     }
-    addToWalletOrGetAddress(event, element) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let className = element.className;
-            if (className != 'getAddress' && className != 'addToWallet') {
+    async addToWalletOrGetAddress(event, element) {
+        let className = element.className;
+        if (className != 'getAddress' && className != 'addToWallet') {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        let symbol = element.dataset.symbol;
+        if (!symbol)
+            return;
+        LoadingHelper.setLoading(element);
+        let liminalMarketService = new LiminalMarketService();
+        let address = await liminalMarketService.getSymbolContractAddress(symbol);
+        if (className == 'getAddress') {
+            await this.showGetAddress(element, symbol, address);
+        }
+        else {
+            await this.showAddToWallet(element, symbol, address);
+        }
+        LoadingHelper.removeLoading();
+    }
+    async showGetAddress(element, symbol, address) {
+        if (address !== AddressZero) {
+            let copyHelper = new CopyHelper();
+            let success = await copyHelper.copyTextToClipboard(address);
+            if (success) {
+                element.innerText = 'Copied';
                 return;
             }
-            event.preventDefault();
-            event.stopPropagation();
-            let symbol = element.dataset.symbol;
-            if (!symbol)
-                return;
-            LoadingHelper.setLoading(element);
-            let liminalMarketService = new LiminalMarketService();
-            let address = yield liminalMarketService.getSymbolContractAddress(symbol);
-            if (className == 'getAddress') {
-                yield this.showGetAddress(element, symbol, address);
-            }
-            else {
-                yield this.showAddToWallet(element, symbol, address);
-            }
-            LoadingHelper.removeLoading();
-        });
+        }
+        this.renderContractInfoToString(element, address, symbol, AddressInfoHtml);
     }
-    showGetAddress(element, symbol, address) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (address !== AddressZero) {
-                let copyHelper = new CopyHelper();
-                let success = yield copyHelper.copyTextToClipboard(address);
-                if (success) {
-                    element.innerText = 'Copied';
-                    return;
-                }
+    async showAddToWallet(element, symbol, address) {
+        if (address !== AddressZero) {
+            let walletHelper = new WalletHelper();
+            let added = await walletHelper.addTokenToWallet(address, symbol, () => {
+                LoadingHelper.removeLoading();
+                this.renderContractInfoToString(element, address, symbol, AddToWalletHtml);
+            });
+            if (added) {
+                return '';
             }
-            this.renderContractInfoToString(element, address, symbol, AddressInfoHtml);
-        });
-    }
-    showAddToWallet(element, symbol, address) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (address !== AddressZero) {
-                let walletHelper = new WalletHelper();
-                let added = yield walletHelper.addTokenToWallet(address, symbol, () => {
-                    LoadingHelper.removeLoading();
-                    this.renderContractInfoToString(element, address, symbol, AddToWalletHtml);
-                });
-                if (added) {
-                    return '';
-                }
-            }
-            this.renderContractInfoToString(element, address, symbol, AddToWalletHtml);
-        });
+        }
+        this.renderContractInfoToString(element, address, symbol, AddToWalletHtml);
     }
     renderContractInfoToString(element, address, symbol, template) {
         let symbolInfoToCopy = document.getElementById('symbolInfoToCopy');
@@ -29728,22 +30453,23 @@ class SecuritiesList {
 }
 
 class SecuritiesListModal {
+    page;
+    tbodyId = 'liminal_market_securities_list';
+    loadmore;
+    modal;
     constructor() {
-        this.tbodyId = 'liminal_market_securities_list';
         this.page = 0;
         this.loadmore = true;
         this.modal = new Modal();
     }
-    showModal(onSelectSymbol) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let securitiesList = new SecuritiesList();
-            let content = yield securitiesList.render();
-            this.modal.showModal('Select stock to buy', content, true);
-            //if (newInstance)
-            {
-                yield securitiesList.bindEvents(onSelectSymbol);
-            }
-        });
+    async showModal(onSelectSymbol) {
+        let securitiesList = new SecuritiesList();
+        let content = await securitiesList.render();
+        this.modal.showModal('Select stock to buy', content, true);
+        //if (newInstance)
+        {
+            await securitiesList.bindEvents(onSelectSymbol);
+        }
     }
     hideModal() {
         this.modal.hideModal();
@@ -29751,6 +30477,8 @@ class SecuritiesListModal {
 }
 
 class TradeInfo {
+    price;
+    lastTrade;
     constructor(price, lastTrade) {
         this.price = price;
         this.lastTrade = lastTrade;
@@ -29758,6 +30486,10 @@ class TradeInfo {
 }
 
 class HttpError {
+    method;
+    url;
+    body;
+    serverError;
     constructor(obj) {
         this.method = obj.method;
         this.url = obj.url;
@@ -29798,39 +30530,52 @@ class CloudError extends GeneralError {
         }
         return tmp;
     }
+    static Errors = [
+        HttpError
+    ];
 }
-CloudError.Errors = [
-    HttpError
-];
 
 class StockPriceService extends BaseService {
     constructor() {
         super();
     }
-    getSymbolPrice(symbol, tradeType) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            const params = {
-                symbol: symbol
-            };
-            let result = yield this.get("getSymbolPrice", params)
-                .catch((e) => {
-                throw new CloudError(e);
-            });
-            if (!result.quote)
-                throw new Error('Quote could not be provided');
-            let quote = result.quote;
-            let price = (tradeType == TradeType.Sell) ? quote.ap : quote.bp;
-            let tradeInfo = new TradeInfo(price, quote.t);
-            return tradeInfo;
+    async getSymbolPrice(symbol, tradeType) {
+        const params = {
+            symbol: symbol
+        };
+        let result = await this.get("getSymbolPrice", params)
+            .catch((e) => {
+            throw new CloudError(e);
         });
+        if (!result.quote)
+            throw new Error('Quote could not be provided');
+        let quote = result.quote;
+        let price = (tradeType == TradeType.Sell) ? quote.ap : quote.bp;
+        let tradeInfo = new TradeInfo(price, quote.t);
+        return tradeInfo;
     }
 }
 
 var PricePerShareHtml = "<abbr title=\"Last trade was {{lastTraded}}\" data-tooltip=\"Last trade was {{lastTraded}}\">{{text}}</abbr>";
 
 class TradePanelInput {
+    symbol;
+    name;
+    logo;
+    address;
+    tradeType;
+    quantity;
+    strQuantity;
+    balance;
+    lastPrice;
+    lastTraded;
+    qtyPerDollar;
+    template;
+    pricePerShareTemplate;
+    otherTradePanelInput;
+    onUpdate;
+    isDirty = false;
     constructor(symbol, name, logo, address, tradeType) {
-        this.isDirty = false;
         this.symbol = symbol;
         this.name = name;
         this.logo = logo;
@@ -29873,10 +30618,10 @@ class TradePanelInput {
         let selectStock = document.querySelector("#" + this.tradeType + "SelectStock");
         if (!selectStock)
             return;
-        selectStock.addEventListener("click", (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        selectStock.addEventListener("click", async (evt) => {
             evt.preventDefault();
             let securityList = new SecuritiesListModal();
-            yield securityList.showModal((symbol, name, logo) => __awaiter$9(this, void 0, void 0, function* () {
+            await securityList.showModal(async (symbol, name, logo) => {
                 securityList.hideModal();
                 if (this.otherTradePanelInput &&
                     this.symbol == "aUSD" &&
@@ -29887,14 +30632,14 @@ class TradePanelInput {
                 this.name = name;
                 this.logo = logo;
                 let liminalMarketService = new LiminalMarketService();
-                this.address = yield liminalMarketService.getSymbolContractAddress(symbol);
+                this.address = await liminalMarketService.getSymbolContractAddress(symbol);
                 this.render();
                 this.loadBalance().then();
-                yield this.loadLastTrade();
+                await this.loadLastTrade();
                 if (this.onUpdate)
                     this.onUpdate();
-            }));
-        }));
+            });
+        });
     }
     bindQuantityListener() {
         let qtyInput = document.querySelector("." + this.tradeType + "Inputs .trade_input input");
@@ -29933,84 +30678,80 @@ class TradePanelInput {
                 this.onUpdate();
         });
     }
-    loadBalance() {
-        return __awaiter$9(this, void 0, void 0, function* () {
+    async loadBalance() {
+        this.balance = new BigNumber$1(0);
+        //TODO: check if we need the userService on the widget
+        //   let userService = new UserService();
+        //   let ethAddress = userService.getEthAddress();
+        let ethAddress = TradePanelWidget.User.address;
+        let balanceDom = document.querySelector("." + this.tradeType + "Inputs .balance_value");
+        if (!balanceDom)
+            return;
+        if (this.symbol === "aUSD") {
+            if (ethAddress) {
+                let aUsdService = new AUSDService();
+                this.balance = await aUsdService.getAUSDBalanceOf(ethAddress);
+            }
+            balanceDom.innerHTML = "$" + this.balance;
+        }
+        else if (this.name !== "") {
             this.balance = new BigNumber$1(0);
-            //TODO: check if we need the userService on the widget
-            //   let userService = new UserService();
-            //   let ethAddress = userService.getEthAddress();
-            let ethAddress = TradePanelWidget.User.address;
-            let balanceDom = document.querySelector("." + this.tradeType + "Inputs .balance_value");
-            if (!balanceDom)
-                return;
-            if (this.symbol === "aUSD") {
-                if (ethAddress) {
-                    let aUsdService = new AUSDService();
-                    this.balance = yield aUsdService.getAUSDBalanceOf(ethAddress);
-                }
-                balanceDom.innerHTML = "$" + this.balance;
+            if (ethAddress) {
+                let securityTokenService = new SecurityTokenService();
+                this.balance = await securityTokenService.getQuantityByAddress(this.symbol, ethAddress);
             }
-            else if (this.name !== "") {
-                this.balance = new BigNumber$1(0);
-                if (ethAddress) {
-                    let securityTokenService = new SecurityTokenService();
-                    this.balance = yield securityTokenService.getQuantityByAddress(this.symbol, ethAddress);
-                }
-                balanceDom.innerHTML = this.balance.toString();
-            }
-            balanceDom.dataset.tooltip = this.balance.toString();
-            balanceDom.title = this.balance.toString();
-            this.loadProgressbar();
-            this.toggleMaxBalanceLink();
-        });
+            balanceDom.innerHTML = this.balance.toString();
+        }
+        balanceDom.dataset.tooltip = this.balance.toString();
+        balanceDom.title = this.balance.toString();
+        this.loadProgressbar();
+        this.toggleMaxBalanceLink();
     }
-    loadLastTrade() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            if (this.symbol === "aUSD") {
-                this.lastPrice = 1;
-                this.qtyPerDollar = 1;
-                return;
-            }
-            if (!this.otherTradePanelInput || this.name == "")
-                return;
-            let aUsdPricePerShare = document.querySelector("." + this.otherTradePanelInput.tradeType + "Inputs .price_per_share");
-            if (!aUsdPricePerShare)
-                return;
-            let pricePerShare = document.querySelector("." + this.tradeType + "Inputs .price_per_share");
-            if (!pricePerShare)
-                return;
-            aUsdPricePerShare.setAttribute("aria-busy", "true");
-            pricePerShare.setAttribute("aria-busy", "true");
-            let stockPriceService = new StockPriceService();
-            let tradeInfo = yield stockPriceService
-                .getSymbolPrice(this.symbol, this.otherTradePanelInput.tradeType)
-                .catch((reason) => {
-                alert(reason.message);
-                aUsdPricePerShare.removeAttribute("aria-busy");
-                pricePerShare.removeAttribute("aria-busy");
-            });
-            if (!tradeInfo)
-                return;
-            this.lastPrice = tradeInfo.price;
-            this.lastTraded = tradeInfo.lastTrade.toString();
-            this.qtyPerDollar = 1 / this.lastPrice;
-            let pricePerShareHtml = {
-                lastTraded: this.lastTraded,
-                text: "≈ $" + this.lastPrice + " per share",
-            };
-            pricePerShare.innerHTML = this.pricePerShareTemplate(pricePerShareHtml);
-            let pricePerAUsdHtml = {
-                lastTraded: this.lastTraded,
-                text: "1 aUSD ≈ " +
-                    roundNumberDecimal(this.qtyPerDollar, 6) +
-                    " " +
-                    this.symbol,
-            };
-            aUsdPricePerShare.innerHTML = this.pricePerShareTemplate(pricePerAUsdHtml);
-            this.updateQuantity();
+    async loadLastTrade() {
+        if (this.symbol === "aUSD") {
+            this.lastPrice = 1;
+            this.qtyPerDollar = 1;
+            return;
+        }
+        if (!this.otherTradePanelInput || this.name == "")
+            return;
+        let aUsdPricePerShare = document.querySelector("." + this.otherTradePanelInput.tradeType + "Inputs .price_per_share");
+        if (!aUsdPricePerShare)
+            return;
+        let pricePerShare = document.querySelector("." + this.tradeType + "Inputs .price_per_share");
+        if (!pricePerShare)
+            return;
+        aUsdPricePerShare.setAttribute("aria-busy", "true");
+        pricePerShare.setAttribute("aria-busy", "true");
+        let stockPriceService = new StockPriceService();
+        let tradeInfo = await stockPriceService
+            .getSymbolPrice(this.symbol, this.otherTradePanelInput.tradeType)
+            .catch((reason) => {
+            alert(reason.message);
             aUsdPricePerShare.removeAttribute("aria-busy");
             pricePerShare.removeAttribute("aria-busy");
         });
+        if (!tradeInfo)
+            return;
+        this.lastPrice = tradeInfo.price;
+        this.lastTraded = tradeInfo.lastTrade.toString();
+        this.qtyPerDollar = 1 / this.lastPrice;
+        let pricePerShareHtml = {
+            lastTraded: this.lastTraded,
+            text: "≈ $" + this.lastPrice + " per share",
+        };
+        pricePerShare.innerHTML = this.pricePerShareTemplate(pricePerShareHtml);
+        let pricePerAUsdHtml = {
+            lastTraded: this.lastTraded,
+            text: "1 aUSD ≈ " +
+                roundNumberDecimal(this.qtyPerDollar, 6) +
+                " " +
+                this.symbol,
+        };
+        aUsdPricePerShare.innerHTML = this.pricePerShareTemplate(pricePerAUsdHtml);
+        this.updateQuantity();
+        aUsdPricePerShare.removeAttribute("aria-busy");
+        pricePerShare.removeAttribute("aria-busy");
     }
     updateQuantity() {
         if (!this.otherTradePanelInput)
@@ -30051,20 +30792,18 @@ class TradePanelInput {
             exceedsBalance.classList.add("d-none");
         }
     }
-    static switchPanels(sellTradePanelInput, buyTradePanelInput) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let sellSymbol = sellTradePanelInput.symbol;
-            let sellName = sellTradePanelInput.name;
-            let sellLogo = sellTradePanelInput.logo;
-            let sellQuantity = sellTradePanelInput.quantity;
-            sellTradePanelInput.setSymbol(buyTradePanelInput.symbol, buyTradePanelInput.name, buyTradePanelInput.logo);
-            sellTradePanelInput.quantity = buyTradePanelInput.quantity;
-            buyTradePanelInput.setSymbol(sellSymbol, sellName, sellLogo);
-            buyTradePanelInput.quantity = sellQuantity;
-            yield sellTradePanelInput.updatePanel();
-            yield buyTradePanelInput.updatePanel();
-            return [sellTradePanelInput, buyTradePanelInput];
-        });
+    static async switchPanels(sellTradePanelInput, buyTradePanelInput) {
+        let sellSymbol = sellTradePanelInput.symbol;
+        let sellName = sellTradePanelInput.name;
+        let sellLogo = sellTradePanelInput.logo;
+        let sellQuantity = sellTradePanelInput.quantity;
+        sellTradePanelInput.setSymbol(buyTradePanelInput.symbol, buyTradePanelInput.name, buyTradePanelInput.logo);
+        sellTradePanelInput.quantity = buyTradePanelInput.quantity;
+        buyTradePanelInput.setSymbol(sellSymbol, sellName, sellLogo);
+        buyTradePanelInput.quantity = sellQuantity;
+        await sellTradePanelInput.updatePanel();
+        await buyTradePanelInput.updatePanel();
+        return [sellTradePanelInput, buyTradePanelInput];
     }
     setQuantity(value) {
         if (value == "" || value == "0")
@@ -30075,13 +30814,11 @@ class TradePanelInput {
     quantityFormatted() {
         return this.symbol === "aUSD" ? "$" + this.quantity : this.quantity;
     }
-    updatePanel() {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            this.updateQuantity();
-            this.render(true);
-            yield this.loadBalance();
-            yield this.loadLastTrade();
-        });
+    async updatePanel() {
+        this.updateQuantity();
+        this.render(true);
+        await this.loadBalance();
+        await this.loadLastTrade();
     }
     toggleMaxBalanceLink() {
         let maxBalanceDom = document.querySelector("." + this.tradeType + "Inputs .balance_max");
@@ -30099,78 +30836,78 @@ class TradePanelInput {
 var TradeSwitchHtml = "<div class=\"grid tradeSwitch\">\n    <a title=\"Switch the trade\" href=\"\" class=\"switchBtn\" class=\"outline\"></a>\n</div>";
 
 class TradeSwitch {
+    template = undefined;
     constructor() {
-        this.template = undefined;
         this.template = Handlebars.compile(TradeSwitchHtml);
     }
     renderToString() {
         return this.template();
     }
     render() {
-        let dom = document.querySelector('.tradeSwitch');
+        let dom = document.querySelector(".tradeSwitch");
         if (!dom)
             return;
         dom.outerHTML = this.renderToString();
     }
     bindEvents(sellTradePanelInput, buyTradePanelInput, executeTradeButton) {
-        let dom = document.querySelector('.switchBtn');
+        let dom = document.querySelector(".switchBtn");
         if (!dom)
             return;
-        dom.addEventListener('click', (evt) => __awaiter$9(this, void 0, void 0, function* () {
+        dom.addEventListener("click", async (evt) => {
             evt.preventDefault();
-            [sellTradePanelInput, buyTradePanelInput] = yield TradePanelInput.switchPanels(sellTradePanelInput, buyTradePanelInput);
-        }));
+            [sellTradePanelInput, buyTradePanelInput] =
+                await TradePanelInput.switchPanels(sellTradePanelInput, buyTradePanelInput);
+        });
     }
 }
 
 class TradePanel {
+    quantity;
     constructor() {
         this.quantity = 0;
     }
-    render(elementId, symbol, name, logo, address) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            let element = document.getElementById(elementId);
-            if (!element)
-                return;
-            let contractInfo = ContractInfo.getContractInfo(TradePanelWidget.Network.Name);
-            let sellTradeInput = new TradePanelInput("aUSD", "aUSD at Broker", "/img/ausd.png", contractInfo.AUSD_ADDRESS, TradeType.Sell);
-            let buyTradeInput;
-            if (!symbol) {
-                buyTradeInput = new TradePanelInput("Select stock", "", "", "", TradeType.Buy);
-            }
-            else {
-                buyTradeInput = new TradePanelInput(symbol, name, logo, address, TradeType.Buy);
-            }
-            sellTradeInput.setOtherTradePanelInput(buyTradeInput);
-            buyTradeInput.setOtherTradePanelInput(sellTradeInput);
-            let tradeSwitch = new TradeSwitch();
-            let executeOrderButton = new ExecuteOrderButton(sellTradeInput, buyTradeInput);
-            let sellInput = sellTradeInput.renderToString();
-            let buyInput = buyTradeInput.renderToString();
-            let switchHtml = tradeSwitch.renderToString();
-            let executeOrderButtonHtml = executeOrderButton.renderToString();
-            element.innerHTML =
-                sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
-            yield sellTradeInput.loadBalance();
-            yield buyTradeInput.loadBalance();
-            if (symbol) {
-                yield buyTradeInput.loadLastTrade();
-            }
-            sellTradeInput.bindEvents();
-            buyTradeInput.bindEvents();
-            yield executeOrderButton.renderButton();
-            tradeSwitch.bindEvents(sellTradeInput, buyTradeInput, executeOrderButton);
-            sellTradeInput.onUpdate = () => {
-                if (buyTradeInput.isDirty)
-                    buyTradeInput.updatePanel();
-                executeOrderButton.renderButton();
-            };
-            buyTradeInput.onUpdate = () => {
-                if (sellTradeInput.isDirty)
-                    sellTradeInput.updatePanel();
-                executeOrderButton.renderButton();
-            };
-        });
+    async render(elementId, symbol, name, logo, address) {
+        let element = document.getElementById(elementId);
+        if (!element)
+            return;
+        let contractInfo = ContractInfo.getContractInfo(TradePanelWidget.Network.Name);
+        let sellTradeInput = new TradePanelInput("aUSD", "aUSD at Broker", "/img/ausd.png", contractInfo.AUSD_ADDRESS, TradeType.Sell);
+        let buyTradeInput;
+        if (!symbol) {
+            buyTradeInput = new TradePanelInput("Select stock", "", "", "", TradeType.Buy);
+        }
+        else {
+            buyTradeInput = new TradePanelInput(symbol, name, logo, address, TradeType.Buy);
+        }
+        sellTradeInput.setOtherTradePanelInput(buyTradeInput);
+        buyTradeInput.setOtherTradePanelInput(sellTradeInput);
+        let tradeSwitch = new TradeSwitch();
+        let executeOrderButton = new ExecuteOrderButton(sellTradeInput, buyTradeInput);
+        let sellInput = sellTradeInput.renderToString();
+        let buyInput = buyTradeInput.renderToString();
+        let switchHtml = tradeSwitch.renderToString();
+        let executeOrderButtonHtml = executeOrderButton.renderToString();
+        element.innerHTML =
+            sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
+        await sellTradeInput.loadBalance();
+        await buyTradeInput.loadBalance();
+        if (symbol) {
+            await buyTradeInput.loadLastTrade();
+        }
+        sellTradeInput.bindEvents();
+        buyTradeInput.bindEvents();
+        await executeOrderButton.renderButton();
+        tradeSwitch.bindEvents(sellTradeInput, buyTradeInput, executeOrderButton);
+        sellTradeInput.onUpdate = () => {
+            if (buyTradeInput.isDirty)
+                buyTradeInput.updatePanel();
+            executeOrderButton.renderButton();
+        };
+        buyTradeInput.onUpdate = () => {
+            if (sellTradeInput.isDirty)
+                sellTradeInput.updatePanel();
+            executeOrderButton.renderButton();
+        };
     }
     formatBuyPanel(symbol, name, logo, tradeType, contractAddress) {
         document.getElementById("liminal_market_select_symbol").innerHTML = symbol;
@@ -30178,15 +30915,15 @@ class TradePanel {
 }
 
 class TradePanelWidget {
+    static Network;
+    static User;
     constructor() {
         TradePanelWidget.Network = NetworkInfo.getInstance();
         TradePanelWidget.User = new User(null, "", TradePanelWidget.Network.ChainId, "");
         EventService.register();
     }
-    render(elementId, symbol, name, logo, address) {
-        return __awaiter$9(this, void 0, void 0, function* () {
-            new TradePanel().render(elementId, symbol, name, logo, address);
-        });
+    async render(elementId, symbol, name, logo, address) {
+        new TradePanel().render(elementId, symbol, name, logo, address);
     }
 }
 
