@@ -4,7 +4,7 @@ export default class LocalhostNetworkDefaults extends TestNetwork {
     constructor() {
         super();
 
-        this.ChainId = 31337;
+        this.ChainId = LocalhostNetworkDefaults.ChainId;
         this.Name = "localhost";
         this.ChainName = 'localhost test';
         this.NativeCurrencyName = "Ethereum";
@@ -16,6 +16,7 @@ export default class LocalhostNetworkDefaults extends TestNetwork {
 	}
     static override RpcUrl = 'http://127.0.0.1:8545/';
 
+    static override ChainId = 31337;
 
 }
 

@@ -1,5 +1,5 @@
 import Network from "./networks/Network";
-import {BigNumber, BigNumberish, ethers, Transaction, Wallet} from "ethers";
+import {BigNumber, BigNumberish, ethers, Signer, Transaction, Wallet} from "ethers";
 import HttpRequest from "./http/HttpRequest";
 import NetworkType from "./networks/NetworkType";
 import TestNetwork from "./networks/TestNetwork";
@@ -8,13 +8,16 @@ import KycStatus from "./dto/KycStatus";
 import AccountService from "./services/AccountService";
 import BlockchainService from "./services/BlockchainService";
 import Abis from "./abis";
+import {Provider} from "@ethersproject/abstract-provider";
+import OrderExecutedEvent from "./dto/OrderExecutedEvent";
 
 export default class LiminalMarket {
     httpRequest : HttpRequest;
     blockchainService : BlockchainService;
     accountService : AccountService;
     account : Account;
-    static Wallet : Wallet;
+    static Provider : any;
+    static Signer : any;
     static ServiceContractAddress : string;
     static Network : Network;
     static WalletAddress : string;
@@ -27,24 +30,69 @@ export default class LiminalMarket {
         this.account = {} as Account;
     }
 
-    public static async getInstance(wallet : any, serviceContractAddress? : string | undefined) {
+    public static async getInstanceUsingPrivateKey(privateKey : string, chainId : number, serviceContractAddress? : string | undefined){
+        LiminalMarket.Network = NetworkType.getInstance(chainId) ?? new TestNetwork();
+        if (LiminalMarket.Network.ChainId == 0) {
+            throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
+        }
+        let provider = new ethers.providers.JsonRpcProvider(LiminalMarket.Network.RpcUrl);
+        let wallet = new Wallet(privateKey, provider)
+        return await this.getInstance(wallet, serviceContractAddress);
+    }
+
+    public static async getBrowserInstance(provider? : ethers.providers.Web3Provider | undefined, serviceContractAddress? : string | undefined) {
+        if (!provider) {
+            // @ts-ignore
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+        }
+
+        if (!provider._isProvider) {
+            throw new Error('provider is not valid ethers.providers.Web3Provider.')
+        }
+
+        let accounts = await provider.listAccounts()
+        if (!accounts || accounts.length == 0) {
+            throw new Error('No account could be access')
+        }
+        let network = await provider.getNetwork()
+        return await this.load(accounts[0]!, provider, provider.getSigner(), network.chainId, serviceContractAddress)
+    }
+
+    public static async getInstance(wallet : Wallet, serviceContractAddress? : string | undefined) {
         if (this.Instance) return this.Instance;
 
-        let liminalMarket = new LiminalMarket();
+        if (!wallet) {
+            throw new Error('Provider cannot be null')
+        }
+        let chainId = await wallet.getChainId();
 
-        let network = await wallet.provider.detectNetwork();
-        LiminalMarket.Network = NetworkType.getInstance(network.chainId) ?? new TestNetwork();
+        return await this.load(wallet.address,  wallet.provider,  wallet as any as Signer, chainId, serviceContractAddress);
+    }
+
+    private static async load(walletAddress : string, provider : Provider, signer : Signer, chainId : number, serviceContractAddress : string | undefined) {
+        LiminalMarket.Provider = provider;
+        LiminalMarket.Signer = signer;
+
+        LiminalMarket.Network = NetworkType.getInstance(chainId) ?? new TestNetwork();
+        console.log('load chainId:', chainId,  LiminalMarket.Network);
         if (LiminalMarket.Network.ChainId == 0) {
-            throw new Error('Network is not supported. Using chainId ' + wallet.provider.chainId + '. Try switching to different network, e.g. Mumbai');
+            throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
         }
 
-        LiminalMarket.ServiceContractAddress = serviceContractAddress ?? LiminalMarket.Network.EXTERNAL_SERVICE_CONTRACT_ADDRESS;
+        LiminalMarket.ServiceContractAddress = serviceContractAddress ?? LiminalMarket.Network.NO_FEE_CONTRACT_ADDRESS;
+        console.log('serviceContractAddress', (LiminalMarket.ServiceContractAddress == LiminalMarket.Network.NO_FEE_CONTRACT_ADDRESS));
+
         if (!LiminalMarket.ServiceContractAddress) {
-            throw new Error('ServiceContractAddress cannot be empty. You can get service contract address by signing contract at https://liminal.market/contract.html. No cost (except gas)')
+            throw new Error('ServiceContractAddress cannot be empty. You can get service contract address by signing contract at https://liminal.market/contract. No cost (except gas)')
         }
-        LiminalMarket.Wallet = wallet;
-        LiminalMarket.WalletAddress = wallet.address;
 
+        if (LiminalMarket.ServiceContractAddress == LiminalMarket.Network.NO_FEE_CONTRACT_ADDRESS) {
+            console.debug('No service contract address set. You will not receive any service fee. Check out https://liminal.market/contract/')
+        }
+
+        LiminalMarket.WalletAddress = walletAddress;
+
+        let liminalMarket = new LiminalMarket();
         liminalMarket.account = await liminalMarket.accountService.login();
 
         this.Instance = liminalMarket;
@@ -56,7 +104,7 @@ export default class LiminalMarket {
      * Return true if market is open, else false
      */
     public async isMarketOpen() : Promise<boolean> {
-        return await this.httpRequest.get('isOpen');
+        return (await this.httpRequest.get('isOpen')).marketIsOpen;
     }
 
     /**
@@ -81,15 +129,15 @@ export default class LiminalMarket {
      * Returns the status of the account. Most important is if KYC has been approved.
      * Trades cannot be executed if KYC is not valid.
      */
-    public async isValidKyc() : Promise<KycStatus> {
+    public async kycStatus() : Promise<KycStatus> {
         let accountService = new AccountService();
-        return await accountService.isValidKyc();
+        return await accountService.kycStatus();
     }
 
     /**
      * Funds wallets sandbox account. There are limitation on how frequently you can fund your account.
      **/
-    public async fundSandboxAccount(accountFunded : (obj : any) => Promise<void> | undefined) {
+    public async fundSandboxAccount(accountFunded? : (obj : any) => Promise<void> | undefined) {
         return await this.accountService.fundSandboxAccount(accountFunded)
     }
 
@@ -99,7 +147,7 @@ export default class LiminalMarket {
      */
     public async getAUSDBalance(address? : string | undefined) : Promise<BigNumber> {
         if (!address) address = LiminalMarket.WalletAddress;
-        return await this.getBalance(LiminalMarket.Network.AUSD_ADDRESS, address)
+        return await this.getSecurityTokenQuantity(LiminalMarket.Network.AUSD_ADDRESS, address)
     }
 
     /**
@@ -118,31 +166,26 @@ export default class LiminalMarket {
         return await this.httpRequest.get('positions', {address:address})
     }
 
-
-
     /**
      * Get the balance of a security token.
      * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
      */
-    public async getSecurityTokenQuantity(symbol : string, address? : string | undefined) : Promise<BigNumberish> {
+    public async getSecurityTokenQuantity(symbolOrAddress : string, address? : string | undefined) : Promise<BigNumber> {
         if (!address) address = LiminalMarket.WalletAddress;
-        let tokenAddress = await this.getSecurityTokenAddress(symbol);
-        return await this.getBalance(tokenAddress, address);
-    }
-    /**
-     * Get the balance of a token by tokenAddress and wallet address
-     */
-    public async getBalance(tokenAddress : string, address : string) {
-        const contract = new ethers.Contract(tokenAddress, Abis.balanceOfAbi, LiminalMarket.Wallet.provider);
-        return await contract['balanceOf'](address);
+        if (symbolOrAddress.indexOf('0x') == -1) {
+            symbolOrAddress = await this.getSecurityTokenAddress(symbolOrAddress);
+        }
+
+        const contract = new ethers.Contract(symbolOrAddress, Abis.BalanceOfAbi, LiminalMarket.Provider);
+        return await contract['balanceOf']!(address);
     }
 
     /**
      * Get the address of a security token (symbol)
      */
     public async getSecurityTokenAddress(symbol: string) : Promise<string> {
-        const contract = new ethers.Contract(LiminalMarket.Network.LIMINAL_MARKET_ADDRESS, Abis.getSecurityTokenAbi, LiminalMarket.Wallet.provider);
-        return await contract['getSecurityToken'](symbol);
+        const contract = new ethers.Contract(LiminalMarket.Network.LIMINAL_MARKET_ADDRESS, Abis.LiminalMarketAbi, LiminalMarket.Provider);
+        return await contract['getSecurityToken']!(symbol);
     }
 
 
@@ -154,9 +197,9 @@ export default class LiminalMarket {
      *
      * */
     public async buySecurityToken(symbol : string, amount : BigNumberish,
-                                  orderExecutedEvent? : (recipient : string, symbol : string, tsl : BigNumberish, filledQty: BigNumberish, filledAvgPrice: BigNumberish, side : string, filledAt : BigNumberish, totalServiceFee: BigNumberish, aUsdBalance: BigNumberish, spender : string) => Promise<void> | undefined
+                                  orderExecutedEvent? : (event : OrderExecutedEvent) => Promise<void> | undefined
     ) : Promise<Transaction> {
-        return await this.blockchainService.executeOrder('buySecurityToken', symbol, amount, orderExecutedEvent);
+        return await this.blockchainService.executeOrder('buy', symbol, amount, orderExecutedEvent);
     }
 
     /**
@@ -167,9 +210,25 @@ export default class LiminalMarket {
      *
      * */
     public async sellSecurityToken(symbol : string, quantity : BigNumberish,
-                                   orderExecutedEvent? : (recipient : string, symbol : string, tsl : BigNumberish, filledQty: BigNumberish, filledAvgPrice: BigNumberish, side : string, filledAt : BigNumberish, totalServiceFee: BigNumberish, aUsdBalance: BigNumberish, spender : string) => Promise<void> | undefined
+                                   orderExecutedEvent? : (event : OrderExecutedEvent) => Promise<void> | undefined
     ) : Promise<Transaction> {
-        return await this.blockchainService.executeOrder('sellSecurityToken', symbol, quantity, orderExecutedEvent);
+        return await this.blockchainService.executeOrder('sell', symbol, quantity, orderExecutedEvent);
+    }
+
+    /**
+     * Send the command to execute order depending on side (buy or sell)
+     * @param {string}  symbol - Symbol of the security to buy, e.g. AAPL for Apple.
+     * @param {string}  quantity - Quantity of shares to sell in Wei. Selling 10 shares would be 10 * 10**18. Selling 1.234 shares would be 123 * 10*15
+     * @param {function} [orderExecutedEvent] - Optional. Listens for the orderExecuted event on chain, then calls your function.
+     *
+     * */
+    public async executeOrder(side : string, symbol : string, quantity : BigNumberish,
+                                   orderExecutedEvent? : (event : OrderExecutedEvent) => Promise<void> | undefined
+    ) : Promise<Transaction> {
+        if (side != 'buy' && side != 'sell') {
+            throw new Error('side [' + side + '] is not valid. You can only set "buy" or "sell"');
+        }
+        return await this.blockchainService.executeOrder(side, symbol, quantity, orderExecutedEvent);
     }
 
 

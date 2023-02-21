@@ -1,5 +1,4 @@
 import LiminalMarket from "../index";
-import EventSource from 'eventsource';
 import AccountService from "../services/AccountService";
 
 export default class HttpRequest {
@@ -63,7 +62,7 @@ export default class HttpRequest {
                 headers: {'Authentication': 'Bearer: ' + LiminalMarket.Bearer, 'Content-Type': 'application/json'}
             })
         let obj = await response.json();
-        return (obj.result) ? obj.result : undefined;
+        return (obj.result) ? obj.result : obj;
     }
 
 
