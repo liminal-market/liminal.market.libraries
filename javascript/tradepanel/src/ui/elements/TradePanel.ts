@@ -45,8 +45,6 @@ export default class TradePanel {
     let element = document.getElementById(elementId);
     if (!element) return;
 
-    console.log("UAI");
-
     this.importStylesheet();
 
     let contractInfo = ContractInfo.getContractInfo(
