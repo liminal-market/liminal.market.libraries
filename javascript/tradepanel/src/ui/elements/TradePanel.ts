@@ -36,13 +36,13 @@ export default class TradePanel {
   }
 
   public async render(
-    elementId: string,
+    elementSelector: string,
     symbol?: string,
     name?: string,
     logo?: string,
     address?: string
   ) {
-    let element = document.getElementById(elementId);
+    let element = document.querySelector(elementSelector);
     if (!element) return;
 
     this.importStylesheet();

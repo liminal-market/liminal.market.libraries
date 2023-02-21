@@ -30918,8 +30918,8 @@ class TradePanel {
         `);
         }
     }
-    async render(elementId, symbol, name, logo, address) {
-        let element = document.getElementById(elementId);
+    async render(elementSelector, symbol, name, logo, address) {
+        let element = document.querySelector(elementSelector);
         if (!element)
             return;
         this.importStylesheet();
@@ -30975,8 +30975,8 @@ class TradePanelWidget {
         TradePanelWidget.User = new User(null, "", TradePanelWidget.Network.ChainId, "");
         EventService.register();
     }
-    async render(elementId, symbol, name, logo, address) {
-        new TradePanel().render(elementId, symbol, name, logo, address);
+    async render(elementSelector, symbol, name, logo, address) {
+        new TradePanel().render(elementSelector, symbol, name, logo, address);
     }
 }
 

@@ -19,12 +19,12 @@ export default class TradePanelWidget {
   }
 
   public async render(
-    elementId: string,
+    elementSelector: string,
     symbol?: string,
     name?: string,
     logo?: string,
     address?: string
   ) {
-    new TradePanel().render(elementId, symbol, name, logo, address);
+    new TradePanel().render(elementSelector, symbol, name, logo, address);
   }
 }
