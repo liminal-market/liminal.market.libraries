@@ -1,5 +1,5 @@
 {
-  "name": "liminal-tradepanel",
+  "name": "liminal.market.tradepanel",
   "main": "app/js/bundle.js",
   "version": "1.0.0",
   "private": true,
@@ -21,6 +21,7 @@
     "jsdom-global": "3.0.2",
     "mocha": "^10.2.0",
     "rollup": "^3.15.0",
+    "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-polyfills": "^0.2.1",
@@ -38,7 +39,6 @@
     "webpack-dev-server": "^4.9.1"
   },
   "scripts": {
-    "prepublishOnly": "npx rollup -c",
     "build": "npx rollup -c"
   },
   "jshintConfig": {

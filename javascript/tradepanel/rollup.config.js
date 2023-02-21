@@ -8,6 +8,7 @@ import html from "rollup-plugin-html";
 import multi from "@rollup/plugin-multi-entry";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 import globals from "rollup-plugin-node-globals";
+import cleaner from "rollup-plugin-cleaner";
 
 export default {
   input: ["./src/main.ts"],
@@ -23,6 +24,9 @@ export default {
   ],
   external: ["js-sha3"],
   plugins: [
+    cleaner({
+      targets: ["./app/"],
+    }),
     resolve({
       browser: false,
       preferBuiltins: true,
@@ -40,6 +44,7 @@ export default {
     multi(),
     typescript({
       tsconfig: "./tsconfig.json",
+      useTsconfigDeclarationDir: true,
     }),
     html({
       include: "**/*.html",
