@@ -39,6 +39,7 @@ export default class SecuritiesService extends BaseService {
     super();
 
     this.securities = new Map<string, Security>();
+    this.securitiesArray = [];
     this.page = 1;
   }
 

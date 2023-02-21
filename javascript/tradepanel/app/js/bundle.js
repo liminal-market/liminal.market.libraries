@@ -282,6 +282,7 @@ class SecuritiesService extends BaseService {
     constructor() {
         super();
         this.securities = new Map();
+        this.securitiesArray = [];
         this.page = 1;
     }
     static async getInstance() {
@@ -29439,7 +29440,7 @@ class ExecuteOrderButton {
     }
 }
 
-var TradeExecutedHtml = "\n<article class=\"trade_executed\">\n    <nav>\n    <ul>\n        <li>\n            <img src=\"{{sellingLogo}}\"><br>\n            {{sellingSymbol}}<br>\n            {{sellingAmount}}\n        </li>\n    </ul>\n    <ul>\n        <li> ----> </li>\n    </ul>\n    <ul>\n        <li>\n            <img src=\"{{buyingLogo}}\"><br>\n            {{buyingSymbol}}<br>\n            <abbr title=\"{{buyingQuantity}}\" data-tooltip=\"{{buyingQuantity}}\">{{buyingRoundQuantity}}</abbr>\n        </li>\n    </ul>\n    </nav>\n    <div>\n        If you haven't already, add the {{buyingSymbol}} to your wallet.\n        <br><br>\n        <button id=\"addTokenToWallet\" data-address=\"{{tokenAddress}}\">Add {{buyingSymbol}} to wallet</button>\n        <div id=\"addTokenToWalletFailed\" class=\"d-none\">\n            You can copy the address, to import the token\n            <input value=\"{{tokenAddress}}\">\n        </div>\n        <br>\n        Should be visible in your wallet on address {{shortEthAddress}}.\n        <br>\n        <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View portfolio</a>\n        <br><br>\n        <small>You can view the <a href=\"{{blockExplorerLink}}\" target=\"_blank\">block transaction here</a></small>\n    </div>\n</article>\n";
+var TradeExecutedHtml = "<article class=\"trade_executed\">\n  <nav>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{sellingLogo}}\"><br>\n        {{sellingSymbol}}<br>\n        {{sellingAmount}}\n      </li>\n    </ul>\n    <ul>\n      <li>----></li>\n    </ul>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{buyingLogo}}\"><br>\n        {{buyingSymbol}}<br>\n        <abbr title=\"{{buyingQuantity}}\" data-tooltip=\"{{buyingQuantity}}\">{{buyingRoundQuantity}}</abbr>\n      </li>\n    </ul>\n  </nav>\n  <div>\n    If you haven't already, add the {{buyingSymbol}} to your wallet.\n    <br><br>\n    <button id=\"addTokenToWallet\" data-address=\"{{tokenAddress}}\">\n      Add {{buyingSymbol}} to wallet\n    </button>\n    <div id=\"addTokenToWalletFailed\" class=\"d-none\">\n      You can copy the address, to import the token\n      <input value=\"{{tokenAddress}}\">\n    </div>\n    <br>\n    Should be visible in your wallet on address {{shortEthAddress}}.\n    <br>\n    <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View portfolio</a>\n    <br><br>\n    <small>You can view the\n      <a href=\"{{blockExplorerLink}}\" target=\"_blank\">block transaction here</a></small>\n  </div>\n</article>\n";
 
 // canvas-confetti v1.6.0 built on 2022-10-24T21:26:41.619Z
 var module = {};
@@ -30244,11 +30245,11 @@ var TradeType;
     TradeType["Buy"] = "Buy";
 })(TradeType || (TradeType = {}));
 
-var TradeInputHtml = "<article class=\"{{tradeType}}Inputs tradeInputArticle\">\n    <div class=\"grid tradeInput\">\n        <div class=\"select_token\">\n            <a id=\"{{tradeType}}SelectStock\" href=\"#\" role=\"button\">\n                <img src=\"{{logo}}\">\n                {{symbol}}\n            </a>\n        </div>\n        <div class=\"trade_input\"><input autocomplete=\"off\" autocorrect=\"off\" type=\"tel\" spellcheck=\"false\" value=\"{{strQuantity}}\" placeholder=\"0.0\"></div>\n        <div class=\"balance\">Balance : <abbr title=\"{{balance}}\" data-tooltip=\"{{balance}}\" class=\"balance_value\">{{abbrBalance}}</abbr>\n            <a href=\"\" class=\"balance_max\">Max</a></div>\n        <div class=\"price_per_share\"></div>\n    </div>\n    <progress class=\"progress d-none\" value=\"0\" max=\"1\"></progress>\n    <div class=\"exceeds_wallet_balance d-none\">Exceeds wallet balance</div>\n</article>\n";
+var TradeInputHtml = "<article class=\"{{tradeType}}Inputs tradeInputArticle\">\n  <div class=\"grid tradeInput\">\n    <div class=\"select_token\">\n      <a id=\"{{tradeType}}SelectStock\" href=\"#\" role=\"button\">\n        {{#if logo}}\n        <img src=\"https://app.liminal.market{{logo}}\">\n        {{/if}} {{symbol}}\n      </a>\n    </div>\n    <div class=\"trade_input\">\n      <input autocomplete=\"off\" autocorrect=\"off\" type=\"tel\" spellcheck=\"false\" value=\"{{strQuantity}}\" placeholder=\"0.0\">\n    </div>\n    <div class=\"balance\">\n      Balance :\n      <abbr title=\"{{balance}}\" data-tooltip=\"{{balance}}\" class=\"balance_value\">{{abbrBalance}}</abbr>\n      <a href=\"\" class=\"balance_max\">Max</a>\n    </div>\n    <div class=\"price_per_share\"></div>\n  </div>\n  <progress class=\"progress d-none\" value=\"0\" max=\"1\"></progress>\n  <div class=\"exceeds_wallet_balance d-none\">Exceeds wallet balance</div>\n</article>\n";
 
 var SecuritiesListHtml = "<figure>\n    <table id=\"liminal_market_securities_table\" role=\"grid\">\n    <thead>\n    <tr>\n        <th colspan=\"2\"><input autocomplete=\"off\" type=\"search\" id=\"search_for_symbol\" placeholder=\"Search for name or symbol in {{securitiesCount}} stocks\"></th>\n    </tr>\n    </thead>\n    <tbody id=\"{{tbodyId}}\">\n    {{>securities}}\n    </tbody>\n</table>\n<span id=\"liminal_market_load_more\"></span>\n</figure>";
 
-var SecurityHtml = "{{#each securities}}\n<tr data-symbol=\"{{{Symbol}}}\" data-logo=\"{{LogoPath}}{{Logo}}\" data-name=\"{{Name}}\">\n    <td class=\"symbol_logo\"><img src=\"{{LogoPath}}{{Logo}}\"></td>\n    <td class=\"security_information\">\n        <strong>{{Name}}</strong><br>\n        <nav class=\"security_extra\">\n            <ul>\n                <li>\n                    <a href=\"https://strike.market/stocks/{{Symbol}}\" target=\"_blank\">{{Symbol}}</a>\n                </li>\n            </ul>\n            <ul>\n                <li>\n                    <a href=\"\" class=\"getAddress\" data-symbol=\"{{Symbol}}\">Get address</a>\n                </li>\n            </ul>\n            <ul>\n                <li>\n                    <a href=\"\" class=\"addToWallet\" data-symbol=\"{{Symbol}}\">Add to wallet</a>\n                </li>\n            </ul>\n        </nav>\n    </td>\n</tr>\n{{/each}}";
+var SecurityHtml = "{{#each securities}}\n<tr data-symbol=\"{{{Symbol}}}\" data-logo=\"{{LogoPath}}{{Logo}}\" data-name=\"{{Name}}\">\n  <td class=\"symbol_logo\">\n    <img src=\"https://app.liminal.market{{LogoPath}}{{Logo}}\">\n  </td>\n  <td class=\"security_information\">\n    <strong>{{Name}}</strong><br>\n    <nav class=\"security_extra\">\n      <ul>\n        <li>\n          <a href=\"https://strike.market/stocks/{{Symbol}}\" target=\"_blank\">{{Symbol}}</a>\n        </li>\n      </ul>\n      <ul>\n        <li>\n          <a href=\"\" class=\"getAddress\" data-symbol=\"{{Symbol}}\">Get address</a>\n        </li>\n      </ul>\n      <ul>\n        <li>\n          <a href=\"\" class=\"addToWallet\" data-symbol=\"{{Symbol}}\">Add to wallet</a>\n        </li>\n      </ul>\n    </nav>\n  </td>\n</tr>\n{{/each}}\n";
 
 class CopyHelper {
     fallbackCopyTextToClipboard(text) {
@@ -30920,7 +30921,6 @@ class TradePanel {
         let element = document.getElementById(elementId);
         if (!element)
             return;
-        console.log("UAI");
         this.importStylesheet();
         let contractInfo = ContractInfo.getContractInfo(TradePanelWidget.Network.Name);
         let sellTradeInput = new TradePanelInput("aUSD", "aUSD at Broker", "/img/ausd.png", contractInfo.AUSD_ADDRESS, TradeType.Sell);
