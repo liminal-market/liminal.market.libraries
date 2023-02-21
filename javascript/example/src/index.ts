@@ -9,8 +9,6 @@ async function registerAndTrade() {
         async () => {
             let aUsdBalance = await liminalMarketCore.getAUSDBalance();
             console.log('aUsdBalance:', aUsdBalance.toString());
-
-
         });
 
 
