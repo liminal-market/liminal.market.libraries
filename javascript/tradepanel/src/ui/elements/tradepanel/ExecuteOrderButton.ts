@@ -43,9 +43,9 @@ export default class ExecuteOrderButton {
   }
 
   public async renderButton() {
-    if (this.button) {
-      this.button.outerHTML = this.button.outerHTML;
-    }
+    // if (this.button) {
+    //   this.button.outerHTML = this.button.outerHTML;
+    // }
     this.button = document.getElementById(
       "liminal_market_execute_order"
     ) as HTMLInputElement;

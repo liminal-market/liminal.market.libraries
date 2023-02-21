@@ -12,6 +12,29 @@ export default class TradePanel {
     this.quantity = 0;
   }
 
+  public importStylesheet() {
+    const existingLinkTag = document.getElementById("liminal-market-css");
+    if (!existingLinkTag) {
+      document.head.insertAdjacentHTML(
+        "beforeend",
+        `
+          <link
+            id="liminal-market-css"
+            rel="stylesheet"
+            href="https://app.liminal.market/css/style.css"
+            type="text/css"
+          />
+          <link
+            id="pico-css"
+            rel="stylesheet"
+            href="https://app.liminal.market/css/pico/pico.min.css"
+            type="text/css"
+          />
+        `
+      );
+    }
+  }
+
   public async render(
     elementId: string,
     symbol?: string,
@@ -21,6 +44,10 @@ export default class TradePanel {
   ) {
     let element = document.getElementById(elementId);
     if (!element) return;
+
+    console.log("UAI");
+
+    this.importStylesheet();
 
     let contractInfo = ContractInfo.getContractInfo(
       TradePanelWidget.Network.Name

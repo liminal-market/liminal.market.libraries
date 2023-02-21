@@ -18,7 +18,7 @@ export default class KYCService extends BlockchainService {
   public async getKYCAbi() {
     if (KYCService.KYCInfo) return KYCService.KYCInfo.abi;
 
-    const response = await fetch("../abi/KYC.json");
+    const response = await fetch("https://app.liminal.market/abi/KYC.json");
     KYCService.KYCInfo = await response.json();
     return KYCService.KYCInfo.abi;
   }

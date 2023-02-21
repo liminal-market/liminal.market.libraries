@@ -251,7 +251,34 @@ class SecuritiesService extends BaseService {
     securitiesArray;
     static instance;
     page;
-    symbols = ["MSFT", "AAPL", "AMZN", "TSLA", "GOOGL", "GOOG", "GME", "META", "NVDA", "BRK.B", "JPM", "HD", "JNJ", "UNH", "PG", "BAC", "V", "ADBE", "NFLX", "CRM", "PFE", "DIS", "MA", "XOM", "TMO", "COST"];
+    symbols = [
+        "MSFT",
+        "AAPL",
+        "AMZN",
+        "TSLA",
+        "GOOGL",
+        "GOOG",
+        "GME",
+        "META",
+        "NVDA",
+        "BRK.B",
+        "JPM",
+        "HD",
+        "JNJ",
+        "UNH",
+        "PG",
+        "BAC",
+        "V",
+        "ADBE",
+        "NFLX",
+        "CRM",
+        "PFE",
+        "DIS",
+        "MA",
+        "XOM",
+        "TMO",
+        "COST",
+    ];
     constructor() {
         super();
         this.securities = new Map();
@@ -260,16 +287,17 @@ class SecuritiesService extends BaseService {
     static async getInstance() {
         if (!SecuritiesService.instance) {
             SecuritiesService.instance = new SecuritiesService();
-            SecuritiesService.instance.securities = await SecuritiesService.instance.getSecurities();
+            SecuritiesService.instance.securities =
+                await SecuritiesService.instance.getSecurities();
         }
         return SecuritiesService.instance;
     }
     async getSecurities() {
         if (this.securities.size != 0)
             return this.securities;
-        const results = await (await fetch('/securities/securities.json')).json();
+        const results = await (await fetch("https://app.liminal.market/securities/securities.json")).json();
         for (let i = 0; i < results.length; i++) {
-            this.securities.set(results[i].Symbol, Object.assign(new Security, results[i]));
+            this.securities.set(results[i].Symbol, Object.assign(new Security(), results[i]));
         }
         this.securitiesArray = Array.from(this.securities);
         return this.securities;
@@ -277,7 +305,7 @@ class SecuritiesService extends BaseService {
     async getSecurityBySymbol(symbol) {
         let securities = await this.getSecurities();
         let security = securities.get(symbol);
-        return (security) ? security : new Security();
+        return security ? security : new Security();
     }
     async getTopSecurities() {
         let securities = await this.getSecurities();
@@ -25492,14 +25520,16 @@ class UserService extends BaseService {
         return TradePanelWidget.User;
     }
     async load(address) {
-        let response = await fetch("/user", { body: address });
+        let response = await fetch("https://app.liminal.market/user", {
+            body: address,
+        });
         await response.json();
     }
     async getAlpacaId() {
         let user = await this.getUser();
         if (user.alpacaId)
             return user.alpacaId;
-        let result = (await fetch(""));
+        let result = (await fetch("https://app.liminal.market/"));
         user.alpacaId = result.alpacaId;
         return user.alpacaId;
     }
@@ -26186,7 +26216,8 @@ class AUSDService extends BlockchainService {
         super();
     }
     async getAUSDBalanceOf(ethAddress) {
-        if (AUSDService.lastUpdate && AUSDService.aUSDAmount &&
+        if (AUSDService.lastUpdate &&
+            AUSDService.aUSDAmount &&
             !DateHelper.isOlderThen(AUSDService.lastUpdate, 5)) {
             return AUSDService.aUSDAmount;
         }
@@ -26208,7 +26239,7 @@ class AUSDService extends BlockchainService {
     async getAUsdAbi() {
         if (AUSDService.AUSDInfo)
             return AUSDService.AUSDInfo.abi;
-        let response = await fetch('../abi/aUSD.json');
+        let response = await fetch("https://app.liminal.market/abi/aUSD.json");
         AUSDService.AUSDInfo = await response.json();
         return AUSDService.AUSDInfo.abi;
     }
@@ -27449,7 +27480,7 @@ class KYCService extends BlockchainService {
     async getKYCAbi() {
         if (KYCService.KYCInfo)
             return KYCService.KYCInfo.abi;
-        const response = await fetch("../abi/KYC.json");
+        const response = await fetch("https://app.liminal.market/abi/KYC.json");
         KYCService.KYCInfo = await response.json();
         return KYCService.KYCInfo.abi;
     }
@@ -30866,10 +30897,31 @@ class TradePanel {
     constructor() {
         this.quantity = 0;
     }
+    importStylesheet() {
+        const existingLinkTag = document.getElementById("liminal-market-css");
+        if (!existingLinkTag) {
+            document.head.insertAdjacentHTML("beforeend", `
+          <link
+            id="liminal-market-css"
+            rel="stylesheet"
+            href="https://app.liminal.market/css/style.css"
+            type="text/css"
+          />
+          <link
+            id="pico-css"
+            rel="stylesheet"
+            href="https://app.liminal.market/css/pico/pico.min.css"
+            type="text/css"
+          />
+        `);
+        }
+    }
     async render(elementId, symbol, name, logo, address) {
         let element = document.getElementById(elementId);
         if (!element)
             return;
+        console.log("UAI");
+        this.importStylesheet();
         let contractInfo = ContractInfo.getContractInfo(TradePanelWidget.Network.Name);
         let sellTradeInput = new TradePanelInput("aUSD", "aUSD at Broker", "/img/ausd.png", contractInfo.AUSD_ADDRESS, TradeType.Sell);
         let buyTradeInput;
