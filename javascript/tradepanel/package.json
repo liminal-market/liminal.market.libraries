@@ -2,7 +2,7 @@
   "name": "liminal.market.tradepanel",
   "main": "app/js/bundle.js",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "sideEffects": false,
   "devDependencies": {
