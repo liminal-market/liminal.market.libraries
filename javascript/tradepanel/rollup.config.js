@@ -14,12 +14,21 @@ export default {
   input: ["./src/main.ts"],
   output: [
     {
-      file: pkg.main,
+      file: "./app/js/bundle.js",
       format: "esm",
       exports: "named",
       strict: true,
       name: "TradePanel",
       intro: "import Handlebars from 'handlebars/dist/cjs/handlebars.js';",
+    },
+    {
+      file: "./app/js/bundle.umd.js",
+      format: "umd",
+      umdNamedDefine: true,
+      library: "TradePanel",
+      libraryExport: "default",
+      strict: true,
+      name: "TradePanel",
     },
   ],
   external: ["js-sha3"],
