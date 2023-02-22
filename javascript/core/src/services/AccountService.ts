@@ -11,7 +11,7 @@ export default class AccountService {
         this.httpRequest = new HttpRequest();
     }
 
-    public async isValidKyc(): Promise<KycStatus> {
+    public async kycStatus(): Promise<KycStatus> {
         let result = (await this.httpRequest.getAuth("isValidKyc")) as KycStatus;
         if (!result.isValidKyc && result.status == 'ACTIVE') {
             result.message = 'Kyc status is being written down on blockchain. This can take few minutes. Ask again in few minutes'
@@ -28,16 +28,19 @@ export default class AccountService {
     }
 
     public async login(): Promise<Account> {
+        let account = await this.autoLogin();
+        if (account) return account;
 
         let response = await this.httpRequest.post('/me/nonce', {address: LiminalMarket.WalletAddress})
         let signingMessage = this.signInMessage + response.nonce;
 
-        let signedMessage = await LiminalMarket.Wallet.signMessage(signingMessage)
+        let signedMessage = await LiminalMarket.Signer.signMessage(signingMessage)
         let loginResponse = await this.httpRequest.post('me/validate', {
             address: LiminalMarket.WalletAddress,
             signedMessage
         });
-        let account = loginResponse as Account;
+
+        account = loginResponse as Account;
         account.brokerId = loginResponse.alpacaId;
         delete (account as any).alpacaId;
 
@@ -49,9 +52,9 @@ export default class AccountService {
         return account;
     }
 
-    public async fundSandboxAccount(accountFunded: (obj: any) => Promise<void> | undefined) {
+    public async fundSandboxAccount(accountFunded?: (obj: any) => Promise<void> | undefined) {
         await this.httpRequest.listen('BalanceSet', async (obj: any) => {
-            accountFunded(obj);
+            if (accountFunded) accountFunded(obj);
         })
         return await this.httpRequest.postAuth('/fundUser')
     }
@@ -69,5 +72,27 @@ export default class AccountService {
             })
         }
         return response;
+    }
+
+    private async autoLogin() {
+        try {
+            let validate = document.cookie.match('(^|;)\\s*validate\\s*=\\s*([^;]+)')?.pop() || '';
+            if (validate) {
+                let obj = JSON.parse(atob(validate));
+                LiminalMarket.Bearer = obj.token;
+                let result = await this.httpRequest.post('/me/jwt');
+                if (result.jwt) {
+                    let account = {} as Account;
+                    account.brokerId = result.alpacaId;
+                    account.chainId = result.chainId;
+                    account.token = obj.token;
+                    account.address = result.address;
+                    return account;
+                }
+            }
+        } catch (e : any) {
+            document.cookie = "validate=0; expires=Mon, 2 Dec 2020 12:00:00 UTC;path=/";
+        }
+        return;
     }
 }

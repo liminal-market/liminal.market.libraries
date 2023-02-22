@@ -6,8 +6,8 @@ export default class BlockchainError extends Error {
         super();
 
         this.name = 'BlockchainError'
-        this.stack = e;
-
+        this.stack = e.stack;
+        this.message = e.message;
         if (e.error && e.error.reason) {
             this.message = e.error.reason;
         }

@@ -1,12 +1,12 @@
 {
-  "name": "liminal.market.core",
+  "name": "liminal.market",
   "version": "1.0.0",
-  "description": "Core package for liminal.market",
+  "description": "Main package for liminal.market. Use this package to register and trade securities",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc --watch",
     "start": "npx ts-node .\\tests\\test.ts"
   },
   "author": "",

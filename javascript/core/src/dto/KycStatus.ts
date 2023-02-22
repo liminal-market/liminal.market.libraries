@@ -2,6 +2,6 @@ export default interface KycStatus {
     isValidKyc : boolean;
     brokerId : string;
     status : string;
-    hasBuyPower : boolean;
+    hasBuyingPower : boolean;
     message : string;
 }

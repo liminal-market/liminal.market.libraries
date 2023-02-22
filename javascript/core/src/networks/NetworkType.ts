@@ -1,9 +1,9 @@
-import localhostNetwork from "./localhostNetwork";
-import mumbaiNetwork from "./mumbaiNetwork";
 import Network from "./Network";
+import LocalhostNetwork from "./LocalhostNetwork";
+import MumbaiNetwork from "./MumbaiNetwork";
 
 export default class NetworkType {
-    static Networks : any = [localhostNetwork, mumbaiNetwork];
+    static Networks : any = [LocalhostNetwork, MumbaiNetwork];
 
     public static getInstance(chainId : any) {
         let networkInfo: Network | undefined = undefined;
