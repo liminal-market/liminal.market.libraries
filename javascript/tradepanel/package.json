@@ -47,7 +47,7 @@
   },
   "scripts": {
     "build": "npx rollup -c",
-    "test": "jest --runInBand --detectOpenHandles --forceExit"
+    "test": "JEST_PUPPETEER_CONFIG=./jest-puppeteer.config.cjs jest --runInBand --detectOpenHandles --forceExit"
   },
   "jshintConfig": {
     "esversion": 11
