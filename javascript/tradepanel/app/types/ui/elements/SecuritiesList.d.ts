@@ -5,7 +5,7 @@ export default class SecuritiesList {
     loadmore: boolean;
     onSelectSymbol?: (symbol: string, name: string, logo: string) => void;
     constructor();
-    render(): Promise<string>;
+    render(): Promise<any>;
     bindEvents(onSelectSymbol: (symbol: string, name: string, logo: string) => void): Promise<void>;
     private bindOnClickEvent;
     handleClick(evt: MouseEvent): Promise<void>;

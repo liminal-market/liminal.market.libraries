@@ -7,7 +7,7 @@ import NetworkInfo from "../networks/NetworkInfo";
 import ProviderInfo from "../wallet/ProviderInfo";
 import { WalletType } from "../enums/WalletType";
 import UserService from "../services/backend/UserService";
-import TradePanelWidget from "../TradePanelWidget";
+import WidgetGlobals from "../WidgetGlobals";
 
 export default class WalletHelper {
   static addTokenFallbackLoaded?: boolean = undefined;
@@ -95,9 +95,9 @@ export default class WalletHelper {
   }
 
   public async isMagic() {
-    if (!TradePanelWidget.User.magic || !TradePanelWidget.User.magic.connect)
+    if (!WidgetGlobals.User.magic || !WidgetGlobals.User.magic.connect)
       return false;
-    let walletInfo = await TradePanelWidget.User.magic.connect.getWalletInfo();
+    let walletInfo = await WidgetGlobals.User.magic.connect.getWalletInfo();
     if (walletInfo) {
       return walletInfo.walletType == "magic";
     }

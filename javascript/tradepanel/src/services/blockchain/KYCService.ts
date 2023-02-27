@@ -5,7 +5,7 @@ import KycStatus from "../../dto/KycStatus";
 import AUsdBalance from "../../ui/elements/AUsdBalance";
 import BlockchainService from "./BlockchainService";
 import UserService from "../backend/UserService";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class KYCService extends BlockchainService {
   private static KYCInfo: any;
@@ -37,7 +37,7 @@ export default class KYCService extends BlockchainService {
     })) as KycStatus;
 
     if (KYCService.KycResponse.alpacaId) {
-      TradePanelWidget.User.alpacaId = KYCService.KycResponse.alpacaId;
+      WidgetGlobals.User.alpacaId = KYCService.KycResponse.alpacaId;
 
       let aUsdBalance = new AUsdBalance();
       await aUsdBalance.loadAUSDBalanceUI();

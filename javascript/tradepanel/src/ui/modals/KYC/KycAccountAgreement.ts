@@ -8,7 +8,7 @@ import KycValidatorError from "../../../errors/cloud/KycValidatorError";
 import FormHelper from "../../../util/FormHelper";
 import ExecuteOrderButton from "../../elements/tradepanel/ExecuteOrderButton";
 import FakeAUSDFund from "../Funding/FakeAUSDFund";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class KycAccountAgreement extends KycBase {
   constructor(kycForm: KYCForm) {
@@ -16,7 +16,9 @@ export default class KycAccountAgreement extends KycBase {
   }
 
   public render(edit = false) {
-    let template = Handlebars.compile(KycAccountAgreementHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(
+      KycAccountAgreementHtml
+    );
     return template({ edit: edit });
   }
 
@@ -76,7 +78,7 @@ export default class KycAccountAgreement extends KycBase {
 
       let params = FormHelper.getParams("#kyc_wizard_form");
 
-      let networkInfo = TradePanelWidget.Network;
+      let networkInfo = WidgetGlobals.Network;
       params.chainId = networkInfo.ChainId;
 
       let kycService = new KYCService();

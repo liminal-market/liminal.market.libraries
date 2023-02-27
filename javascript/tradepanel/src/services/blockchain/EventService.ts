@@ -2,15 +2,13 @@ import { ethers } from "ethers";
 import ContractAddresses from "../../contracts/ContractAddresses";
 import ContractInfo from "../../contracts/ContractInfo";
 import BigNumber from "bignumber.js";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class EventService {
   contracts: ContractAddresses;
 
   constructor() {
-    this.contracts = ContractInfo.getContractInfo(
-      TradePanelWidget.Network.Name
-    );
+    this.contracts = ContractInfo.getContractInfo(WidgetGlobals.Network.Name);
   }
 
   public subscribeToBuy(hash: string) {
@@ -27,7 +25,7 @@ export default class EventService {
     const lmContract = new ethers.Contract(
       this.contracts.LIMINAL_MARKET_ADDRESS,
       this.lmAbi,
-      TradePanelWidget.User.signer
+      WidgetGlobals.User.signer
     );
 
     let listeners = lmContract.listeners(eventName);
@@ -46,7 +44,7 @@ export default class EventService {
         spender: string
       ) => {
         console.log(eventName + " event");
-        lmContract.off(eventName, TradePanelWidget.User.provider);
+        lmContract.off(eventName, WidgetGlobals.User.provider);
         this.remove(hash);
       }
     );

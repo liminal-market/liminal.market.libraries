@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import AbstractWeb3Connector from "./AbstractWeb3Connector";
 import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
-import TradePanelWidget from "../TradePanelWidget";
+import WidgetGlobals from "../WidgetGlobals";
 
 export default class MagicWeb3Connector extends AbstractWeb3Connector {
   type = "MagicLink";
@@ -11,7 +11,7 @@ export default class MagicWeb3Connector extends AbstractWeb3Connector {
   ether: ethers.providers.Web3Provider | null = null;
 
   async activate() {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let network = {
       rpcUrl: networkInfo.RpcUrl,
       chainId: networkInfo.ChainId,

@@ -4,7 +4,7 @@ import KYCService from "../../../services/blockchain/KYCService";
 import StringHelper from "../../../util/StringHelper";
 import FormValidator from "../../../util/FormValidator";
 import Waiting from "./Waiting";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 import LoadingHelper from "../../../util/LoadingHelper";
 
 export default class Registration {
@@ -15,13 +15,13 @@ export default class Registration {
   }
 
   public show() {
-    if (TradePanelWidget.User.alpacaId) {
+    if (WidgetGlobals.User.alpacaId) {
       let waiting = new Waiting();
       waiting.show();
       return;
     }
 
-    let template = Handlebars.compile(RegistrationHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(RegistrationHtml);
     this.modal.showModal("Sandbox registration", template({}));
 
     this.bindEvents();
@@ -56,7 +56,7 @@ export default class Registration {
           LoadingHelper.removeLoading();
         });
       if (alpacaId) {
-        TradePanelWidget.User.alpacaId = alpacaId;
+        WidgetGlobals.User.alpacaId = alpacaId;
 
         let waiting = new Waiting();
         waiting.show();

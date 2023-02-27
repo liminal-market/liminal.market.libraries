@@ -3,7 +3,7 @@ import KycBase from "./KycBase";
 export default class KycIdentity extends KycBase {
     edit: boolean;
     constructor(kycForm: KYCForm);
-    render(edit?: boolean): string;
+    render(edit?: boolean): any;
     show(): void;
     bindEvents(): void;
     private hideCitizenErrorMessage;

@@ -1,5 +1,5 @@
 import NetworkInfo from "../../networks/NetworkInfo";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class ConnectionService {
   options: { serverUrl: string; appId: string };
@@ -13,7 +13,7 @@ export default class ConnectionService {
   }
 
   public async start(): Promise<void> {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     this.options = {
       serverUrl: networkInfo.ServerUrl,
       appId: networkInfo.AppId,

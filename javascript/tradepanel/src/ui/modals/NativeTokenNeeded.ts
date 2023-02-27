@@ -3,7 +3,7 @@ import FakeNativeTokenNeededHtml from "../../html/modal/FakeNativeTokenNeeded.ht
 import NativeTokenNeededHtml from "../../html/modal/NativeTokenNeeded.html";
 import Modal from "./Modal";
 import UserService from "../../services/backend/UserService";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class NativeTokenNeeded {
   onNativeTokenArrived: () => void;
@@ -16,12 +16,14 @@ export default class NativeTokenNeeded {
   }
 
   public show() {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let userService = new UserService();
     let ethAddress = userService.getEthAddress();
 
     if (networkInfo.TestNetwork) {
-      let template = Handlebars.compile(FakeNativeTokenNeededHtml);
+      let template = WidgetGlobals.HandlebarsInstance.compile(
+        FakeNativeTokenNeededHtml
+      );
       let content = template({
         symbol: networkInfo.NativeSymbol,
         faucetUrl: networkInfo.FaucetUrl,
@@ -36,7 +38,9 @@ export default class NativeTokenNeeded {
         }
       );
     } else {
-      let template = Handlebars.compile(NativeTokenNeededHtml);
+      let template = WidgetGlobals.HandlebarsInstance.compile(
+        NativeTokenNeededHtml
+      );
       let content = template({
         symbol: networkInfo.NativeSymbol,
         buyUrl: networkInfo.BuyUrl,
@@ -70,7 +74,7 @@ export default class NativeTokenNeeded {
   }
 
   public async checkForNativeTokens() {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
     if (hasEnoughNativeTokens) {
       this.modal.hideModal();

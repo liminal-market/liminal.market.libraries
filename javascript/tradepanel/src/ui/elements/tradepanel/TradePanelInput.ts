@@ -8,7 +8,7 @@ import { roundNumberDecimal } from "../../../util/Helper";
 import StockPriceService from "../../../services/backend/StockPriceService";
 import BigNumber from "bignumber.js";
 import PricePerShareHtml from "../../../html/elements/tradepanel/PricePerShare.html";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class TradePanelInput {
   symbol: string;
@@ -46,8 +46,9 @@ export default class TradePanelInput {
     this.lastPrice = 0;
     this.qtyPerDollar = 0;
     this.lastTraded = "";
-    this.template = Handlebars.compile(TradeInputHtml);
-    this.pricePerShareTemplate = Handlebars.compile(PricePerShareHtml);
+    this.template = WidgetGlobals.HandlebarsInstance.compile(TradeInputHtml);
+    this.pricePerShareTemplate =
+      WidgetGlobals.HandlebarsInstance.compile(PricePerShareHtml);
   }
 
   public setOtherTradePanelInput(tradePanelInput: TradePanelInput) {
@@ -177,7 +178,7 @@ export default class TradePanelInput {
     //TODO: check if we need the userService on the widget
     //   let userService = new UserService();
     //   let ethAddress = userService.getEthAddress();
-    let ethAddress = TradePanelWidget.User.address;
+    let ethAddress = WidgetGlobals.User.address;
 
     let balanceDom = document.querySelector(
       "." + this.tradeType + "Inputs .balance_value"

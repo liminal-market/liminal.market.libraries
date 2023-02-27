@@ -1,5 +1,5 @@
 import ExecuteOrderButton from "../../ui/elements/tradepanel/ExecuteOrderButton";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 import NetworkInfo from "../../networks/NetworkInfo";
 import AuthenticateService from "./AuthenticateService";
 import UserInfo from "../../ui/elements/UserInfo";
@@ -22,9 +22,9 @@ export default class EventService {
   }
 
   public listen() {
-    let network = TradePanelWidget.Network;
+    let network = WidgetGlobals.Network;
     let eventSource = new EventSource(
-      network.ServerUrl + "/listenForChanges?jwt=" + TradePanelWidget.User.token
+      network.ServerUrl + "/listenForChanges?jwt=" + WidgetGlobals.User.token
     );
     eventSource.onmessage = async (e: any) => {
       let data = e.data;
@@ -55,7 +55,7 @@ export default class EventService {
       } else if (obj.methodName == "UpdateAUsdOnChain") {
         FakeAUSDFund.writingToChain();
       } else if (obj.methodName == "BalanceSet") {
-        if (TradePanelWidget.Network.TestNetwork) {
+        if (WidgetGlobals.Network.TestNetwork) {
           let sandbox_registration_waiting = document.getElementById(
             "sandbox_registration_waiting"
           );
@@ -76,7 +76,7 @@ export default class EventService {
         aUsdBalance.updateUIBalance(new BigNumber(balance));
         ExecuteOrderButton.Instance?.renderButton();
       } else if (obj.methodName == "AccountValidated") {
-        if (TradePanelWidget.Network.TestNetwork) {
+        if (WidgetGlobals.Network.TestNetwork) {
           let li_sandbox_account_status = document.getElementById(
             "li_sandbox_account_status"
           );

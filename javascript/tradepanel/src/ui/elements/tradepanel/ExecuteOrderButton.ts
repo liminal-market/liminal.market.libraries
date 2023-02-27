@@ -17,7 +17,7 @@ import KycStatusHandler from "../../modals/KYC/KycStatusHandler";
 import AUsdBalance from "../AUsdBalance";
 import KycApproved from "../../modals/KYC/KycApproved";
 import OrderProgress from "./OrderProgress";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class ExecuteOrderButton {
   authenticateService: AuthenticateService;
@@ -31,7 +31,9 @@ export default class ExecuteOrderButton {
     this.sellTradeInput = sellTradeInput;
     this.buyTradeInput = buyTradeInput;
     this.authenticateService = new AuthenticateService();
-    this.template = Handlebars.compile(ExecuteOrderButtonHtml);
+    this.template = WidgetGlobals.HandlebarsInstance.compile(
+      ExecuteOrderButtonHtml
+    );
     ExecuteOrderButton.Instance = this;
     this.button = document.getElementById(
       "liminal_market_execute_order"
@@ -194,7 +196,7 @@ export default class ExecuteOrderButton {
     let authenticationService = new AuthenticateService();
     await authenticationService.isAuthenticated();
 
-    if (TradePanelWidget.User.provider) return true;
+    if (WidgetGlobals.User.provider) return true;
 
     button.innerHTML = "Connect wallet";
     button.addEventListener("click", async (evt) => {
@@ -206,7 +208,7 @@ export default class ExecuteOrderButton {
   }
 
   private async userIsLoggedIn(button: HTMLElement) {
-    if (TradePanelWidget.User.isLoggedIn) return true;
+    if (WidgetGlobals.User.isLoggedIn) return true;
 
     button.innerHTML = "Login";
     button.addEventListener("click", async () => {
@@ -217,8 +219,8 @@ export default class ExecuteOrderButton {
   }
 
   private chainIdIsCorrect(button: HTMLElement) {
-    let chainId = TradePanelWidget.User.chainId;
-    if (chainId === TradePanelWidget.Network.ChainId) return true;
+    let chainId = WidgetGlobals.User.chainId;
+    if (chainId === WidgetGlobals.Network.ChainId) return true;
 
     let usersWalletNetwork = NetworkInfo.getNetworkInfoByChainId(chainId);
     if (usersWalletNetwork) {
@@ -228,14 +230,14 @@ export default class ExecuteOrderButton {
 
     button.innerHTML = "Switch Network";
     button.addEventListener("click", async () => {
-      await TradePanelWidget.Network.addNetworkToWallet();
+      await WidgetGlobals.Network.addNetworkToWallet();
     });
     this.stopLoadingButton(button);
     return false;
   }
 
   private async userHasNativeToken(button: HTMLElement): Promise<boolean> {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
     if (hasEnoughNativeTokens) return true;
 
@@ -303,7 +305,7 @@ export default class ExecuteOrderButton {
   private async userHasAUSD(button: HTMLElement): Promise<boolean> {
     let ausdService = new AUSDService();
     let balance = await ausdService.getAUSDBalanceOf(
-      TradePanelWidget.User.address
+      WidgetGlobals.User.address
     );
     if (balance.isGreaterThan(0)) return true;
 
@@ -313,7 +315,7 @@ export default class ExecuteOrderButton {
         AUSDService.lastUpdate = undefined;
 
         let balance = await ausdService.getAUSDBalanceOf(
-          TradePanelWidget.User.address
+          WidgetGlobals.User.address
         );
         if (balance.isGreaterThan(0)) {
           await AUsdBalance.forceLoadAUSDBalanceUI();
@@ -326,7 +328,7 @@ export default class ExecuteOrderButton {
       return false;
     }
 
-    if (TradePanelWidget.Network.TestNetwork) {
+    if (WidgetGlobals.Network.TestNetwork) {
       button.innerHTML = "You need aUSD. Click here to get some";
     } else {
       button.innerHTML = "You need aUSD. Click here for instructions";
@@ -344,7 +346,7 @@ export default class ExecuteOrderButton {
     let ausdService = new AUSDService();
     if (this.sellTradeInput.symbol == "aUSD") {
       let balance = await ausdService.getAUSDBalanceOf(
-        TradePanelWidget.User.address
+        WidgetGlobals.User.address
       );
       if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
         return true;
@@ -358,7 +360,7 @@ export default class ExecuteOrderButton {
       let securityTokenService = new SecurityTokenService();
       let userQuantity = await securityTokenService.getQuantityByAddress(
         this.sellTradeInput.symbol,
-        TradePanelWidget.User.address
+        WidgetGlobals.User.address
       );
       if (this.sellTradeInput.quantity <= userQuantity) return true;
 

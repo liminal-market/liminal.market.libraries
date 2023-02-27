@@ -6,7 +6,7 @@ import {
 import BigNumber from "bignumber.js";
 import AUsdBalance from "../AUsdBalance";
 import ProviderInfo from "../../../wallet/ProviderInfo";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 import Modal from "../../modals/Modal";
 import WalletHelper from "../../../util/WalletHelper";
 import TradeExecutedHtml from "../../../html/elements/tradepanel/TradeExecuted.html";
@@ -20,7 +20,7 @@ export default class OrderExecutedModal {
     OrderProgress.getInstance().clearProgressText();
 
     let providerInfo = ProviderInfo.Instance;
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let isBuy = object.side == "buy";
 
     let obj = isBuy
@@ -30,7 +30,7 @@ export default class OrderExecutedModal {
     obj.blockExplorerLink =
       networkInfo.BlockExplorer + "/tx/" + object.transaction_hash;
 
-    let template = Handlebars.compile(TradeExecutedHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(TradeExecutedHtml);
     let content = template(obj);
     let modal = new Modal();
     modal.showModal("Trade executed", content);
@@ -79,7 +79,7 @@ export default class OrderExecutedModal {
       shortEthAddress: shortEth(ethAddress),
       ethAddress: ethAddress,
       tokenAddress: tokenAddress,
-      chainId: TradePanelWidget.Network.ChainId,
+      chainId: WidgetGlobals.Network.ChainId,
     };
   }
 
@@ -103,7 +103,7 @@ export default class OrderExecutedModal {
       shortEthAddress: shortEth(ethAddress),
       ethAddress: ethAddress,
       tokenAddress: tokenAddress,
-      chainId: TradePanelWidget.Network.ChainId,
+      chainId: WidgetGlobals.Network.ChainId,
     };
   }
 }

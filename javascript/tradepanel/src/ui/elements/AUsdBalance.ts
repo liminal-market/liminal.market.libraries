@@ -7,7 +7,7 @@ import WalletHelper from "../../util/WalletHelper";
 import ContractInfo from "../../contracts/ContractInfo";
 import Modal from "../modals/Modal";
 import AddToWalletHtml from "../../html/elements/AddToWallet.html";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 import AuthenticateService from "../../services/backend/AuthenticateService";
 import BigNumber from "bignumber.js";
 
@@ -21,14 +21,14 @@ export default class AUsdBalance {
   }
 
   public async loadAUSDBalanceUI() {
-    if (!TradePanelWidget.User.ether) {
+    if (!WidgetGlobals.User.ether) {
       await AuthenticateService.enableWeb3();
-      if (!TradePanelWidget.User.ether) return;
+      if (!WidgetGlobals.User.ether) return;
     }
 
     let aUSDService = new AUSDService();
     let aUsdValueWei = await aUSDService.getAUSDBalanceOf(
-      TradePanelWidget.User.address
+      WidgetGlobals.User.address
     );
 
     this.updateUIBalance(aUsdValueWei);
@@ -37,7 +37,7 @@ export default class AUsdBalance {
   }
 
   private bindEvents() {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let add_aUSD_to_wallet = document.querySelectorAll(".add_aUSD_to_wallet");
     add_aUSD_to_wallet.forEach((element) => {
       element.addEventListener("click", async (evt) => {
@@ -49,7 +49,8 @@ export default class AUsdBalance {
           contractInfo.AUSD_ADDRESS,
           "aUSD",
           () => {
-            let template = Handlebars.compile(AddToWalletHtml);
+            let template =
+              WidgetGlobals.HandlebarsInstance.compile(AddToWalletHtml);
             let obj = { symbol: "aUSD", address: contractInfo.AUSD_ADDRESS };
             let modal = new Modal();
             modal.showModal("Add aUSD token", template(obj));
@@ -107,7 +108,7 @@ export default class AUsdBalance {
     let userInfoAUsdBalance = document.getElementById("userInfoAUsdBalance");
     let frontpageAUsdBalance = document.getElementById("frontpageAUsdBalance");
 
-    if (!TradePanelWidget.User.alpacaId) {
+    if (!WidgetGlobals.User.alpacaId) {
       frontpageAUsdBalance?.classList.add("hidden");
       userInfoAUsdBalance?.classList.add("hidden");
     } else {
