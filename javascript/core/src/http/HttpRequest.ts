@@ -99,7 +99,8 @@ export default class HttpRequest {
 
     private runActions(e: any) {
         let obj = this.getEventSourceObject(e);
-        let action = HttpRequest.actionMap.get(obj.method)
+
+        let action = HttpRequest.actionMap.get(obj.methodName)
         if (action) {
             action(obj);
         }
@@ -107,7 +108,6 @@ export default class HttpRequest {
 
     private getEventSourceObject(e: any) {
         let data = e.data;
-        console.log(e);
         if (!data || data == 'ok') return;
 
         try {

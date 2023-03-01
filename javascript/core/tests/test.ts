@@ -50,9 +50,8 @@ export default class Test {
         } else {
             console.log('send buy order')
             let amount = '23' + '0'.repeat(18)
-            let buyResponse = await liminalMarket.buySecurityToken('MSFT', amount, async (recipient, symbol, tsl, filledQty, filledAvgPrice, side, filledAt, totalServiceFee, aUsdBalance, spender) => {
-                console.log(recipient, symbol, tsl, filledQty, filledAvgPrice, side, filledAt, totalServiceFee, aUsdBalance, spender);
-            }).catch((e: any) => {
+            let buyResponse = await liminalMarket.buySecurityToken('MSFT', amount)
+                .catch((e: any) => {
                 console.log('Error message:', e.message);
             });
 
@@ -80,7 +79,7 @@ export default class Test {
 
         //initiate LiminalMarket class
         //myContractAddress is optional
-        const liminalMarket = await LiminalMarket.getInstance(wallet);
+        const liminalMarket = await LiminalMarket.getInstanceByWallet(wallet);
         if (!liminalMarket.hasAccount()) {
             //start by registering you account, you only need to do this one time
             //you will receive aUSD when you register, so you can trade immediately
@@ -132,6 +131,27 @@ export default class Test {
         //retrieve the address of a security token
         const securityTokenAddress = await liminalMarket.getSecurityTokenAddress('AAPL')
         console.log('address', securityTokenAddress);
+
+    }
+
+    public async doKyc() {
+        let pk = [
+            '47b0e063fa8b12adc19b09548f665a757089913a6e7ecb1d8600b9f9ed5de504',
+            '63766379421dc92a9a8c99c9f5a9049e702065e7869b99b960c84fa22fae998c',
+            '3920c2b328b88e396bbe2044e87d5111de8c53d91b708da92a52c153acf4bcc9',
+            'ff0747021dfc5c8e6c1a6b16896b1b398c0f19d6ac9c81b1ce9b14a1922805f7',
+            '24d2a3aa667e4f932c6fc6ef26effa7eab79ada93212294c492fcb0190e8665e',
+            'd353f599281ceb13d8c199a731a57b032d7ce1225f95904ddf1e8152ac420dc6',
+            '85d957cc30e8b37248d88c5d39c88d5972b34f943372640e044a11da2c17d882',
+            '8431e156b51498e7529b715ad94cf67957e912cb19444b65b99279eff0fea597',
+            '407261e4cd0bbf84fd1f826a173b403d93c73325428db397d109e8f20c70f839',
+            'd7cb7083feda2385b38138306cd739dd420d7e7c321a3ac1007ac8b4dde289b6'
+        ]
+        for (let i=0;i<pk.length;i++) {
+            let liminalMarket = await LiminalMarket.getInstanceUsingPrivateKey(pk[i] as string, MumbaiNetworkDefaults.ChainId);
+            let result = await liminalMarket.kycStatus();
+            console.log('kycStatus:', result);
+        }
 
     }
 }
