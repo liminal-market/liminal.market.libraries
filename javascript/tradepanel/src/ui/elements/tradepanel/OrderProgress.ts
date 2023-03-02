@@ -1,4 +1,4 @@
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class OrderProgress {
   progressNr: number = 0;
@@ -30,7 +30,7 @@ export default class OrderProgress {
     let progressText = document.getElementById("progress-text");
     if (!progressText) return;
 
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     progressText.innerHTML =
       text +
       '<br /><a href="' +

@@ -5,7 +5,7 @@ export default class FileUpload {
     accept: string;
     capture: string;
     constructor(inputId: string, label: string, accept?: string, capture?: string);
-    render(): string;
+    render(): any;
     bindEvents(): void;
     protected processFile(element: HTMLInputElement): void;
     protected setBase64Input(elementId: string, value: string): void;

@@ -6,7 +6,7 @@ import KycDisclosures from "./KYC/KycDisclosures";
 import KycAccountAgreement from "./KYC/KycAccountAgreement";
 import KycTrustedContact from "./KYC/KycTrustedContact";
 import KycUpload from "./KYC/KycUpload";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 import Registration from "./Sandbox/Registration";
 
 export default class KYCForm {
@@ -36,7 +36,7 @@ export default class KYCForm {
   }
 
   public show(className: string) {
-    if (TradePanelWidget.Network.TestNetwork) {
+    if (WidgetGlobals.Network.TestNetwork) {
       let registration = new Registration();
       registration.show();
       return;
@@ -51,13 +51,13 @@ export default class KYCForm {
   }
 
   public showKYCForm(edit = false) {
-    if (TradePanelWidget.Network.TestNetwork) {
+    if (WidgetGlobals.Network.TestNetwork) {
       let registration = new Registration();
       registration.show();
       return;
     }
 
-    let template = Handlebars.compile(KYCFormHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(KYCFormHtml);
     let obj = {
       KycContactHtml: this.kycContact.render(),
       KycIdentityHtml: this.kycIdentity.render(),

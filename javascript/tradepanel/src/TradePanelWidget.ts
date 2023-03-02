@@ -1,20 +1,15 @@
 import User from "./dto/User";
-import Network from "./networks/Network";
 import NetworkInfo from "./networks/NetworkInfo";
 import EventService from "./services/backend/EventService";
 import TradePanel from "./ui/elements/TradePanel";
+import WidgetGlobals from "./WidgetGlobals";
+import Handlebars from "handlebars";
 
 export default class TradePanelWidget {
-  static Network: Network;
-  static User: User;
   constructor() {
-    TradePanelWidget.Network = NetworkInfo.getInstance();
-    TradePanelWidget.User = new User(
-      null,
-      "",
-      TradePanelWidget.Network.ChainId,
-      ""
-    );
+    WidgetGlobals.HandlebarsInstance = Handlebars;
+    WidgetGlobals.Network = NetworkInfo.getInstance();
+    WidgetGlobals.User = new User(null, "", WidgetGlobals.Network.ChainId, "");
     EventService.register();
   }
 

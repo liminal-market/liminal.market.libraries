@@ -2,7 +2,7 @@ import AuthenticateService from "../../services/backend/AuthenticateService";
 import ConnectWallet from "./ConnectWallet";
 import UserInfo from "./UserInfo";
 import LoadingHelper from "../../util/LoadingHelper";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class Header {
   public async load() {
@@ -34,7 +34,7 @@ export default class Header {
       return;
     }
 
-    let userInfo = new UserInfo(TradePanelWidget.User.providerInfo);
+    let userInfo = new UserInfo(WidgetGlobals.User.providerInfo);
     await userInfo.render("user_header_info");
   }
 }

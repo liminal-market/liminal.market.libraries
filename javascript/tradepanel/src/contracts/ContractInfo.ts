@@ -4,7 +4,7 @@ import fujiContractAddresses from "./fuji-contract-addresses";
 import ContractAddresses from "./ContractAddresses";
 import NetworkInfo from "../networks/NetworkInfo";
 import polygonContractAddresses from "./polygon-contract-addresses";
-import TradePanelWidget from "../TradePanelWidget";
+import WidgetGlobals from "../WidgetGlobals";
 
 export default class ContractInfo {
   public static getContractInfo(networkName?: string): ContractAddresses {
@@ -16,7 +16,7 @@ export default class ContractInfo {
     };
 
     if (!networkName) {
-      networkName = TradePanelWidget.Network.Name;
+      networkName = WidgetGlobals.Network.Name;
     }
     const contractInfoType = contractInfos[networkName + "ContractAddresses"];
     return new contractInfoType();

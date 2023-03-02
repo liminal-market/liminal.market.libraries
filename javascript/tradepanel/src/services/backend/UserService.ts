@@ -7,7 +7,7 @@ import CookieHelper from "../../util/CookieHelper";
 import User from "../../dto/User";
 import { ethers } from "ethers";
 import BaseService from "./BaseService";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class UserService extends BaseService {
   static readonly signedMessage = "signedMessage";
@@ -27,22 +27,22 @@ export default class UserService extends BaseService {
     let signedMessage = cookieHelper.getCookieValue("signedMessage");
 
     if (!signedMessage) {
-      TradePanelWidget.User = new User(
+      WidgetGlobals.User = new User(
         null,
         "",
-        TradePanelWidget.Network.ChainId,
+        WidgetGlobals.Network.ChainId,
         null
       );
-      return TradePanelWidget.User;
+      return WidgetGlobals.User;
     }
     const signingAddress = ethers.utils.recoverAddress("", signedMessage);
-    TradePanelWidget.User = new User(
+    WidgetGlobals.User = new User(
       null,
       signingAddress,
-      TradePanelWidget.Network.ChainId,
+      WidgetGlobals.Network.ChainId,
       null
     );
-    return TradePanelWidget.User;
+    return WidgetGlobals.User;
   }
 
   public async load(address: string) {
@@ -66,7 +66,7 @@ export default class UserService extends BaseService {
   }
 
   getEthAddress(): string | undefined {
-    return TradePanelWidget.User.address;
+    return WidgetGlobals.User.address;
   }
 
   public async kycActionRequired(): Promise<KycResult> {

@@ -4,7 +4,7 @@ import WalletMissingHtml from "../html/modal/WalletMissing.html";
 import Modal from "../ui/modals/Modal";
 import SwitchNetworkModal from "../ui/modals/SwitchNetworkModal";
 import UserService from "../services/backend/UserService";
-import TradePanelWidget from "../TradePanelWidget";
+import WidgetGlobals from "../WidgetGlobals";
 import AuthenticateService from "../services/backend/AuthenticateService";
 
 export default class PredefinedErrorHandlers {
@@ -58,7 +58,8 @@ export default class PredefinedErrorHandlers {
     });
     this.errorMessageMapping.set("Non ethereum enabled browser", () => {
       let modal = new Modal();
-      let template = Handlebars.compile(WalletMissingHtml);
+      let template =
+        WidgetGlobals.HandlebarsInstance.compile(WalletMissingHtml);
       modal.showModal("New to blockchain?", template(null), false, () => {
         //window.location.reload();
       });

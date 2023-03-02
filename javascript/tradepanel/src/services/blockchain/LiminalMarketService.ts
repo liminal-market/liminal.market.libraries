@@ -1,7 +1,7 @@
 import BlockchainError from "../../errors/BlockchainError";
 import BlockchainService from "./BlockchainService";
 import { ethers } from "ethers";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class LiminalMarketService extends BlockchainService {
   private static LiminalMarketInfo: any;
@@ -16,7 +16,7 @@ export default class LiminalMarketService extends BlockchainService {
     const contract = new ethers.Contract(
       this.contracts.LIMINAL_MARKET_ADDRESS,
       this.getSecurityTokenAbi,
-      TradePanelWidget.User.ether
+      WidgetGlobals.User.ether
     );
     return await contract.getSecurityToken(symbol);
   }
@@ -28,7 +28,7 @@ export default class LiminalMarketService extends BlockchainService {
     const contract = new ethers.Contract(
       this.contracts.LIMINAL_MARKET_ADDRESS,
       this.createTokenAbi,
-      TradePanelWidget.User.signer
+      WidgetGlobals.User.signer
     );
     let result = await contract.createToken(symbol);
 

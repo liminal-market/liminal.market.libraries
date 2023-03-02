@@ -1,12 +1,13 @@
 import TradeSwitchHtml from "../../../html/elements/tradepanel/TradeSwitch.html";
 import TradePanelInput from "./TradePanelInput";
 import ExecuteOrderButton from "./ExecuteOrderButton";
+import WidgetGlobals from "src/WidgetGlobals";
 
 export default class TradeSwitch {
   template: any = undefined;
 
   constructor() {
-    this.template = Handlebars.compile(TradeSwitchHtml);
+    this.template = WidgetGlobals.HandlebarsInstance.compile(TradeSwitchHtml);
   }
 
   public renderToString() {

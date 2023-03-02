@@ -12,7 +12,7 @@ import ExecuteOrderButton from "./tradepanel/ExecuteOrderButton";
 import LoadingHelper from "../../util/LoadingHelper";
 import WalletHelper from "../../util/WalletHelper";
 import AuthenticateService from "../../services/backend/AuthenticateService";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 type ListenerAction = (...args: Array<any>) => void;
 
@@ -66,10 +66,10 @@ export default class UserInfo {
     let userInfoDiv = document.getElementById(elementId);
     if (!userInfoDiv) return;
 
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     let obj: any = {
-      ethAddress: TradePanelWidget.User.address,
-      shortEthAddress: shortEth(TradePanelWidget.User.address),
+      ethAddress: WidgetGlobals.User.address,
+      shortEthAddress: shortEth(WidgetGlobals.User.address),
       walletName: this.providerInfo.WalletName,
       networkName:
         networkInfo.ChainName +
@@ -79,7 +79,7 @@ export default class UserInfo {
       chainId: networkInfo.ChainId,
     };
 
-    let template = Handlebars.compile(UserInfoElement);
+    let template = WidgetGlobals.HandlebarsInstance.compile(UserInfoElement);
     let html = template(obj);
 
     userInfoDiv.innerHTML = html;
@@ -91,7 +91,7 @@ export default class UserInfo {
       UserInfo.onUserLoggedIn[i]();
     }
 
-    if (networkInfo.TestNetwork || !TradePanelWidget.User.alpacaId) {
+    if (networkInfo.TestNetwork || !WidgetGlobals.User.alpacaId) {
       let edit_account = document.querySelector(".edit_account");
       edit_account?.classList.add("hidden");
     }
@@ -172,7 +172,7 @@ export default class UserInfo {
         return;
       }
 
-      TradePanelWidget.User.magic.connect.showWallet().catch(async (e: any) => {
+      WidgetGlobals.User.magic.connect.showWallet().catch(async (e: any) => {
         this.walletLoaded = false;
         if (e.message.indexOf("User denied account access") != -1) {
           await this.authenticationService.logOut();
@@ -210,13 +210,15 @@ export default class UserInfo {
   }
 
   private loadIfTestNetwork() {
-    if (!TradePanelWidget.User.provider) return;
-    if (!TradePanelWidget.Network.TestNetwork) return;
+    if (!WidgetGlobals.User.provider) return;
+    if (!WidgetGlobals.Network.TestNetwork) return;
 
     let header = document.querySelector("header");
     if (!header) return;
 
-    let template = Handlebars.compile(TestNetworkBannerHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(
+      TestNetworkBannerHtml
+    );
     header.insertAdjacentHTML("beforebegin", template({}));
 
     let switch_from_test_network = document.getElementById(

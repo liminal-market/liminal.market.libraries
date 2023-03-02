@@ -15,6 +15,6 @@
     "typeRoots": ["node_modules/@types", "types"]
   },
   "exclude": ["node_modules"],
-  "files": ["src/main.ts", "./src/.d.ts", "./src/html.d.ts"],
+  "files": ["src/main.ts", "./src/html.d.ts"],
   "compileOnSave": true
 }

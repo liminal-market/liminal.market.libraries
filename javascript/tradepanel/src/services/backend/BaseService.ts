@@ -1,4 +1,4 @@
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class BaseService {
   constructor() {}
@@ -7,14 +7,14 @@ export default class BaseService {
     let url = "";
     let method = "GET";
     if (!options || !options.relativeUrl) {
-      url = TradePanelWidget.Network.ServerUrl;
+      url = WidgetGlobals.Network.ServerUrl;
     }
     let params = new URLSearchParams(data);
     if (!params.has("chainId")) {
-      params.set("chainId", TradePanelWidget.Network.ChainId.toString());
+      params.set("chainId", WidgetGlobals.Network.ChainId.toString());
     }
     if (!params.has("address")) {
-      params.set("address", TradePanelWidget.User.address);
+      params.set("address", WidgetGlobals.User.address);
     }
 
     let response = await fetch(
@@ -22,7 +22,7 @@ export default class BaseService {
       {
         method: method,
         headers: {
-          Authentication: "Bearer: " + TradePanelWidget.User.token,
+          Authentication: "Bearer: " + WidgetGlobals.User.token,
           "Content-Type": "application/json",
         },
       }
@@ -35,17 +35,15 @@ export default class BaseService {
     if (!data) {
       data = {};
     }
-    data.chainId = data.chainId
-      ? data.chainId
-      : TradePanelWidget.Network.ChainId;
-    data.address = data.address ? data.address : TradePanelWidget.User.address;
+    data.chainId = data.chainId ? data.chainId : WidgetGlobals.Network.ChainId;
+    data.address = data.address ? data.address : WidgetGlobals.User.address;
 
     let response = await fetch(
-      this.getUrl(TradePanelWidget.Network.ServerUrl, path),
+      this.getUrl(WidgetGlobals.Network.ServerUrl, path),
       {
         method: "POST",
         headers: {
-          Authentication: "Bearer: " + TradePanelWidget.User.token,
+          Authentication: "Bearer: " + WidgetGlobals.User.token,
           "Content-Type": "application/json;charset=UTF-8",
         },
         body: JSON.stringify(data),

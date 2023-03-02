@@ -8,7 +8,7 @@ import UserService from "../../../services/backend/UserService";
 import { roundBigNumber } from "../../../util/Helper";
 import BigNumber from "bignumber.js";
 import AUSDFund from "./AUSDFund";
-import TradePanelWidget from "../../../TradePanelWidget";
+import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class FakeAUSDFund {
   currentBalance: BigNumber;
@@ -30,13 +30,13 @@ export default class FakeAUSDFund {
   }
 
   public showAUSDFakeFund() {
-    let networkInfo = TradePanelWidget.Network;
+    let networkInfo = WidgetGlobals.Network;
     if (!networkInfo.TestNetwork) {
       this.showAUSDFund();
       return;
     }
 
-    let template = Handlebars.compile(FakeFundingHtml);
+    let template = WidgetGlobals.HandlebarsInstance.compile(FakeFundingHtml);
 
     let contractInfo = ContractInfo.getContractInfo();
     let content = template({ aUSDAddress: contractInfo.AUSD_ADDRESS });

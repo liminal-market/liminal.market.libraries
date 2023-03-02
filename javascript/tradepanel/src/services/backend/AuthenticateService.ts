@@ -6,7 +6,7 @@ import CookieHelper from "../../util/CookieHelper";
 import User from "../../dto/User";
 import { showBar } from "../../util/Helper";
 import WalletHelper from "../../util/WalletHelper";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class AuthenticateService extends BaseService {
   public constructor() {
@@ -14,15 +14,15 @@ export default class AuthenticateService extends BaseService {
   }
 
   public static async enableWeb3() {
-    if (TradePanelWidget.User.connector) return TradePanelWidget.User.connector;
+    if (WidgetGlobals.User.connector) return WidgetGlobals.User.connector;
 
     let magicWeb3Connector = new MagicWeb3Connector();
     let connector = await magicWeb3Connector.activate();
-    TradePanelWidget.User.connector = connector;
-    TradePanelWidget.User.magic = connector.magic;
-    TradePanelWidget.User.provider = connector.provider;
-    TradePanelWidget.User.ether = connector.ether;
-    TradePanelWidget.User.signer = connector.signer;
+    WidgetGlobals.User.connector = connector;
+    WidgetGlobals.User.magic = connector.magic;
+    WidgetGlobals.User.provider = connector.provider;
+    WidgetGlobals.User.ether = connector.ether;
+    WidgetGlobals.User.signer = connector.signer;
 
     return connector;
   }
@@ -30,30 +30,25 @@ export default class AuthenticateService extends BaseService {
   public async logOut() {
     let cookieHelper = new CookieHelper(document);
     cookieHelper.deleteCookie("validate");
-    if (!TradePanelWidget.User.ether) {
+    if (!WidgetGlobals.User.ether) {
       let connection = await AuthenticateService.enableWeb3();
-      TradePanelWidget.User.magic = connection.magic;
+      WidgetGlobals.User.magic = connection.magic;
     }
-    TradePanelWidget.User.magic.connect.disconnect();
-    TradePanelWidget.User = new User(
-      null,
-      "",
-      TradePanelWidget.Network.ChainId,
-      ""
-    );
+    WidgetGlobals.User.magic.connect.disconnect();
+    WidgetGlobals.User = new User(null, "", WidgetGlobals.Network.ChainId, "");
   }
 
   public async login() {
     let connector = await AuthenticateService.enableWeb3();
-    TradePanelWidget.User = new User(
+    WidgetGlobals.User = new User(
       connector.provider,
       connector.account,
       connector.chainId,
       connector.ether
     );
-    TradePanelWidget.User.magic = connector.magic;
-    TradePanelWidget.User.signer = connector.signer;
-    TradePanelWidget.User.isLoggedIn = true;
+    WidgetGlobals.User.magic = connector.magic;
+    WidgetGlobals.User.signer = connector.signer;
+    WidgetGlobals.User.isLoggedIn = true;
   }
 
   public async isAuthenticated() {
@@ -63,7 +58,7 @@ export default class AuthenticateService extends BaseService {
 
     try {
       let obj = JSON.parse(atob(validate));
-      TradePanelWidget.User.token = obj.token;
+      WidgetGlobals.User.token = obj.token;
 
       let result = await this.post("/me/jwt");
       if (!result.jwt) {
@@ -73,10 +68,10 @@ export default class AuthenticateService extends BaseService {
 
       await AuthenticateService.enableWeb3();
 
-      TradePanelWidget.User.address = result.address;
-      TradePanelWidget.User.alpacaId = result.alpacaId;
-      TradePanelWidget.User.chainId = result.chainId;
-      TradePanelWidget.User.isLoggedIn = true;
+      WidgetGlobals.User.address = result.address;
+      WidgetGlobals.User.alpacaId = result.alpacaId;
+      WidgetGlobals.User.chainId = result.chainId;
+      WidgetGlobals.User.isLoggedIn = true;
 
       return true;
     } catch (e: any) {
@@ -97,7 +92,7 @@ export default class AuthenticateService extends BaseService {
       enableWeb3Callback(connector.provider);
     }
 
-    if (connector.chainId != TradePanelWidget.Network.ChainId) {
+    if (connector.chainId != WidgetGlobals.Network.ChainId) {
       let userNetwork = NetworkInfo.getNetworkInfoByChainId(connector.chainId);
       if (userNetwork) {
         NetworkInfo.setNetworkByChainId(connector.chainId);
@@ -123,7 +118,7 @@ export default class AuthenticateService extends BaseService {
     //        console.log('Ethereum', ethereum);
 
     console.log("connector.ether", connector.ether);
-    console.log("network", TradePanelWidget.Network);
+    console.log("network", WidgetGlobals.Network);
 
     // @ts-ignore
     if (window.ethereum) {
@@ -133,7 +128,7 @@ export default class AuthenticateService extends BaseService {
         window.ethereum.networkVersion,
         // @ts-ignore
         window.ethereum.chainId,
-        TradePanelWidget.Network.ChainIdHex
+        WidgetGlobals.Network.ChainIdHex
       );
       if (WalletHelper.isWebview()) {
       }
@@ -158,7 +153,7 @@ export default class AuthenticateService extends BaseService {
             enableWeb3Callback,
             authenticatedCallback
           );
-          //showBar('Your wallet is on wrong network. I expect you to be on ' + TradePanelWidget.Network.Name + '(chainId:' + TradePanelWidget.Network.ChainId + ') network');
+          //showBar('Your wallet is on wrong network. I expect you to be on ' + WidgetGlobals.Network.Name + '(chainId:' + WidgetGlobals.Network.ChainId + ') network');
         } else {
           showBar("Error signing in:" + e.message);
           return;
@@ -177,11 +172,11 @@ export default class AuthenticateService extends BaseService {
       return;
     }
 
-    TradePanelWidget.User.setValidate(loginResponse);
-    TradePanelWidget.User.token = loginResponse.token;
-    TradePanelWidget.User.alpacaId = loginResponse.alpacaId;
-    TradePanelWidget.User.address = loginResponse.address;
-    TradePanelWidget.User.isLoggedIn = true;
+    WidgetGlobals.User.setValidate(loginResponse);
+    WidgetGlobals.User.token = loginResponse.token;
+    WidgetGlobals.User.alpacaId = loginResponse.alpacaId;
+    WidgetGlobals.User.address = loginResponse.address;
+    WidgetGlobals.User.isLoggedIn = true;
 
     if (authenticatedCallback) {
       authenticatedCallback();

@@ -1,11 +1,17 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: "jest-puppeteer",
+  preset: "ts-jest",
   testMatch: ["**/?(*.)+(spec|test).[t]s"],
   testPathIgnorePatterns: ["/node_modules/", "app"], //
-  setupFilesAfterEnv: ["<rootDir>/test/setup/jest.setup.ts"],
+  setupFilesAfterEnv: [
+    "expect-puppeteer",
+    "<rootDir>/test/setup/jest.setup.ts",
+  ],
   transform: {
     "^.+\\.ts?$": "ts-jest",
   },
-  globalSetup: "./test/setup/jest.global-setup.ts", // will be called once before all tests are executed
-  globalTeardown: "./test/setup/jest.global-teardown.ts", // will be called once after all tests are executed
+  globalSetup: "<rootDir>/test/setup/jest.global-setup.ts",
+  globalTeardown: "<rootDir>/test/setup/jest.global-teardown.ts",
+  testEnvironment: "jest-environment-puppeteer",
+  testTimeout: 15000,
 };

@@ -6,7 +6,7 @@ export default class KycDisclosures extends KycBase {
     kycAffiliatedOrControlled: KycAffiliateOrControlled;
     kycImmediateFamily: KycImmediateFamily;
     constructor(kycForm: KYCForm);
-    render(edit?: boolean): string;
+    render(edit?: boolean): any;
     show(): void;
     bindEvents(): void;
     private loadAffiliatedOrControlComponent;

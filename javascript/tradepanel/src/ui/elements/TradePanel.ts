@@ -3,7 +3,7 @@ import { TradeType } from "../../enums/TradeType";
 import TradePanelInput from "./tradepanel/TradePanelInput";
 import ContractInfo from "../../contracts/ContractInfo";
 import TradeSwitch from "./tradepanel/TradeSwitch";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 
 export default class TradePanel {
   quantity: number;
@@ -47,9 +47,7 @@ export default class TradePanel {
 
     this.importStylesheet();
 
-    let contractInfo = ContractInfo.getContractInfo(
-      TradePanelWidget.Network.Name
-    );
+    let contractInfo = ContractInfo.getContractInfo(WidgetGlobals.Network.Name);
 
     let sellTradeInput = new TradePanelInput(
       "aUSD",

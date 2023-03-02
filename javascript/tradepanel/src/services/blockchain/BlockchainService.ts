@@ -5,7 +5,7 @@ import AuthenticateService from "../backend/AuthenticateService";
 import BaseService from "../backend/BaseService";
 import User from "../../dto/User";
 import UserService from "../backend/UserService";
-import TradePanelWidget from "../../TradePanelWidget";
+import WidgetGlobals from "../../WidgetGlobals";
 import { ethers } from "ethers";
 import ContractInfo from "../../contracts/ContractInfo";
 import Network from "../../networks/Network";
@@ -19,7 +19,7 @@ export default class BlockchainService extends BaseService {
 
   constructor() {
     super();
-    this.network = TradePanelWidget.Network;
+    this.network = WidgetGlobals.Network;
     this.contracts = ContractInfo.getContractInfo(this.network.Name);
   }
 
@@ -29,14 +29,14 @@ export default class BlockchainService extends BaseService {
   ): Promise<BigNumber> {
     await this.loadEther();
 
-    if (!TradePanelWidget.User.ether) {
+    if (!WidgetGlobals.User.ether) {
       return new BigNumber(0);
     }
 
     const contract = new ethers.Contract(
       tokenAddress,
       this.balanceOfAbi,
-      TradePanelWidget.User.ether
+      WidgetGlobals.User.ether
     );
     return await contract.balanceOf(ethAddress);
   }
@@ -54,7 +54,7 @@ export default class BlockchainService extends BaseService {
     const contract = new ethers.Contract(
       tokenAddress,
       this.transferAbi,
-      TradePanelWidget.User.signer
+      WidgetGlobals.User.signer
     );
     let result = await contract.transfer(to, qtyWei);
 
@@ -70,13 +70,13 @@ export default class BlockchainService extends BaseService {
   }
 
   protected async loadEther() {
-    if (TradePanelWidget.User.ether) return;
+    if (WidgetGlobals.User.ether) return;
     await AuthenticateService.enableWeb3();
   }
 
   public async getNativeBalance() {
-    const balanceInWei = await TradePanelWidget.User.ether.getBalance(
-      TradePanelWidget.User.address
+    const balanceInWei = await WidgetGlobals.User.ether.getBalance(
+      WidgetGlobals.User.address
     );
 
     const balanceInEther = ethers.utils.formatEther(balanceInWei);
