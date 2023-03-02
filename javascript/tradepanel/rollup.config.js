@@ -30,7 +30,7 @@ export default {
       name: "TradePanel",
     },
   ],
-  external: ["js-sha3"],
+  // external: ["js-sha3"],
   plugins: [
     commonjs({
       include: "node_modules/**",
