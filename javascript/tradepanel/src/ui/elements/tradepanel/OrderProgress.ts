@@ -1,13 +1,28 @@
+import OrderProgressHtml from "../../../html/elements/tradepanel/OrderProgress.html";
 import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class OrderProgress {
+  template: any = undefined;
   progressNr: number = 0;
   private static instance: OrderProgress = new OrderProgress();
 
-  private constructor() {}
+  private constructor() {
+    this.template = WidgetGlobals.HandlebarsInstance.compile(OrderProgressHtml);
+  }
 
   public static getInstance() {
     return this.instance;
+  }
+
+  public render() {
+    let dom = document.querySelector(".tradeSwitch");
+    if (!dom) return;
+
+    dom.outerHTML = this.renderToString();
+  }
+
+  public renderToString() {
+    return this.template();
   }
 
   public clearProgressText() {

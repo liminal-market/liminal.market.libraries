@@ -36046,6 +36046,7 @@ class AuthenticateService extends BaseService {
         WidgetGlobals.User.provider = connector.provider;
         WidgetGlobals.User.ether = connector.ether;
         WidgetGlobals.User.signer = connector.signer;
+        console.log(WidgetGlobals.User);
         return connector;
     }
     async logOut() {
@@ -36182,10 +36183,10 @@ class localhostContractAddresses {
 }
 
 class mumbaiContractAddresses {
-    KYC_ADDRESS = "0x9e2B28D9F841300bE3B64e505dEcA36c35250609";
-    AUSD_ADDRESS = "0x38F2B1E9F11937dD276D64521535b15280A7F137";
-    LIMINAL_MARKET_ADDRESS = "0x6e9C29e416dc9F7A6A03ffebaB3f02Ef62a1baE4";
-    MARKET_CALENDAR_ADDRESS = "0xc6B29dfd4FD756EF94b3A3FF7a531F4467BDDA75";
+    KYC_ADDRESS = "0xA5C844558a93590A32D1110D7031531A0bBf0773";
+    AUSD_ADDRESS = "0xc4d1f8D35DB0f0d3E91a3fc8485792F4Df60C387";
+    LIMINAL_MARKET_ADDRESS = "0x0D8c3D4F4B29EfC3c54172803dA8a7f1CA2E6189";
+    MARKET_CALENDAR_ADDRESS = "0x67Dad7E344C6137DF922924a0aAb26bba862BFDe";
 }
 
 class fujiContractAddresses {
@@ -36636,6 +36637,7 @@ class UserService extends BaseService {
     async isMarketOpenOrUserOffHours() {
         let marketService = new MarketService();
         let response = await marketService.isMarketOpen();
+        console.log(response);
         return response.marketIsOpen;
     }
     getUser() {
@@ -40295,12 +40297,26 @@ class KycApproved {
     }
 }
 
+var OrderProgressHtml = "<div id=\"executing-order-progress\" class=\"hidden\">\n  <div id=\"progress-text\"></div>\n  <progress></progress>\n</div>\n";
+
 class OrderProgress {
+    template = undefined;
     progressNr = 0;
     static instance = new OrderProgress();
-    constructor() { }
+    constructor() {
+        this.template = WidgetGlobals.HandlebarsInstance.compile(OrderProgressHtml);
+    }
     static getInstance() {
         return this.instance;
+    }
+    render() {
+        let dom = document.querySelector(".tradeSwitch");
+        if (!dom)
+            return;
+        dom.outerHTML = this.renderToString();
+    }
+    renderToString() {
+        return this.template();
     }
     clearProgressText() {
         let executingOrderProgress = document.getElementById("executing-order-progress");
@@ -40604,6 +40620,7 @@ class ExecuteOrderButton {
     async isMarketOpen(button) {
         let userService = new UserService();
         let isMarketOpen = await userService.isMarketOpenOrUserOffHours();
+        console.log(isMarketOpen);
         if (isMarketOpen)
             return true;
         button.innerHTML = "Market is closed";
@@ -41994,12 +42011,19 @@ class TradePanel {
         buyTradeInput.setOtherTradePanelInput(sellTradeInput);
         let tradeSwitch = new TradeSwitch();
         let executeOrderButton = new ExecuteOrderButton(sellTradeInput, buyTradeInput);
+        let orderProgress = OrderProgress.getInstance();
         let sellInput = sellTradeInput.renderToString();
         let buyInput = buyTradeInput.renderToString();
         let switchHtml = tradeSwitch.renderToString();
         let executeOrderButtonHtml = executeOrderButton.renderToString();
+        let orderProgressHtml = orderProgress.renderToString();
         element.innerHTML =
-            sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
+            sellInput +
+                switchHtml +
+                buyInput +
+                switchHtml +
+                executeOrderButtonHtml +
+                orderProgressHtml;
         await sellTradeInput.loadBalance();
         await buyTradeInput.loadBalance();
         if (symbol) {

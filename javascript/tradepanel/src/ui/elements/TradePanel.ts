@@ -4,6 +4,7 @@ import TradePanelInput from "./tradepanel/TradePanelInput";
 import ContractInfo from "../../contracts/ContractInfo";
 import TradeSwitch from "./tradepanel/TradeSwitch";
 import WidgetGlobals from "../../WidgetGlobals";
+import OrderProgress from "./tradepanel/OrderProgress";
 
 export default class TradePanel {
   quantity: number;
@@ -83,14 +84,21 @@ export default class TradePanel {
       sellTradeInput,
       buyTradeInput
     );
+    let orderProgress = OrderProgress.getInstance();
 
     let sellInput = sellTradeInput.renderToString();
     let buyInput = buyTradeInput.renderToString();
     let switchHtml = tradeSwitch.renderToString();
     let executeOrderButtonHtml = executeOrderButton.renderToString();
+    let orderProgressHtml = orderProgress.renderToString();
 
     element.innerHTML =
-      sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
+      sellInput +
+      switchHtml +
+      buyInput +
+      switchHtml +
+      executeOrderButtonHtml +
+      orderProgressHtml;
 
     await sellTradeInput.loadBalance();
     await buyTradeInput.loadBalance();
