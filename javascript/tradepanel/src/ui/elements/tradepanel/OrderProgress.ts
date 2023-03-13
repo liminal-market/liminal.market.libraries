@@ -33,7 +33,12 @@ export default class OrderProgress {
     this.progressNr = 0;
   }
 
-  public setProgressText(progressNr: number, text: string, hash: string) {
+  public setProgressText(
+    progressNr: number,
+    text: string,
+    hash?: string,
+    hideInSeconds?: number
+  ) {
     console.log("thisNr", this.progressNr, "nr", progressNr, "text", text);
     if (progressNr < this.progressNr) return;
 
@@ -55,5 +60,11 @@ export default class OrderProgress {
       '" target="_blank" style="font-size:10px">View</a>';
     executingOrderProgress.classList.remove("hidden");
     this.progressNr = progressNr;
+
+    if (hideInSeconds) {
+      setTimeout(() => {
+        this.clearProgressText();
+      }, hideInSeconds * 1000);
+    }
   }
 }

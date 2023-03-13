@@ -172,7 +172,7 @@ export default class UserInfo {
         return;
       }
 
-      WidgetGlobals.User.magic.connect.showWallet().catch(async (e: any) => {
+      WidgetGlobals.User.magic?.connect.showWallet().catch(async (e: any) => {
         this.walletLoaded = false;
         if (e.message.indexOf("User denied account access") != -1) {
           await this.authenticationService.logOut();

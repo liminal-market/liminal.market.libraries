@@ -2,21 +2,20 @@ import NetworkInfo from "../../../networks/NetworkInfo";
 import UserService from "../../../services/backend/UserService";
 import AuthenticateService from "../../../services/backend/AuthenticateService";
 import ConnectWallet from "../ConnectWallet";
-import KYCService from "../../../services/blockchain/KYCService";
 import AUSDService from "../../../services/blockchain/AUSDService";
 import FakeAUSDFund from "../../modals/Funding/FakeAUSDFund";
 import SecurityTokenService from "../../../services/blockchain/SecurityTokenService";
-import LiminalMarketService from "../../../services/blockchain/LiminalMarketService";
-import { AddressZero, showBar } from "../../../util/Helper";
 import TradePanelInput from "./TradePanelInput";
 import ExecuteOrderButtonHtml from "../../../html/elements/tradepanel/ExecuteOrderButton.html";
-import BlockchainError from "../../../errors/BlockchainError";
 import NativeTokenNeeded from "../../modals/NativeTokenNeeded";
-import BigNumber from "bignumber.js";
 import KycStatusHandler from "../../modals/KYC/KycStatusHandler";
 import AUsdBalance from "../AUsdBalance";
 import KycApproved from "../../modals/KYC/KycApproved";
 import OrderProgress from "./OrderProgress";
+import LiminalMarket from "liminal.market";
+import { ethers } from "ethers";
+import OrderExecutedModal from "./OrderExecutedModal";
+import Listener from "liminal.market/dist/services/Listener";
 import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class ExecuteOrderButton {
@@ -103,85 +102,60 @@ export default class ExecuteOrderButton {
     button.classList.replace("disabled", "enabled");
     this.stopLoadingButton(button);
 
+    console.log("service contract", LiminalMarket.ServiceContractAddress);
     button.addEventListener("click", async () => {
       this.loadingButton(button);
 
       button.innerHTML = "Confirm transaction in your wallet";
 
-      if (this.sellTradeInput.symbol == "aUSD") {
-        let liminalMarketService = new LiminalMarketService();
-        let symbolAddress = await liminalMarketService.getSymbolContractAddress(
-          this.buyTradeInput.symbol
-        );
-
-        if (symbolAddress === AddressZero) {
-          let result = await liminalMarketService
-            .createToken(this.buyTradeInput.symbol, () => {
-              button.innerHTML = "Creating token. Give it few seconds";
-            })
-            .finally(() => {
-              this.stopLoadingButton(button);
-              button.innerHTML = "Execute trade";
-            });
-          if (result instanceof BlockchainError) {
-            showBar("Error:" + result.message);
-            console.error(result);
-            return;
-          }
-          symbolAddress = result as string;
-        }
-
-        await this.executeTransfer(
-          symbolAddress,
-          this.sellTradeInput.quantity,
-          new AUSDService(),
-          button
-        );
-      } else {
-        let liminalMarketService = new LiminalMarketService();
-        let symbolAddress = await liminalMarketService.getSymbolContractAddress(
-          this.sellTradeInput.symbol
-        );
-
-        await this.executeTransfer(
-          symbolAddress,
-          this.sellTradeInput.quantity,
-          new SecurityTokenService(),
-          button
-        );
+      let side = "buy";
+      if (this.buyTradeInput.symbol == "aUSD") {
+        side = "sell";
       }
-    });
-  }
 
-  private async executeTransfer(
-    symbolAddress: string,
-    quantity: BigNumber,
-    service: AUSDService | SecurityTokenService,
-    button: HTMLElement
-  ) {
-    await service
-      .transfer(symbolAddress, quantity)
-      .then((transaction) => {
-        button.innerHTML = "Execute trade";
-        if (!transaction) return;
+      let liminalMarket = WidgetGlobals.User.LiminalMarket!;
+
+      Listener.onOrderExecuted = async (event: any) => {
+        let orderExecutedModal = new OrderExecutedModal();
+        orderExecutedModal.show(event);
+        OrderProgress.getInstance().clearProgressText();
+      };
+
+      Listener.onOrderSentToMarket = async (event: any) => {
+        OrderProgress.getInstance().setProgressText(0, "Sent to stock market");
+      };
+
+      Listener.onOrderExecutedWritingToChain = async (event: any) => {
         OrderProgress.getInstance().setProgressText(
           0,
-          "Sending to blockchain",
-          transaction.hash
+          "Order executed writing to blockchain"
         );
-      })
-      .catch((reason) => {
-        let msg = reason.toString();
-        console.log("CATCH - contract.transfer", reason);
-        if (msg.indexOf("Market is closed") != -1) {
-          this.button.innerHTML = "Market is closed";
-        } else {
+      };
+
+      let qtyWei = ethers.utils.parseUnits(
+        this.sellTradeInput.quantity.toString(),
+        "ether"
+      );
+      await liminalMarket
+        .executeOrder(side, this.buyTradeInput.symbol, qtyWei)
+        .then((result) => {
           button.innerHTML = "Execute trade";
-        }
-      })
-      .finally(() => {
-        this.stopLoadingButton(button);
-      });
+          OrderProgress.getInstance().setProgressText(0, "Sending order");
+        })
+        .catch((reason) => {
+          OrderProgress.getInstance().setProgressText(
+            100,
+            reason.message,
+            "",
+            10
+          );
+          button.innerHTML = "Execute trade";
+          return;
+        })
+        .finally(() => {
+          this.stopLoadingButton(button);
+        });
+    });
   }
 
   private loadingButton(button: HTMLElement) {
@@ -261,8 +235,7 @@ export default class ExecuteOrderButton {
   kycIdDoneTimeout: any;
 
   private async kycIsDone(button: HTMLElement) {
-    let kycService = new KYCService();
-    let kycResponse = await kycService.hasValidKYC();
+    let kycResponse = await WidgetGlobals.User.LiminalMarket!.kycStatus();
 
     if (!kycResponse.isValidKyc) {
       let kycStatusHandler = new KycStatusHandler(kycResponse, this);
@@ -276,7 +249,7 @@ export default class ExecuteOrderButton {
         this.loadingButton(button);
 
         this.kycIdDoneTimeout = setInterval(async () => {
-          kycResponse = await kycService.hasValidKYC();
+          kycResponse = await WidgetGlobals.User.LiminalMarket!.kycStatus();
           if (kycResponse.isValidKyc) {
             this.hasBuyingPower = kycResponse.hasBuyingPower;
             if (!this.hasBuyingPower) {

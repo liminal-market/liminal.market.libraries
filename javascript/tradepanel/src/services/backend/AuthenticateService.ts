@@ -6,6 +6,7 @@ import CookieHelper from "../../util/CookieHelper";
 import User from "../../dto/User";
 import { showBar } from "../../util/Helper";
 import WalletHelper from "../../util/WalletHelper";
+import LiminalMarket from "liminal.market";
 import WidgetGlobals from "../../WidgetGlobals";
 
 export default class AuthenticateService extends BaseService {
@@ -34,7 +35,7 @@ export default class AuthenticateService extends BaseService {
       let connection = await AuthenticateService.enableWeb3();
       WidgetGlobals.User.magic = connection.magic;
     }
-    WidgetGlobals.User.magic.connect.disconnect();
+    WidgetGlobals.User.magic?.connect.disconnect();
     WidgetGlobals.User = new User(null, "", WidgetGlobals.Network.ChainId, "");
   }
 
@@ -52,34 +53,19 @@ export default class AuthenticateService extends BaseService {
   }
 
   public async isAuthenticated() {
-    let cookieHelper = new CookieHelper();
-    let validate = cookieHelper.getCookieValue("validate");
-    if (!validate) return false;
+    let provider = await AuthenticateService.enableWeb3();
+    let liminalMarket = await LiminalMarket.getInstance(
+      provider.ether,
+      "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18"
+    );
+    if (liminalMarket.account.token == "") return false;
 
-    try {
-      let obj = JSON.parse(atob(validate));
-      WidgetGlobals.User.token = obj.token;
+    WidgetGlobals.User.address = liminalMarket.account.address;
+    WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
+    WidgetGlobals.User.chainId = liminalMarket.account.chainId;
+    WidgetGlobals.User.isLoggedIn = true;
 
-      let result = await this.post("/me/jwt");
-      if (!result.jwt) {
-        await this.logOut();
-        return false;
-      }
-
-      await AuthenticateService.enableWeb3();
-
-      WidgetGlobals.User.address = result.address;
-      WidgetGlobals.User.alpacaId = result.alpacaId;
-      WidgetGlobals.User.chainId = result.chainId;
-      WidgetGlobals.User.isLoggedIn = true;
-
-      return true;
-    } catch (e: any) {
-      cookieHelper.deleteCookie("validate");
-
-      console.info(e);
-      return false;
-    }
+    return liminalMarket;
   }
 
   public async authenticateUser(
@@ -87,6 +73,12 @@ export default class AuthenticateService extends BaseService {
     authenticatedCallback?: () => void
   ) {
     let connector = await AuthenticateService.enableWeb3();
+
+    let liminalMarket = await this.isAuthenticated();
+    if (!liminalMarket) {
+      await this.logOut();
+      return;
+    }
 
     if (enableWeb3Callback && connector.provider) {
       enableWeb3Callback(connector.provider);
@@ -103,81 +95,11 @@ export default class AuthenticateService extends BaseService {
       }
     }
 
-    let response = await this.post<any>("/me/nonce", {
-      address: connector.account,
-    });
-
-    let obj: any = {
-      signingMessage:
-        "You are logging into Liminal.market.\n\nNonce:" + response.nonce,
-      connector: MagicWeb3Connector,
-    };
-    console.log("isWebview", WalletHelper.isWebview());
-    // @ts-ignore
-    console.log("win.Ethereum", window.ethereum);
-    //        console.log('Ethereum', ethereum);
-
-    console.log("connector.ether", connector.ether);
-    console.log("network", WidgetGlobals.Network);
-
-    // @ts-ignore
-    if (window.ethereum) {
-      console.log(
-        "Ethereum",
-        // @ts-ignore
-        window.ethereum.networkVersion,
-        // @ts-ignore
-        window.ethereum.chainId,
-        WidgetGlobals.Network.ChainIdHex
-      );
-      if (WalletHelper.isWebview()) {
-      }
-    }
-
-    console.log("calling signMessage");
-    const signedMessage = await connector.ether
-      .getSigner()
-      .signMessage(obj.signingMessage)
-      .then((result: any) => {
-        console.log("then signMessage:", result);
-        return result;
-      })
-      .catch(async (e: any) => {
-        console.log(e);
-        await this.logOut();
-        if (
-          e.message &&
-          e.message.toLowerCase().indexOf("wrong network") != -1
-        ) {
-          await this.authenticateUser(
-            enableWeb3Callback,
-            authenticatedCallback
-          );
-          //showBar('Your wallet is on wrong network. I expect you to be on ' + WidgetGlobals.Network.Name + '(chainId:' + WidgetGlobals.Network.ChainId + ') network');
-        } else {
-          showBar("Error signing in:" + e.message);
-          return;
-        }
-      });
-
-    if (!signedMessage) return;
-
-    let loginResponse = await this.post<any>("me/validate", {
-      address: connector.account,
-      signedMessage,
-    });
-
-    if (!loginResponse.address) {
-      await this.logOut();
-      return;
-    }
-
-    WidgetGlobals.User.setValidate(loginResponse);
-    WidgetGlobals.User.token = loginResponse.token;
-    WidgetGlobals.User.alpacaId = loginResponse.alpacaId;
-    WidgetGlobals.User.address = loginResponse.address;
+    WidgetGlobals.User.setValidate(liminalMarket.account.token);
+    WidgetGlobals.User.token = liminalMarket.account.token;
+    WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
+    WidgetGlobals.User.address = liminalMarket.account.address;
     WidgetGlobals.User.isLoggedIn = true;
-
     if (authenticatedCallback) {
       authenticatedCallback();
     } else {

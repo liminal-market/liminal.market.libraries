@@ -16,15 +16,18 @@ import { ethers } from "ethers";
 export default class EventService {
   public static register() {
     UserInfo.onUserLoggedIn.push(async () => {
+      console.log("Doing EventService listening");
       let eventService = new EventService();
-      eventService.listen();
+      // eventService.listen();
     });
   }
 
   public listen() {
     let network = WidgetGlobals.Network;
     let eventSource = new EventSource(
-      network.ServerUrl + "/listenForChanges?jwt=" + WidgetGlobals.User.token
+      network.ServerUrl +
+        "/listenForChanges?jwt=" +
+        WidgetGlobals.User.LiminalMarket!.account.token
     );
     eventSource.onmessage = async (e: any) => {
       let data = e.data;
@@ -38,8 +41,8 @@ export default class EventService {
       }
 
       if (obj.methodName == "OrderExecuted") {
-        let orderExecutedModal = new OrderExecutedModal();
-        orderExecutedModal.show(obj);
+        // let orderExecutedModal = new OrderExecutedModal();
+        // orderExecutedModal.show(obj);
       } else if (obj.methodName == "SendingToExchange") {
         await OrderProgress.getInstance().setProgressText(
           1,
