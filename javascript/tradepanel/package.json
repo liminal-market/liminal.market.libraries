@@ -6,6 +6,7 @@
   "type": "module",
   "sideEffects": false,
   "devDependencies": {
+    "@chainsafe/dappeteer": "^3.0.0",
     "@jest/globals": "^29.4.3",
     "@johanblumenberg/ts-mockito": "^1.0.32",
     "@rollup/plugin-alias": "^4.0.3",
@@ -16,7 +17,6 @@
     "@types/canvas-confetti": "^1.6.0",
     "@types/expect-puppeteer": "^5.0.3",
     "@types/jest": "^29.4.0",
-    "@types/jest-environment-puppeteer": "^5.0.3",
     "@types/jsdom": "^20.0.1",
     "@types/mocha": "^10.0.1",
     "@types/puppeteer": "^7.0.4",
@@ -50,7 +50,7 @@
   },
   "scripts": {
     "build": "npx rollup -c",
-    "test": "JEST_PUPPETEER_CONFIG=./jest-puppeteer.config.cjs jest --runInBand"
+    "test": "JEST_PUPPETEER_CONFIG=./jest-puppeteer.config.cjs jest --runInBand --forceExit"
   },
   "jshintConfig": {
     "esversion": 11

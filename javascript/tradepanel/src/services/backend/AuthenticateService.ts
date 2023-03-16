@@ -64,6 +64,7 @@ export default class AuthenticateService extends BaseService {
     WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
     WidgetGlobals.User.chainId = liminalMarket.account.chainId;
     WidgetGlobals.User.isLoggedIn = true;
+    WidgetGlobals.User.LiminalMarket = liminalMarket;
 
     return liminalMarket;
   }

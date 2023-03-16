@@ -1,9 +1,14 @@
-let http = require("http");
+import https from "https";
 import fs from "fs";
+
+const options = {
+  key: fs.readFileSync(__dirname + "/key.pem"),
+  cert: fs.readFileSync(__dirname + "/cert.pem"),
+};
 
 export const startServer = () => {
   let handleRequest = (request: any, response: any) => {
-    console.log(request.url);
+    // console.log(request.url);
 
     switch (request.url) {
       case "/":
@@ -17,7 +22,9 @@ export const startServer = () => {
         break;
     }
   };
-  return http.createServer(handleRequest).listen(8000);
+  console.log(options);
+
+  return https.createServer(options, handleRequest).listen(443);
 };
 function processRequest(response: any, file: string, contentType: string) {
   response.writeHead(200, {

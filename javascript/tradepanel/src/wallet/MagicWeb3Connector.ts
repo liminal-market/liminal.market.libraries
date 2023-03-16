@@ -16,7 +16,7 @@ export default class MagicWeb3Connector extends AbstractWeb3Connector {
       rpcUrl: networkInfo.RpcUrl,
       chainId: networkInfo.ChainId,
     } as any;
-    if (networkInfo.ChainId == 31337) {
+    if (networkInfo.ChainId == 80001) {
       // @ts-ignore
       await window.ethereum.enable();
       // @ts-ignore

@@ -1,4 +1,4 @@
-import FakeFundingHtml from "../../../html/modal/funding/FakeFunding.html";
+import FakeFundingHtml from "../../../html/modal/Funding/FakeFunding.html";
 import Modal from "../Modal";
 import WalletHelper from "../../../util/WalletHelper";
 import ContractInfo from "../../../contracts/ContractInfo";

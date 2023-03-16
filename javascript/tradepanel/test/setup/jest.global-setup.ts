@@ -1,8 +1,63 @@
+import { mkdirSync, writeFileSync } from "fs";
+import os from "os";
+import path from "path";
 import { startServer } from "../server";
-const { setup: setupPuppeteer } = require("jest-environment-puppeteer");
+import puppeteer from "puppeteer";
+const dappeteer = require("@chainsafe/dappeteer");
 
-module.exports = async function globalSetup() {
-  await setupPuppeteer();
+const DIR = path.join(os.tmpdir(), "jest_puppeteer_global_setup");
+
+module.exports = async function () {
   console.log("Loading server...");
   await startServer();
+  try {
+    console.log("Initializing metamask browser...");
+    const browser = await dappeteer.launch(puppeteer, {
+      metamaskVersion: "v10.15.0",
+      slowMo: 30,
+      dumpio: true,
+      ignoreHTTPSErrors: true,
+      args: [
+        "--no-sandbox",
+        "--disable-infobars",
+        "--allow-insecure-localhost",
+        "--disable-web-security",
+        "--disable-features=IsolateOrigins,site-per-process",
+      ],
+    });
+    const metamask = await dappeteer.setupMetamask(browser, {
+      seed: "element ritual intact tumble cement voice sauce trick present skill yard link",
+      password: "1q2w3e4r",
+    });
+
+    console.log("Configuring metamask...");
+    await metamask.addNetwork({
+      networkName: "Mumbai Testnet",
+      rpc: "https://rpc-mumbai.maticvigil.com/",
+      chainId: "80001",
+      symbol: "MATIC",
+    });
+
+    const page = await browser.newPage();
+    await page.goto("https://localhost");
+
+    console.log("Approving metamask...");
+    await new Promise((r) => setTimeout(r, 5000));
+    await metamask.approve();
+
+    console.log("Sign...");
+    await new Promise((r) => setTimeout(r, 5000));
+    await metamask.sign();
+
+    global.browser = browser;
+    global.metamask = metamask;
+    global.page = page;
+
+    // use the file system to expose the wsEndpoint for TestEnvironments
+    await mkdirSync(DIR, { recursive: true });
+    await writeFileSync(path.join(DIR, "wsEndpoint"), browser.wsEndpoint());
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };

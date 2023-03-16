@@ -7,5 +7,5 @@ export default class OrderProgress {
     render(): void;
     renderToString(): any;
     clearProgressText(): void;
-    setProgressText(progressNr: number, text: string, hash: string): void;
+    setProgressText(progressNr: number, text: string, hash?: string, hideInSeconds?: number): void;
 }

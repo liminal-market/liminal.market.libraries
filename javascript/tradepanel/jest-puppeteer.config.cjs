@@ -2,7 +2,9 @@ module.exports = {
   launch: {
     dumpio: true,
     headless: false,
-    args: ["--disable-infobars"],
+    ignoreHTTPSErrors: true,
+    slowMo: 3000,
+    args: ["--disable-infobars", "--allow-insecure-localhost"],
   },
   browserContext: "default",
 };
