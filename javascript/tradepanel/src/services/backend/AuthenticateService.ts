@@ -65,6 +65,8 @@ export default class AuthenticateService extends BaseService {
     WidgetGlobals.User.chainId = liminalMarket.account.chainId;
     WidgetGlobals.User.isLoggedIn = true;
     WidgetGlobals.User.LiminalMarket = liminalMarket;
+    WidgetGlobals.User.token = liminalMarket.account.token;
+    console.log("liminalMarket.account.token", liminalMarket.account.token);
 
     return liminalMarket;
   }
