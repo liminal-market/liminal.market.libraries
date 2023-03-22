@@ -15,7 +15,8 @@
     "typeRoots": ["node_modules/@types", "types"]
   },
   "ts-node": {
-    "files": true
+    "files": true,
+    "esm": true
   },
   "exclude": ["node_modules"],
   "files": ["src/main.ts", "./src/html.d.ts", "./src/global.d.ts"],

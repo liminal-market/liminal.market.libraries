@@ -50,7 +50,8 @@
   },
   "scripts": {
     "build": "npx rollup -c",
-    "test": "JEST_PUPPETEER_CONFIG=./jest-puppeteer.config.cjs jest --runInBand --forceExit"
+    "test": "JEST_PUPPETEER_CONFIG=./jest-puppeteer.config.cjs jest --runInBand --forceExit --detectOpenHandles",
+    "test:server": "npx ts-node ./test/server/serve.ts"
   },
   "jshintConfig": {
     "esversion": 11

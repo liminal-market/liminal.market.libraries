@@ -14,14 +14,19 @@ module.exports = async function () {
     console.log("Initializing metamask browser...");
     const browser = await dappeteer.launch(puppeteer, {
       metamaskVersion: "v10.15.0",
+      headless: false,
       slowMo: 30,
       dumpio: true,
       ignoreHTTPSErrors: true,
       args: [
         "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-accelerated-2d-canvas",
+        "--disable-gpu",
         "--disable-infobars",
         "--allow-insecure-localhost",
         "--disable-web-security",
+        "--ignore-certificate-errors",
         "--disable-features=IsolateOrigins,site-per-process",
       ],
     });
@@ -48,6 +53,12 @@ module.exports = async function () {
     console.log("Sign...");
     await new Promise((r) => setTimeout(r, 5000));
     await metamask.sign();
+
+    try {
+      console.log("Sign..."); //sometimes it needs to be signed twice
+      await new Promise((r) => setTimeout(r, 5000));
+      await metamask.sign();
+    } catch (error) {}
 
     global.browser = browser;
     global.metamask = metamask;
