@@ -47202,9 +47202,13 @@ class ExecuteOrderButton {
         button.addEventListener("click", async () => {
             this.loadingButton(button);
             button.innerHTML = "Confirm transaction in your wallet";
+            let symbol = this.buyTradeInput.symbol;
             let side = "buy";
-            if (this.buyTradeInput.symbol == "aUSD") {
+            let qtyWei = parseUnits(this.sellTradeInput.quantity.toString(), "ether");
+            if (symbol == "aUSD") {
                 side = "sell";
+                symbol = this.sellTradeInput.symbol;
+                qtyWei = parseUnits(this.buyTradeInput.quantity.toString(), "ether");
             }
             let liminalMarket = WidgetGlobals.User.LiminalMarket;
             Listener.onOrderExecuted = async (event) => {
@@ -47218,9 +47222,8 @@ class ExecuteOrderButton {
             Listener.onOrderExecutedWritingToChain = async (event) => {
                 OrderProgress.getInstance().setProgressText(0, "Order executed writing to blockchain");
             };
-            let qtyWei = parseUnits(this.sellTradeInput.quantity.toString(), "ether");
             await liminalMarket
-                .executeOrder(side, this.buyTradeInput.symbol, qtyWei)
+                .executeOrder(side, symbol, qtyWei)
                 .then((result) => {
                 button.innerHTML = "Execute trade";
                 OrderProgress.getInstance().setProgressText(0, "Sending order");

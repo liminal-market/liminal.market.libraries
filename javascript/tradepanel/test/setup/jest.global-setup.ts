@@ -63,6 +63,8 @@ module.exports = async function () {
     global.browser = browser;
     global.metamask = metamask;
     global.page = page;
+    global.actionTimeout = 60000 * 3;
+    global.defaultScenatioTimeout = 60000 * 5;
 
     // use the file system to expose the wsEndpoint for TestEnvironments
     await mkdirSync(DIR, { recursive: true });

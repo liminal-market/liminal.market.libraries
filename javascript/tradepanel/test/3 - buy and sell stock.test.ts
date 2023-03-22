@@ -1,13 +1,12 @@
 import { beforeAll, it, describe, beforeEach } from "@jest/globals";
 import { setDefaultOptions } from "expect-puppeteer";
 
-setDefaultOptions({ timeout: 60000 });
+setDefaultOptions({ timeout: global.actionTimeout });
 
 describe("Buys and sell transactions", () => {
   beforeEach(async () => {
     await global.page.goto(`https://localhost`);
-    await global.page.bringToFront();
-  }, 60000);
+  }, global.defaultScenatioTimeout);
 
   it(
     "Buy Stock",
@@ -41,9 +40,8 @@ describe("Buys and sell transactions", () => {
           timeout: 60000 * 3,
         }
       );
-      await new Promise((r) => setTimeout(r, 30000));
     },
-    60000 * 5
+    global.defaultScenatioTimeout * 2
   );
 
   it(
@@ -81,8 +79,7 @@ describe("Buys and sell transactions", () => {
           timeout: 60000 * 3,
         }
       );
-      await new Promise((r) => setTimeout(r, 30000));
     },
-    60000 * 5
+    global.defaultScenatioTimeout * 2
   );
 });
