@@ -9,6 +9,11 @@ describe("On widget load test", () => {
     await global.page.bringToFront();
   });
 
+  it("should render Action button", async () => {
+    await expect(global.page).toMatchElement("button", {
+      text: "Type in quantity",
+    });
+  }, 60000);
   it(
     "should render aUSD button",
     async () => {
@@ -31,11 +36,6 @@ describe("On widget load test", () => {
     });
     await expect(global.page).toMatchElement(".BuyInputs .balance", {
       text: "Balance :",
-    });
-  }, 60000);
-  it("should render Action button", async () => {
-    await expect(global.page).toClick("button", {
-      text: "Type in quantity",
     });
   }, 60000);
 });

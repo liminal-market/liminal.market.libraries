@@ -15,7 +15,7 @@ module.exports = async function () {
     const browser = await dappeteer.launch(puppeteer, {
       metamaskVersion: "v10.15.0",
       headless: false,
-      slowMo: 30,
+      slowMo: 100,
       dumpio: true,
       ignoreHTTPSErrors: true,
       args: [
