@@ -6,6 +6,8 @@ setDefaultOptions({ timeout: global.actionTimeout });
 describe("On widget load test", () => {
   beforeAll(async () => {
     await global.page.goto(`https://localhost`);
+    await global.page.bringToFront();
+    await new Promise((r) => setTimeout(r, 1000));
   });
 
   it(

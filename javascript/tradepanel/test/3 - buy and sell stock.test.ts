@@ -6,6 +6,8 @@ setDefaultOptions({ timeout: global.actionTimeout });
 describe("Buys and sell transactions", () => {
   beforeEach(async () => {
     await global.page.goto(`https://localhost`);
+    await global.page.bringToFront();
+    await new Promise((r) => setTimeout(r, 1000));
   }, global.defaultScenatioTimeout);
 
   it(
@@ -33,6 +35,9 @@ describe("Buys and sell transactions", () => {
         await global.metamask.sign();
       } catch (error) {}
 
+      await global.page.bringToFront();
+      await new Promise((r) => setTimeout(r, 1000));
+
       await expect(global.page).toMatchElement(
         "dialog#liminal_market_modal_div span",
         {
@@ -56,7 +61,7 @@ describe("Buys and sell transactions", () => {
       });
       await expect(global.page).toFill(
         ".SellInputs .trade_input input",
-        "0.001"
+        "0.01"
       );
       await new Promise((r) => setTimeout(r, 5000));
       await expect(global.page).toClick("button#liminal_market_execute_order", {
@@ -71,6 +76,9 @@ describe("Buys and sell transactions", () => {
         await new Promise((r) => setTimeout(r, 5000));
         await global.metamask.sign();
       } catch (error) {}
+
+      await global.page.bringToFront();
+      await new Promise((r) => setTimeout(r, 1000));
 
       await expect(global.page).toMatchElement(
         "dialog#liminal_market_modal_div span",

@@ -117,10 +117,6 @@ export default class ExecuteOrderButton {
       if (symbol == "aUSD") {
         side = "sell";
         symbol = this.sellTradeInput.symbol;
-        qtyWei = ethers.utils.parseUnits(
-          this.buyTradeInput.quantity.toString(),
-          "ether"
-        );
       }
 
       let liminalMarket = WidgetGlobals.User.LiminalMarket!;

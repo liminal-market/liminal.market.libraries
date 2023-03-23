@@ -47214,7 +47214,6 @@ Time:${time.toISOString()}
                 if (symbol == "aUSD") {
                     side = "sell";
                     symbol = this.sellTradeInput.symbol;
-                    qtyWei = parseUnits(this.buyTradeInput.quantity.toString(), "ether");
                 }
                 let liminalMarket = WidgetGlobals.User.LiminalMarket;
                 Listener.onOrderExecuted = async (event) => {
