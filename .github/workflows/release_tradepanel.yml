@@ -31,16 +31,14 @@ jobs:
         run: |
           npm install
           npm run build
-
-      #Start display x
-      - name: Start Xvfb
-        uses: mikeal/xvfb-action@master
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
 
       # Tests
       - name: Run tests
-        run: npm run test
-        env:
-          DISPLAY: ${{ steps.xvfb.outputs.display }}
+        uses: djp3/puppeteer-headful@master
+        with:
+          args: npm run test
 
       # Update changelog unreleased section with new version
       - name: Update changelog
