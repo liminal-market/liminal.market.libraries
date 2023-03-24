@@ -34,7 +34,7 @@ jobs:
 
       # Tests
       - name: Run tests
-        run: sudo npm run test
+        run: npm run test
 
       # Update changelog unreleased section with new version
       - name: Update changelog
