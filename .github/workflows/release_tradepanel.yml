@@ -38,6 +38,7 @@ jobs:
           CI: "true"
           DISPLAY: :99
         with:
+          path: ./javascript/tradepanel/
           args: npm run test
 
       # Update changelog unreleased section with new version
