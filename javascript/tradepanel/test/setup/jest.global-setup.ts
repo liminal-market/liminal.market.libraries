@@ -13,7 +13,7 @@ module.exports = async function () {
   try {
     console.log("Initializing metamask browser...");
     const browser = await dappeteer.launch(puppeteer, {
-      metamaskVersion: "v10.15.0",
+      metamaskVersion: "10.15",
       headless: false,
       slowMo: 100,
       dumpio: true,
