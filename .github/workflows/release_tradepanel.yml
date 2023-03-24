@@ -34,13 +34,6 @@ jobs:
         env:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
 
-      # Tests
-      - name: Run tests
-        uses: beemi/puppeteer-headful@master
-        env:
-          CI: "true"
-          DISPLAY: :99
-
       - name: Run tests (headful)
         run: npm run test
         env:
