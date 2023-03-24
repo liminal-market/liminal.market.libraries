@@ -39,7 +39,7 @@ jobs:
           DISPLAY: :99
 
       - name: Run tests (headful)
-        run: npm run test
+        run: sudo npm run test
         env:
           CI: "true"
           DISPLAY: :99
