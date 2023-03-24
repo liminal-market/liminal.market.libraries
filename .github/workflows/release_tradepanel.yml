@@ -8,9 +8,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: lironavon/docker-puppeteer-container:14.16.0
-    env:
-      CI: true
     defaults:
       run:
         working-directory: ./javascript/tradepanel/
@@ -31,10 +28,17 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
 
       # Tests
       - name: Run tests
-        run: npm run test
+        uses: beemi/puppeteer-headful@master
+        env:
+          CI: "true"
+          DISPLAY: :99
+        with:
+          args: npm run test
 
       # Update changelog unreleased section with new version
       - name: Update changelog
