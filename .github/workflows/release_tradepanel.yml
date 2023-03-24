@@ -29,6 +29,10 @@ jobs:
           npm install
           npm run build
 
+      #Install metamask 10.15.0
+      - name: Install Metamask
+        run: npm install @metamask/legacy-web3@10.15.0
+
       # Tests
       - name: Run tests
         run: sudo npm run test
