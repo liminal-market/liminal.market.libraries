@@ -37,9 +37,12 @@ jobs:
         env:
           CI: "true"
           DISPLAY: :99
-        with:
-          path: ./javascript/tradepanel/
-          args: npm run test
+
+      - name: Run tests (headful)
+        run: npm run test
+        env:
+          CI: "true"
+          DISPLAY: :99
 
       # Update changelog unreleased section with new version
       - name: Update changelog
