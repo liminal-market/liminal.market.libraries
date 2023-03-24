@@ -25,13 +25,13 @@ jobs:
 
       # Install dependencies (required by Run tests step)
       - name: Install dependencies & Build
-        run: |
+       git statrun: |
           npm install
           npm run build
 
       # Tests
       - name: Run tests
-        run: npm run test
+       run: npm run test
 
       # Update changelog unreleased section with new version
       - name: Update changelog
@@ -42,8 +42,10 @@ jobs:
           operation: release
 
       # Commit changes
+      - name: Setup Git Action User
+        uses: fregante/setup-git-user@v2
+
       - name: Commit CHANGELOG.md and package.json changes and create tag
-      - uses: fregante/setup-git-user@v2
         run: |
           git add "package.json"
           git add "CHANGELOG.md"
@@ -58,7 +60,6 @@ jobs:
 
       # Push repository changes
       - name: Push changes to repository
-      - uses: fregante/setup-git-user@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
