@@ -32,9 +32,15 @@ jobs:
           npm install
           npm run build
 
+      #Start display x
+      - name: Start Xvfb
+        uses: mikeal/xvfb-action@master
+
       # Tests
       - name: Run tests
         run: npm run test
+        env:
+          DISPLAY: ${{ steps.xvfb.outputs.display }}
 
       # Update changelog unreleased section with new version
       - name: Update changelog
