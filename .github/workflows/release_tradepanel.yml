@@ -25,13 +25,13 @@ jobs:
 
       # Install dependencies (required by Run tests step)
       - name: Install dependencies & Build
-       run: |
+        run: |
           npm install
           npm run build
 
       # Tests
       - name: Run tests
-       run: npm run test
+        run: npm run test
 
       # Update changelog unreleased section with new version
       - name: Update changelog
