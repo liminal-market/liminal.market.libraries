@@ -1,5 +1,8 @@
 name: Tradepanel - Test On Push
-on: push
+on:
+  push:
+    branches:
+      - "**" # matches every branch
 jobs:
   test:
     runs-on: ubuntu-latest
