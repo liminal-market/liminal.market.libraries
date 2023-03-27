@@ -1,9 +1,13 @@
 name: Tradepanel - Publish Package to npmjs
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: [Tradepanel - Test On Push]
+    branches: [main]
+    types:
+      - completed
 jobs:
-  build:
+  deploy-packages:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Only run if the test workflow was successful
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,7 +19,7 @@ jobs:
       - name: Build and Publish
         run: |
           npm install
-          npm build
+          npm run build
           npm publish
         working-directory: javascript/tradepanel
         env:
