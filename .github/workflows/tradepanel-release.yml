@@ -17,6 +17,7 @@ jobs:
         run: |
           ./javascript/tradepanel/test/docker-run-test.sh
   deploy-packages:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
