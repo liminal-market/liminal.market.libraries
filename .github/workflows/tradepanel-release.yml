@@ -4,6 +4,18 @@ on:
     tags:
       - "v*"
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: cypress/included:9.4.1
+    steps:
+      # Checkout project repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Setup Node.js environment
+      - name: Setup Node.js
+        run: |
+          ./javascript/tradepanel/test/docker-run-test.sh
   deploy-packages:
     runs-on: ubuntu-latest
     steps:
