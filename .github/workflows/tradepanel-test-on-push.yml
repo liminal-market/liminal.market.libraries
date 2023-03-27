@@ -1,4 +1,4 @@
-name: Test On Push
+name: Tradepanel - Test On Push
 on: push
 jobs:
   release:

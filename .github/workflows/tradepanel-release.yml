@@ -1,11 +1,10 @@
-name: Publish Package to npmjs
+name: Tradepanel - Publish Package to npmjs
 on:
   release:
     types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
-    working-directory: javascript/tradepanel
     steps:
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to npm
@@ -13,6 +12,11 @@ jobs:
         with:
           node-version: "18.x"
           registry-url: "https://registry.npmjs.org"
-      - run: npm publish
+      - name: Build and Publish
+        run: |
+          npm install
+          npm build
+          npm publish
+        working-directory: javascript/tradepanel
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
