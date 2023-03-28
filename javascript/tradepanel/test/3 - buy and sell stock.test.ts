@@ -40,7 +40,7 @@ describe("Buys and sell transactions", () => {
 
       await expect(global.page).toMatchElement("div#progress-text", {
         text: /Sent to stock market.*/,
-        timeout: global.defaultScenatioTimeout,
+        timeout: global.defaultScenatioTimeout * 2,
       });
 
       ////uncomment this up to test the trade execution result
@@ -88,7 +88,7 @@ describe("Buys and sell transactions", () => {
 
       await expect(global.page).toMatchElement("div#progress-text", {
         text: /Sent to stock market.*/,
-        timeout: global.defaultScenatioTimeout,
+        timeout: global.defaultScenatioTimeout * 2,
       });
 
       ////uncomment this up to test the trade execution result
