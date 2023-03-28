@@ -42,7 +42,7 @@ describe("Buys and sell transactions", () => {
         "dialog#liminal_market_modal_div span",
         {
           text: "Trade executed",
-          timeout: 60000 * 3,
+          timeout: global.defaultScenatioTimeout * 2,
         }
       );
     },
@@ -84,10 +84,10 @@ describe("Buys and sell transactions", () => {
         "dialog#liminal_market_modal_div span",
         {
           text: "Trade executed",
-          timeout: 60000 * 3,
+          timeout: global.defaultScenatioTimeout * 2,
         }
       );
     },
-    global.defaultScenatioTimeout * 2
+    global.defaultScenatioTimeout * 3
   );
 });
