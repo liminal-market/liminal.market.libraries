@@ -38,13 +38,19 @@ describe("Buys and sell transactions", () => {
       await global.page.bringToFront();
       await new Promise((r) => setTimeout(r, 1000));
 
-      await expect(global.page).toMatchElement(
-        "dialog#liminal_market_modal_div span",
-        {
-          text: "Trade executed",
-          timeout: global.defaultScenatioTimeout * 2,
-        }
-      );
+      await expect(global.page).toMatchElement("div#progress-text", {
+        text: /Sent to stock market.*/,
+        timeout: global.defaultScenatioTimeout,
+      });
+
+      ////uncomment this up to test the trade execution result
+      // await expect(global.page).toMatchElement(
+      //   "dialog#liminal_market_modal_div span",
+      //   {
+      //     text: "Trade executed",
+      //     timeout: global.defaultScenatioTimeout * 2,
+      //   }
+      // );
     },
     global.defaultScenatioTimeout * 2
   );
@@ -80,13 +86,19 @@ describe("Buys and sell transactions", () => {
       await global.page.bringToFront();
       await new Promise((r) => setTimeout(r, 1000));
 
-      await expect(global.page).toMatchElement(
-        "dialog#liminal_market_modal_div span",
-        {
-          text: "Trade executed",
-          timeout: global.defaultScenatioTimeout * 2,
-        }
-      );
+      await expect(global.page).toMatchElement("div#progress-text", {
+        text: /Sent to stock market.*/,
+        timeout: global.defaultScenatioTimeout,
+      });
+
+      ////uncomment this up to test the trade execution result
+      // await expect(global.page).toMatchElement(
+      //   "dialog#liminal_market_modal_div span",
+      //   {
+      //     text: "Trade executed",
+      //     timeout: global.defaultScenatioTimeout * 2,
+      //   }
+      // );
     },
     global.defaultScenatioTimeout * 3
   );

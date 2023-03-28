@@ -69,6 +69,8 @@ module.exports = async function () {
     // use the file system to expose the wsEndpoint for TestEnvironments
     await mkdirSync(DIR, { recursive: true });
     await writeFileSync(path.join(DIR, "wsEndpoint"), browser.wsEndpoint());
+
+    // await new Promise((r) => setTimeout(r, 6000 * 60 * 60));
   } catch (error) {
     console.log(error);
     throw error;
