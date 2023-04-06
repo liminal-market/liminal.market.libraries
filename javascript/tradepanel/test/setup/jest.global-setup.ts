@@ -4,32 +4,51 @@ import path from "path";
 import { startServer } from "../server";
 import puppeteer from "puppeteer";
 const dappeteer = require("@chainsafe/dappeteer");
+var download = require("download");
+const AdmZip = require("adm-zip");
 
 const DIR = path.join(os.tmpdir(), "jest_puppeteer_global_setup");
+
+const downloadAndUnzipMetamaskExtension = async (): Promise<string> => {
+  const fileUrl =
+    "https://github.com/MetaMask/metamask-extension/releases/download/v10.15.0/metamask-chrome-10.15.0.zip";
+  const metamaskPath = "/tmp/metamask-chrome";
+
+  await writeFileSync(`${metamaskPath}.zip`, await download(fileUrl));
+  await new AdmZip(`${metamaskPath}.zip`).extractAllTo(metamaskPath, true);
+  return metamaskPath;
+};
 
 module.exports = async function () {
   console.log("Loading server...");
   await startServer();
   try {
     console.log("Initializing metamask browser...");
-    const browser = await dappeteer.launch(puppeteer, {
-      metamaskVersion: "10.15",
-      headless: false,
-      slowMo: 100,
-      dumpio: true,
-      ignoreHTTPSErrors: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-accelerated-2d-canvas",
-        "--disable-gpu",
-        "--disable-infobars",
-        "--allow-insecure-localhost",
-        "--disable-web-security",
-        "--ignore-certificate-errors",
-        "--disable-features=IsolateOrigins,site-per-process",
-      ],
-    });
+    let browser;
+    const loadBrowser = (metamaskPath: string) => {
+      return dappeteer.launch(puppeteer, {
+        metamaskPath: metamaskPath,
+        headless: false,
+        slowMo: 100,
+        dumpio: true,
+        ignoreHTTPSErrors: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-accelerated-2d-canvas",
+          "--disable-gpu",
+          "--disable-infobars",
+          "--allow-insecure-localhost",
+          "--disable-web-security",
+          "--ignore-certificate-errors",
+          "--disable-features=IsolateOrigins,site-per-process",
+        ],
+      });
+    };
+
+    const metamaskPath = await downloadAndUnzipMetamaskExtension();
+    browser = await loadBrowser(metamaskPath);
+
     const metamask = await dappeteer.setupMetamask(browser, {
       seed: "element ritual intact tumble cement voice sauce trick present skill yard link",
       password: "1q2w3e4r",

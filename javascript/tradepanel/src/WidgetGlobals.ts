@@ -6,4 +6,5 @@ export default class WidgetGlobals {
   static HandlebarsInstance: any = Handlebars;
   static Network: Network;
   static User: User;
+  static elementSelector: string;
 }

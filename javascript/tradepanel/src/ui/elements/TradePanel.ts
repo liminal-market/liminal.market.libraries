@@ -5,6 +5,8 @@ import ContractInfo from "../../contracts/ContractInfo";
 import TradeSwitch from "./tradepanel/TradeSwitch";
 import WidgetGlobals from "../../WidgetGlobals";
 import OrderProgress from "./tradepanel/OrderProgress";
+// @ts-ignore
+import * as scope from "scope-css";
 
 export default class TradePanel {
   quantity: number;
@@ -13,24 +15,32 @@ export default class TradePanel {
     this.quantity = 0;
   }
 
-  public importStylesheet() {
+  public async loadStyle(elementSelector: string) {
+    console.log(elementSelector);
     const existingLinkTag = document.getElementById("liminal-market-css");
     if (!existingLinkTag) {
+      let picoStream = await (
+        await fetch("https://app.liminal.market/css/pico/pico.min.css")
+      ).text();
+      let picoCss = scope
+        .default(picoStream, elementSelector)
+        .replace(/:root/g, `:is(${elementSelector} > *)`);
+
+      let liminalStream = await (
+        await fetch("https://app.liminal.market/css/style.css")
+      ).text();
+
+      let liminalCss = scope
+        .default(liminalStream, elementSelector)
+        .replace(/:root/g, `:is(${elementSelector} > *)`);
+
       document.head.insertAdjacentHTML(
         "beforeend",
         `
-          <link
-            id="liminal-market-css"
-            rel="stylesheet"
-            href="https://app.liminal.market/css/style.css"
-            type="text/css"
-          />
-          <link
-            id="pico-css"
-            rel="stylesheet"
-            href="https://app.liminal.market/css/pico/pico.min.css"
-            type="text/css"
-          />
+          <style>
+             ${picoCss}
+             ${liminalCss}
+          </style>
         `
       );
     }
@@ -43,10 +53,11 @@ export default class TradePanel {
     logo?: string,
     address?: string
   ) {
+    WidgetGlobals.elementSelector = elementSelector;
     let element = document.querySelector(elementSelector);
     if (!element) return;
 
-    this.importStylesheet();
+    await this.loadStyle(elementSelector);
 
     let contractInfo = ContractInfo.getContractInfo(WidgetGlobals.Network.Name);
 
