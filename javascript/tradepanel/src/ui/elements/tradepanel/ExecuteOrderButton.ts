@@ -119,7 +119,7 @@ export default class ExecuteOrderButton {
         symbol = this.sellTradeInput.symbol;
       }
 
-      let liminalMarket = WidgetGlobals.User.LiminalMarket!;
+      let liminalMarket = WidgetGlobals.LiminalMarket!;
 
       Listener.onOrderExecuted = async (event: any) => {
         let orderExecutedModal = new OrderExecutedModal();
@@ -237,7 +237,7 @@ export default class ExecuteOrderButton {
   kycIdDoneTimeout: any;
 
   private async kycIsDone(button: HTMLElement) {
-    let kycResponse = await WidgetGlobals.User.LiminalMarket!.kycStatus();
+    let kycResponse = await WidgetGlobals.LiminalMarket!.kycStatus();
 
     if (!kycResponse.isValidKyc) {
       let kycStatusHandler = new KycStatusHandler(kycResponse, this);
@@ -251,7 +251,7 @@ export default class ExecuteOrderButton {
         this.loadingButton(button);
 
         this.kycIdDoneTimeout = setInterval(async () => {
-          kycResponse = await WidgetGlobals.User.LiminalMarket!.kycStatus();
+          kycResponse = await WidgetGlobals.LiminalMarket!.kycStatus();
           if (kycResponse.isValidKyc) {
             this.hasBuyingPower = kycResponse.hasBuyingPower;
             if (!this.hasBuyingPower) {

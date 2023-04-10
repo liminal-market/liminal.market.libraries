@@ -70,7 +70,7 @@ export default class FakeAUSDFund {
     requestFakeAUSD?.addEventListener("click", async (evt) => {
       requestFakeAUSD!.setAttribute("aria-busy", "true");
 
-      let result = await WidgetGlobals.User.LiminalMarket!.fundSandboxAccount(
+      let result = await WidgetGlobals.LiminalMarket!.fundSandboxAccount(
         async (obj) => {
           console.log("Funding is done", obj);
         }

@@ -15,7 +15,6 @@ export default class User {
   _token: string = "";
   isLoggedIn: boolean = false;
   signer: any;
-  LiminalMarket?: LiminalMarket;
 
   constructor(provider: any, address: string, chainId: number, ether: any) {
     this.provider = provider;

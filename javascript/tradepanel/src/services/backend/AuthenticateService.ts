@@ -64,8 +64,8 @@ export default class AuthenticateService extends BaseService {
     WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
     WidgetGlobals.User.chainId = liminalMarket.account.chainId;
     WidgetGlobals.User.isLoggedIn = true;
-    WidgetGlobals.User.LiminalMarket = liminalMarket;
     WidgetGlobals.User.token = liminalMarket.account.token;
+    WidgetGlobals.LiminalMarket = liminalMarket;
     console.log("liminalMarket.account.token", liminalMarket.account.token);
 
     return liminalMarket;
@@ -97,12 +97,7 @@ export default class AuthenticateService extends BaseService {
         return;
       }
     }
-
     WidgetGlobals.User.setValidate(liminalMarket.account.token);
-    WidgetGlobals.User.token = liminalMarket.account.token;
-    WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
-    WidgetGlobals.User.address = liminalMarket.account.address;
-    WidgetGlobals.User.isLoggedIn = true;
     if (authenticatedCallback) {
       authenticatedCallback();
     } else {

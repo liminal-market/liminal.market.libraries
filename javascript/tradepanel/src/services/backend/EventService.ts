@@ -27,7 +27,7 @@ export default class EventService {
     let eventSource = new EventSource(
       network.ServerUrl +
         "/listenForChanges?jwt=" +
-        WidgetGlobals.User.LiminalMarket!.account.token
+        WidgetGlobals.LiminalMarket!.account.token
     );
     eventSource.onmessage = async (e: any) => {
       let data = e.data;
