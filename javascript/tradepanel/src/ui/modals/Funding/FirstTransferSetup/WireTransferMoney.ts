@@ -3,7 +3,6 @@ import FirstTransferSetupBase from "./FirstTransferSetupBase";
 import { BankRelationship } from "../../../../dto/alpaca/BankRelationship";
 import MoneyTransferred from "./MoneyTransferred";
 import AUSDFund from "../AUSDFund";
-import doc = Mocha.reporters.doc;
 import FirstTransferSetup from "./FirstTransferSetup";
 import WidgetGlobals from "src/WidgetGlobals";
 

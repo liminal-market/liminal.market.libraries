@@ -103,7 +103,6 @@
         _token = "";
         isLoggedIn = false;
         signer;
-        LiminalMarket;
         constructor(provider, address, chainId, ether) {
             this.provider = provider;
             this.address = address;
@@ -9178,6 +9177,7 @@
         static HandlebarsInstance = Handlebars;
         static Network;
         static User;
+        static LiminalMarket;
         static elementSelector;
     }
 
@@ -9209,7 +9209,9 @@
             };
             let html = template(obj);
             if (modalDiv) {
-                document.body.removeChild(modalDiv);
+                document
+                    .querySelector(WidgetGlobals.elementSelector)
+                    ?.removeChild(modalDiv);
             }
             document
                 .querySelector(WidgetGlobals.elementSelector)
@@ -39693,12 +39695,12 @@ Time:${time.toISOString()}
             let liminalMarket = await LiminalMarket.getInstance(provider.ether, "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18");
             if (liminalMarket.account.token == "")
                 return false;
+            WidgetGlobals.LiminalMarket = liminalMarket;
             WidgetGlobals.User.address = liminalMarket.account.address;
             WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
             WidgetGlobals.User.chainId = liminalMarket.account.chainId;
-            WidgetGlobals.User.isLoggedIn = true;
-            WidgetGlobals.User.LiminalMarket = liminalMarket;
             WidgetGlobals.User.token = liminalMarket.account.token;
+            WidgetGlobals.User.isLoggedIn = true;
             console.log("liminalMarket.account.token", liminalMarket.account.token);
             return liminalMarket;
         }
@@ -39724,10 +39726,6 @@ Time:${time.toISOString()}
                 }
             }
             WidgetGlobals.User.setValidate(liminalMarket.account.token);
-            WidgetGlobals.User.token = liminalMarket.account.token;
-            WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
-            WidgetGlobals.User.address = liminalMarket.account.address;
-            WidgetGlobals.User.isLoggedIn = true;
             if (authenticatedCallback) {
                 authenticatedCallback();
             }
@@ -44148,7 +44146,7 @@ Time:${time.toISOString()}
             let requestFakeAUSD = document.getElementById("requestFakeAUSD");
             requestFakeAUSD?.addEventListener("click", async (evt) => {
                 requestFakeAUSD.setAttribute("aria-busy", "true");
-                let result = await WidgetGlobals.User.LiminalMarket.fundSandboxAccount(async (obj) => {
+                let result = await WidgetGlobals.LiminalMarket.fundSandboxAccount(async (obj) => {
                     console.log("Funding is done", obj);
                 });
                 if (!result)
@@ -47214,7 +47212,7 @@ Time:${time.toISOString()}
                     side = "sell";
                     symbol = this.sellTradeInput.symbol;
                 }
-                let liminalMarket = WidgetGlobals.User.LiminalMarket;
+                let liminalMarket = WidgetGlobals.LiminalMarket;
                 Listener.onOrderExecuted = async (event) => {
                     let orderExecutedModal = new OrderExecutedModal();
                     orderExecutedModal.show(event);
@@ -47308,7 +47306,7 @@ Time:${time.toISOString()}
         }
         kycIdDoneTimeout;
         async kycIsDone(button) {
-            let kycResponse = await WidgetGlobals.User.LiminalMarket.kycStatus();
+            let kycResponse = await WidgetGlobals.LiminalMarket.kycStatus();
             if (!kycResponse.isValidKyc) {
                 let kycStatusHandler = new KycStatusHandler(kycResponse, this);
                 button.innerHTML = kycStatusHandler.getButtonText();
@@ -47316,7 +47314,7 @@ Time:${time.toISOString()}
                 if (kycResponse.status == "ACTIVE") {
                     this.loadingButton(button);
                     this.kycIdDoneTimeout = setInterval(async () => {
-                        kycResponse = await WidgetGlobals.User.LiminalMarket.kycStatus();
+                        kycResponse = await WidgetGlobals.LiminalMarket.kycStatus();
                         if (kycResponse.isValidKyc) {
                             this.hasBuyingPower = kycResponse.hasBuyingPower;
                             if (!this.hasBuyingPower) {
@@ -47428,7 +47426,7 @@ Time:${time.toISOString()}
             let network = WidgetGlobals.Network;
             let eventSource = new EventSource(network.ServerUrl +
                 "/listenForChanges?jwt=" +
-                WidgetGlobals.User.LiminalMarket.account.token);
+                WidgetGlobals.LiminalMarket.account.token);
             eventSource.onmessage = async (e) => {
                 let data = e.data;
                 console.log(e);
@@ -48769,7 +48767,6 @@ Time:${time.toISOString()}
                 let liminalStream = await (await fetch("https://app.liminal.market/css/style.css")).text();
                 let liminalCss = scopeCss$1(liminalStream, elementSelector)
                     .replace(/:root/g, `:is(${elementSelector} > *)`);
-                console.log(liminalCss);
                 document.head.insertAdjacentHTML("beforeend", `
           <style>
              ${picoCss}
