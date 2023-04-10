@@ -4,8 +4,6 @@ import MagicWeb3Connector from "../../wallet/MagicWeb3Connector";
 import BaseService from "./BaseService";
 import CookieHelper from "../../util/CookieHelper";
 import User from "../../dto/User";
-import { showBar } from "../../util/Helper";
-import WalletHelper from "../../util/WalletHelper";
 import LiminalMarket from "liminal.market";
 import WidgetGlobals from "../../WidgetGlobals";
 
@@ -60,12 +58,12 @@ export default class AuthenticateService extends BaseService {
     );
     if (liminalMarket.account.token == "") return false;
 
+    WidgetGlobals.LiminalMarket = liminalMarket;
     WidgetGlobals.User.address = liminalMarket.account.address;
     WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
     WidgetGlobals.User.chainId = liminalMarket.account.chainId;
-    WidgetGlobals.User.isLoggedIn = true;
     WidgetGlobals.User.token = liminalMarket.account.token;
-    WidgetGlobals.LiminalMarket = liminalMarket;
+    WidgetGlobals.User.isLoggedIn = true;
     console.log("liminalMarket.account.token", liminalMarket.account.token);
 
     return liminalMarket;
