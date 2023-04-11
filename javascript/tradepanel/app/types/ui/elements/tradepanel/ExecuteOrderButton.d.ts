@@ -11,7 +11,6 @@ export default class ExecuteOrderButton {
     renderToString(): string;
     renderButton(): Promise<void>;
     private enableExecuteOrder;
-    private executeTransfer;
     private loadingButton;
     private stopLoadingButton;
     private walletIsConnected;

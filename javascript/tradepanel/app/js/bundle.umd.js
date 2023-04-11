@@ -100,18 +100,19 @@
         address;
         magic;
         connector;
-        _token = '';
+        _token = "";
         isLoggedIn = false;
         signer;
+        LiminalMarket;
         constructor(provider, address, chainId, ether) {
             this.provider = provider;
             this.address = address;
             this.chainId = chainId;
             this.ether = ether;
             this.providerInfo = new ProviderInfo(provider);
-            this.email = '';
+            this.email = "";
             let cookieHelper = new CookieHelper();
-            this._token = cookieHelper.getCookieValue('token');
+            this._token = cookieHelper.getCookieValue("token");
         }
         get token() {
             return this._token;
@@ -122,13 +123,17 @@
         setValidate(validate) {
             let base64 = btoa(JSON.stringify(validate));
             let cookieHelper = new CookieHelper();
-            cookieHelper.setCookie('validate', base64);
+            cookieHelper.setCookie("validate", base64);
         }
     }
 
     var SwitchNetworkHtml = "<div id=\"switchNetworkInfo\">\n    You can choose any of these networks.\n    <!--\n    <div>\n        <h3>Mainnet - real money & stocks</h3>\n        {{#each mainNetworks}}\n        <button href=\"\" class=\"setNetwork\"\n                data-chainid=\"{{ChainId}}\">{{ChainName}}\n        </button>\n        {{/each}}\n    </div>-->\n    <div>\n        <h3>Testnet - fake money & stocks</h3>\n        {{#each testNetworks}}\n        <button href=\"\" class=\"setNetwork\" data-chainid=\"{{ChainId}}\">{{ChainName}}\n        </button>\n        {{/each}}\n    </div>\n</div>\n<div id=\"jsSwitchNetworkNotWorking\" class=\"d-none\">\n    It seem as we can't add the network automatically for your, so you need to add it your self.\n    This is the information you need to add the network. You will need to figure out where to\n    add new network for your wallet, as it difference between wallets.\n    <form>\n        <label>ChainId:\n            <input id=\"switchChainId\">\n        </label>\n        <label>Chain name\n            <input id=\"switchChainName\">\n        </label>\n        <label>Currency name\n            <input id=\"switchCurrencyName\">\n        </label>\n        <label>\n            Symbol\n            <input id=\"switchSymbol\">\n        </label>\n        <label>Decimal\n            <input id=\"switchDecimal\">\n        </label>\n        <label>Rpc Url\n            <input id=\"switchRpcUrl\">\n        </label>\n    </form>\n</div>";
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+    function getDefaultExportFromCjs (x) {
+    	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+    }
 
     function getAugmentedNamespace(n) {
       if (n.__esModule) return n;
@@ -176,16 +181,16 @@
 
     var base$2 = {};
 
-    var utils$a = {};
+    var utils$b = {};
 
-    utils$a.__esModule = true;
-    utils$a.extend = extend;
-    utils$a.indexOf = indexOf;
-    utils$a.escapeExpression = escapeExpression;
-    utils$a.isEmpty = isEmpty;
-    utils$a.createFrame = createFrame;
-    utils$a.blockParams = blockParams;
-    utils$a.appendContextPath = appendContextPath;
+    utils$b.__esModule = true;
+    utils$b.extend = extend;
+    utils$b.indexOf = indexOf;
+    utils$b.escapeExpression = escapeExpression;
+    utils$b.isEmpty = isEmpty;
+    utils$b.createFrame = createFrame;
+    utils$b.blockParams = blockParams;
+    utils$b.appendContextPath = appendContextPath;
     var escape = {
       '&': '&amp;',
       '<': '&lt;',
@@ -197,7 +202,7 @@
     };
     var badChars = /[&<>"'`=]/g,
       possible = /[&<>"'`=]/;
-    function escapeChar(chr) {
+    function escapeChar$1(chr) {
       return escape[chr];
     }
     function extend(obj /* , ...source */) {
@@ -211,7 +216,7 @@
       return obj;
     }
     var toString$1 = Object.prototype.toString;
-    utils$a.toString = toString$1;
+    utils$b.toString = toString$1;
     // Sourced from lodash
     // https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
     /* eslint-disable func-style */
@@ -221,11 +226,11 @@
     // fallback for older versions of Chrome and Safari
     /* istanbul ignore next */
     if (isFunction$1(/x/)) {
-      utils$a.isFunction = isFunction$1 = function (value) {
+      utils$b.isFunction = isFunction$1 = function (value) {
         return typeof value === 'function' && toString$1.call(value) === '[object Function]';
       };
     }
-    utils$a.isFunction = isFunction$1;
+    utils$b.isFunction = isFunction$1;
 
     /* eslint-enable func-style */
 
@@ -233,7 +238,7 @@
     var isArray$2 = Array.isArray || function (value) {
       return value && typeof value === 'object' ? toString$1.call(value) === '[object Array]' : false;
     };
-    utils$a.isArray = isArray$2;
+    utils$b.isArray = isArray$2;
     // Older IE versions do not directly support indexOf so we must implement our own, sadly.
 
     function indexOf(array, value) {
@@ -263,7 +268,7 @@
       if (!possible.test(string)) {
         return string;
       }
-      return string.replace(badChars, escapeChar);
+      return string.replace(badChars, escapeChar$1);
     }
     function isEmpty(value) {
       if (!value && value !== 0) {
@@ -362,7 +367,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$a;
+      var _utils = utils$b;
       exports['default'] = function (instance) {
         instance.registerHelper('blockHelperMissing', function (context, options) {
           var inverse = options.inverse,
@@ -411,7 +416,7 @@
           'default': obj
         };
       }
-      var _utils = utils$a;
+      var _utils = utils$b;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -542,7 +547,7 @@
           'default': obj
         };
       }
-      var _utils = utils$a;
+      var _utils = utils$b;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -643,7 +648,7 @@
           'default': obj
         };
       }
-      var _utils = utils$a;
+      var _utils = utils$b;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -726,7 +731,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$a;
+      var _utils = utils$b;
       exports['default'] = function (instance) {
         instance.registerDecorator('inline', function (fn, props, container, options) {
           var ret = fn;
@@ -764,7 +769,7 @@
     }
 
     var loggerExports = {};
-    var logger$r = {
+    var logger$L = {
       get exports(){ return loggerExports; },
       set exports(v){ loggerExports = v; },
     };
@@ -772,7 +777,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$a;
+      var _utils = utils$b;
       var logger = {
         methodMap: ['debug', 'info', 'warn', 'error'],
         level: 'info',
@@ -807,7 +812,7 @@
 
       exports['default'] = logger;
       module.exports = exports['default'];
-    })(logger$r, loggerExports);
+    })(logger$L, loggerExports);
 
     var protoAccess = {};
 
@@ -815,7 +820,7 @@
 
     createNewLookupObject$1.__esModule = true;
     createNewLookupObject$1.createNewLookupObject = createNewLookupObject;
-    var _utils$4 = utils$a;
+    var _utils$4 = utils$b;
 
     /**
      * Create a new object with "null"-prototype to avoid truthy results on prototype properties.
@@ -853,7 +858,7 @@
     }
     var _createNewLookupObject = createNewLookupObject$1;
     var _logger$1 = loggerExports;
-    var logger$q = _interopRequireWildcard$2(_logger$1);
+    var logger$K = _interopRequireWildcard$2(_logger$1);
     var loggedProperties = Object.create(null);
     function createProtoAccessControl(runtimeOptions) {
       var defaultMethodWhiteList = Object.create(null);
@@ -895,7 +900,7 @@
     function logUnexpecedPropertyAccessOnce(propertyName) {
       if (loggedProperties[propertyName] !== true) {
         loggedProperties[propertyName] = true;
-        logger$q.log('error', 'Handlebars: Access has been denied to resolve the property "' + propertyName + '" because it is not an "own property" of its parent.\n' + 'You can add a runtime option to disable the check or this warning:\n' + 'See https://handlebarsjs.com/api-reference/runtime-options.html#options-to-control-prototype-access for details');
+        logger$K.log('error', 'Handlebars: Access has been denied to resolve the property "' + propertyName + '" because it is not an "own property" of its parent.\n' + 'You can add a runtime option to disable the check or this warning:\n' + 'See https://handlebarsjs.com/api-reference/runtime-options.html#options-to-control-prototype-access for details');
       }
     }
     function resetLoggedProperties() {
@@ -913,7 +918,7 @@
         'default': obj
       };
     }
-    var _utils$3 = utils$a;
+    var _utils$3 = utils$b;
     var _exception$3 = exceptionExports;
     var _exception2$3 = _interopRequireDefault$5(_exception$3);
     var _helpers$2 = helpers$1;
@@ -1073,7 +1078,7 @@
         return newObj;
       }
     }
-    var _utils$2 = utils$a;
+    var _utils$2 = utils$b;
     var Utils = _interopRequireWildcard$1(_utils$2);
     var _exception$2 = exceptionExports;
     var _exception2$2 = _interopRequireDefault$4(_exception$2);
@@ -1440,7 +1445,7 @@
       var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
       var _handlebarsException = exceptionExports;
       var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
-      var _handlebarsUtils = utils$a;
+      var _handlebarsUtils = utils$b;
       var Utils = _interopRequireWildcard(_handlebarsUtils);
       var _handlebarsRuntime = runtime;
       var runtime$1 = _interopRequireWildcard(_handlebarsRuntime);
@@ -4332,7 +4337,7 @@
     var _whitespaceControl2 = _interopRequireDefault$2(_whitespaceControl);
     var _helpers = helpers;
     var Helpers = _interopRequireWildcard(_helpers);
-    var _utils$1 = utils$a;
+    var _utils$1 = utils$b;
     base$1.parser = _parser2['default'];
     var yy = {};
     _utils$1.extend(yy, Helpers);
@@ -4372,7 +4377,7 @@
     }
     var _exception = exceptionExports;
     var _exception2 = _interopRequireDefault$1(_exception);
-    var _utils = utils$a;
+    var _utils = utils$b;
     var _ast = astExports;
     var _ast2 = _interopRequireDefault$1(_ast);
     var slice = [].slice;
@@ -7759,7 +7764,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$a;
+      var _utils = utils$b;
       var SourceNode = undefined;
       try {
         /* istanbul ignore next */
@@ -7917,7 +7922,7 @@
       var _base = base$2;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
-      var _utils = utils$a;
+      var _utils = utils$b;
       var _codeGen = codeGenExports;
       var _codeGen2 = _interopRequireDefault(_codeGen);
       function Literal(value) {
@@ -9173,6 +9178,7 @@
         static HandlebarsInstance = Handlebars;
         static Network;
         static User;
+        static elementSelector;
     }
 
     var ModalHtml = "<dialog id=\"liminal_market_modal_div\" data-title=\"{{{title}}}\">\n    <article>\n        <header>\n            <span>{{title}}</span>\n            <a href=\"#close\" aria-label=\"Close\" class=\"close\" id=\"liminal_market_modal_close\"></a>\n        </header>\n        {{{content}}}\n    </article>\n\n</dialog>";
@@ -9205,7 +9211,9 @@
             if (modalDiv) {
                 document.body.removeChild(modalDiv);
             }
-            document.body.insertAdjacentHTML("beforeend", html);
+            document
+                .querySelector(WidgetGlobals.elementSelector)
+                ?.insertAdjacentHTML("beforeend", html);
             modalDiv = document.getElementById(this.modalId);
             modalDiv.setAttribute("open", "");
             if (hideOnOutsideClick) {
@@ -9589,19 +9597,19 @@
         }
     }
 
-    var NetworkType;
+    var NetworkType$2;
     (function (NetworkType) {
         NetworkType[NetworkType["Mainnet"] = 0] = "Mainnet";
         NetworkType[NetworkType["Testnet"] = 1] = "Testnet";
-    })(NetworkType || (NetworkType = {}));
+    })(NetworkType$2 || (NetworkType$2 = {}));
 
     class SwitchNetworkModal {
         selectedNetwork;
         constructor() { }
         show() {
             let template = WidgetGlobals.HandlebarsInstance.compile(SwitchNetworkHtml);
-            let testNetworks = NetworkInfo.getNetworks(NetworkType.Testnet);
-            let mainNetworks = NetworkInfo.getNetworks(NetworkType.Mainnet);
+            let testNetworks = NetworkInfo.getNetworks(NetworkType$2.Testnet);
+            let mainNetworks = NetworkInfo.getNetworks(NetworkType$2.Mainnet);
             let content = template({ testNetworks, mainNetworks });
             let modal = new Modal();
             modal.showModal("Switch network", content, false, undefined, false);
@@ -11352,7 +11360,7 @@
         kMaxLength: _kMaxLength
     });
 
-    var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
+    var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
 
     (function (module) {
       (function (module, exports) {
@@ -11404,7 +11412,7 @@
           if (typeof window !== 'undefined' && typeof window.Buffer !== 'undefined') {
             Buffer = window.Buffer;
           } else {
-            Buffer = require$$0$1.Buffer;
+            Buffer = require$$0$2.Buffer;
           }
         } catch (e) {}
         BN.isBN = function isBN(num) {
@@ -14293,7 +14301,7 @@
     })(bn);
     var BN$1 = bnExports;
 
-    const version$j = "logger/5.7.0";
+    const version$q = "logger/5.7.0";
 
     let _permanentCensorErrors = false;
     let _censorErrors = false;
@@ -14618,7 +14626,7 @@
       }
       static globalLogger() {
         if (!_globalLogger) {
-          _globalLogger = new Logger(version$j);
+          _globalLogger = new Logger(version$q);
         }
         return _globalLogger;
       }
@@ -14654,9 +14662,9 @@
     Logger.errors = ErrorCode;
     Logger.levels = LogLevel;
 
-    const version$i = "bytes/5.7.0";
+    const version$p = "bytes/5.7.0";
 
-    const logger$p = new Logger(version$i);
+    const logger$J = new Logger(version$p);
     ///////////////////////////////
     function isHexable(value) {
       return !!value.toHexString;
@@ -14703,7 +14711,7 @@
         options = {};
       }
       if (typeof value === "number") {
-        logger$p.checkSafeUint53(value, "invalid arrayify value");
+        logger$J.checkSafeUint53(value, "invalid arrayify value");
         const result = [];
         while (value) {
           result.unshift(value & 0xff);
@@ -14728,7 +14736,7 @@
           } else if (options.hexPad === "right") {
             hex += "0";
           } else {
-            logger$p.throwArgumentError("hex data is odd-length", "value", value);
+            logger$J.throwArgumentError("hex data is odd-length", "value", value);
           }
         }
         const result = [];
@@ -14740,7 +14748,7 @@
       if (isBytes(value)) {
         return addSlice(new Uint8Array(value));
       }
-      return logger$p.throwArgumentError("invalid arrayify value", "value", value);
+      return logger$J.throwArgumentError("invalid arrayify value", "value", value);
     }
     function concat(items) {
       const objects = items.map(item => arrayify(item));
@@ -14771,7 +14779,7 @@
     function zeroPad(value, length) {
       value = arrayify(value);
       if (value.length > length) {
-        logger$p.throwArgumentError("value out of range", "value", arguments[0]);
+        logger$J.throwArgumentError("value out of range", "value", arguments[0]);
       }
       const result = new Uint8Array(length);
       result.set(value, length - value.length);
@@ -14792,7 +14800,7 @@
         options = {};
       }
       if (typeof value === "number") {
-        logger$p.checkSafeUint53(value, "invalid hexlify value");
+        logger$J.checkSafeUint53(value, "invalid hexlify value");
         let hex = "";
         while (value) {
           hex = HexCharacters[value & 0xf] + hex;
@@ -14826,7 +14834,7 @@
           } else if (options.hexPad === "right") {
             value += "0";
           } else {
-            logger$p.throwArgumentError("hex data is odd-length", "value", value);
+            logger$J.throwArgumentError("hex data is odd-length", "value", value);
           }
         }
         return value.toLowerCase();
@@ -14839,7 +14847,7 @@
         }
         return result;
       }
-      return logger$p.throwArgumentError("invalid hexlify value", "value", value);
+      return logger$J.throwArgumentError("invalid hexlify value", "value", value);
     }
     /*
     function unoddify(value: BytesLike | Hexable | number): BytesLike | Hexable | number {
@@ -14861,7 +14869,7 @@
       if (typeof data !== "string") {
         data = hexlify(data);
       } else if (!isHexString(data) || data.length % 2) {
-        logger$p.throwArgumentError("invalid hexData", "value", data);
+        logger$J.throwArgumentError("invalid hexData", "value", data);
       }
       offset = 2 + 2 * offset;
       if (endOffset != null) {
@@ -14890,7 +14898,7 @@
         value = hexlify(value);
       }
       if (!isHexString(value)) {
-        logger$p.throwArgumentError("invalid hex string", "value", value);
+        logger$J.throwArgumentError("invalid hex string", "value", value);
       }
       value = value.substring(2);
       let offset = 0;
@@ -14903,10 +14911,10 @@
       if (typeof value !== "string") {
         value = hexlify(value);
       } else if (!isHexString(value)) {
-        logger$p.throwArgumentError("invalid hex string", "value", value);
+        logger$J.throwArgumentError("invalid hex string", "value", value);
       }
       if (value.length > 2 * length + 2) {
-        logger$p.throwArgumentError("value out of range", "value", arguments[1]);
+        logger$J.throwArgumentError("value out of range", "value", arguments[1]);
       }
       while (value.length < 2 * length + 2) {
         value = "0x0" + value.substring(2);
@@ -14937,14 +14945,14 @@
           result.s = hexlify(bytes.slice(32, 64));
           result.v = bytes[64];
         } else {
-          logger$p.throwArgumentError("invalid signature string", "signature", signature);
+          logger$J.throwArgumentError("invalid signature string", "signature", signature);
         }
         // Allow a recid to be used as the v
         if (result.v < 27) {
           if (result.v === 0 || result.v === 1) {
             result.v += 27;
           } else {
-            logger$p.throwArgumentError("signature invalid v byte", "signature", signature);
+            logger$J.throwArgumentError("signature invalid v byte", "signature", signature);
           }
         }
         // Compute recoveryParam from v
@@ -14970,7 +14978,7 @@
           if (result.recoveryParam == null) {
             result.recoveryParam = recoveryParam;
           } else if (result.recoveryParam !== recoveryParam) {
-            logger$p.throwArgumentError("signature recoveryParam mismatch _vs", "signature", signature);
+            logger$J.throwArgumentError("signature recoveryParam mismatch _vs", "signature", signature);
           }
           // Set or check the s
           vs[0] &= 0x7f;
@@ -14978,13 +14986,13 @@
           if (result.s == null) {
             result.s = s;
           } else if (result.s !== s) {
-            logger$p.throwArgumentError("signature v mismatch _vs", "signature", signature);
+            logger$J.throwArgumentError("signature v mismatch _vs", "signature", signature);
           }
         }
         // Use recid and v to populate each other
         if (result.recoveryParam == null) {
           if (result.v == null) {
-            logger$p.throwArgumentError("signature missing v and recoveryParam", "signature", signature);
+            logger$J.throwArgumentError("signature missing v and recoveryParam", "signature", signature);
           } else if (result.v === 0 || result.v === 1) {
             result.recoveryParam = result.v;
           } else {
@@ -14996,23 +15004,23 @@
           } else {
             const recId = result.v === 0 || result.v === 1 ? result.v : 1 - result.v % 2;
             if (result.recoveryParam !== recId) {
-              logger$p.throwArgumentError("signature recoveryParam mismatch v", "signature", signature);
+              logger$J.throwArgumentError("signature recoveryParam mismatch v", "signature", signature);
             }
           }
         }
         if (result.r == null || !isHexString(result.r)) {
-          logger$p.throwArgumentError("signature missing or invalid r", "signature", signature);
+          logger$J.throwArgumentError("signature missing or invalid r", "signature", signature);
         } else {
           result.r = hexZeroPad(result.r, 32);
         }
         if (result.s == null || !isHexString(result.s)) {
-          logger$p.throwArgumentError("signature missing or invalid s", "signature", signature);
+          logger$J.throwArgumentError("signature missing or invalid s", "signature", signature);
         } else {
           result.s = hexZeroPad(result.s, 32);
         }
         const vs = arrayify(result.s);
         if (vs[0] >= 128) {
-          logger$p.throwArgumentError("signature s out of range", "signature", signature);
+          logger$J.throwArgumentError("signature s out of range", "signature", signature);
         }
         if (result.recoveryParam) {
           vs[0] |= 0x80;
@@ -15020,7 +15028,7 @@
         const _vs = hexlify(vs);
         if (result._vs) {
           if (!isHexString(result._vs)) {
-            logger$p.throwArgumentError("signature invalid _vs", "signature", signature);
+            logger$J.throwArgumentError("signature invalid _vs", "signature", signature);
           }
           result._vs = hexZeroPad(result._vs, 32);
         }
@@ -15028,19 +15036,23 @@
         if (result._vs == null) {
           result._vs = _vs;
         } else if (result._vs !== _vs) {
-          logger$p.throwArgumentError("signature _vs mismatch v and s", "signature", signature);
+          logger$J.throwArgumentError("signature _vs mismatch v and s", "signature", signature);
         }
       }
       result.yParityAndS = result._vs;
       result.compact = result.r + result.yParityAndS.substring(2);
       return result;
     }
+    function joinSignature(signature) {
+      signature = splitSignature(signature);
+      return hexlify(concat([signature.r, signature.s, signature.recoveryParam ? "0x1c" : "0x1b"]));
+    }
 
-    const version$h = "bignumber/5.7.0";
+    const version$o = "bignumber/5.7.0";
 
     var BN = BN$1.BN;
-    const logger$o = new Logger(version$h);
-    const _constructorGuard$3 = {};
+    const logger$I = new Logger(version$o);
+    const _constructorGuard$4 = {};
     const MAX_SAFE = 0x1fffffffffffff;
     function isBigNumberish(value) {
       return value != null && (BigNumber$2.isBigNumber(value) || typeof value === "number" && value % 1 === 0 || typeof value === "string" && !!value.match(/^-?[0-9]+$/) || isHexString(value) || typeof value === "bigint" || isBytes(value));
@@ -15049,8 +15061,8 @@
     let _warnedToStringRadix = false;
     let BigNumber$2 = class BigNumber {
       constructor(constructorGuard, hex) {
-        if (constructorGuard !== _constructorGuard$3) {
-          logger$o.throwError("cannot call constructor directly; use BigNumber.from", Logger.errors.UNSUPPORTED_OPERATION, {
+        if (constructorGuard !== _constructorGuard$4) {
+          logger$I.throwError("cannot call constructor directly; use BigNumber.from", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "new (BigNumber)"
           });
         }
@@ -15172,7 +15184,7 @@
         try {
           return BigInt(this.toString());
         } catch (e) {}
-        return logger$o.throwError("this platform does not support BigInt", Logger.errors.UNSUPPORTED_OPERATION, {
+        return logger$I.throwError("this platform does not support BigInt", Logger.errors.UNSUPPORTED_OPERATION, {
           value: this.toString()
         });
       }
@@ -15182,12 +15194,12 @@
           if (arguments[0] === 10) {
             if (!_warnedToStringRadix) {
               _warnedToStringRadix = true;
-              logger$o.warn("BigNumber.toString does not accept any parameters; base-10 is assumed");
+              logger$I.warn("BigNumber.toString does not accept any parameters; base-10 is assumed");
             }
           } else if (arguments[0] === 16) {
-            logger$o.throwError("BigNumber.toString does not accept any parameters; use bigNumber.toHexString()", Logger.errors.UNEXPECTED_ARGUMENT, {});
+            logger$I.throwError("BigNumber.toString does not accept any parameters; use bigNumber.toHexString()", Logger.errors.UNEXPECTED_ARGUMENT, {});
           } else {
-            logger$o.throwError("BigNumber.toString does not accept parameters", Logger.errors.UNEXPECTED_ARGUMENT, {});
+            logger$I.throwError("BigNumber.toString does not accept parameters", Logger.errors.UNEXPECTED_ARGUMENT, {});
           }
         }
         return toBN(this).toString(10);
@@ -15207,12 +15219,12 @@
         }
         if (typeof value === "string") {
           if (value.match(/^-?0x[0-9a-f]+$/i)) {
-            return new BigNumber(_constructorGuard$3, toHex$1(value));
+            return new BigNumber(_constructorGuard$4, toHex$1(value));
           }
           if (value.match(/^-?[0-9]+$/)) {
-            return new BigNumber(_constructorGuard$3, toHex$1(new BN(value)));
+            return new BigNumber(_constructorGuard$4, toHex$1(new BN(value)));
           }
-          return logger$o.throwArgumentError("invalid BigNumber string", "value", value);
+          return logger$I.throwArgumentError("invalid BigNumber string", "value", value);
         }
         if (typeof value === "number") {
           if (value % 1) {
@@ -15251,7 +15263,7 @@
             }
           }
         }
-        return logger$o.throwArgumentError("invalid BigNumber value", "value", value);
+        return logger$I.throwArgumentError("invalid BigNumber value", "value", value);
       }
       static isBigNumber(value) {
         return !!(value && value._isBigNumber);
@@ -15269,7 +15281,7 @@
         value = value.substring(1);
         // Cannot have multiple negative signs (e.g. "--0x04")
         if (value[0] === "-") {
-          logger$o.throwArgumentError("invalid hex", "value", value);
+          logger$I.throwArgumentError("invalid hex", "value", value);
         }
         // Call toHex on the positive component
         value = toHex$1(value);
@@ -15316,15 +15328,19 @@
       if (value != null) {
         params.value = value;
       }
-      return logger$o.throwError(fault, Logger.errors.NUMERIC_FAULT, params);
+      return logger$I.throwError(fault, Logger.errors.NUMERIC_FAULT, params);
     }
     // value should have no prefix
     function _base36To16(value) {
       return new BN(value, 36).toString(16);
     }
+    // value should have no prefix
+    function _base16To36(value) {
+      return new BN(value, 16).toString(36);
+    }
 
-    const logger$n = new Logger(version$h);
-    const _constructorGuard$2 = {};
+    const logger$H = new Logger(version$o);
+    const _constructorGuard$3 = {};
     const Zero$2 = BigNumber$2.from(0);
     const NegativeOne$2 = BigNumber$2.from(-1);
     function throwFault(message, fault, operation, value) {
@@ -15335,7 +15351,7 @@
       if (value !== undefined) {
         params.value = value;
       }
-      return logger$n.throwError(message, Logger.errors.NUMERIC_FAULT, params);
+      return logger$H.throwError(message, Logger.errors.NUMERIC_FAULT, params);
     }
     // Constant to pull zeros from for multipliers
     let zeros = "0";
@@ -15352,7 +15368,7 @@
       if (typeof decimals === "number" && decimals >= 0 && decimals <= 256 && !(decimals % 1)) {
         return "1" + zeros.substring(0, decimals);
       }
-      return logger$n.throwArgumentError("invalid decimal size", "decimals", decimals);
+      return logger$H.throwArgumentError("invalid decimal size", "decimals", decimals);
     }
     function formatFixed(value, decimals) {
       if (decimals == null) {
@@ -15388,7 +15404,7 @@
       }
       const multiplier = getMultiplier(decimals);
       if (typeof value !== "string" || !value.match(/^-?[0-9.]+$/)) {
-        logger$n.throwArgumentError("invalid decimal value", "value", value);
+        logger$H.throwArgumentError("invalid decimal value", "value", value);
       }
       // Is it negative?
       const negative = value.substring(0, 1) === "-";
@@ -15396,12 +15412,12 @@
         value = value.substring(1);
       }
       if (value === ".") {
-        logger$n.throwArgumentError("missing value", "value", value);
+        logger$H.throwArgumentError("missing value", "value", value);
       }
       // Split it into a whole and fractional part
       const comps = value.split(".");
       if (comps.length > 2) {
-        logger$n.throwArgumentError("too many decimal points", "value", value);
+        logger$H.throwArgumentError("too many decimal points", "value", value);
       }
       let whole = comps[0],
         fraction = comps[1];
@@ -15437,8 +15453,8 @@
     }
     class FixedFormat {
       constructor(constructorGuard, signed, width, decimals) {
-        if (constructorGuard !== _constructorGuard$2) {
-          logger$n.throwError("cannot use FixedFormat constructor; use FixedFormat.from", Logger.errors.UNSUPPORTED_OPERATION, {
+        if (constructorGuard !== _constructorGuard$3) {
+          logger$H.throwError("cannot use FixedFormat constructor; use FixedFormat.from", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "new FixedFormat"
           });
         }
@@ -15465,7 +15481,7 @@
           } else {
             const match = value.match(/^(u?)fixed([0-9]+)x([0-9]+)$/);
             if (!match) {
-              logger$n.throwArgumentError("invalid fixed format", "format", value);
+              logger$H.throwArgumentError("invalid fixed format", "format", value);
             }
             signed = match[1] !== "u";
             width = parseInt(match[2]);
@@ -15477,7 +15493,7 @@
               return defaultValue;
             }
             if (typeof value[key] !== type) {
-              logger$n.throwArgumentError("invalid fixed format (" + key + " not " + type + ")", "format." + key, value[key]);
+              logger$H.throwArgumentError("invalid fixed format (" + key + " not " + type + ")", "format." + key, value[key]);
             }
             return value[key];
           };
@@ -15486,18 +15502,18 @@
           decimals = check("decimals", "number", decimals);
         }
         if (width % 8) {
-          logger$n.throwArgumentError("invalid fixed format width (not byte aligned)", "format.width", width);
+          logger$H.throwArgumentError("invalid fixed format width (not byte aligned)", "format.width", width);
         }
         if (decimals > 80) {
-          logger$n.throwArgumentError("invalid fixed format (decimals too large)", "format.decimals", decimals);
+          logger$H.throwArgumentError("invalid fixed format (decimals too large)", "format.decimals", decimals);
         }
-        return new FixedFormat(_constructorGuard$2, signed, width, decimals);
+        return new FixedFormat(_constructorGuard$3, signed, width, decimals);
       }
     }
     class FixedNumber {
       constructor(constructorGuard, hex, value, format) {
-        if (constructorGuard !== _constructorGuard$2) {
-          logger$n.throwError("cannot use FixedNumber constructor; use FixedNumber.from", Logger.errors.UNSUPPORTED_OPERATION, {
+        if (constructorGuard !== _constructorGuard$3) {
+          logger$H.throwError("cannot use FixedNumber constructor; use FixedNumber.from", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "new FixedFormat"
           });
         }
@@ -15509,7 +15525,7 @@
       }
       _checkFormat(other) {
         if (this.format.name !== other.format.name) {
-          logger$n.throwArgumentError("incompatible format; use fixedNumber.toFormat", "other", other);
+          logger$H.throwArgumentError("incompatible format; use fixedNumber.toFormat", "other", other);
         }
       }
       addUnsafe(other) {
@@ -15571,7 +15587,7 @@
           comps.push("0");
         }
         if (decimals < 0 || decimals > 80 || decimals % 1) {
-          logger$n.throwArgumentError("invalid decimal count", "decimals", decimals);
+          logger$H.throwArgumentError("invalid decimal count", "decimals", decimals);
         }
         if (comps[1].length <= decimals) {
           return this;
@@ -15594,7 +15610,7 @@
           return this._hex;
         }
         if (width % 8) {
-          logger$n.throwArgumentError("invalid byte width", "width", width);
+          logger$H.throwArgumentError("invalid byte width", "width", width);
         }
         const hex = BigNumber$2.from(this._hex).fromTwos(this.format.width).toTwos(width).toHexString();
         return hexZeroPad(hex, width / 8);
@@ -15636,7 +15652,7 @@
           hex = hexZeroPad(hex, fixedFormat.width / 8);
         }
         const decimal = formatFixed(numeric, fixedFormat.decimals);
-        return new FixedNumber(_constructorGuard$2, hex, decimal, fixedFormat);
+        return new FixedNumber(_constructorGuard$3, hex, decimal, fixedFormat);
       }
       static fromBytes(value, format) {
         if (format == null) {
@@ -15652,7 +15668,7 @@
         }
         const hex = numeric.toTwos((fixedFormat.signed ? 0 : 1) + fixedFormat.width).toHexString();
         const decimal = formatFixed(numeric, fixedFormat.decimals);
-        return new FixedNumber(_constructorGuard$2, hex, decimal, fixedFormat);
+        return new FixedNumber(_constructorGuard$3, hex, decimal, fixedFormat);
       }
       static from(value, format) {
         if (typeof value === "string") {
@@ -15669,7 +15685,7 @@
             throw error;
           }
         }
-        return logger$n.throwArgumentError("invalid FixedNumber value", "value", value);
+        return logger$H.throwArgumentError("invalid FixedNumber value", "value", value);
       }
       static isFixedNumber(value) {
         return !!(value && value._isFixedNumber);
@@ -15678,9 +15694,9 @@
     const ONE = FixedNumber.from(1);
     const BUMP = FixedNumber.from("0.5");
 
-    const version$g = "properties/5.7.0";
+    const version$n = "properties/5.7.0";
 
-    var __awaiter$8 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$f = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -15707,7 +15723,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$m = new Logger(version$g);
+    const logger$G = new Logger(version$n);
     function defineReadOnly(object, name, value) {
       Object.defineProperty(object, name, {
         enumerable: true,
@@ -15729,7 +15745,7 @@
       return null;
     }
     function resolveProperties(object) {
-      return __awaiter$8(this, void 0, void 0, function* () {
+      return __awaiter$f(this, void 0, void 0, function* () {
         const promises = Object.keys(object).map(key => {
           const value = object[key];
           return Promise.resolve(value).then(v => ({
@@ -15746,11 +15762,11 @@
     }
     function checkProperties(object, properties) {
       if (!object || typeof object !== "object") {
-        logger$m.throwArgumentError("invalid object", "object", object);
+        logger$G.throwArgumentError("invalid object", "object", object);
       }
       Object.keys(object).forEach(key => {
         if (!properties[key]) {
-          logger$m.throwArgumentError("invalid object key - " + key, "transaction:" + key, object);
+          logger$G.throwArgumentError("invalid object key - " + key, "transaction:" + key, object);
         }
       });
     }
@@ -15793,7 +15809,7 @@
         }
         return true;
       }
-      return logger$m.throwArgumentError(`Cannot deepCopy ${typeof object}`, "object", object);
+      return logger$G.throwArgumentError(`Cannot deepCopy ${typeof object}`, "object", object);
     }
     // Returns a new copy of object, such that no properties may be replaced.
     // New properties may be added only to objects.
@@ -15816,7 +15832,7 @@
         }
         return result;
       }
-      return logger$m.throwArgumentError(`Cannot deepCopy ${typeof object}`, "object", object);
+      return logger$G.throwArgumentError(`Cannot deepCopy ${typeof object}`, "object", object);
     }
     function deepCopy(object) {
       return _deepCopy(object);
@@ -15829,10 +15845,10 @@
       }
     }
 
-    const version$f = "abi/5.7.0";
+    const version$m = "abi/5.7.0";
 
-    const logger$l = new Logger(version$f);
-    const _constructorGuard$1 = {};
+    const logger$F = new Logger(version$m);
+    const _constructorGuard$2 = {};
     let ModifiersBytes = {
       calldata: true,
       memory: true,
@@ -15857,7 +15873,7 @@
         }
       }
       if (ModifiersBytes[name] || name === "payable") {
-        logger$l.throwArgumentError("invalid modifier", "name", name);
+        logger$F.throwArgumentError("invalid modifier", "name", name);
       }
       return false;
     }
@@ -15865,7 +15881,7 @@
     function parseParamType(param, allowIndexed) {
       let originalParam = param;
       function throwError(i) {
-        logger$l.throwArgumentError(`unexpected character at position ${i}`, "param", param);
+        logger$F.throwArgumentError(`unexpected character at position ${i}`, "param", param);
       }
       param = param.replace(/\s/g, " ");
       function newNode(parent) {
@@ -16011,7 +16027,7 @@
         }
       }
       if (node.parent) {
-        logger$l.throwArgumentError("unexpected eof", "param", param);
+        logger$F.throwArgumentError("unexpected eof", "param", param);
       }
       delete parent.state;
       if (node.name === "indexed") {
@@ -16047,8 +16063,8 @@
     const paramTypeArray = new RegExp(/^(.*)\[([0-9]*)\]$/);
     class ParamType {
       constructor(constructorGuard, params) {
-        if (constructorGuard !== _constructorGuard$1) {
-          logger$l.throwError("use fromString", Logger.errors.UNSUPPORTED_OPERATION, {
+        if (constructorGuard !== _constructorGuard$2) {
+          logger$F.throwError("use fromString", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "new ParamType()"
           });
         }
@@ -16082,7 +16098,7 @@
           format = FormatTypes.sighash;
         }
         if (!FormatTypes[format]) {
-          logger$l.throwArgumentError("invalid format type", "format", format);
+          logger$F.throwArgumentError("invalid format type", "format", format);
         }
         if (format === FormatTypes.json) {
           let result = {
@@ -16132,7 +16148,7 @@
         if (ParamType.isParamType(value)) {
           return value;
         }
-        return new ParamType(_constructorGuard$1, {
+        return new ParamType(_constructorGuard$2, {
           name: value.name || null,
           type: verifyType(value.type),
           indexed: value.indexed == null ? null : !!value.indexed,
@@ -16159,8 +16175,8 @@
     }
     class Fragment {
       constructor(constructorGuard, params) {
-        if (constructorGuard !== _constructorGuard$1) {
-          logger$l.throwError("use a static from method", Logger.errors.UNSUPPORTED_OPERATION, {
+        if (constructorGuard !== _constructorGuard$2) {
+          logger$F.throwError("use a static from method", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "new Fragment()"
           });
         }
@@ -16195,7 +16211,7 @@
             // @TODO: Something? Maybe return a FunctionFragment? A custom DefaultFunctionFragment?
             return null;
         }
-        return logger$l.throwArgumentError("invalid fragment object", "value", value);
+        return logger$F.throwArgumentError("invalid fragment object", "value", value);
       }
       static fromString(value) {
         // Make sure the "returns" is surrounded by a space and all whitespace is exactly one space
@@ -16211,7 +16227,7 @@
         } else if (value.split(" ")[0] === "error") {
           return ErrorFragment.fromString(value.substring(5).trim());
         }
-        return logger$l.throwArgumentError("unsupported fragment", "value", value);
+        return logger$F.throwArgumentError("unsupported fragment", "value", value);
       }
       static isFragment(value) {
         return !!(value && value._isFragment);
@@ -16223,7 +16239,7 @@
           format = FormatTypes.sighash;
         }
         if (!FormatTypes[format]) {
-          logger$l.throwArgumentError("invalid format type", "format", format);
+          logger$F.throwArgumentError("invalid format type", "format", format);
         }
         if (format === FormatTypes.json) {
           return JSON.stringify({
@@ -16256,7 +16272,7 @@
           return value;
         }
         if (value.type !== "event") {
-          logger$l.throwArgumentError("invalid event object", "value", value);
+          logger$F.throwArgumentError("invalid event object", "value", value);
         }
         const params = {
           name: verifyIdentifier(value.name),
@@ -16264,12 +16280,12 @@
           inputs: value.inputs ? value.inputs.map(ParamType.fromObject) : [],
           type: "event"
         };
-        return new EventFragment(_constructorGuard$1, params);
+        return new EventFragment(_constructorGuard$2, params);
       }
       static fromString(value) {
         let match = value.match(regexParen);
         if (!match) {
-          logger$l.throwArgumentError("invalid event string", "value", value);
+          logger$F.throwArgumentError("invalid event string", "value", value);
         }
         let anonymous = false;
         match[3].split(" ").forEach(modifier => {
@@ -16280,7 +16296,7 @@
             case "":
               break;
             default:
-              logger$l.warn("unknown modifier: " + modifier);
+              logger$F.warn("unknown modifier: " + modifier);
           }
         });
         return EventFragment.fromObject({
@@ -16299,10 +16315,10 @@
       let comps = value.split("@");
       if (comps.length !== 1) {
         if (comps.length > 2) {
-          logger$l.throwArgumentError("invalid human-readable ABI signature", "value", value);
+          logger$F.throwArgumentError("invalid human-readable ABI signature", "value", value);
         }
         if (!comps[1].match(/^[0-9]+$/)) {
-          logger$l.throwArgumentError("invalid human-readable ABI signature gas", "value", value);
+          logger$F.throwArgumentError("invalid human-readable ABI signature gas", "value", value);
         }
         params.gas = BigNumber$2.from(comps[1]);
         return comps[0];
@@ -16355,21 +16371,21 @@
         result.constant = result.stateMutability === "view" || result.stateMutability === "pure";
         if (value.constant != null) {
           if (!!value.constant !== result.constant) {
-            logger$l.throwArgumentError("cannot have constant function with mutability " + result.stateMutability, "value", value);
+            logger$F.throwArgumentError("cannot have constant function with mutability " + result.stateMutability, "value", value);
           }
         }
         // Set (and check things are consistent) the payable property
         result.payable = result.stateMutability === "payable";
         if (value.payable != null) {
           if (!!value.payable !== result.payable) {
-            logger$l.throwArgumentError("cannot have payable function with mutability " + result.stateMutability, "value", value);
+            logger$F.throwArgumentError("cannot have payable function with mutability " + result.stateMutability, "value", value);
           }
         }
       } else if (value.payable != null) {
         result.payable = !!value.payable;
         // If payable we can assume non-constant; otherwise we can't assume
         if (value.constant == null && !result.payable && value.type !== "constructor") {
-          logger$l.throwArgumentError("unable to determine stateMutability", "value", value);
+          logger$F.throwArgumentError("unable to determine stateMutability", "value", value);
         }
         result.constant = !!value.constant;
         if (result.constant) {
@@ -16378,14 +16394,14 @@
           result.stateMutability = result.payable ? "payable" : "nonpayable";
         }
         if (result.payable && result.constant) {
-          logger$l.throwArgumentError("cannot have constant payable function", "value", value);
+          logger$F.throwArgumentError("cannot have constant payable function", "value", value);
         }
       } else if (value.constant != null) {
         result.constant = !!value.constant;
         result.payable = !result.constant;
         result.stateMutability = result.constant ? "view" : "payable";
       } else if (value.type !== "constructor") {
-        logger$l.throwArgumentError("unable to determine stateMutability", "value", value);
+        logger$F.throwArgumentError("unable to determine stateMutability", "value", value);
       }
       return result;
     }
@@ -16395,7 +16411,7 @@
           format = FormatTypes.sighash;
         }
         if (!FormatTypes[format]) {
-          logger$l.throwArgumentError("invalid format type", "format", format);
+          logger$F.throwArgumentError("invalid format type", "format", format);
         }
         if (format === FormatTypes.json) {
           return JSON.stringify({
@@ -16407,7 +16423,7 @@
           });
         }
         if (format === FormatTypes.sighash) {
-          logger$l.throwError("cannot format a constructor for sighash", Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$F.throwError("cannot format a constructor for sighash", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "format(sighash)"
           });
         }
@@ -16428,11 +16444,11 @@
           return value;
         }
         if (value.type !== "constructor") {
-          logger$l.throwArgumentError("invalid constructor object", "value", value);
+          logger$F.throwArgumentError("invalid constructor object", "value", value);
         }
         let state = verifyState(value);
         if (state.constant) {
-          logger$l.throwArgumentError("constructor cannot be constant", "value", value);
+          logger$F.throwArgumentError("constructor cannot be constant", "value", value);
         }
         const params = {
           name: null,
@@ -16442,7 +16458,7 @@
           stateMutability: state.stateMutability,
           gas: value.gas ? BigNumber$2.from(value.gas) : null
         };
-        return new ConstructorFragment(_constructorGuard$1, params);
+        return new ConstructorFragment(_constructorGuard$2, params);
       }
       static fromString(value) {
         let params = {
@@ -16451,7 +16467,7 @@
         value = parseGas(value, params);
         let parens = value.match(regexParen);
         if (!parens || parens[1].trim() !== "constructor") {
-          logger$l.throwArgumentError("invalid constructor string", "value", value);
+          logger$F.throwArgumentError("invalid constructor string", "value", value);
         }
         params.inputs = parseParams(parens[2].trim(), false);
         parseModifiers(parens[3].trim(), params);
@@ -16467,7 +16483,7 @@
           format = FormatTypes.sighash;
         }
         if (!FormatTypes[format]) {
-          logger$l.throwArgumentError("invalid format type", "format", format);
+          logger$F.throwArgumentError("invalid format type", "format", format);
         }
         if (format === FormatTypes.json) {
           return JSON.stringify({
@@ -16514,7 +16530,7 @@
           return value;
         }
         if (value.type !== "function") {
-          logger$l.throwArgumentError("invalid function object", "value", value);
+          logger$F.throwArgumentError("invalid function object", "value", value);
         }
         let state = verifyState(value);
         const params = {
@@ -16527,7 +16543,7 @@
           stateMutability: state.stateMutability,
           gas: value.gas ? BigNumber$2.from(value.gas) : null
         };
-        return new FunctionFragment(_constructorGuard$1, params);
+        return new FunctionFragment(_constructorGuard$2, params);
       }
       static fromString(value) {
         let params = {
@@ -16536,11 +16552,11 @@
         value = parseGas(value, params);
         let comps = value.split(" returns ");
         if (comps.length > 2) {
-          logger$l.throwArgumentError("invalid function string", "value", value);
+          logger$F.throwArgumentError("invalid function string", "value", value);
         }
         let parens = comps[0].match(regexParen);
         if (!parens) {
-          logger$l.throwArgumentError("invalid function signature", "value", value);
+          logger$F.throwArgumentError("invalid function signature", "value", value);
         }
         params.name = parens[1].trim();
         if (params.name) {
@@ -16552,7 +16568,7 @@
         if (comps.length > 1) {
           let returns = comps[1].match(regexParen);
           if (returns[1].trim() != "" || returns[3].trim() != "") {
-            logger$l.throwArgumentError("unexpected tokens", "value", value);
+            logger$F.throwArgumentError("unexpected tokens", "value", value);
           }
           params.outputs = parseParams(returns[2], false);
         } else {
@@ -16569,7 +16585,7 @@
     function checkForbidden(fragment) {
       const sig = fragment.format();
       if (sig === "Error(string)" || sig === "Panic(uint256)") {
-        logger$l.throwArgumentError(`cannot specify user defined ${sig} error`, "fragment", fragment);
+        logger$F.throwArgumentError(`cannot specify user defined ${sig} error`, "fragment", fragment);
       }
       return fragment;
     }
@@ -16579,7 +16595,7 @@
           format = FormatTypes.sighash;
         }
         if (!FormatTypes[format]) {
-          logger$l.throwArgumentError("invalid format type", "format", format);
+          logger$F.throwArgumentError("invalid format type", "format", format);
         }
         if (format === FormatTypes.json) {
           return JSON.stringify({
@@ -16606,14 +16622,14 @@
           return value;
         }
         if (value.type !== "error") {
-          logger$l.throwArgumentError("invalid error object", "value", value);
+          logger$F.throwArgumentError("invalid error object", "value", value);
         }
         const params = {
           type: value.type,
           name: verifyIdentifier(value.name),
           inputs: value.inputs ? value.inputs.map(ParamType.fromObject) : []
         };
-        return checkForbidden(new ErrorFragment(_constructorGuard$1, params));
+        return checkForbidden(new ErrorFragment(_constructorGuard$2, params));
       }
       static fromString(value) {
         let params = {
@@ -16621,7 +16637,7 @@
         };
         let parens = value.match(regexParen);
         if (!parens) {
-          logger$l.throwArgumentError("invalid error signature", "value", value);
+          logger$F.throwArgumentError("invalid error signature", "value", value);
         }
         params.name = parens[1].trim();
         if (params.name) {
@@ -16648,7 +16664,7 @@
     const regexIdentifier = new RegExp("^[a-zA-Z$_][a-zA-Z0-9$_]*$");
     function verifyIdentifier(value) {
       if (!value || !value.match(regexIdentifier)) {
-        logger$l.throwArgumentError(`invalid identifier "${value}"`, "value", value);
+        logger$F.throwArgumentError(`invalid identifier "${value}"`, "value", value);
       }
       return value;
     }
@@ -16670,7 +16686,7 @@
           } else if (c === ")") {
             depth--;
             if (depth === -1) {
-              logger$l.throwArgumentError("unbalanced parenthesis", "value", value);
+              logger$F.throwArgumentError("unbalanced parenthesis", "value", value);
             }
           }
         }
@@ -16681,7 +16697,7 @@
       return result;
     }
 
-    const logger$k = new Logger(version$f);
+    const logger$E = new Logger(version$m);
     function checkResultErrors(result) {
       // Find the first error (if any)
       const errors = [];
@@ -16714,7 +16730,7 @@
         this.dynamic = dynamic;
       }
       _throwError(message, value) {
-        logger$k.throwArgumentError(message, this.localName, value);
+        logger$E.throwArgumentError(message, this.localName, value);
       }
     }
     class Writer {
@@ -16750,7 +16766,7 @@
       _getValue(value) {
         let bytes = arrayify(BigNumber$2.from(value));
         if (bytes.length > this.wordSize) {
-          logger$k.throwError("value out-of-bounds", Logger.errors.BUFFER_OVERRUN, {
+          logger$E.throwError("value out-of-bounds", Logger.errors.BUFFER_OVERRUN, {
             length: this.wordSize,
             offset: bytes.length
           });
@@ -16807,7 +16823,7 @@
           if (this.allowLoose && loose && this._offset + length <= this._data.length) {
             alignedLength = length;
           } else {
-            logger$k.throwError("data out-of-bounds", Logger.errors.BUFFER_OVERRUN, {
+            logger$E.throwError("data out-of-bounds", Logger.errors.BUFFER_OVERRUN, {
               length: this._data.length,
               offset: this._offset + alignedLength
             });
@@ -16958,7 +16974,7 @@
     var browser = true;
     var env = {};
     var argv = [];
-    var version$e = ''; // empty string to avoid regexp issues
+    var version$l = ''; // empty string to avoid regexp issues
     var versions = {};
     var release = {};
     var config = {};
@@ -17017,7 +17033,7 @@
       browser: browser,
       env: env,
       argv: argv,
-      version: version$e,
+      version: version$l,
       versions: versions,
       on: on$1,
       addListener: addListener,
@@ -17689,13 +17705,13 @@
     })(sha3$1);
     var sha3 = sha3Exports;
 
-    function keccak256(data) {
+    function keccak256$1(data) {
       return '0x' + sha3.keccak_256(arrayify(data));
     }
 
-    const version$d = "rlp/5.7.0";
+    const version$k = "rlp/5.7.0";
 
-    const logger$j = new Logger(version$d);
+    const logger$D = new Logger(version$k);
     function arrayifyInteger(value) {
       const result = [];
       while (value) {
@@ -17726,7 +17742,7 @@
         return length.concat(payload);
       }
       if (!isBytesLike(object)) {
-        logger$j.throwArgumentError("RLP object must be BytesLike", "object", object);
+        logger$D.throwArgumentError("RLP object must be BytesLike", "object", object);
       }
       const data = Array.prototype.slice.call(arrayify(object));
       if (data.length === 1 && data[0] <= 0x7f) {
@@ -17749,7 +17765,7 @@
         result.push(decoded.result);
         childOffset += decoded.consumed;
         if (childOffset > offset + 1 + length) {
-          logger$j.throwError("child data too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("child data too short", Logger.errors.BUFFER_OVERRUN, {});
         }
       }
       return {
@@ -17760,33 +17776,33 @@
     // returns { consumed: number, result: Object }
     function _decode(data, offset) {
       if (data.length === 0) {
-        logger$j.throwError("data too short", Logger.errors.BUFFER_OVERRUN, {});
+        logger$D.throwError("data too short", Logger.errors.BUFFER_OVERRUN, {});
       }
       // Array with extra length prefix
       if (data[offset] >= 0xf8) {
         const lengthLength = data[offset] - 0xf7;
         if (offset + 1 + lengthLength > data.length) {
-          logger$j.throwError("data short segment too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data short segment too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         const length = unarrayifyInteger(data, offset + 1, lengthLength);
         if (offset + 1 + lengthLength + length > data.length) {
-          logger$j.throwError("data long segment too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data long segment too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         return _decodeChildren(data, offset, offset + 1 + lengthLength, lengthLength + length);
       } else if (data[offset] >= 0xc0) {
         const length = data[offset] - 0xc0;
         if (offset + 1 + length > data.length) {
-          logger$j.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         return _decodeChildren(data, offset, offset + 1, length);
       } else if (data[offset] >= 0xb8) {
         const lengthLength = data[offset] - 0xb7;
         if (offset + 1 + lengthLength > data.length) {
-          logger$j.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         const length = unarrayifyInteger(data, offset + 1, lengthLength);
         if (offset + 1 + lengthLength + length > data.length) {
-          logger$j.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data array too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         const result = hexlify(data.slice(offset + 1 + lengthLength, offset + 1 + lengthLength + length));
         return {
@@ -17796,7 +17812,7 @@
       } else if (data[offset] >= 0x80) {
         const length = data[offset] - 0x80;
         if (offset + 1 + length > data.length) {
-          logger$j.throwError("data too short", Logger.errors.BUFFER_OVERRUN, {});
+          logger$D.throwError("data too short", Logger.errors.BUFFER_OVERRUN, {});
         }
         const result = hexlify(data.slice(offset + 1, offset + 1 + length));
         return {
@@ -17813,17 +17829,23 @@
       const bytes = arrayify(data);
       const decoded = _decode(bytes, 0);
       if (decoded.consumed !== bytes.length) {
-        logger$j.throwArgumentError("invalid rlp data", "data", data);
+        logger$D.throwArgumentError("invalid rlp data", "data", data);
       }
       return decoded.result;
     }
 
-    const version$c = "address/5.7.0";
+    var index$3 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        decode: decode$2,
+        encode: encode$2
+    });
 
-    const logger$i = new Logger(version$c);
+    const version$j = "address/5.7.0";
+
+    const logger$C = new Logger(version$j);
     function getChecksumAddress(address) {
       if (!isHexString(address, 20)) {
-        logger$i.throwArgumentError("invalid address", "address", address);
+        logger$C.throwArgumentError("invalid address", "address", address);
       }
       address = address.toLowerCase();
       const chars = address.substring(2).split("");
@@ -17831,7 +17853,7 @@
       for (let i = 0; i < 40; i++) {
         expanded[i] = chars[i].charCodeAt(0);
       }
-      const hashed = arrayify(keccak256(expanded));
+      const hashed = arrayify(keccak256$1(expanded));
       for (let i = 0; i < 40; i += 2) {
         if (hashed[i >> 1] >> 4 >= 8) {
           chars[i] = chars[i].toUpperCase();
@@ -17881,7 +17903,7 @@
     function getAddress(address) {
       let result = null;
       if (typeof address !== "string") {
-        logger$i.throwArgumentError("invalid address", "address", address);
+        logger$C.throwArgumentError("invalid address", "address", address);
       }
       if (address.match(/^(0x)?[0-9a-fA-F]{40}$/)) {
         // Missing the 0x prefix
@@ -17891,13 +17913,13 @@
         result = getChecksumAddress(address);
         // It is a checksummed address with a bad checksum
         if (address.match(/([A-F].*[a-f])|([a-f].*[A-F])/) && result !== address) {
-          logger$i.throwArgumentError("bad address checksum", "address", address);
+          logger$C.throwArgumentError("bad address checksum", "address", address);
         }
         // Maybe ICAP? (we only support direct mode)
       } else if (address.match(/^XE[0-9]{2}[0-9A-Za-z]{30,31}$/)) {
         // It is an ICAP address with a bad checksum
         if (address.substring(2, 4) !== ibanChecksum(address)) {
-          logger$i.throwArgumentError("bad icap checksum", "address", address);
+          logger$C.throwArgumentError("bad icap checksum", "address", address);
         }
         result = _base36To16(address.substring(4));
         while (result.length < 40) {
@@ -17905,9 +17927,23 @@
         }
         result = getChecksumAddress("0x" + result);
       } else {
-        logger$i.throwArgumentError("invalid address", "address", address);
+        logger$C.throwArgumentError("invalid address", "address", address);
       }
       return result;
+    }
+    function isAddress(address) {
+      try {
+        getAddress(address);
+        return true;
+      } catch (error) {}
+      return false;
+    }
+    function getIcapAddress(address) {
+      let base36 = _base16To36(getAddress(address).substring(2)).toUpperCase();
+      while (base36.length < 30) {
+        base36 = "0" + base36;
+      }
+      return "XE" + ibanChecksum("XE00" + base36) + base36;
     }
     // http://ethereum.stackexchange.com/questions/760/how-is-the-address-of-an-ethereum-contract-computed
     function getContractAddress(transaction) {
@@ -17915,10 +17951,19 @@
       try {
         from = getAddress(transaction.from);
       } catch (error) {
-        logger$i.throwArgumentError("missing from address", "transaction", transaction);
+        logger$C.throwArgumentError("missing from address", "transaction", transaction);
       }
       const nonce = stripZeros(arrayify(BigNumber$2.from(transaction.nonce).toHexString()));
-      return getAddress(hexDataSlice(keccak256(encode$2([from, nonce])), 12));
+      return getAddress(hexDataSlice(keccak256$1(encode$2([from, nonce])), 12));
+    }
+    function getCreate2Address(from, salt, initCodeHash) {
+      if (hexDataLength(salt) !== 32) {
+        logger$C.throwArgumentError("salt must be 32 bytes", "salt", salt);
+      }
+      if (hexDataLength(initCodeHash) !== 32) {
+        logger$C.throwArgumentError("initCodeHash must be 32 bytes", "initCodeHash", initCodeHash);
+      }
+      return getAddress(hexDataSlice(keccak256$1(concat(["0xff", getAddress(from), salt, initCodeHash])), 12));
     }
 
     class AddressCoder extends Coder {
@@ -17958,8 +18003,8 @@
       }
     }
 
-    const logger$h = new Logger(version$f);
-    function pack(writer, coders, values) {
+    const logger$B = new Logger(version$m);
+    function pack$1(writer, coders, values) {
       let arrayValues = null;
       if (Array.isArray(values)) {
         arrayValues = values;
@@ -17968,14 +18013,14 @@
         arrayValues = coders.map(coder => {
           const name = coder.localName;
           if (!name) {
-            logger$h.throwError("cannot encode object for signature with missing names", Logger.errors.INVALID_ARGUMENT, {
+            logger$B.throwError("cannot encode object for signature with missing names", Logger.errors.INVALID_ARGUMENT, {
               argument: "values",
               coder: coder,
               value: values
             });
           }
           if (unique[name]) {
-            logger$h.throwError("cannot encode object for signature with duplicate names", Logger.errors.INVALID_ARGUMENT, {
+            logger$B.throwError("cannot encode object for signature with duplicate names", Logger.errors.INVALID_ARGUMENT, {
               argument: "values",
               coder: coder,
               value: values
@@ -17985,10 +18030,10 @@
           return values[name];
         });
       } else {
-        logger$h.throwArgumentError("invalid tuple value", "tuple", values);
+        logger$B.throwArgumentError("invalid tuple value", "tuple", values);
       }
       if (coders.length !== arrayValues.length) {
-        logger$h.throwArgumentError("types/value length mismatch", "tuple", values);
+        logger$B.throwArgumentError("types/value length mismatch", "tuple", values);
       }
       let staticWriter = new Writer(writer.wordSize);
       let dynamicWriter = new Writer(writer.wordSize);
@@ -18130,12 +18175,12 @@
           count = value.length;
           writer.writeValue(value.length);
         }
-        logger$h.checkArgumentCount(value.length, count, "coder array" + (this.localName ? " " + this.localName : ""));
+        logger$B.checkArgumentCount(value.length, count, "coder array" + (this.localName ? " " + this.localName : ""));
         let coders = [];
         for (let i = 0; i < value.length; i++) {
           coders.push(this.coder);
         }
-        return pack(writer, coders, value);
+        return pack$1(writer, coders, value);
       }
       decode(reader) {
         let count = this.length;
@@ -18147,7 +18192,7 @@
           // bytes as a link to the data). This could use a much
           // tighter bound, but we are erroring on the side of safety.
           if (count * 32 > reader._data.length) {
-            logger$h.throwError("insufficient data length", Logger.errors.BUFFER_OVERRUN, {
+            logger$B.throwError("insufficient data length", Logger.errors.BUFFER_OVERRUN, {
               length: reader._data.length,
               count: count
             });
@@ -18248,9 +18293,31 @@
     const NegativeOne$1 = /*#__PURE__*/BigNumber$2.from(-1);
     const Zero$1 = /*#__PURE__*/BigNumber$2.from(0);
     const One$1 = /*#__PURE__*/BigNumber$2.from(1);
+    const Two = /*#__PURE__*/BigNumber$2.from(2);
+    const WeiPerEther = /*#__PURE__*/BigNumber$2.from("1000000000000000000");
     const MaxUint256$1 = /*#__PURE__*/BigNumber$2.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    const MinInt256 = /*#__PURE__*/BigNumber$2.from("-0x8000000000000000000000000000000000000000000000000000000000000000");
+    const MaxInt256 = /*#__PURE__*/BigNumber$2.from("0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
     const HashZero = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+    // NFKC (composed)             // (decomposed)
+    const EtherSymbol = "\u039e"; // "\uD835\uDF63";
+
+    var index$2 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        AddressZero: AddressZero$1,
+        EtherSymbol: EtherSymbol,
+        HashZero: HashZero,
+        MaxInt256: MaxInt256,
+        MaxUint256: MaxUint256$1,
+        MinInt256: MinInt256,
+        NegativeOne: NegativeOne$1,
+        One: One$1,
+        Two: Two,
+        WeiPerEther: WeiPerEther,
+        Zero: Zero$1
+    });
 
     class NumberCoder extends Coder {
       constructor(size, signed, localName) {
@@ -18289,9 +18356,9 @@
       }
     }
 
-    const version$b = "strings/5.7.0";
+    const version$i = "strings/5.7.0";
 
-    const logger$g = new Logger(version$b);
+    const logger$A = new Logger(version$i);
     ///////////////////////////////
     var UnicodeNormalizationForm;
     (function (UnicodeNormalizationForm) {
@@ -18329,7 +18396,7 @@
       Utf8ErrorReason["OVERLONG"] = "overlong representation";
     })(Utf8ErrorReason || (Utf8ErrorReason = {}));
     function errorFunc(reason, offset, bytes, output, badCodepoint) {
-      return logger$g.throwArgumentError(`invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes);
+      return logger$A.throwArgumentError(`invalid codepoint at offset ${offset}; ${reason}`, "bytes", bytes);
     }
     function ignoreFunc(reason, offset, bytes, output, badCodepoint) {
       // If there is an invalid prefix (including stray continuation), skip any additional continuation bytes
@@ -18451,7 +18518,7 @@
     // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
     function toUtf8Bytes(str, form = UnicodeNormalizationForm.current) {
       if (form != UnicodeNormalizationForm.current) {
-        logger$g.checkNormalize();
+        logger$A.checkNormalize();
         str = str.normalize(form);
       }
       let result = [];
@@ -18482,6 +18549,38 @@
       }
       return arrayify(result);
     }
+    function escapeChar(value) {
+      const hex = "0000" + value.toString(16);
+      return "\\u" + hex.substring(hex.length - 4);
+    }
+    function _toEscapedUtf8String(bytes, onError) {
+      return '"' + getUtf8CodePoints(bytes, onError).map(codePoint => {
+        if (codePoint < 256) {
+          switch (codePoint) {
+            case 8:
+              return "\\b";
+            case 9:
+              return "\\t";
+            case 10:
+              return "\\n";
+            case 13:
+              return "\\r";
+            case 34:
+              return "\\\"";
+            case 92:
+              return "\\\\";
+          }
+          if (codePoint >= 32 && codePoint < 127) {
+            return String.fromCharCode(codePoint);
+          }
+        }
+        if (codePoint <= 0xffff) {
+          return escapeChar(codePoint);
+        }
+        codePoint -= 0x10000;
+        return escapeChar((codePoint >> 10 & 0x3ff) + 0xd800) + escapeChar((codePoint & 0x3ff) + 0xdc00);
+      }).join("") + '"';
+    }
     function _toUtf8String(codePoints) {
       return codePoints.map(codePoint => {
         if (codePoint <= 0xffff) {
@@ -18496,6 +18595,375 @@
     }
     function toUtf8CodePoints(str, form = UnicodeNormalizationForm.current) {
       return getUtf8CodePoints(toUtf8Bytes(str, form));
+    }
+
+    function formatBytes32String(text) {
+      // Get the bytes
+      const bytes = toUtf8Bytes(text);
+      // Check we have room for null-termination
+      if (bytes.length > 31) {
+        throw new Error("bytes32 string must be less than 32 bytes");
+      }
+      // Zero-pad (implicitly null-terminates)
+      return hexlify(concat([bytes, HashZero]).slice(0, 32));
+    }
+    function parseBytes32String(bytes) {
+      const data = arrayify(bytes);
+      // Must be 32 bytes with a null-termination
+      if (data.length !== 32) {
+        throw new Error("invalid bytes32 - not 32 bytes long");
+      }
+      if (data[31] !== 0) {
+        throw new Error("invalid bytes32 string - no null terminator");
+      }
+      // Find the null termination
+      let length = 31;
+      while (data[length - 1] === 0) {
+        length--;
+      }
+      // Determine the string value
+      return toUtf8String(data.slice(0, length));
+    }
+
+    function bytes2(data) {
+      if (data.length % 4 !== 0) {
+        throw new Error("bad data");
+      }
+      let result = [];
+      for (let i = 0; i < data.length; i += 4) {
+        result.push(parseInt(data.substring(i, i + 4), 16));
+      }
+      return result;
+    }
+    function createTable(data, func) {
+      if (!func) {
+        func = function (value) {
+          return [parseInt(value, 16)];
+        };
+      }
+      let lo = 0;
+      let result = {};
+      data.split(",").forEach(pair => {
+        let comps = pair.split(":");
+        lo += parseInt(comps[0], 16);
+        result[lo] = func(comps[1]);
+      });
+      return result;
+    }
+    function createRangeTable(data) {
+      let hi = 0;
+      return data.split(",").map(v => {
+        let comps = v.split("-");
+        if (comps.length === 1) {
+          comps[1] = "0";
+        } else if (comps[1] === "") {
+          comps[1] = "1";
+        }
+        let lo = hi + parseInt(comps[0], 16);
+        hi = parseInt(comps[1], 16);
+        return {
+          l: lo,
+          h: hi
+        };
+      });
+    }
+    function matchMap(value, ranges) {
+      let lo = 0;
+      for (let i = 0; i < ranges.length; i++) {
+        let range = ranges[i];
+        lo += range.l;
+        if (value >= lo && value <= lo + range.h && (value - lo) % (range.d || 1) === 0) {
+          if (range.e && range.e.indexOf(value - lo) !== -1) {
+            continue;
+          }
+          return range;
+        }
+      }
+      return null;
+    }
+    const Table_A_1_ranges = createRangeTable("221,13-1b,5f-,40-10,51-f,11-3,3-3,2-2,2-4,8,2,15,2d,28-8,88,48,27-,3-5,11-20,27-,8,28,3-5,12,18,b-a,1c-4,6-16,2-d,2-2,2,1b-4,17-9,8f-,10,f,1f-2,1c-34,33-14e,4,36-,13-,6-2,1a-f,4,9-,3-,17,8,2-2,5-,2,8-,3-,4-8,2-3,3,6-,16-6,2-,7-3,3-,17,8,3,3,3-,2,6-3,3-,4-a,5,2-6,10-b,4,8,2,4,17,8,3,6-,b,4,4-,2-e,2-4,b-10,4,9-,3-,17,8,3-,5-,9-2,3-,4-7,3-3,3,4-3,c-10,3,7-2,4,5-2,3,2,3-2,3-2,4-2,9,4-3,6-2,4,5-8,2-e,d-d,4,9,4,18,b,6-3,8,4,5-6,3-8,3-3,b-11,3,9,4,18,b,6-3,8,4,5-6,3-6,2,3-3,b-11,3,9,4,18,11-3,7-,4,5-8,2-7,3-3,b-11,3,13-2,19,a,2-,8-2,2-3,7,2,9-11,4-b,3b-3,1e-24,3,2-,3,2-,2-5,5,8,4,2,2-,3,e,4-,6,2,7-,b-,3-21,49,23-5,1c-3,9,25,10-,2-2f,23,6,3,8-2,5-5,1b-45,27-9,2a-,2-3,5b-4,45-4,53-5,8,40,2,5-,8,2,5-,28,2,5-,20,2,5-,8,2,5-,8,8,18,20,2,5-,8,28,14-5,1d-22,56-b,277-8,1e-2,52-e,e,8-a,18-8,15-b,e,4,3-b,5e-2,b-15,10,b-5,59-7,2b-555,9d-3,5b-5,17-,7-,27-,7-,9,2,2,2,20-,36,10,f-,7,14-,4,a,54-3,2-6,6-5,9-,1c-10,13-1d,1c-14,3c-,10-6,32-b,240-30,28-18,c-14,a0,115-,3,66-,b-76,5,5-,1d,24,2,5-2,2,8-,35-2,19,f-10,1d-3,311-37f,1b,5a-b,d7-19,d-3,41,57-,68-4,29-3,5f,29-37,2e-2,25-c,2c-2,4e-3,30,78-3,64-,20,19b7-49,51a7-59,48e-2,38-738,2ba5-5b,222f-,3c-94,8-b,6-4,1b,6,2,3,3,6d-20,16e-f,41-,37-7,2e-2,11-f,5-b,18-,b,14,5-3,6,88-,2,bf-2,7-,7-,7-,4-2,8,8-9,8-2ff,20,5-b,1c-b4,27-,27-cbb1,f7-9,28-2,b5-221,56,48,3-,2-,3-,5,d,2,5,3,42,5-,9,8,1d,5,6,2-2,8,153-3,123-3,33-27fd,a6da-5128,21f-5df,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3-fffd,3,2-1d,61-ff7d");
+    // @TODO: Make this relative...
+    const Table_B_1_flags = "ad,34f,1806,180b,180c,180d,200b,200c,200d,2060,feff".split(",").map(v => parseInt(v, 16));
+    const Table_B_2_ranges = [{
+      h: 25,
+      s: 32,
+      l: 65
+    }, {
+      h: 30,
+      s: 32,
+      e: [23],
+      l: 127
+    }, {
+      h: 54,
+      s: 1,
+      e: [48],
+      l: 64,
+      d: 2
+    }, {
+      h: 14,
+      s: 1,
+      l: 57,
+      d: 2
+    }, {
+      h: 44,
+      s: 1,
+      l: 17,
+      d: 2
+    }, {
+      h: 10,
+      s: 1,
+      e: [2, 6, 8],
+      l: 61,
+      d: 2
+    }, {
+      h: 16,
+      s: 1,
+      l: 68,
+      d: 2
+    }, {
+      h: 84,
+      s: 1,
+      e: [18, 24, 66],
+      l: 19,
+      d: 2
+    }, {
+      h: 26,
+      s: 32,
+      e: [17],
+      l: 435
+    }, {
+      h: 22,
+      s: 1,
+      l: 71,
+      d: 2
+    }, {
+      h: 15,
+      s: 80,
+      l: 40
+    }, {
+      h: 31,
+      s: 32,
+      l: 16
+    }, {
+      h: 32,
+      s: 1,
+      l: 80,
+      d: 2
+    }, {
+      h: 52,
+      s: 1,
+      l: 42,
+      d: 2
+    }, {
+      h: 12,
+      s: 1,
+      l: 55,
+      d: 2
+    }, {
+      h: 40,
+      s: 1,
+      e: [38],
+      l: 15,
+      d: 2
+    }, {
+      h: 14,
+      s: 1,
+      l: 48,
+      d: 2
+    }, {
+      h: 37,
+      s: 48,
+      l: 49
+    }, {
+      h: 148,
+      s: 1,
+      l: 6351,
+      d: 2
+    }, {
+      h: 88,
+      s: 1,
+      l: 160,
+      d: 2
+    }, {
+      h: 15,
+      s: 16,
+      l: 704
+    }, {
+      h: 25,
+      s: 26,
+      l: 854
+    }, {
+      h: 25,
+      s: 32,
+      l: 55915
+    }, {
+      h: 37,
+      s: 40,
+      l: 1247
+    }, {
+      h: 25,
+      s: -119711,
+      l: 53248
+    }, {
+      h: 25,
+      s: -119763,
+      l: 52
+    }, {
+      h: 25,
+      s: -119815,
+      l: 52
+    }, {
+      h: 25,
+      s: -119867,
+      e: [1, 4, 5, 7, 8, 11, 12, 17],
+      l: 52
+    }, {
+      h: 25,
+      s: -119919,
+      l: 52
+    }, {
+      h: 24,
+      s: -119971,
+      e: [2, 7, 8, 17],
+      l: 52
+    }, {
+      h: 24,
+      s: -120023,
+      e: [2, 7, 13, 15, 16, 17],
+      l: 52
+    }, {
+      h: 25,
+      s: -120075,
+      l: 52
+    }, {
+      h: 25,
+      s: -120127,
+      l: 52
+    }, {
+      h: 25,
+      s: -120179,
+      l: 52
+    }, {
+      h: 25,
+      s: -120231,
+      l: 52
+    }, {
+      h: 25,
+      s: -120283,
+      l: 52
+    }, {
+      h: 25,
+      s: -120335,
+      l: 52
+    }, {
+      h: 24,
+      s: -119543,
+      e: [17],
+      l: 56
+    }, {
+      h: 24,
+      s: -119601,
+      e: [17],
+      l: 58
+    }, {
+      h: 24,
+      s: -119659,
+      e: [17],
+      l: 58
+    }, {
+      h: 24,
+      s: -119717,
+      e: [17],
+      l: 58
+    }, {
+      h: 24,
+      s: -119775,
+      e: [17],
+      l: 58
+    }];
+    const Table_B_2_lut_abs = createTable("b5:3bc,c3:ff,7:73,2:253,5:254,3:256,1:257,5:259,1:25b,3:260,1:263,2:269,1:268,5:26f,1:272,2:275,7:280,3:283,5:288,3:28a,1:28b,5:292,3f:195,1:1bf,29:19e,125:3b9,8b:3b2,1:3b8,1:3c5,3:3c6,1:3c0,1a:3ba,1:3c1,1:3c3,2:3b8,1:3b5,1bc9:3b9,1c:1f76,1:1f77,f:1f7a,1:1f7b,d:1f78,1:1f79,1:1f7c,1:1f7d,107:63,5:25b,4:68,1:68,1:68,3:69,1:69,1:6c,3:6e,4:70,1:71,1:72,1:72,1:72,7:7a,2:3c9,2:7a,2:6b,1:e5,1:62,1:63,3:65,1:66,2:6d,b:3b3,1:3c0,6:64,1b574:3b8,1a:3c3,20:3b8,1a:3c3,20:3b8,1a:3c3,20:3b8,1a:3c3,20:3b8,1a:3c3");
+    const Table_B_2_lut_rel = createTable("179:1,2:1,2:1,5:1,2:1,a:4f,a:1,8:1,2:1,2:1,3:1,5:1,3:1,4:1,2:1,3:1,4:1,8:2,1:1,2:2,1:1,2:2,27:2,195:26,2:25,1:25,1:25,2:40,2:3f,1:3f,33:1,11:-6,1:-9,1ac7:-3a,6d:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,9:-8,1:-8,1:-8,1:-8,1:-8,1:-8,b:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,9:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,9:-8,1:-8,1:-8,1:-8,1:-8,1:-8,c:-8,2:-8,2:-8,2:-8,9:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,1:-8,49:-8,1:-8,1:-4a,1:-4a,d:-56,1:-56,1:-56,1:-56,d:-8,1:-8,f:-8,1:-8,3:-7");
+    const Table_B_2_complex = createTable("df:00730073,51:00690307,19:02BC006E,a7:006A030C,18a:002003B9,16:03B903080301,20:03C503080301,1d7:05650582,190f:00680331,1:00740308,1:0077030A,1:0079030A,1:006102BE,b6:03C50313,2:03C503130300,2:03C503130301,2:03C503130342,2a:1F0003B9,1:1F0103B9,1:1F0203B9,1:1F0303B9,1:1F0403B9,1:1F0503B9,1:1F0603B9,1:1F0703B9,1:1F0003B9,1:1F0103B9,1:1F0203B9,1:1F0303B9,1:1F0403B9,1:1F0503B9,1:1F0603B9,1:1F0703B9,1:1F2003B9,1:1F2103B9,1:1F2203B9,1:1F2303B9,1:1F2403B9,1:1F2503B9,1:1F2603B9,1:1F2703B9,1:1F2003B9,1:1F2103B9,1:1F2203B9,1:1F2303B9,1:1F2403B9,1:1F2503B9,1:1F2603B9,1:1F2703B9,1:1F6003B9,1:1F6103B9,1:1F6203B9,1:1F6303B9,1:1F6403B9,1:1F6503B9,1:1F6603B9,1:1F6703B9,1:1F6003B9,1:1F6103B9,1:1F6203B9,1:1F6303B9,1:1F6403B9,1:1F6503B9,1:1F6603B9,1:1F6703B9,3:1F7003B9,1:03B103B9,1:03AC03B9,2:03B10342,1:03B1034203B9,5:03B103B9,6:1F7403B9,1:03B703B9,1:03AE03B9,2:03B70342,1:03B7034203B9,5:03B703B9,6:03B903080300,1:03B903080301,3:03B90342,1:03B903080342,b:03C503080300,1:03C503080301,1:03C10313,2:03C50342,1:03C503080342,b:1F7C03B9,1:03C903B9,1:03CE03B9,2:03C90342,1:03C9034203B9,5:03C903B9,ac:00720073,5b:00B00063,6:00B00066,d:006E006F,a:0073006D,1:00740065006C,1:0074006D,124f:006800700061,2:00610075,2:006F0076,b:00700061,1:006E0061,1:03BC0061,1:006D0061,1:006B0061,1:006B0062,1:006D0062,1:00670062,3:00700066,1:006E0066,1:03BC0066,4:0068007A,1:006B0068007A,1:006D0068007A,1:00670068007A,1:00740068007A,15:00700061,1:006B00700061,1:006D00700061,1:006700700061,8:00700076,1:006E0076,1:03BC0076,1:006D0076,1:006B0076,1:006D0076,1:00700077,1:006E0077,1:03BC0077,1:006D0077,1:006B0077,1:006D0077,1:006B03C9,1:006D03C9,2:00620071,3:00632215006B0067,1:0063006F002E,1:00640062,1:00670079,2:00680070,2:006B006B,1:006B006D,9:00700068,2:00700070006D,1:00700072,2:00730076,1:00770062,c723:00660066,1:00660069,1:0066006C,1:006600660069,1:00660066006C,1:00730074,1:00730074,d:05740576,1:05740565,1:0574056B,1:057E0576,1:0574056D", bytes2);
+    const Table_C_ranges = createRangeTable("80-20,2a0-,39c,32,f71,18e,7f2-f,19-7,30-4,7-5,f81-b,5,a800-20ff,4d1-1f,110,fa-6,d174-7,2e84-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,ffff-,2,1f-5f,ff7f-20001");
+    function flatten(values) {
+      return values.reduce((accum, value) => {
+        value.forEach(value => {
+          accum.push(value);
+        });
+        return accum;
+      }, []);
+    }
+    function _nameprepTableA1(codepoint) {
+      return !!matchMap(codepoint, Table_A_1_ranges);
+    }
+    function _nameprepTableB2(codepoint) {
+      let range = matchMap(codepoint, Table_B_2_ranges);
+      if (range) {
+        return [codepoint + range.s];
+      }
+      let codes = Table_B_2_lut_abs[codepoint];
+      if (codes) {
+        return codes;
+      }
+      let shift = Table_B_2_lut_rel[codepoint];
+      if (shift) {
+        return [codepoint + shift[0]];
+      }
+      let complex = Table_B_2_complex[codepoint];
+      if (complex) {
+        return complex;
+      }
+      return null;
+    }
+    function _nameprepTableC(codepoint) {
+      return !!matchMap(codepoint, Table_C_ranges);
+    }
+    function nameprep(value) {
+      // This allows platforms with incomplete normalize to bypass
+      // it for very basic names which the built-in toLowerCase
+      // will certainly handle correctly
+      if (value.match(/^[a-z0-9-]*$/i) && value.length <= 59) {
+        return value.toLowerCase();
+      }
+      // Get the code points (keeping the current normalization)
+      let codes = toUtf8CodePoints(value);
+      codes = flatten(codes.map(code => {
+        // Substitute Table B.1 (Maps to Nothing)
+        if (Table_B_1_flags.indexOf(code) >= 0) {
+          return [];
+        }
+        if (code >= 0xfe00 && code <= 0xfe0f) {
+          return [];
+        }
+        // Substitute Table B.2 (Case Folding)
+        let codesTableB2 = _nameprepTableB2(code);
+        if (codesTableB2) {
+          return codesTableB2;
+        }
+        // No Substitution
+        return [code];
+      }));
+      // Normalize using form KC
+      codes = toUtf8CodePoints(_toUtf8String(codes), UnicodeNormalizationForm.NFKC);
+      // Prohibit Tables C.1.2, C.2.2, C.3, C.4, C.5, C.6, C.7, C.8, C.9
+      codes.forEach(code => {
+        if (_nameprepTableC(code)) {
+          throw new Error("STRINGPREP_CONTAINS_PROHIBITED");
+        }
+      });
+      // Prohibit Unassigned Code Points (Table A.1)
+      codes.forEach(code => {
+        if (_nameprepTableA1(code)) {
+          throw new Error("STRINGPREP_CONTAINS_UNASSIGNED");
+        }
+      });
+      // IDNA extras
+      let name = _toUtf8String(codes);
+      // IDNA: 4.2.3.1
+      if (name.substring(0, 1) === "-" || name.substring(2, 4) === "--" || name.substring(name.length - 1) === "-") {
+        throw new Error("invalid hyphen");
+      }
+      return name;
     }
 
     class StringCoder extends DynamicBytesCoder {
@@ -18560,14 +19028,14 @@
         return Object.freeze(values);
       }
       encode(writer, value) {
-        return pack(writer, this.coders, value);
+        return pack$1(writer, this.coders, value);
       }
       decode(reader) {
         return reader.coerce(this.name, unpack(reader, this.coders));
       }
     }
 
-    const logger$f = new Logger(version$f);
+    const logger$z = new Logger(version$m);
     const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
     const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
     class AbiCoder {
@@ -18598,7 +19066,7 @@
         if (match) {
           let size = parseInt(match[2] || "256");
           if (size === 0 || size > 256 || size % 8 !== 0) {
-            logger$f.throwArgumentError("invalid " + match[1] + " bit length", "param", param);
+            logger$z.throwArgumentError("invalid " + match[1] + " bit length", "param", param);
           }
           return new NumberCoder(size / 8, match[1] === "int", param.name);
         }
@@ -18607,11 +19075,11 @@
         if (match) {
           let size = parseInt(match[1]);
           if (size === 0 || size > 32) {
-            logger$f.throwArgumentError("invalid bytes length", "param", param);
+            logger$z.throwArgumentError("invalid bytes length", "param", param);
           }
           return new FixedBytesCoder(size, param.name);
         }
-        return logger$f.throwArgumentError("invalid type", "type", param.type);
+        return logger$z.throwArgumentError("invalid type", "type", param.type);
       }
       _getWordSize() {
         return 32;
@@ -18629,7 +19097,7 @@
       }
       encode(types, values) {
         if (types.length !== values.length) {
-          logger$f.throwError("types/values length mismatch", Logger.errors.INVALID_ARGUMENT, {
+          logger$z.throwError("types/values length mismatch", Logger.errors.INVALID_ARGUMENT, {
             count: {
               types: types.length,
               values: values.length
@@ -18655,10 +19123,10 @@
     const defaultAbiCoder = new AbiCoder();
 
     function id(text) {
-      return keccak256(toUtf8Bytes(text));
+      return keccak256$1(toUtf8Bytes(text));
     }
 
-    const version$a = "hash/5.7.0";
+    const version$h = "hash/5.7.0";
 
     function decode$1(textData) {
       textData = atob(textData);
@@ -18676,6 +19144,12 @@
       }
       return btoa(textData);
     }
+
+    var index$1 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        decode: decode$1,
+        encode: encode$1
+    });
 
     /**
      * MIT License
@@ -19101,9 +19575,9 @@
       return emoji;
     }
 
-    const logger$e = new Logger(version$a);
-    const Zeros = new Uint8Array(32);
-    Zeros.fill(0);
+    const logger$y = new Logger(version$h);
+    const Zeros$1 = new Uint8Array(32);
+    Zeros$1.fill(0);
     function checkComponent(comp) {
       if (comp.length === 0) {
         throw new Error("invalid ENS name; empty component");
@@ -19132,15 +19606,21 @@
       comps.push(checkComponent(bytes.slice(last)));
       return comps;
     }
+    function isValidName(name) {
+      try {
+        return ensNameSplit(name).length !== 0;
+      } catch (error) {}
+      return false;
+    }
     function namehash(name) {
       /* istanbul ignore if */
       if (typeof name !== "string") {
-        logger$e.throwArgumentError("invalid ENS name; not a string", "name", name);
+        logger$y.throwArgumentError("invalid ENS name; not a string", "name", name);
       }
-      let result = Zeros;
+      let result = Zeros$1;
       const comps = ensNameSplit(name);
       while (comps.length) {
-        result = keccak256(concat([result, keccak256(comps.pop())]));
+        result = keccak256$1(concat([result, keccak256$1(comps.pop())]));
       }
       return hexlify(result);
     }
@@ -19157,7 +19637,15 @@
       }))) + "00";
     }
 
-    var __awaiter$7 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    const messagePrefix = "\x19Ethereum Signed Message:\n";
+    function hashMessage(message) {
+      if (typeof message === "string") {
+        message = toUtf8Bytes(message);
+      }
+      return keccak256$1(concat([toUtf8Bytes(messagePrefix), toUtf8Bytes(String(message.length)), message]));
+    }
+
+    var __awaiter$e = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -19184,7 +19672,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$d = new Logger(version$a);
+    const logger$x = new Logger(version$h);
     const padding = new Uint8Array(32);
     padding.fill(0);
     const NegativeOne = BigNumber$2.from(-1);
@@ -19212,7 +19700,7 @@
     function checkString(key) {
       return function (value) {
         if (typeof value !== "string") {
-          logger$d.throwArgumentError(`invalid domain value for ${JSON.stringify(key)}`, `domain.${key}`, value);
+          logger$x.throwArgumentError(`invalid domain value for ${JSON.stringify(key)}`, `domain.${key}`, value);
         }
         return value;
       };
@@ -19224,13 +19712,13 @@
         try {
           return BigNumber$2.from(value).toString();
         } catch (error) {}
-        return logger$d.throwArgumentError(`invalid domain value for "chainId"`, "domain.chainId", value);
+        return logger$x.throwArgumentError(`invalid domain value for "chainId"`, "domain.chainId", value);
       },
       verifyingContract: function (value) {
         try {
           return getAddress(value).toLowerCase();
         } catch (error) {}
-        return logger$d.throwArgumentError(`invalid domain value "verifyingContract"`, "domain.verifyingContract", value);
+        return logger$x.throwArgumentError(`invalid domain value "verifyingContract"`, "domain.verifyingContract", value);
       },
       salt: function (value) {
         try {
@@ -19240,7 +19728,7 @@
           }
           return hexlify(bytes);
         } catch (error) {}
-        return logger$d.throwArgumentError(`invalid domain value "salt"`, "domain.salt", value);
+        return logger$x.throwArgumentError(`invalid domain value "salt"`, "domain.salt", value);
       }
     };
     function getBaseEncoder(type) {
@@ -19251,14 +19739,14 @@
           const signed = match[1] === "";
           const width = parseInt(match[2] || "256");
           if (width % 8 !== 0 || width > 256 || match[2] && match[2] !== String(width)) {
-            logger$d.throwArgumentError("invalid numeric width", "type", type);
+            logger$x.throwArgumentError("invalid numeric width", "type", type);
           }
           const boundsUpper = MaxUint256.mask(signed ? width - 1 : width);
           const boundsLower = signed ? boundsUpper.add(One).mul(NegativeOne) : Zero;
           return function (value) {
             const v = BigNumber$2.from(value);
             if (v.lt(boundsLower) || v.gt(boundsUpper)) {
-              logger$d.throwArgumentError(`value out-of-bounds for ${type}`, "value", value);
+              logger$x.throwArgumentError(`value out-of-bounds for ${type}`, "value", value);
             }
             return hexZeroPad(v.toTwos(256).toHexString(), 32);
           };
@@ -19270,12 +19758,12 @@
         if (match) {
           const width = parseInt(match[1]);
           if (width === 0 || width > 32 || match[1] !== String(width)) {
-            logger$d.throwArgumentError("invalid bytes width", "type", type);
+            logger$x.throwArgumentError("invalid bytes width", "type", type);
           }
           return function (value) {
             const bytes = arrayify(value);
             if (bytes.length !== width) {
-              logger$d.throwArgumentError(`invalid length for ${type}`, "value", value);
+              logger$x.throwArgumentError(`invalid length for ${type}`, "value", value);
             }
             return hexPadRight(value);
           };
@@ -19292,7 +19780,7 @@
           };
         case "bytes":
           return function (value) {
-            return keccak256(value);
+            return keccak256$1(value);
           };
         case "string":
           return function (value) {
@@ -19328,13 +19816,13 @@
           types[name].forEach(field => {
             // Check each field has a unique name
             if (uniqueNames[field.name]) {
-              logger$d.throwArgumentError(`duplicate variable name ${JSON.stringify(field.name)} in ${JSON.stringify(name)}`, "types", types);
+              logger$x.throwArgumentError(`duplicate variable name ${JSON.stringify(field.name)} in ${JSON.stringify(name)}`, "types", types);
             }
             uniqueNames[field.name] = true;
             // Get the base type (drop any array specifiers)
             const baseType = field.type.match(/^([^\x5b]*)(\x5b|$)/)[1];
             if (baseType === name) {
-              logger$d.throwArgumentError(`circular type reference to ${JSON.stringify(baseType)}`, "types", types);
+              logger$x.throwArgumentError(`circular type reference to ${JSON.stringify(baseType)}`, "types", types);
             }
             // Is this a base encoding type?
             const encoder = getBaseEncoder(baseType);
@@ -19342,7 +19830,7 @@
               return;
             }
             if (!parents[baseType]) {
-              logger$d.throwArgumentError(`unknown type ${JSON.stringify(baseType)}`, "types", types);
+              logger$x.throwArgumentError(`unknown type ${JSON.stringify(baseType)}`, "types", types);
             }
             // Add linkage
             parents[baseType].push(name);
@@ -19352,15 +19840,15 @@
         // Deduce the primary type
         const primaryTypes = Object.keys(parents).filter(n => parents[n].length === 0);
         if (primaryTypes.length === 0) {
-          logger$d.throwArgumentError("missing primary type", "types", types);
+          logger$x.throwArgumentError("missing primary type", "types", types);
         } else if (primaryTypes.length > 1) {
-          logger$d.throwArgumentError(`ambiguous primary types or unused types: ${primaryTypes.map(t => JSON.stringify(t)).join(", ")}`, "types", types);
+          logger$x.throwArgumentError(`ambiguous primary types or unused types: ${primaryTypes.map(t => JSON.stringify(t)).join(", ")}`, "types", types);
         }
         defineReadOnly(this, "primaryType", primaryTypes[0]);
         // Check for circular type references
         function checkCircular(type, found) {
           if (found[type]) {
-            logger$d.throwArgumentError(`circular type reference to ${JSON.stringify(type)}`, "types", types);
+            logger$x.throwArgumentError(`circular type reference to ${JSON.stringify(type)}`, "types", types);
           }
           found[type] = true;
           Object.keys(links[type]).forEach(child => {
@@ -19407,13 +19895,13 @@
           const length = parseInt(match[3]);
           return value => {
             if (length >= 0 && value.length !== length) {
-              logger$d.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
+              logger$x.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
             }
             let result = value.map(subEncoder);
             if (this._types[subtype]) {
-              result = result.map(keccak256);
+              result = result.map(keccak256$1);
             }
-            return keccak256(hexConcat(result));
+            return keccak256$1(hexConcat(result));
           };
         }
         // Struct
@@ -19427,7 +19915,7 @@
             }) => {
               const result = this.getEncoder(type)(value[name]);
               if (this._types[type]) {
-                return keccak256(result);
+                return keccak256$1(result);
               }
               return result;
             });
@@ -19435,12 +19923,12 @@
             return hexConcat(values);
           };
         }
-        return logger$d.throwArgumentError(`unknown type: ${type}`, "type", type);
+        return logger$x.throwArgumentError(`unknown type: ${type}`, "type", type);
       }
       encodeType(name) {
         const result = this._types[name];
         if (!result) {
-          logger$d.throwArgumentError(`unknown type: ${JSON.stringify(name)}`, "name", name);
+          logger$x.throwArgumentError(`unknown type: ${JSON.stringify(name)}`, "name", name);
         }
         return result;
       }
@@ -19448,7 +19936,7 @@
         return this.getEncoder(type)(value);
       }
       hashStruct(name, value) {
-        return keccak256(this.encodeData(name, value));
+        return keccak256$1(this.encodeData(name, value));
       }
       encode(value) {
         return this.encodeData(this.primaryType, value);
@@ -19470,7 +19958,7 @@
           const subtype = match[1];
           const length = parseInt(match[3]);
           if (length >= 0 && value.length !== length) {
-            logger$d.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
+            logger$x.throwArgumentError("array length mismatch; expected length ${ arrayLength }", "value", value);
           }
           return value.map(v => this._visit(subtype, v, callback));
         }
@@ -19485,7 +19973,7 @@
             return accum;
           }, {});
         }
-        return logger$d.throwArgumentError(`unknown type: ${type}`, "type", type);
+        return logger$x.throwArgumentError(`unknown type: ${type}`, "type", type);
       }
       visit(value, callback) {
         return this._visit(this.primaryType, value, callback);
@@ -19504,7 +19992,7 @@
         for (const name in domain) {
           const type = domainFieldTypes[name];
           if (!type) {
-            logger$d.throwArgumentError(`invalid typed-data domain key: ${JSON.stringify(name)}`, "domain", domain);
+            logger$x.throwArgumentError(`invalid typed-data domain key: ${JSON.stringify(name)}`, "domain", domain);
           }
           domainFields.push({
             name,
@@ -19522,11 +20010,11 @@
         return hexConcat(["0x1901", TypedDataEncoder.hashDomain(domain), TypedDataEncoder.from(types).hash(value)]);
       }
       static hash(domain, types, value) {
-        return keccak256(TypedDataEncoder.encode(domain, types, value));
+        return keccak256$1(TypedDataEncoder.encode(domain, types, value));
       }
       // Replaces all address types with ENS names with their looked up address
       static resolveNames(domain, types, value, resolveName) {
-        return __awaiter$7(this, void 0, void 0, function* () {
+        return __awaiter$e(this, void 0, void 0, function* () {
           // Make a copy to isolate it from the object passed in
           domain = shallowCopy(domain);
           // Look up all ENS names
@@ -19585,7 +20073,7 @@
         const encoder = TypedDataEncoder.from(types);
         const typesWithDomain = shallowCopy(types);
         if (typesWithDomain.EIP712Domain) {
-          logger$d.throwArgumentError("types must not contain EIP712Domain type", "types.EIP712Domain", types);
+          logger$x.throwArgumentError("types must not contain EIP712Domain type", "types.EIP712Domain", types);
         } else {
           typesWithDomain.EIP712Domain = domainTypes;
         }
@@ -19611,17 +20099,17 @@
                 return !!value;
               case "string":
                 if (typeof value !== "string") {
-                  logger$d.throwArgumentError(`invalid string`, "value", value);
+                  logger$x.throwArgumentError(`invalid string`, "value", value);
                 }
                 return value;
             }
-            return logger$d.throwArgumentError("unsupported type", "type", type);
+            return logger$x.throwArgumentError("unsupported type", "type", type);
           })
         };
       }
     }
 
-    const logger$c = new Logger(version$f);
+    const logger$w = new Logger(version$m);
     class LogDescription extends Description {}
     class TransactionDescription extends Description {}
     class ErrorDescription extends Description {}
@@ -19683,7 +20171,7 @@
           switch (fragment.type) {
             case "constructor":
               if (this.deploy) {
-                logger$c.warn("duplicate definition - constructor");
+                logger$w.warn("duplicate definition - constructor");
                 return;
               }
               //checkNames(fragment, "input", fragment.inputs);
@@ -19706,7 +20194,7 @@
           }
           let signature = fragment.format();
           if (bucket[signature]) {
-            logger$c.warn("duplicate definition - " + signature);
+            logger$w.warn("duplicate definition - " + signature);
             return;
           }
           bucket[signature] = fragment;
@@ -19725,7 +20213,7 @@
           format = FormatTypes.full;
         }
         if (format === FormatTypes.sighash) {
-          logger$c.throwArgumentError("interface does not support formatting sighash", "format", format);
+          logger$w.throwArgumentError("interface does not support formatting sighash", "format", format);
         }
         const abi = this.fragments.map(fragment => fragment.format(format));
         // We need to re-bundle the JSON fragments a bit
@@ -19755,23 +20243,23 @@
               return this.functions[name];
             }
           }
-          logger$c.throwArgumentError("no matching function", "sighash", nameOrSignatureOrSighash);
+          logger$w.throwArgumentError("no matching function", "sighash", nameOrSignatureOrSighash);
         }
         // It is a bare name, look up the function (will return null if ambiguous)
         if (nameOrSignatureOrSighash.indexOf("(") === -1) {
           const name = nameOrSignatureOrSighash.trim();
           const matching = Object.keys(this.functions).filter(f => f.split("(" /* fix:) */)[0] === name);
           if (matching.length === 0) {
-            logger$c.throwArgumentError("no matching function", "name", name);
+            logger$w.throwArgumentError("no matching function", "name", name);
           } else if (matching.length > 1) {
-            logger$c.throwArgumentError("multiple matching functions", "name", name);
+            logger$w.throwArgumentError("multiple matching functions", "name", name);
           }
           return this.functions[matching[0]];
         }
         // Normalize the signature and lookup the function
         const result = this.functions[FunctionFragment.fromString(nameOrSignatureOrSighash).format()];
         if (!result) {
-          logger$c.throwArgumentError("no matching function", "signature", nameOrSignatureOrSighash);
+          logger$w.throwArgumentError("no matching function", "signature", nameOrSignatureOrSighash);
         }
         return result;
       }
@@ -19784,23 +20272,23 @@
               return this.events[name];
             }
           }
-          logger$c.throwArgumentError("no matching event", "topichash", topichash);
+          logger$w.throwArgumentError("no matching event", "topichash", topichash);
         }
         // It is a bare name, look up the function (will return null if ambiguous)
         if (nameOrSignatureOrTopic.indexOf("(") === -1) {
           const name = nameOrSignatureOrTopic.trim();
           const matching = Object.keys(this.events).filter(f => f.split("(" /* fix:) */)[0] === name);
           if (matching.length === 0) {
-            logger$c.throwArgumentError("no matching event", "name", name);
+            logger$w.throwArgumentError("no matching event", "name", name);
           } else if (matching.length > 1) {
-            logger$c.throwArgumentError("multiple matching events", "name", name);
+            logger$w.throwArgumentError("multiple matching events", "name", name);
           }
           return this.events[matching[0]];
         }
         // Normalize the signature and lookup the function
         const result = this.events[EventFragment.fromString(nameOrSignatureOrTopic).format()];
         if (!result) {
-          logger$c.throwArgumentError("no matching event", "signature", nameOrSignatureOrTopic);
+          logger$w.throwArgumentError("no matching event", "signature", nameOrSignatureOrTopic);
         }
         return result;
       }
@@ -19814,23 +20302,23 @@
               return this.errors[name];
             }
           }
-          logger$c.throwArgumentError("no matching error", "sighash", nameOrSignatureOrSighash);
+          logger$w.throwArgumentError("no matching error", "sighash", nameOrSignatureOrSighash);
         }
         // It is a bare name, look up the function (will return null if ambiguous)
         if (nameOrSignatureOrSighash.indexOf("(") === -1) {
           const name = nameOrSignatureOrSighash.trim();
           const matching = Object.keys(this.errors).filter(f => f.split("(" /* fix:) */)[0] === name);
           if (matching.length === 0) {
-            logger$c.throwArgumentError("no matching error", "name", name);
+            logger$w.throwArgumentError("no matching error", "name", name);
           } else if (matching.length > 1) {
-            logger$c.throwArgumentError("multiple matching errors", "name", name);
+            logger$w.throwArgumentError("multiple matching errors", "name", name);
           }
           return this.errors[matching[0]];
         }
         // Normalize the signature and lookup the function
         const result = this.errors[FunctionFragment.fromString(nameOrSignatureOrSighash).format()];
         if (!result) {
-          logger$c.throwArgumentError("no matching error", "signature", nameOrSignatureOrSighash);
+          logger$w.throwArgumentError("no matching error", "signature", nameOrSignatureOrSighash);
         }
         return result;
       }
@@ -19871,7 +20359,7 @@
         }
         const bytes = arrayify(data);
         if (hexlify(bytes.slice(0, 4)) !== this.getSighash(fragment)) {
-          logger$c.throwArgumentError(`data signature does not match error ${fragment.name}.`, "data", hexlify(bytes));
+          logger$w.throwArgumentError(`data signature does not match error ${fragment.name}.`, "data", hexlify(bytes));
         }
         return this._decodeParams(fragment.inputs, bytes.slice(4));
       }
@@ -19888,7 +20376,7 @@
         }
         const bytes = arrayify(data);
         if (hexlify(bytes.slice(0, 4)) !== this.getSighash(functionFragment)) {
-          logger$c.throwArgumentError(`data signature does not match function ${functionFragment.name}.`, "data", hexlify(bytes));
+          logger$w.throwArgumentError(`data signature does not match function ${functionFragment.name}.`, "data", hexlify(bytes));
         }
         return this._decodeParams(functionFragment.inputs, bytes.slice(4));
       }
@@ -19943,7 +20431,7 @@
               break;
             }
         }
-        return logger$c.throwError("call revert exception" + message, Logger.errors.CALL_EXCEPTION, {
+        return logger$w.throwError("call revert exception" + message, Logger.errors.CALL_EXCEPTION, {
           method: functionFragment.format(),
           data: hexlify(data),
           errorArgs,
@@ -19965,7 +20453,7 @@
           eventFragment = this.getEvent(eventFragment);
         }
         if (values.length > eventFragment.inputs.length) {
-          logger$c.throwError("too many arguments for " + eventFragment.format(), Logger.errors.UNEXPECTED_ARGUMENT, {
+          logger$w.throwError("too many arguments for " + eventFragment.format(), Logger.errors.UNEXPECTED_ARGUMENT, {
             argument: "values",
             value: values
           });
@@ -19978,7 +20466,7 @@
           if (param.type === "string") {
             return id(value);
           } else if (param.type === "bytes") {
-            return keccak256(hexlify(value));
+            return keccak256$1(hexlify(value));
           }
           if (param.type === "bool" && typeof value === "boolean") {
             value = value ? "0x01" : "0x00";
@@ -19996,14 +20484,14 @@
           let param = eventFragment.inputs[index];
           if (!param.indexed) {
             if (value != null) {
-              logger$c.throwArgumentError("cannot filter non-indexed parameters; must be null", "contract." + param.name, value);
+              logger$w.throwArgumentError("cannot filter non-indexed parameters; must be null", "contract." + param.name, value);
             }
             return;
           }
           if (value == null) {
             topics.push(null);
           } else if (param.baseType === "array" || param.baseType === "tuple") {
-            logger$c.throwArgumentError("filtering with tuples or arrays not supported", "contract." + param.name, value);
+            logger$w.throwArgumentError("filtering with tuples or arrays not supported", "contract." + param.name, value);
           } else if (Array.isArray(value)) {
             topics.push(value.map(value => encodeTopic(param, value)));
           } else {
@@ -20027,7 +20515,7 @@
           topics.push(this.getEventTopic(eventFragment));
         }
         if (values.length !== eventFragment.inputs.length) {
-          logger$c.throwArgumentError("event arguments/values mismatch", "values", values);
+          logger$w.throwArgumentError("event arguments/values mismatch", "values", values);
         }
         eventFragment.inputs.forEach((param, index) => {
           const value = values[index];
@@ -20035,7 +20523,7 @@
             if (param.type === "string") {
               topics.push(id(value));
             } else if (param.type === "bytes") {
-              topics.push(keccak256(value));
+              topics.push(keccak256$1(value));
             } else if (param.baseType === "tuple" || param.baseType === "array") {
               // @TODO
               throw new Error("not implemented");
@@ -20060,7 +20548,7 @@
         if (topics != null && !eventFragment.anonymous) {
           let topicHash = this.getEventTopic(eventFragment);
           if (!isHexString(topics[0], 32) || topics[0].toLowerCase() !== topicHash) {
-            logger$c.throwError("fragment/topic mismatch", Logger.errors.INVALID_ARGUMENT, {
+            logger$w.throwError("fragment/topic mismatch", Logger.errors.INVALID_ARGUMENT, {
               argument: "topics[0]",
               expected: topicHash,
               value: topics[0]
@@ -20215,9 +20703,9 @@
       }
     }
 
-    const version$9 = "abstract-provider/5.7.0";
+    const version$g = "abstract-provider/5.7.0";
 
-    var __awaiter$6 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$d = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -20244,7 +20732,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$b = new Logger(version$9);
+    const logger$v = new Logger(version$g);
     //export type CallTransactionable = {
     //    call(transaction: TransactionRequest): Promise<TransactionResponse>;
     //};
@@ -20257,11 +20745,11 @@
     // Exported Abstracts
     class Provider {
       constructor() {
-        logger$b.checkAbstract(new.target, Provider);
+        logger$v.checkAbstract(new.target, Provider);
         defineReadOnly(this, "_isProvider", true);
       }
       getFeeData() {
-        return __awaiter$6(this, void 0, void 0, function* () {
+        return __awaiter$d(this, void 0, void 0, function* () {
           const {
             block,
             gasPrice
@@ -20305,9 +20793,9 @@
       }
     }
 
-    const version$8 = "abstract-signer/5.7.0";
+    const version$f = "abstract-signer/5.7.0";
 
-    var __awaiter$5 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$c = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -20334,33 +20822,33 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$a = new Logger(version$8);
-    const allowedTransactionKeys$1 = ["accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"];
+    const logger$u = new Logger(version$f);
+    const allowedTransactionKeys$3 = ["accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"];
     const forwardErrors = [Logger.errors.INSUFFICIENT_FUNDS, Logger.errors.NONCE_EXPIRED, Logger.errors.REPLACEMENT_UNDERPRICED];
     class Signer {
       ///////////////////
       // Sub-classes MUST call super
       constructor() {
-        logger$a.checkAbstract(new.target, Signer);
+        logger$u.checkAbstract(new.target, Signer);
         defineReadOnly(this, "_isSigner", true);
       }
       ///////////////////
       // Sub-classes MAY override these
       getBalance(blockTag) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("getBalance");
           return yield this.provider.getBalance(this.getAddress(), blockTag);
         });
       }
       getTransactionCount(blockTag) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("getTransactionCount");
           return yield this.provider.getTransactionCount(this.getAddress(), blockTag);
         });
       }
       // Populates "from" if unspecified, and estimates the gas for the transaction
       estimateGas(transaction) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("estimateGas");
           const tx = yield resolveProperties(this.checkTransaction(transaction));
           return yield this.provider.estimateGas(tx);
@@ -20368,7 +20856,7 @@
       }
       // Populates "from" if unspecified, and calls with the transaction
       call(transaction, blockTag) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("call");
           const tx = yield resolveProperties(this.checkTransaction(transaction));
           return yield this.provider.call(tx, blockTag);
@@ -20376,7 +20864,7 @@
       }
       // Populates all fields in a transaction, signs it and sends it to the network
       sendTransaction(transaction) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("sendTransaction");
           const tx = yield this.populateTransaction(transaction);
           const signedTx = yield this.signTransaction(tx);
@@ -20384,26 +20872,26 @@
         });
       }
       getChainId() {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("getChainId");
           const network = yield this.provider.getNetwork();
           return network.chainId;
         });
       }
       getGasPrice() {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("getGasPrice");
           return yield this.provider.getGasPrice();
         });
       }
       getFeeData() {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("getFeeData");
           return yield this.provider.getFeeData();
         });
       }
       resolveName(name) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           this._checkProvider("resolveName");
           return yield this.provider.resolveName(name);
         });
@@ -20419,8 +20907,8 @@
       //   - populateTransaction (and therefor sendTransaction)
       checkTransaction(transaction) {
         for (const key in transaction) {
-          if (allowedTransactionKeys$1.indexOf(key) === -1) {
-            logger$a.throwArgumentError("invalid transaction key: " + key, "transaction", transaction);
+          if (allowedTransactionKeys$3.indexOf(key) === -1) {
+            logger$u.throwArgumentError("invalid transaction key: " + key, "transaction", transaction);
           }
         }
         const tx = shallowCopy(transaction);
@@ -20430,7 +20918,7 @@
           // Make sure any provided address matches this signer
           tx.from = Promise.all([Promise.resolve(tx.from), this.getAddress()]).then(result => {
             if (result[0].toLowerCase() !== result[1].toLowerCase()) {
-              logger$a.throwArgumentError("from address mismatch", "transaction", transaction);
+              logger$u.throwArgumentError("from address mismatch", "transaction", transaction);
             }
             return result[0];
           });
@@ -20445,16 +20933,16 @@
       // Notes:
       //  - We allow gasPrice for EIP-1559 as long as it matches maxFeePerGas
       populateTransaction(transaction) {
-        return __awaiter$5(this, void 0, void 0, function* () {
+        return __awaiter$c(this, void 0, void 0, function* () {
           const tx = yield resolveProperties(this.checkTransaction(transaction));
           if (tx.to != null) {
-            tx.to = Promise.resolve(tx.to).then(to => __awaiter$5(this, void 0, void 0, function* () {
+            tx.to = Promise.resolve(tx.to).then(to => __awaiter$c(this, void 0, void 0, function* () {
               if (to == null) {
                 return null;
               }
               const address = yield this.resolveName(to);
               if (address == null) {
-                logger$a.throwArgumentError("provided ENS name resolves to null", "tx.to", to);
+                logger$u.throwArgumentError("provided ENS name resolves to null", "tx.to", to);
               }
               return address;
             }));
@@ -20464,9 +20952,9 @@
           // Do not allow mixing pre-eip-1559 and eip-1559 properties
           const hasEip1559 = tx.maxFeePerGas != null || tx.maxPriorityFeePerGas != null;
           if (tx.gasPrice != null && (tx.type === 2 || hasEip1559)) {
-            logger$a.throwArgumentError("eip-1559 transaction do not support gasPrice", "transaction", transaction);
+            logger$u.throwArgumentError("eip-1559 transaction do not support gasPrice", "transaction", transaction);
           } else if ((tx.type === 0 || tx.type === 1) && hasEip1559) {
-            logger$a.throwArgumentError("pre-eip-1559 transaction do not support maxFeePerGas/maxPriorityFeePerGas", "transaction", transaction);
+            logger$u.throwArgumentError("pre-eip-1559 transaction do not support maxFeePerGas/maxPriorityFeePerGas", "transaction", transaction);
           }
           if ((tx.type === 2 || tx.type == null) && tx.maxFeePerGas != null && tx.maxPriorityFeePerGas != null) {
             // Fully-formed EIP-1559 transaction (skip getFeeData)
@@ -20506,7 +20994,7 @@
                 // Network doesn't support EIP-1559...
                 // ...but they are trying to use EIP-1559 properties
                 if (hasEip1559) {
-                  logger$a.throwError("network does not support EIP-1559", Logger.errors.UNSUPPORTED_OPERATION, {
+                  logger$u.throwError("network does not support EIP-1559", Logger.errors.UNSUPPORTED_OPERATION, {
                     operation: "populateTransaction"
                   });
                 }
@@ -20518,7 +21006,7 @@
                 tx.type = 0;
               } else {
                 // getFeeData has failed us.
-                logger$a.throwError("failed to get consistent fee data", Logger.errors.UNSUPPORTED_OPERATION, {
+                logger$u.throwError("failed to get consistent fee data", Logger.errors.UNSUPPORTED_OPERATION, {
                   operation: "signer.getFeeData"
                 });
               }
@@ -20541,7 +21029,7 @@
               if (forwardErrors.indexOf(error.code) >= 0) {
                 throw error;
               }
-              return logger$a.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
+              return logger$u.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
                 error: error,
                 tx: tx
               });
@@ -20552,7 +21040,7 @@
           } else {
             tx.chainId = Promise.all([Promise.resolve(tx.chainId), this.getChainId()]).then(results => {
               if (results[1] !== 0 && results[0] !== results[1]) {
-                logger$a.throwArgumentError("chainId address mismatch", "transaction", transaction);
+                logger$u.throwArgumentError("chainId address mismatch", "transaction", transaction);
               }
               return results[0];
             });
@@ -20564,7 +21052,7 @@
       // Sub-classes SHOULD leave these alone
       _checkProvider(operation) {
         if (!this.provider) {
-          logger$a.throwError("missing provider", Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$u.throwError("missing provider", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: operation || "_checkProvider"
           });
         }
@@ -20584,7 +21072,7 @@
       }
       _fail(message, operation) {
         return Promise.resolve().then(() => {
-          logger$a.throwError(message, Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$u.throwError(message, Logger.errors.UNSUPPORTED_OPERATION, {
             operation: operation
           });
         });
@@ -20605,7 +21093,7 @@
 
     var hash = {};
 
-    var utils$9 = {};
+    var utils$a = {};
 
     var minimalisticAssert$1 = assert$b;
     function assert$b(val, msg) {
@@ -20854,7 +21342,7 @@
           var name = value.name ? ': ' + value.name : '';
           return ctx.stylize('[Function' + name + ']', 'special');
         }
-        if (isRegExp(value)) {
+        if (isRegExp$1(value)) {
           return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
         }
         if (isDate(value)) {
@@ -20881,7 +21369,7 @@
       }
 
       // Make RegExps say that they are RegExps
-      if (isRegExp(value)) {
+      if (isRegExp$1(value)) {
         base = ' ' + RegExp.prototype.toString.call(value);
       }
 
@@ -20898,7 +21386,7 @@
         return braces[0] + base + braces[1];
       }
       if (recurseTimes < 0) {
-        if (isRegExp(value)) {
+        if (isRegExp$1(value)) {
           return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
         } else {
           return ctx.stylize('[Object]', 'special');
@@ -21039,7 +21527,7 @@
     function isUndefined(arg) {
       return arg === void 0;
     }
-    function isRegExp(re) {
+    function isRegExp$1(re) {
       return isObject(re) && objectToString(re) === '[object RegExp]';
     }
     function isObject(arg) {
@@ -21104,7 +21592,7 @@
       isError: isError,
       isDate: isDate,
       isObject: isObject,
-      isRegExp: isRegExp,
+      isRegExp: isRegExp$1,
       isUndefined: isUndefined,
       isSymbol: isSymbol,
       isString: isString,
@@ -21139,14 +21627,14 @@
         isNumber: isNumber,
         isObject: isObject,
         isPrimitive: isPrimitive,
-        isRegExp: isRegExp,
+        isRegExp: isRegExp$1,
         isString: isString,
         isSymbol: isSymbol,
         isUndefined: isUndefined,
         log: log
     });
 
-    var require$$0 = /*@__PURE__*/getAugmentedNamespace(util$1);
+    var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(util$1);
 
     var inherits_browserExports = {};
     var inherits_browser$1 = {
@@ -21190,7 +21678,7 @@
 
     (function (module) {
       try {
-        var util = require$$0;
+        var util = require$$0$1;
         /* istanbul ignore next */
         if (typeof util.inherits !== 'function') throw '';
         module.exports = util.inherits;
@@ -21202,7 +21690,7 @@
 
     var assert$a = minimalisticAssert$1;
     var inherits = inheritsExports;
-    utils$9.inherits = inherits;
+    utils$a.inherits = inherits;
     function isSurrogatePair(msg, i) {
       if ((msg.charCodeAt(i) & 0xFC00) !== 0xD800) {
         return false;
@@ -21252,18 +21740,18 @@
       }
       return res;
     }
-    utils$9.toArray = toArray;
+    utils$a.toArray = toArray;
     function toHex(msg) {
       var res = '';
       for (var i = 0; i < msg.length; i++) res += zero2(msg[i].toString(16));
       return res;
     }
-    utils$9.toHex = toHex;
+    utils$a.toHex = toHex;
     function htonl(w) {
       var res = w >>> 24 | w >>> 8 & 0xff00 | w << 8 & 0xff0000 | (w & 0xff) << 24;
       return res >>> 0;
     }
-    utils$9.htonl = htonl;
+    utils$a.htonl = htonl;
     function toHex32(msg, endian) {
       var res = '';
       for (var i = 0; i < msg.length; i++) {
@@ -21273,15 +21761,15 @@
       }
       return res;
     }
-    utils$9.toHex32 = toHex32;
+    utils$a.toHex32 = toHex32;
     function zero2(word) {
       if (word.length === 1) return '0' + word;else return word;
     }
-    utils$9.zero2 = zero2;
+    utils$a.zero2 = zero2;
     function zero8(word) {
       if (word.length === 7) return '0' + word;else if (word.length === 6) return '00' + word;else if (word.length === 5) return '000' + word;else if (word.length === 4) return '0000' + word;else if (word.length === 3) return '00000' + word;else if (word.length === 2) return '000000' + word;else if (word.length === 1) return '0000000' + word;else return word;
     }
-    utils$9.zero8 = zero8;
+    utils$a.zero8 = zero8;
     function join32(msg, start, end, endian) {
       var len = end - start;
       assert$a(len % 4 === 0);
@@ -21293,7 +21781,7 @@
       }
       return res;
     }
-    utils$9.join32 = join32;
+    utils$a.join32 = join32;
     function split32(msg, endian) {
       var res = new Array(msg.length * 4);
       for (var i = 0, k = 0; i < msg.length; i++, k += 4) {
@@ -21312,31 +21800,31 @@
       }
       return res;
     }
-    utils$9.split32 = split32;
+    utils$a.split32 = split32;
     function rotr32$1(w, b) {
       return w >>> b | w << 32 - b;
     }
-    utils$9.rotr32 = rotr32$1;
+    utils$a.rotr32 = rotr32$1;
     function rotl32$2(w, b) {
       return w << b | w >>> 32 - b;
     }
-    utils$9.rotl32 = rotl32$2;
+    utils$a.rotl32 = rotl32$2;
     function sum32$3(a, b) {
       return a + b >>> 0;
     }
-    utils$9.sum32 = sum32$3;
+    utils$a.sum32 = sum32$3;
     function sum32_3$1(a, b, c) {
       return a + b + c >>> 0;
     }
-    utils$9.sum32_3 = sum32_3$1;
+    utils$a.sum32_3 = sum32_3$1;
     function sum32_4$2(a, b, c, d) {
       return a + b + c + d >>> 0;
     }
-    utils$9.sum32_4 = sum32_4$2;
+    utils$a.sum32_4 = sum32_4$2;
     function sum32_5$2(a, b, c, d, e) {
       return a + b + c + d + e >>> 0;
     }
-    utils$9.sum32_5 = sum32_5$2;
+    utils$a.sum32_5 = sum32_5$2;
     function sum64$1(buf, pos, ah, al) {
       var bh = buf[pos];
       var bl = buf[pos + 1];
@@ -21345,18 +21833,18 @@
       buf[pos] = hi >>> 0;
       buf[pos + 1] = lo;
     }
-    utils$9.sum64 = sum64$1;
+    utils$a.sum64 = sum64$1;
     function sum64_hi$1(ah, al, bh, bl) {
       var lo = al + bl >>> 0;
       var hi = (lo < al ? 1 : 0) + ah + bh;
       return hi >>> 0;
     }
-    utils$9.sum64_hi = sum64_hi$1;
+    utils$a.sum64_hi = sum64_hi$1;
     function sum64_lo$1(ah, al, bh, bl) {
       var lo = al + bl;
       return lo >>> 0;
     }
-    utils$9.sum64_lo = sum64_lo$1;
+    utils$a.sum64_lo = sum64_lo$1;
     function sum64_4_hi$1(ah, al, bh, bl, ch, cl, dh, dl) {
       var carry = 0;
       var lo = al;
@@ -21369,12 +21857,12 @@
       var hi = ah + bh + ch + dh + carry;
       return hi >>> 0;
     }
-    utils$9.sum64_4_hi = sum64_4_hi$1;
+    utils$a.sum64_4_hi = sum64_4_hi$1;
     function sum64_4_lo$1(ah, al, bh, bl, ch, cl, dh, dl) {
       var lo = al + bl + cl + dl;
       return lo >>> 0;
     }
-    utils$9.sum64_4_lo = sum64_4_lo$1;
+    utils$a.sum64_4_lo = sum64_4_lo$1;
     function sum64_5_hi$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
       var carry = 0;
       var lo = al;
@@ -21389,35 +21877,35 @@
       var hi = ah + bh + ch + dh + eh + carry;
       return hi >>> 0;
     }
-    utils$9.sum64_5_hi = sum64_5_hi$1;
+    utils$a.sum64_5_hi = sum64_5_hi$1;
     function sum64_5_lo$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
       var lo = al + bl + cl + dl + el;
       return lo >>> 0;
     }
-    utils$9.sum64_5_lo = sum64_5_lo$1;
+    utils$a.sum64_5_lo = sum64_5_lo$1;
     function rotr64_hi$1(ah, al, num) {
       var r = al << 32 - num | ah >>> num;
       return r >>> 0;
     }
-    utils$9.rotr64_hi = rotr64_hi$1;
+    utils$a.rotr64_hi = rotr64_hi$1;
     function rotr64_lo$1(ah, al, num) {
       var r = ah << 32 - num | al >>> num;
       return r >>> 0;
     }
-    utils$9.rotr64_lo = rotr64_lo$1;
+    utils$a.rotr64_lo = rotr64_lo$1;
     function shr64_hi$1(ah, al, num) {
       return ah >>> num;
     }
-    utils$9.shr64_hi = shr64_hi$1;
+    utils$a.shr64_hi = shr64_hi$1;
     function shr64_lo$1(ah, al, num) {
       var r = ah << 32 - num | al >>> num;
       return r >>> 0;
     }
-    utils$9.shr64_lo = shr64_lo$1;
+    utils$a.shr64_lo = shr64_lo$1;
 
     var common$5 = {};
 
-    var utils$8 = utils$9;
+    var utils$9 = utils$a;
     var assert$9 = minimalisticAssert$1;
     function BlockHash$4() {
       this.pending = null;
@@ -21433,7 +21921,7 @@
     common$5.BlockHash = BlockHash$4;
     BlockHash$4.prototype.update = function update(msg, enc) {
       // Convert message to array, pad it, and join into 32bit blocks
-      msg = utils$8.toArray(msg, enc);
+      msg = utils$9.toArray(msg, enc);
       if (!this.pending) this.pending = msg;else this.pending = this.pending.concat(msg);
       this.pendingTotal += msg.length;
 
@@ -21445,7 +21933,7 @@
         var r = msg.length % this._delta8;
         this.pending = msg.slice(msg.length - r, msg.length);
         if (this.pending.length === 0) this.pending = null;
-        msg = utils$8.join32(msg, 0, msg.length - r, this.endian);
+        msg = utils$9.join32(msg, 0, msg.length - r, this.endian);
         for (var i = 0; i < msg.length; i += this._delta32) this._update(msg, i, i + this._delta32);
       }
       return this;
@@ -21493,8 +21981,8 @@
 
     var common$4 = {};
 
-    var utils$7 = utils$9;
-    var rotr32 = utils$7.rotr32;
+    var utils$8 = utils$a;
+    var rotr32 = utils$8.rotr32;
     function ft_1$1(s, x, y, z) {
       if (s === 0) return ch32$1(x, y, z);
       if (s === 1 || s === 3) return p32(x, y, z);
@@ -21530,12 +22018,12 @@
     }
     common$4.g1_256 = g1_256$1;
 
-    var utils$6 = utils$9;
+    var utils$7 = utils$a;
     var common$3 = common$5;
     var shaCommon$1 = common$4;
-    var rotl32$1 = utils$6.rotl32;
-    var sum32$2 = utils$6.sum32;
-    var sum32_5$1 = utils$6.sum32_5;
+    var rotl32$1 = utils$7.rotl32;
+    var sum32$2 = utils$7.sum32;
+    var sum32_5$1 = utils$7.sum32_5;
     var ft_1 = shaCommon$1.ft_1;
     var BlockHash$3 = common$3.BlockHash;
     var sha1_K = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6];
@@ -21545,7 +22033,7 @@
       this.h = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
       this.W = new Array(80);
     }
-    utils$6.inherits(SHA1, BlockHash$3);
+    utils$7.inherits(SHA1, BlockHash$3);
     var _1 = SHA1;
     SHA1.blockSize = 512;
     SHA1.outSize = 160;
@@ -21576,16 +22064,16 @@
       this.h[4] = sum32$2(this.h[4], e);
     };
     SHA1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$6.toHex32(this.h, 'big');else return utils$6.split32(this.h, 'big');
+      if (enc === 'hex') return utils$7.toHex32(this.h, 'big');else return utils$7.split32(this.h, 'big');
     };
 
-    var utils$5 = utils$9;
+    var utils$6 = utils$a;
     var common$2 = common$5;
     var shaCommon = common$4;
     var assert$8 = minimalisticAssert$1;
-    var sum32$1 = utils$5.sum32;
-    var sum32_4$1 = utils$5.sum32_4;
-    var sum32_5 = utils$5.sum32_5;
+    var sum32$1 = utils$6.sum32;
+    var sum32_4$1 = utils$6.sum32_4;
+    var sum32_5 = utils$6.sum32_5;
     var ch32 = shaCommon.ch32;
     var maj32 = shaCommon.maj32;
     var s0_256 = shaCommon.s0_256;
@@ -21601,7 +22089,7 @@
       this.k = sha256_K;
       this.W = new Array(64);
     }
-    utils$5.inherits(SHA256$1, BlockHash$2);
+    utils$6.inherits(SHA256$1, BlockHash$2);
     var _256 = SHA256$1;
     SHA256$1.blockSize = 512;
     SHA256$1.outSize = 256;
@@ -21642,17 +22130,17 @@
       this.h[7] = sum32$1(this.h[7], h);
     };
     SHA256$1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$5.toHex32(this.h, 'big');else return utils$5.split32(this.h, 'big');
+      if (enc === 'hex') return utils$6.toHex32(this.h, 'big');else return utils$6.split32(this.h, 'big');
     };
 
-    var utils$4 = utils$9;
+    var utils$5 = utils$a;
     var SHA256 = _256;
     function SHA224() {
       if (!(this instanceof SHA224)) return new SHA224();
       SHA256.call(this);
       this.h = [0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4];
     }
-    utils$4.inherits(SHA224, SHA256);
+    utils$5.inherits(SHA224, SHA256);
     var _224 = SHA224;
     SHA224.blockSize = 512;
     SHA224.outSize = 224;
@@ -21660,23 +22148,23 @@
     SHA224.padLength = 64;
     SHA224.prototype._digest = function digest(enc) {
       // Just truncate output
-      if (enc === 'hex') return utils$4.toHex32(this.h.slice(0, 7), 'big');else return utils$4.split32(this.h.slice(0, 7), 'big');
+      if (enc === 'hex') return utils$5.toHex32(this.h.slice(0, 7), 'big');else return utils$5.split32(this.h.slice(0, 7), 'big');
     };
 
-    var utils$3 = utils$9;
+    var utils$4 = utils$a;
     var common$1 = common$5;
     var assert$7 = minimalisticAssert$1;
-    var rotr64_hi = utils$3.rotr64_hi;
-    var rotr64_lo = utils$3.rotr64_lo;
-    var shr64_hi = utils$3.shr64_hi;
-    var shr64_lo = utils$3.shr64_lo;
-    var sum64 = utils$3.sum64;
-    var sum64_hi = utils$3.sum64_hi;
-    var sum64_lo = utils$3.sum64_lo;
-    var sum64_4_hi = utils$3.sum64_4_hi;
-    var sum64_4_lo = utils$3.sum64_4_lo;
-    var sum64_5_hi = utils$3.sum64_5_hi;
-    var sum64_5_lo = utils$3.sum64_5_lo;
+    var rotr64_hi = utils$4.rotr64_hi;
+    var rotr64_lo = utils$4.rotr64_lo;
+    var shr64_hi = utils$4.shr64_hi;
+    var shr64_lo = utils$4.shr64_lo;
+    var sum64 = utils$4.sum64;
+    var sum64_hi = utils$4.sum64_hi;
+    var sum64_lo = utils$4.sum64_lo;
+    var sum64_4_hi = utils$4.sum64_4_hi;
+    var sum64_4_lo = utils$4.sum64_4_lo;
+    var sum64_5_hi = utils$4.sum64_5_hi;
+    var sum64_5_lo = utils$4.sum64_5_lo;
     var BlockHash$1 = common$1.BlockHash;
     var sha512_K = [0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd, 0xb5c0fbcf, 0xec4d3b2f, 0xe9b5dba5, 0x8189dbbc, 0x3956c25b, 0xf348b538, 0x59f111f1, 0xb605d019, 0x923f82a4, 0xaf194f9b, 0xab1c5ed5, 0xda6d8118, 0xd807aa98, 0xa3030242, 0x12835b01, 0x45706fbe, 0x243185be, 0x4ee4b28c, 0x550c7dc3, 0xd5ffb4e2, 0x72be5d74, 0xf27b896f, 0x80deb1fe, 0x3b1696b1, 0x9bdc06a7, 0x25c71235, 0xc19bf174, 0xcf692694, 0xe49b69c1, 0x9ef14ad2, 0xefbe4786, 0x384f25e3, 0x0fc19dc6, 0x8b8cd5b5, 0x240ca1cc, 0x77ac9c65, 0x2de92c6f, 0x592b0275, 0x4a7484aa, 0x6ea6e483, 0x5cb0a9dc, 0xbd41fbd4, 0x76f988da, 0x831153b5, 0x983e5152, 0xee66dfab, 0xa831c66d, 0x2db43210, 0xb00327c8, 0x98fb213f, 0xbf597fc7, 0xbeef0ee4, 0xc6e00bf3, 0x3da88fc2, 0xd5a79147, 0x930aa725, 0x06ca6351, 0xe003826f, 0x14292967, 0x0a0e6e70, 0x27b70a85, 0x46d22ffc, 0x2e1b2138, 0x5c26c926, 0x4d2c6dfc, 0x5ac42aed, 0x53380d13, 0x9d95b3df, 0x650a7354, 0x8baf63de, 0x766a0abb, 0x3c77b2a8, 0x81c2c92e, 0x47edaee6, 0x92722c85, 0x1482353b, 0xa2bfe8a1, 0x4cf10364, 0xa81a664b, 0xbc423001, 0xc24b8b70, 0xd0f89791, 0xc76c51a3, 0x0654be30, 0xd192e819, 0xd6ef5218, 0xd6990624, 0x5565a910, 0xf40e3585, 0x5771202a, 0x106aa070, 0x32bbd1b8, 0x19a4c116, 0xb8d2d0c8, 0x1e376c08, 0x5141ab53, 0x2748774c, 0xdf8eeb99, 0x34b0bcb5, 0xe19b48a8, 0x391c0cb3, 0xc5c95a63, 0x4ed8aa4a, 0xe3418acb, 0x5b9cca4f, 0x7763e373, 0x682e6ff3, 0xd6b2b8a3, 0x748f82ee, 0x5defb2fc, 0x78a5636f, 0x43172f60, 0x84c87814, 0xa1f0ab72, 0x8cc70208, 0x1a6439ec, 0x90befffa, 0x23631e28, 0xa4506ceb, 0xde82bde9, 0xbef9a3f7, 0xb2c67915, 0xc67178f2, 0xe372532b, 0xca273ece, 0xea26619c, 0xd186b8c7, 0x21c0c207, 0xeada7dd6, 0xcde0eb1e, 0xf57d4f7f, 0xee6ed178, 0x06f067aa, 0x72176fba, 0x0a637dc5, 0xa2c898a6, 0x113f9804, 0xbef90dae, 0x1b710b35, 0x131c471b, 0x28db77f5, 0x23047d84, 0x32caab7b, 0x40c72493, 0x3c9ebe0a, 0x15c9bebc, 0x431d67c4, 0x9c100d4c, 0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a, 0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817];
     function SHA512$1() {
@@ -21686,7 +22174,7 @@
       this.k = sha512_K;
       this.W = new Array(160);
     }
-    utils$3.inherits(SHA512$1, BlockHash$1);
+    utils$4.inherits(SHA512$1, BlockHash$1);
     var _512 = SHA512$1;
     SHA512$1.blockSize = 1024;
     SHA512$1.outSize = 512;
@@ -21776,7 +22264,7 @@
       sum64(this.h, 14, hh, hl);
     };
     SHA512$1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$3.toHex32(this.h, 'big');else return utils$3.split32(this.h, 'big');
+      if (enc === 'hex') return utils$4.toHex32(this.h, 'big');else return utils$4.split32(this.h, 'big');
     };
     function ch64_hi(xh, xl, yh, yl, zh) {
       var r = xh & yh ^ ~xh & zh;
@@ -21867,21 +22355,21 @@
       return r;
     }
 
-    var utils$2 = utils$9;
+    var utils$3 = utils$a;
     var SHA512 = _512;
     function SHA384() {
       if (!(this instanceof SHA384)) return new SHA384();
       SHA512.call(this);
       this.h = [0xcbbb9d5d, 0xc1059ed8, 0x629a292a, 0x367cd507, 0x9159015a, 0x3070dd17, 0x152fecd8, 0xf70e5939, 0x67332667, 0xffc00b31, 0x8eb44a87, 0x68581511, 0xdb0c2e0d, 0x64f98fa7, 0x47b5481d, 0xbefa4fa4];
     }
-    utils$2.inherits(SHA384, SHA512);
+    utils$3.inherits(SHA384, SHA512);
     var _384 = SHA384;
     SHA384.blockSize = 1024;
     SHA384.outSize = 384;
     SHA384.hmacStrength = 192;
     SHA384.padLength = 128;
     SHA384.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$2.toHex32(this.h.slice(0, 12), 'big');else return utils$2.split32(this.h.slice(0, 12), 'big');
+      if (enc === 'hex') return utils$3.toHex32(this.h.slice(0, 12), 'big');else return utils$3.split32(this.h.slice(0, 12), 'big');
     };
 
     sha.sha1 = _1;
@@ -21892,12 +22380,12 @@
 
     var ripemd = {};
 
-    var utils$1 = utils$9;
+    var utils$2 = utils$a;
     var common = common$5;
-    var rotl32 = utils$1.rotl32;
-    var sum32 = utils$1.sum32;
-    var sum32_3 = utils$1.sum32_3;
-    var sum32_4 = utils$1.sum32_4;
+    var rotl32 = utils$2.rotl32;
+    var sum32 = utils$2.sum32;
+    var sum32_3 = utils$2.sum32_3;
+    var sum32_4 = utils$2.sum32_4;
     var BlockHash = common.BlockHash;
     function RIPEMD160() {
       if (!(this instanceof RIPEMD160)) return new RIPEMD160();
@@ -21905,7 +22393,7 @@
       this.h = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
       this.endian = 'little';
     }
-    utils$1.inherits(RIPEMD160, BlockHash);
+    utils$2.inherits(RIPEMD160, BlockHash);
     ripemd.ripemd160 = RIPEMD160;
     RIPEMD160.blockSize = 512;
     RIPEMD160.outSize = 160;
@@ -21944,7 +22432,7 @@
       this.h[0] = T;
     };
     RIPEMD160.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$1.toHex32(this.h, 'little');else return utils$1.split32(this.h, 'little');
+      if (enc === 'hex') return utils$2.toHex32(this.h, 'little');else return utils$2.split32(this.h, 'little');
     };
     function f$1(j, x, y, z) {
       if (j <= 15) return x ^ y ^ z;else if (j <= 31) return x & y | ~x & z;else if (j <= 47) return (x | ~y) ^ z;else if (j <= 63) return x & z | y & ~z;else return x ^ (y | ~z);
@@ -21960,7 +22448,7 @@
     var s$1 = [11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8, 7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12, 11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5, 11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12, 9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6];
     var sh = [8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6, 9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11, 9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5, 15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8, 8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11];
 
-    var utils = utils$9;
+    var utils$1 = utils$a;
     var assert$6 = minimalisticAssert$1;
     function Hmac(hash, key, enc) {
       if (!(this instanceof Hmac)) return new Hmac(hash, key, enc);
@@ -21969,7 +22457,7 @@
       this.outSize = hash.outSize / 8;
       this.inner = null;
       this.outer = null;
-      this._init(utils.toArray(key, enc));
+      this._init(utils$1.toArray(key, enc));
     }
     var hmac = Hmac;
     Hmac.prototype._init = function init(key) {
@@ -21997,7 +22485,7 @@
 
     (function (exports) {
       var hash = exports;
-      hash.utils = utils$9;
+      hash.utils = utils$a;
       hash.common = common$5;
       hash.sha = sha;
       hash.ripemd = ripemd;
@@ -23901,9 +24389,9 @@
     });
     var EC$1 = elliptic_1.ec;
 
-    const version$7 = "signing-key/5.7.0";
+    const version$e = "signing-key/5.7.0";
 
-    const logger$9 = new Logger(version$7);
+    const logger$t = new Logger(version$e);
     let _curve = null;
     function getCurve() {
       if (!_curve) {
@@ -23916,7 +24404,7 @@
         defineReadOnly(this, "curve", "secp256k1");
         defineReadOnly(this, "privateKey", hexlify(privateKey));
         if (hexDataLength(this.privateKey) !== 32) {
-          logger$9.throwArgumentError("invalid private key", "privateKey", "[[ REDACTED ]]");
+          logger$t.throwArgumentError("invalid private key", "privateKey", "[[ REDACTED ]]");
         }
         const keyPair = getCurve().keyFromPrivate(arrayify(this.privateKey));
         defineReadOnly(this, "publicKey", "0x" + keyPair.getPublic(false, "hex"));
@@ -23932,7 +24420,7 @@
         const keyPair = getCurve().keyFromPrivate(arrayify(this.privateKey));
         const digestBytes = arrayify(digest);
         if (digestBytes.length !== 32) {
-          logger$9.throwArgumentError("bad digest length", "digest", digest);
+          logger$t.throwArgumentError("bad digest length", "digest", digest);
         }
         const signature = keyPair.sign(digestBytes, {
           canonical: true
@@ -23979,12 +24467,12 @@
         }
         return "0x" + getCurve().keyFromPublic(bytes).getPublic(true, "hex");
       }
-      return logger$9.throwArgumentError("invalid public or private key", "key", "[REDACTED]");
+      return logger$t.throwArgumentError("invalid public or private key", "key", "[REDACTED]");
     }
 
-    const version$6 = "transactions/5.7.0";
+    const version$d = "transactions/5.7.0";
 
-    const logger$8 = new Logger(version$6);
+    const logger$s = new Logger(version$d);
     var TransactionTypes;
     (function (TransactionTypes) {
       TransactionTypes[TransactionTypes["legacy"] = 0] = "legacy";
@@ -24004,9 +24492,42 @@
       }
       return BigNumber$2.from(value);
     }
+    // Legacy Transaction Fields
+    const transactionFields = [{
+      name: "nonce",
+      maxLength: 32,
+      numeric: true
+    }, {
+      name: "gasPrice",
+      maxLength: 32,
+      numeric: true
+    }, {
+      name: "gasLimit",
+      maxLength: 32,
+      numeric: true
+    }, {
+      name: "to",
+      length: 20
+    }, {
+      name: "value",
+      maxLength: 32,
+      numeric: true
+    }, {
+      name: "data"
+    }];
+    const allowedTransactionKeys$2 = {
+      chainId: true,
+      data: true,
+      gasLimit: true,
+      gasPrice: true,
+      nonce: true,
+      to: true,
+      type: true,
+      value: true
+    };
     function computeAddress(key) {
       const publicKey = computePublicKey(key);
-      return getAddress(hexDataSlice(keccak256(hexDataSlice(publicKey, 1)), 12));
+      return getAddress(hexDataSlice(keccak256$1(hexDataSlice(publicKey, 1)), 12));
     }
     function recoverAddress(digest, signature) {
       return computeAddress(recoverPublicKey(arrayify(digest), signature));
@@ -24014,7 +24535,7 @@
     function formatNumber(value, name) {
       const result = stripZeros(BigNumber$2.from(value).toHexString());
       if (result.length > 32) {
-        logger$8.throwArgumentError("invalid length for " + name, "transaction:" + name, value);
+        logger$s.throwArgumentError("invalid length for " + name, "transaction:" + name, value);
       }
       return result;
     }
@@ -24023,7 +24544,7 @@
         address: getAddress(addr),
         storageKeys: (storageKeys || []).map((storageKey, index) => {
           if (hexDataLength(storageKey) !== 32) {
-            logger$8.throwArgumentError("invalid access list storageKey", `accessList[${addr}:${index}]`, storageKey);
+            logger$s.throwArgumentError("invalid access list storageKey", `accessList[${addr}:${index}]`, storageKey);
           }
           return storageKey.toLowerCase();
         })
@@ -24034,7 +24555,7 @@
         return value.map((set, index) => {
           if (Array.isArray(set)) {
             if (set.length > 2) {
-              logger$8.throwArgumentError("access list expected to be [ address, storageKeys[] ]", `value[${index}]`, set);
+              logger$s.throwArgumentError("access list expected to be [ address, storageKeys[] ]", `value[${index}]`, set);
             }
             return accessSetify(set[0], set[1]);
           }
@@ -24062,7 +24583,7 @@
         const gasPrice = BigNumber$2.from(transaction.gasPrice);
         const maxFeePerGas = BigNumber$2.from(transaction.maxFeePerGas || 0);
         if (!gasPrice.eq(maxFeePerGas)) {
-          logger$8.throwArgumentError("mismatch EIP-1559 gasPrice != maxFeePerGas", "tx", {
+          logger$s.throwArgumentError("mismatch EIP-1559 gasPrice != maxFeePerGas", "tx", {
             gasPrice,
             maxFeePerGas
           });
@@ -24087,6 +24608,93 @@
       }
       return hexConcat(["0x01", encode$2(fields)]);
     }
+    // Legacy Transactions and EIP-155
+    function _serialize(transaction, signature) {
+      checkProperties(transaction, allowedTransactionKeys$2);
+      const raw = [];
+      transactionFields.forEach(function (fieldInfo) {
+        let value = transaction[fieldInfo.name] || [];
+        const options = {};
+        if (fieldInfo.numeric) {
+          options.hexPad = "left";
+        }
+        value = arrayify(hexlify(value, options));
+        // Fixed-width field
+        if (fieldInfo.length && value.length !== fieldInfo.length && value.length > 0) {
+          logger$s.throwArgumentError("invalid length for " + fieldInfo.name, "transaction:" + fieldInfo.name, value);
+        }
+        // Variable-width (with a maximum)
+        if (fieldInfo.maxLength) {
+          value = stripZeros(value);
+          if (value.length > fieldInfo.maxLength) {
+            logger$s.throwArgumentError("invalid length for " + fieldInfo.name, "transaction:" + fieldInfo.name, value);
+          }
+        }
+        raw.push(hexlify(value));
+      });
+      let chainId = 0;
+      if (transaction.chainId != null) {
+        // A chainId was provided; if non-zero we'll use EIP-155
+        chainId = transaction.chainId;
+        if (typeof chainId !== "number") {
+          logger$s.throwArgumentError("invalid transaction.chainId", "transaction", transaction);
+        }
+      } else if (signature && !isBytesLike(signature) && signature.v > 28) {
+        // No chainId provided, but the signature is signing with EIP-155; derive chainId
+        chainId = Math.floor((signature.v - 35) / 2);
+      }
+      // We have an EIP-155 transaction (chainId was specified and non-zero)
+      if (chainId !== 0) {
+        raw.push(hexlify(chainId)); // @TODO: hexValue?
+        raw.push("0x");
+        raw.push("0x");
+      }
+      // Requesting an unsigned transaction
+      if (!signature) {
+        return encode$2(raw);
+      }
+      // The splitSignature will ensure the transaction has a recoveryParam in the
+      // case that the signTransaction function only adds a v.
+      const sig = splitSignature(signature);
+      // We pushed a chainId and null r, s on for hashing only; remove those
+      let v = 27 + sig.recoveryParam;
+      if (chainId !== 0) {
+        raw.pop();
+        raw.pop();
+        raw.pop();
+        v += chainId * 2 + 8;
+        // If an EIP-155 v (directly or indirectly; maybe _vs) was provided, check it!
+        if (sig.v > 28 && sig.v !== v) {
+          logger$s.throwArgumentError("transaction.chainId/signature.v mismatch", "signature", signature);
+        }
+      } else if (sig.v !== v) {
+        logger$s.throwArgumentError("transaction.chainId/signature.v mismatch", "signature", signature);
+      }
+      raw.push(hexlify(v));
+      raw.push(stripZeros(arrayify(sig.r)));
+      raw.push(stripZeros(arrayify(sig.s)));
+      return encode$2(raw);
+    }
+    function serialize$1(transaction, signature) {
+      // Legacy and EIP-155 Transactions
+      if (transaction.type == null || transaction.type === 0) {
+        if (transaction.accessList != null) {
+          logger$s.throwArgumentError("untyped transactions do not support accessList; include type: 1", "transaction", transaction);
+        }
+        return _serialize(transaction, signature);
+      }
+      // Typed Transactions (EIP-2718)
+      switch (transaction.type) {
+        case 1:
+          return _serializeEip2930(transaction, signature);
+        case 2:
+          return _serializeEip1559(transaction, signature);
+      }
+      return logger$s.throwError(`unsupported transaction type: ${transaction.type}`, Logger.errors.UNSUPPORTED_OPERATION, {
+        operation: "serializeTransaction",
+        transactionType: transaction.type
+      });
+    }
     function _parseEipSignature(tx, fields, serialize) {
       try {
         const recid = handleNumber(fields[0]).toNumber();
@@ -24095,12 +24703,12 @@
         }
         tx.v = recid;
       } catch (error) {
-        logger$8.throwArgumentError("invalid v for transaction type: 1", "v", fields[0]);
+        logger$s.throwArgumentError("invalid v for transaction type: 1", "v", fields[0]);
       }
       tx.r = hexZeroPad(fields[1], 32);
       tx.s = hexZeroPad(fields[2], 32);
       try {
-        const digest = keccak256(serialize(tx));
+        const digest = keccak256$1(serialize(tx));
         tx.from = recoverAddress(digest, {
           r: tx.r,
           s: tx.s,
@@ -24111,7 +24719,7 @@
     function _parseEip1559(payload) {
       const transaction = decode$2(payload.slice(1));
       if (transaction.length !== 9 && transaction.length !== 12) {
-        logger$8.throwArgumentError("invalid component count for transaction type: 2", "payload", hexlify(payload));
+        logger$s.throwArgumentError("invalid component count for transaction type: 2", "payload", hexlify(payload));
       }
       const maxPriorityFeePerGas = handleNumber(transaction[2]);
       const maxFeePerGas = handleNumber(transaction[3]);
@@ -24132,14 +24740,14 @@
       if (transaction.length === 9) {
         return tx;
       }
-      tx.hash = keccak256(payload);
+      tx.hash = keccak256$1(payload);
       _parseEipSignature(tx, transaction.slice(9), _serializeEip1559);
       return tx;
     }
     function _parseEip2930(payload) {
       const transaction = decode$2(payload.slice(1));
       if (transaction.length !== 8 && transaction.length !== 11) {
-        logger$8.throwArgumentError("invalid component count for transaction type: 1", "payload", hexlify(payload));
+        logger$s.throwArgumentError("invalid component count for transaction type: 1", "payload", hexlify(payload));
       }
       const tx = {
         type: 1,
@@ -24156,7 +24764,7 @@
       if (transaction.length === 8) {
         return tx;
       }
-      tx.hash = keccak256(payload);
+      tx.hash = keccak256$1(payload);
       _parseEipSignature(tx, transaction.slice(8), _serializeEip2930);
       return tx;
     }
@@ -24164,7 +24772,7 @@
     function _parse(rawTransaction) {
       const transaction = decode$2(rawTransaction);
       if (transaction.length !== 9 && transaction.length !== 6) {
-        logger$8.throwArgumentError("invalid raw transaction", "rawTransaction", rawTransaction);
+        logger$s.throwArgumentError("invalid raw transaction", "rawTransaction", rawTransaction);
       }
       const tx = {
         nonce: handleNumber(transaction[0]).toNumber(),
@@ -24205,7 +24813,7 @@
           raw.push("0x");
           recoveryParam -= tx.chainId * 2 + 8;
         }
-        const digest = keccak256(encode$2(raw));
+        const digest = keccak256$1(encode$2(raw));
         try {
           tx.from = recoverAddress(digest, {
             r: hexlify(tx.r),
@@ -24213,7 +24821,7 @@
             recoveryParam: recoveryParam
           });
         } catch (error) {}
-        tx.hash = keccak256(rawTransaction);
+        tx.hash = keccak256$1(rawTransaction);
       }
       tx.type = null;
       return tx;
@@ -24231,15 +24839,15 @@
         case 2:
           return _parseEip1559(payload);
       }
-      return logger$8.throwError(`unsupported transaction type: ${payload[0]}`, Logger.errors.UNSUPPORTED_OPERATION, {
+      return logger$s.throwError(`unsupported transaction type: ${payload[0]}`, Logger.errors.UNSUPPORTED_OPERATION, {
         operation: "parseTransaction",
         transactionType: payload[0]
       });
     }
 
-    const version$5 = "contracts/5.7.0";
+    const version$c = "contracts/5.7.0";
 
-    var __awaiter$4 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$b = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -24266,32 +24874,49 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$7 = new Logger(version$5);
+    const logger$r = new Logger(version$c);
+    ///////////////////////////////
+    const allowedTransactionKeys$1 = {
+      chainId: true,
+      data: true,
+      from: true,
+      gasLimit: true,
+      gasPrice: true,
+      nonce: true,
+      to: true,
+      value: true,
+      type: true,
+      accessList: true,
+      maxFeePerGas: true,
+      maxPriorityFeePerGas: true,
+      customData: true,
+      ccipReadEnabled: true
+    };
     function resolveName(resolver, nameOrPromise) {
-      return __awaiter$4(this, void 0, void 0, function* () {
+      return __awaiter$b(this, void 0, void 0, function* () {
         const name = yield nameOrPromise;
         if (typeof name !== "string") {
-          logger$7.throwArgumentError("invalid address or ENS name", "name", name);
+          logger$r.throwArgumentError("invalid address or ENS name", "name", name);
         }
         // If it is already an address, just use it (after adding checksum)
         try {
           return getAddress(name);
         } catch (error) {}
         if (!resolver) {
-          logger$7.throwError("a provider or signer is needed to resolve ENS names", Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$r.throwError("a provider or signer is needed to resolve ENS names", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "resolveName"
           });
         }
         const address = yield resolver.resolveName(name);
         if (address == null) {
-          logger$7.throwArgumentError("resolver or addr is not configured for ENS name", "name", name);
+          logger$r.throwArgumentError("resolver or addr is not configured for ENS name", "name", name);
         }
         return address;
       });
     }
     // Recursively replaces ENS names with promises to resolve the name and resolves all properties
     function resolveAddresses(resolver, value, paramType) {
-      return __awaiter$4(this, void 0, void 0, function* () {
+      return __awaiter$b(this, void 0, void 0, function* () {
         if (Array.isArray(paramType)) {
           return yield Promise.all(paramType.map((paramType, index) => {
             return resolveAddresses(resolver, Array.isArray(value) ? value[index] : value[paramType.name], paramType);
@@ -24305,7 +24930,7 @@
         }
         if (paramType.baseType === "array") {
           if (!Array.isArray(value)) {
-            return Promise.reject(logger$7.makeError("invalid value for array", Logger.errors.INVALID_ARGUMENT, {
+            return Promise.reject(logger$r.makeError("invalid value for array", Logger.errors.INVALID_ARGUMENT, {
               argument: "value",
               value
             }));
@@ -24316,14 +24941,14 @@
       });
     }
     function populateTransaction(contract, fragment, args) {
-      return __awaiter$4(this, void 0, void 0, function* () {
+      return __awaiter$b(this, void 0, void 0, function* () {
         // If an extra argument is given, it is overrides
         let overrides = {};
         if (args.length === fragment.inputs.length + 1 && typeof args[args.length - 1] === "object") {
           overrides = shallowCopy(args.pop());
         }
         // Make sure the parameter count matches
-        logger$7.checkArgumentCount(args.length, fragment.inputs.length, "passed to contract");
+        logger$r.checkArgumentCount(args.length, fragment.inputs.length, "passed to contract");
         // Populate "from" override (allow promises)
         if (contract.signer) {
           if (overrides.from) {
@@ -24332,9 +24957,9 @@
             overrides.from = resolveProperties({
               override: resolveName(contract.signer, overrides.from),
               signer: contract.signer.getAddress()
-            }).then(check => __awaiter$4(this, void 0, void 0, function* () {
+            }).then(check => __awaiter$b(this, void 0, void 0, function* () {
               if (getAddress(check.signer) !== check.override) {
-                logger$7.throwError("Contract with a Signer cannot override from", Logger.errors.UNSUPPORTED_OPERATION, {
+                logger$r.throwError("Contract with a Signer cannot override from", Logger.errors.UNSUPPORTED_OPERATION, {
                   operation: "overrides.from"
                 });
               }
@@ -24410,7 +25035,7 @@
         if (ro.value) {
           const roValue = BigNumber$2.from(ro.value);
           if (!roValue.isZero() && !fragment.payable) {
-            logger$7.throwError("non-payable method cannot override value", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$r.throwError("non-payable method cannot override value", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "overrides.value",
               value: overrides.value
             });
@@ -24439,7 +25064,7 @@
         // typo or using an unsupported key.
         const leftovers = Object.keys(overrides).filter(key => overrides[key] != null);
         if (leftovers.length) {
-          logger$7.throwError(`cannot override ${leftovers.map(l => JSON.stringify(l)).join(",")}`, Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$r.throwError(`cannot override ${leftovers.map(l => JSON.stringify(l)).join(",")}`, Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "overrides",
             overrides: leftovers
           });
@@ -24455,9 +25080,9 @@
     function buildEstimate(contract, fragment) {
       const signerOrProvider = contract.signer || contract.provider;
       return function (...args) {
-        return __awaiter$4(this, void 0, void 0, function* () {
+        return __awaiter$b(this, void 0, void 0, function* () {
           if (!signerOrProvider) {
-            logger$7.throwError("estimate require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$r.throwError("estimate require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "estimateGas"
             });
           }
@@ -24507,7 +25132,7 @@
     function buildCall(contract, fragment, collapseSimple) {
       const signerOrProvider = contract.signer || contract.provider;
       return function (...args) {
-        return __awaiter$4(this, void 0, void 0, function* () {
+        return __awaiter$b(this, void 0, void 0, function* () {
           // Extract the "blockTag" override if present
           let blockTag = undefined;
           if (args.length === fragment.inputs.length + 1 && typeof args[args.length - 1] === "object") {
@@ -24544,9 +25169,9 @@
     }
     function buildSend(contract, fragment) {
       return function (...args) {
-        return __awaiter$4(this, void 0, void 0, function* () {
+        return __awaiter$b(this, void 0, void 0, function* () {
           if (!contract.signer) {
-            logger$7.throwError("sending a transaction requires a signer", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$r.throwError("sending a transaction requires a signer", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "sendTransaction"
             });
           }
@@ -24647,7 +25272,7 @@
         let topic = contractInterface.getEventTopic(fragment);
         if (topics) {
           if (topic !== topics[0]) {
-            logger$7.throwArgumentError("topic mismatch", "topics", topics);
+            logger$r.throwArgumentError("topic mismatch", "topics", topics);
           }
           filter.topics = topics.slice();
         } else {
@@ -24725,7 +25350,7 @@
           defineReadOnly(this, "provider", signerOrProvider);
           defineReadOnly(this, "signer", null);
         } else {
-          logger$7.throwArgumentError("invalid signer or provider", "signerOrProvider", signerOrProvider);
+          logger$r.throwArgumentError("invalid signer or provider", "signerOrProvider", signerOrProvider);
         }
         defineReadOnly(this, "callStatic", {});
         defineReadOnly(this, "estimateGas", {});
@@ -24752,14 +25377,14 @@
             if (filters.length === 1) {
               defineReadOnly(this.filters, name, this.filters[filters[0]]);
             } else {
-              logger$7.warn(`Duplicate definition of ${name} (${filters.join(", ")})`);
+              logger$r.warn(`Duplicate definition of ${name} (${filters.join(", ")})`);
             }
           });
         }
         defineReadOnly(this, "_runningEvents", {});
         defineReadOnly(this, "_wrappedEmits", {});
         if (addressOrName == null) {
-          logger$7.throwArgumentError("invalid contract address or ENS name", "addressOrName", addressOrName);
+          logger$r.throwArgumentError("invalid contract address or ENS name", "addressOrName", addressOrName);
         }
         defineReadOnly(this, "address", addressOrName);
         if (this.provider) {
@@ -24769,7 +25394,7 @@
             defineReadOnly(this, "resolvedAddress", Promise.resolve(getAddress(addressOrName)));
           } catch (error) {
             // Without a provider, we cannot use ENS names
-            logger$7.throwError("provider is required to use ENS name as contract address", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$r.throwError("provider is required to use ENS name as contract address", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "new Contract"
             });
           }
@@ -24783,7 +25408,7 @@
           // Check that the signature is unique; if not the ABI generation has
           // not been cleaned or may be incorrectly generated
           if (uniqueSignatures[signature]) {
-            logger$7.warn(`Duplicate ABI entry for ${JSON.stringify(signature)}`);
+            logger$r.warn(`Duplicate ABI entry for ${JSON.stringify(signature)}`);
             return;
           }
           uniqueSignatures[signature] = true;
@@ -24870,7 +25495,7 @@
             // Otherwise, poll for our code to be deployed
             this._deployedPromise = this.provider.getCode(this.address, blockTag).then(code => {
               if (code === "0x") {
-                logger$7.throwError("contract not deployed", Logger.errors.UNSUPPORTED_OPERATION, {
+                logger$r.throwError("contract not deployed", Logger.errors.UNSUPPORTED_OPERATION, {
                   contractAddress: this.address,
                   operation: "getDeployed"
                 });
@@ -24887,7 +25512,7 @@
       // estimateDeploy(bytecode: string, ...args): Promise<BigNumber>
       fallback(overrides) {
         if (!this.signer) {
-          logger$7.throwError("sending a transactions require a signer", Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$r.throwError("sending a transactions require a signer", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "sendTransaction(fallback)"
           });
         }
@@ -24896,7 +25521,7 @@
           if (tx[key] == null) {
             return;
           }
-          logger$7.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$r.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, {
             operation: key
           });
         });
@@ -25007,7 +25632,7 @@
       }
       _addEventListener(runningEvent, listener, once) {
         if (!this.provider) {
-          logger$7.throwError("events require a provider or a signer with a provider", Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$r.throwError("events require a provider or a signer with a provider", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "once"
           });
         }
@@ -25048,7 +25673,7 @@
         const filter = shallowCopy(runningEvent.filter);
         if (typeof fromBlockOrBlockhash === "string" && isHexString(fromBlockOrBlockhash, 32)) {
           if (toBlock != null) {
-            logger$7.throwArgumentError("cannot specify toBlock with blockhash", "toBlock", toBlock);
+            logger$r.throwArgumentError("cannot specify toBlock with blockhash", "toBlock", toBlock);
           }
           filter.blockHash = fromBlockOrBlockhash;
         } else {
@@ -25135,6 +25760,130 @@
       }
     }
     class Contract extends BaseContract {}
+    class ContractFactory {
+      constructor(contractInterface, bytecode, signer) {
+        let bytecodeHex = null;
+        if (typeof bytecode === "string") {
+          bytecodeHex = bytecode;
+        } else if (isBytes(bytecode)) {
+          bytecodeHex = hexlify(bytecode);
+        } else if (bytecode && typeof bytecode.object === "string") {
+          // Allow the bytecode object from the Solidity compiler
+          bytecodeHex = bytecode.object;
+        } else {
+          // Crash in the next verification step
+          bytecodeHex = "!";
+        }
+        // Make sure it is 0x prefixed
+        if (bytecodeHex.substring(0, 2) !== "0x") {
+          bytecodeHex = "0x" + bytecodeHex;
+        }
+        // Make sure the final result is valid bytecode
+        if (!isHexString(bytecodeHex) || bytecodeHex.length % 2) {
+          logger$r.throwArgumentError("invalid bytecode", "bytecode", bytecode);
+        }
+        // If we have a signer, make sure it is valid
+        if (signer && !Signer.isSigner(signer)) {
+          logger$r.throwArgumentError("invalid signer", "signer", signer);
+        }
+        defineReadOnly(this, "bytecode", bytecodeHex);
+        defineReadOnly(this, "interface", getStatic(new.target, "getInterface")(contractInterface));
+        defineReadOnly(this, "signer", signer || null);
+      }
+      // @TODO: Future; rename to populateTransaction?
+      getDeployTransaction(...args) {
+        let tx = {};
+        // If we have 1 additional argument, we allow transaction overrides
+        if (args.length === this.interface.deploy.inputs.length + 1 && typeof args[args.length - 1] === "object") {
+          tx = shallowCopy(args.pop());
+          for (const key in tx) {
+            if (!allowedTransactionKeys$1[key]) {
+              throw new Error("unknown transaction override " + key);
+            }
+          }
+        }
+        // Do not allow these to be overridden in a deployment transaction
+        ["data", "from", "to"].forEach(key => {
+          if (tx[key] == null) {
+            return;
+          }
+          logger$r.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, {
+            operation: key
+          });
+        });
+        if (tx.value) {
+          const value = BigNumber$2.from(tx.value);
+          if (!value.isZero() && !this.interface.deploy.payable) {
+            logger$r.throwError("non-payable constructor cannot override value", Logger.errors.UNSUPPORTED_OPERATION, {
+              operation: "overrides.value",
+              value: tx.value
+            });
+          }
+        }
+        // Make sure the call matches the constructor signature
+        logger$r.checkArgumentCount(args.length, this.interface.deploy.inputs.length, " in Contract constructor");
+        // Set the data to the bytecode + the encoded constructor arguments
+        tx.data = hexlify(concat([this.bytecode, this.interface.encodeDeploy(args)]));
+        return tx;
+      }
+      deploy(...args) {
+        return __awaiter$b(this, void 0, void 0, function* () {
+          let overrides = {};
+          // If 1 extra parameter was passed in, it contains overrides
+          if (args.length === this.interface.deploy.inputs.length + 1) {
+            overrides = args.pop();
+          }
+          // Make sure the call matches the constructor signature
+          logger$r.checkArgumentCount(args.length, this.interface.deploy.inputs.length, " in Contract constructor");
+          // Resolve ENS names and promises in the arguments
+          const params = yield resolveAddresses(this.signer, args, this.interface.deploy.inputs);
+          params.push(overrides);
+          // Get the deployment transaction (with optional overrides)
+          const unsignedTx = this.getDeployTransaction(...params);
+          // Send the deployment transaction
+          const tx = yield this.signer.sendTransaction(unsignedTx);
+          const address = getStatic(this.constructor, "getContractAddress")(tx);
+          const contract = getStatic(this.constructor, "getContract")(address, this.interface, this.signer);
+          // Add the modified wait that wraps events
+          addContractWait(contract, tx);
+          defineReadOnly(contract, "deployTransaction", tx);
+          return contract;
+        });
+      }
+      attach(address) {
+        return this.constructor.getContract(address, this.interface, this.signer);
+      }
+      connect(signer) {
+        return new this.constructor(this.interface, this.bytecode, signer);
+      }
+      static fromSolidity(compilerOutput, signer) {
+        if (compilerOutput == null) {
+          logger$r.throwError("missing compiler output", Logger.errors.MISSING_ARGUMENT, {
+            argument: "compilerOutput"
+          });
+        }
+        if (typeof compilerOutput === "string") {
+          compilerOutput = JSON.parse(compilerOutput);
+        }
+        const abi = compilerOutput.abi;
+        let bytecode = null;
+        if (compilerOutput.bytecode) {
+          bytecode = compilerOutput.bytecode;
+        } else if (compilerOutput.evm && compilerOutput.evm.bytecode) {
+          bytecode = compilerOutput.evm.bytecode;
+        }
+        return new this(abi, bytecode, signer);
+      }
+      static getInterface(contractInterface) {
+        return Contract.getInterface(contractInterface);
+      }
+      static getContractAddress(tx) {
+        return getContractAddress(tx);
+      }
+      static getContract(address, contractInterface, signer) {
+        return new Contract(address, contractInterface, signer);
+      }
+    }
 
     /**
      * var basex = require("base-x");
@@ -25252,16 +26001,2276 @@
     //console.log(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj"))
     //console.log(Base58.encode(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj")))
 
-    const version$4 = "sha2/5.7.0";
+    var SupportedAlgorithm;
+    (function (SupportedAlgorithm) {
+      SupportedAlgorithm["sha256"] = "sha256";
+      SupportedAlgorithm["sha512"] = "sha512";
+    })(SupportedAlgorithm || (SupportedAlgorithm = {}));
 
-    new Logger(version$4);
-    function sha256(data) {
+    const version$b = "sha2/5.7.0";
+
+    const logger$q = new Logger(version$b);
+    function ripemd160(data) {
+      return "0x" + hash.ripemd160().update(arrayify(data)).digest("hex");
+    }
+    function sha256$1(data) {
       return "0x" + hash.sha256().update(arrayify(data)).digest("hex");
     }
+    function sha512(data) {
+      return "0x" + hash.sha512().update(arrayify(data)).digest("hex");
+    }
+    function computeHmac(algorithm, key, data) {
+      if (!SupportedAlgorithm[algorithm]) {
+        logger$q.throwError("unsupported algorithm " + algorithm, Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "hmac",
+          algorithm: algorithm
+        });
+      }
+      return "0x" + hash.hmac(hash[algorithm], arrayify(key)).update(arrayify(data)).digest("hex");
+    }
 
-    const version$3 = "networks/5.7.1";
+    function pbkdf2$1(password, salt, iterations, keylen, hashAlgorithm) {
+      password = arrayify(password);
+      salt = arrayify(salt);
+      let hLen;
+      let l = 1;
+      const DK = new Uint8Array(keylen);
+      const block1 = new Uint8Array(salt.length + 4);
+      block1.set(salt);
+      //salt.copy(block1, 0, 0, salt.length)
+      let r;
+      let T;
+      for (let i = 1; i <= l; i++) {
+        //block1.writeUInt32BE(i, salt.length)
+        block1[salt.length] = i >> 24 & 0xff;
+        block1[salt.length + 1] = i >> 16 & 0xff;
+        block1[salt.length + 2] = i >> 8 & 0xff;
+        block1[salt.length + 3] = i & 0xff;
+        //let U = createHmac(password).update(block1).digest();
+        let U = arrayify(computeHmac(hashAlgorithm, password, block1));
+        if (!hLen) {
+          hLen = U.length;
+          T = new Uint8Array(hLen);
+          l = Math.ceil(keylen / hLen);
+          r = keylen - (l - 1) * hLen;
+        }
+        //U.copy(T, 0, 0, hLen)
+        T.set(U);
+        for (let j = 1; j < iterations; j++) {
+          //U = createHmac(password).update(U).digest();
+          U = arrayify(computeHmac(hashAlgorithm, password, U));
+          for (let k = 0; k < hLen; k++) T[k] ^= U[k];
+        }
+        const destPos = (i - 1) * hLen;
+        const len = i === l ? r : hLen;
+        //T.copy(DK, destPos, 0, len)
+        DK.set(arrayify(T).slice(0, len), destPos);
+      }
+      return hexlify(DK);
+    }
 
-    const logger$6 = new Logger(version$3);
+    const version$a = "wordlists/5.7.0";
+
+    const logger$p = new Logger(version$a);
+    class Wordlist {
+      constructor(locale) {
+        logger$p.checkAbstract(new.target, Wordlist);
+        defineReadOnly(this, "locale", locale);
+      }
+      // Subclasses may override this
+      split(mnemonic) {
+        return mnemonic.toLowerCase().split(/ +/g);
+      }
+      // Subclasses may override this
+      join(words) {
+        return words.join(" ");
+      }
+      static check(wordlist) {
+        const words = [];
+        for (let i = 0; i < 2048; i++) {
+          const word = wordlist.getWord(i);
+          /* istanbul ignore if */
+          if (i !== wordlist.getWordIndex(word)) {
+            return "0x";
+          }
+          words.push(word);
+        }
+        return id(words.join("\n") + "\n");
+      }
+      static register(lang, name) {
+        if (!name) {
+          name = lang.locale;
+        }
+      }
+    }
+
+    const words = "AbandonAbilityAbleAboutAboveAbsentAbsorbAbstractAbsurdAbuseAccessAccidentAccountAccuseAchieveAcidAcousticAcquireAcrossActActionActorActressActualAdaptAddAddictAddressAdjustAdmitAdultAdvanceAdviceAerobicAffairAffordAfraidAgainAgeAgentAgreeAheadAimAirAirportAisleAlarmAlbumAlcoholAlertAlienAllAlleyAllowAlmostAloneAlphaAlreadyAlsoAlterAlwaysAmateurAmazingAmongAmountAmusedAnalystAnchorAncientAngerAngleAngryAnimalAnkleAnnounceAnnualAnotherAnswerAntennaAntiqueAnxietyAnyApartApologyAppearAppleApproveAprilArchArcticAreaArenaArgueArmArmedArmorArmyAroundArrangeArrestArriveArrowArtArtefactArtistArtworkAskAspectAssaultAssetAssistAssumeAsthmaAthleteAtomAttackAttendAttitudeAttractAuctionAuditAugustAuntAuthorAutoAutumnAverageAvocadoAvoidAwakeAwareAwayAwesomeAwfulAwkwardAxisBabyBachelorBaconBadgeBagBalanceBalconyBallBambooBananaBannerBarBarelyBargainBarrelBaseBasicBasketBattleBeachBeanBeautyBecauseBecomeBeefBeforeBeginBehaveBehindBelieveBelowBeltBenchBenefitBestBetrayBetterBetweenBeyondBicycleBidBikeBindBiologyBirdBirthBitterBlackBladeBlameBlanketBlastBleakBlessBlindBloodBlossomBlouseBlueBlurBlushBoardBoatBodyBoilBombBoneBonusBookBoostBorderBoringBorrowBossBottomBounceBoxBoyBracketBrainBrandBrassBraveBreadBreezeBrickBridgeBriefBrightBringBriskBroccoliBrokenBronzeBroomBrotherBrownBrushBubbleBuddyBudgetBuffaloBuildBulbBulkBulletBundleBunkerBurdenBurgerBurstBusBusinessBusyButterBuyerBuzzCabbageCabinCableCactusCageCakeCallCalmCameraCampCanCanalCancelCandyCannonCanoeCanvasCanyonCapableCapitalCaptainCarCarbonCardCargoCarpetCarryCartCaseCashCasinoCastleCasualCatCatalogCatchCategoryCattleCaughtCauseCautionCaveCeilingCeleryCementCensusCenturyCerealCertainChairChalkChampionChangeChaosChapterChargeChaseChatCheapCheckCheeseChefCherryChestChickenChiefChildChimneyChoiceChooseChronicChuckleChunkChurnCigarCinnamonCircleCitizenCityCivilClaimClapClarifyClawClayCleanClerkCleverClickClientCliffClimbClinicClipClockClogCloseClothCloudClownClubClumpClusterClutchCoachCoastCoconutCodeCoffeeCoilCoinCollectColorColumnCombineComeComfortComicCommonCompanyConcertConductConfirmCongressConnectConsiderControlConvinceCookCoolCopperCopyCoralCoreCornCorrectCostCottonCouchCountryCoupleCourseCousinCoverCoyoteCrackCradleCraftCramCraneCrashCraterCrawlCrazyCreamCreditCreekCrewCricketCrimeCrispCriticCropCrossCrouchCrowdCrucialCruelCruiseCrumbleCrunchCrushCryCrystalCubeCultureCupCupboardCuriousCurrentCurtainCurveCushionCustomCuteCycleDadDamageDampDanceDangerDaringDashDaughterDawnDayDealDebateDebrisDecadeDecemberDecideDeclineDecorateDecreaseDeerDefenseDefineDefyDegreeDelayDeliverDemandDemiseDenialDentistDenyDepartDependDepositDepthDeputyDeriveDescribeDesertDesignDeskDespairDestroyDetailDetectDevelopDeviceDevoteDiagramDialDiamondDiaryDiceDieselDietDifferDigitalDignityDilemmaDinnerDinosaurDirectDirtDisagreeDiscoverDiseaseDishDismissDisorderDisplayDistanceDivertDivideDivorceDizzyDoctorDocumentDogDollDolphinDomainDonateDonkeyDonorDoorDoseDoubleDoveDraftDragonDramaDrasticDrawDreamDressDriftDrillDrinkDripDriveDropDrumDryDuckDumbDuneDuringDustDutchDutyDwarfDynamicEagerEagleEarlyEarnEarthEasilyEastEasyEchoEcologyEconomyEdgeEditEducateEffortEggEightEitherElbowElderElectricElegantElementElephantElevatorEliteElseEmbarkEmbodyEmbraceEmergeEmotionEmployEmpowerEmptyEnableEnactEndEndlessEndorseEnemyEnergyEnforceEngageEngineEnhanceEnjoyEnlistEnoughEnrichEnrollEnsureEnterEntireEntryEnvelopeEpisodeEqualEquipEraEraseErodeErosionErrorEruptEscapeEssayEssenceEstateEternalEthicsEvidenceEvilEvokeEvolveExactExampleExcessExchangeExciteExcludeExcuseExecuteExerciseExhaustExhibitExileExistExitExoticExpandExpectExpireExplainExposeExpressExtendExtraEyeEyebrowFabricFaceFacultyFadeFaintFaithFallFalseFameFamilyFamousFanFancyFantasyFarmFashionFatFatalFatherFatigueFaultFavoriteFeatureFebruaryFederalFeeFeedFeelFemaleFenceFestivalFetchFeverFewFiberFictionFieldFigureFileFilmFilterFinalFindFineFingerFinishFireFirmFirstFiscalFishFitFitnessFixFlagFlameFlashFlatFlavorFleeFlightFlipFloatFlockFloorFlowerFluidFlushFlyFoamFocusFogFoilFoldFollowFoodFootForceForestForgetForkFortuneForumForwardFossilFosterFoundFoxFragileFrameFrequentFreshFriendFringeFrogFrontFrostFrownFrozenFruitFuelFunFunnyFurnaceFuryFutureGadgetGainGalaxyGalleryGameGapGarageGarbageGardenGarlicGarmentGasGaspGateGatherGaugeGazeGeneralGeniusGenreGentleGenuineGestureGhostGiantGiftGiggleGingerGiraffeGirlGiveGladGlanceGlareGlassGlideGlimpseGlobeGloomGloryGloveGlowGlueGoatGoddessGoldGoodGooseGorillaGospelGossipGovernGownGrabGraceGrainGrantGrapeGrassGravityGreatGreenGridGriefGritGroceryGroupGrowGruntGuardGuessGuideGuiltGuitarGunGymHabitHairHalfHammerHamsterHandHappyHarborHardHarshHarvestHatHaveHawkHazardHeadHealthHeartHeavyHedgehogHeightHelloHelmetHelpHenHeroHiddenHighHillHintHipHireHistoryHobbyHockeyHoldHoleHolidayHollowHomeHoneyHoodHopeHornHorrorHorseHospitalHostHotelHourHoverHubHugeHumanHumbleHumorHundredHungryHuntHurdleHurryHurtHusbandHybridIceIconIdeaIdentifyIdleIgnoreIllIllegalIllnessImageImitateImmenseImmuneImpactImposeImproveImpulseInchIncludeIncomeIncreaseIndexIndicateIndoorIndustryInfantInflictInformInhaleInheritInitialInjectInjuryInmateInnerInnocentInputInquiryInsaneInsectInsideInspireInstallIntactInterestIntoInvestInviteInvolveIronIslandIsolateIssueItemIvoryJacketJaguarJarJazzJealousJeansJellyJewelJobJoinJokeJourneyJoyJudgeJuiceJumpJungleJuniorJunkJustKangarooKeenKeepKetchupKeyKickKidKidneyKindKingdomKissKitKitchenKiteKittenKiwiKneeKnifeKnockKnowLabLabelLaborLadderLadyLakeLampLanguageLaptopLargeLaterLatinLaughLaundryLavaLawLawnLawsuitLayerLazyLeaderLeafLearnLeaveLectureLeftLegLegalLegendLeisureLemonLendLengthLensLeopardLessonLetterLevelLiarLibertyLibraryLicenseLifeLiftLightLikeLimbLimitLinkLionLiquidListLittleLiveLizardLoadLoanLobsterLocalLockLogicLonelyLongLoopLotteryLoudLoungeLoveLoyalLuckyLuggageLumberLunarLunchLuxuryLyricsMachineMadMagicMagnetMaidMailMainMajorMakeMammalManManageMandateMangoMansionManualMapleMarbleMarchMarginMarineMarketMarriageMaskMassMasterMatchMaterialMathMatrixMatterMaximumMazeMeadowMeanMeasureMeatMechanicMedalMediaMelodyMeltMemberMemoryMentionMenuMercyMergeMeritMerryMeshMessageMetalMethodMiddleMidnightMilkMillionMimicMindMinimumMinorMinuteMiracleMirrorMiseryMissMistakeMixMixedMixtureMobileModelModifyMomMomentMonitorMonkeyMonsterMonthMoonMoralMoreMorningMosquitoMotherMotionMotorMountainMouseMoveMovieMuchMuffinMuleMultiplyMuscleMuseumMushroomMusicMustMutualMyselfMysteryMythNaiveNameNapkinNarrowNastyNationNatureNearNeckNeedNegativeNeglectNeitherNephewNerveNestNetNetworkNeutralNeverNewsNextNiceNightNobleNoiseNomineeNoodleNormalNorthNoseNotableNoteNothingNoticeNovelNowNuclearNumberNurseNutOakObeyObjectObligeObscureObserveObtainObviousOccurOceanOctoberOdorOffOfferOfficeOftenOilOkayOldOliveOlympicOmitOnceOneOnionOnlineOnlyOpenOperaOpinionOpposeOptionOrangeOrbitOrchardOrderOrdinaryOrganOrientOriginalOrphanOstrichOtherOutdoorOuterOutputOutsideOvalOvenOverOwnOwnerOxygenOysterOzonePactPaddlePagePairPalacePalmPandaPanelPanicPantherPaperParadeParentParkParrotPartyPassPatchPathPatientPatrolPatternPausePavePaymentPeacePeanutPearPeasantPelicanPenPenaltyPencilPeoplePepperPerfectPermitPersonPetPhonePhotoPhrasePhysicalPianoPicnicPicturePiecePigPigeonPillPilotPinkPioneerPipePistolPitchPizzaPlacePlanetPlasticPlatePlayPleasePledgePluckPlugPlungePoemPoetPointPolarPolePolicePondPonyPoolPopularPortionPositionPossiblePostPotatoPotteryPovertyPowderPowerPracticePraisePredictPreferPreparePresentPrettyPreventPricePridePrimaryPrintPriorityPrisonPrivatePrizeProblemProcessProduceProfitProgramProjectPromoteProofPropertyProsperProtectProudProvidePublicPuddingPullPulpPulsePumpkinPunchPupilPuppyPurchasePurityPurposePursePushPutPuzzlePyramidQualityQuantumQuarterQuestionQuickQuitQuizQuoteRabbitRaccoonRaceRackRadarRadioRailRainRaiseRallyRampRanchRandomRangeRapidRareRateRatherRavenRawRazorReadyRealReasonRebelRebuildRecallReceiveRecipeRecordRecycleReduceReflectReformRefuseRegionRegretRegularRejectRelaxReleaseReliefRelyRemainRememberRemindRemoveRenderRenewRentReopenRepairRepeatReplaceReportRequireRescueResembleResistResourceResponseResultRetireRetreatReturnReunionRevealReviewRewardRhythmRibRibbonRiceRichRideRidgeRifleRightRigidRingRiotRippleRiskRitualRivalRiverRoadRoastRobotRobustRocketRomanceRoofRookieRoomRoseRotateRoughRoundRouteRoyalRubberRudeRugRuleRunRunwayRuralSadSaddleSadnessSafeSailSaladSalmonSalonSaltSaluteSameSampleSandSatisfySatoshiSauceSausageSaveSayScaleScanScareScatterSceneSchemeSchoolScienceScissorsScorpionScoutScrapScreenScriptScrubSeaSearchSeasonSeatSecondSecretSectionSecuritySeedSeekSegmentSelectSellSeminarSeniorSenseSentenceSeriesServiceSessionSettleSetupSevenShadowShaftShallowShareShedShellSheriffShieldShiftShineShipShiverShockShoeShootShopShortShoulderShoveShrimpShrugShuffleShySiblingSickSideSiegeSightSignSilentSilkSillySilverSimilarSimpleSinceSingSirenSisterSituateSixSizeSkateSketchSkiSkillSkinSkirtSkullSlabSlamSleepSlenderSliceSlideSlightSlimSloganSlotSlowSlushSmallSmartSmileSmokeSmoothSnackSnakeSnapSniffSnowSoapSoccerSocialSockSodaSoftSolarSoldierSolidSolutionSolveSomeoneSongSoonSorrySortSoulSoundSoupSourceSouthSpaceSpareSpatialSpawnSpeakSpecialSpeedSpellSpendSphereSpiceSpiderSpikeSpinSpiritSplitSpoilSponsorSpoonSportSpotSpraySpreadSpringSpySquareSqueezeSquirrelStableStadiumStaffStageStairsStampStandStartStateStaySteakSteelStemStepStereoStickStillStingStockStomachStoneStoolStoryStoveStrategyStreetStrikeStrongStruggleStudentStuffStumbleStyleSubjectSubmitSubwaySuccessSuchSuddenSufferSugarSuggestSuitSummerSunSunnySunsetSuperSupplySupremeSureSurfaceSurgeSurpriseSurroundSurveySuspectSustainSwallowSwampSwapSwarmSwearSweetSwiftSwimSwingSwitchSwordSymbolSymptomSyrupSystemTableTackleTagTailTalentTalkTankTapeTargetTaskTasteTattooTaxiTeachTeamTellTenTenantTennisTentTermTestTextThankThatThemeThenTheoryThereTheyThingThisThoughtThreeThriveThrowThumbThunderTicketTideTigerTiltTimberTimeTinyTipTiredTissueTitleToastTobaccoTodayToddlerToeTogetherToiletTokenTomatoTomorrowToneTongueTonightToolToothTopTopicToppleTorchTornadoTortoiseTossTotalTouristTowardTowerTownToyTrackTradeTrafficTragicTrainTransferTrapTrashTravelTrayTreatTreeTrendTrialTribeTrickTriggerTrimTripTrophyTroubleTruckTrueTrulyTrumpetTrustTruthTryTubeTuitionTumbleTunaTunnelTurkeyTurnTurtleTwelveTwentyTwiceTwinTwistTwoTypeTypicalUglyUmbrellaUnableUnawareUncleUncoverUnderUndoUnfairUnfoldUnhappyUniformUniqueUnitUniverseUnknownUnlockUntilUnusualUnveilUpdateUpgradeUpholdUponUpperUpsetUrbanUrgeUsageUseUsedUsefulUselessUsualUtilityVacantVacuumVagueValidValleyValveVanVanishVaporVariousVastVaultVehicleVelvetVendorVentureVenueVerbVerifyVersionVeryVesselVeteranViableVibrantViciousVictoryVideoViewVillageVintageViolinVirtualVirusVisaVisitVisualVitalVividVocalVoiceVoidVolcanoVolumeVoteVoyageWageWagonWaitWalkWallWalnutWantWarfareWarmWarriorWashWaspWasteWaterWaveWayWealthWeaponWearWeaselWeatherWebWeddingWeekendWeirdWelcomeWestWetWhaleWhatWheatWheelWhenWhereWhipWhisperWideWidthWifeWildWillWinWindowWineWingWinkWinnerWinterWireWisdomWiseWishWitnessWolfWomanWonderWoodWoolWordWorkWorldWorryWorthWrapWreckWrestleWristWriteWrongYardYearYellowYouYoungYouthZebraZeroZoneZoo";
+    let wordlist = null;
+    function loadWords(lang) {
+      if (wordlist != null) {
+        return;
+      }
+      wordlist = words.replace(/([A-Z])/g, " $1").toLowerCase().substring(1).split(" ");
+      // Verify the computed list matches the official list
+      /* istanbul ignore if */
+      if (Wordlist.check(lang) !== "0x3c8acc1e7b08d8e76f9fda015ef48dc8c710a73cb7e0f77b2c18a9b5a7adde60") {
+        wordlist = null;
+        throw new Error("BIP39 Wordlist for en (English) FAILED");
+      }
+    }
+    class LangEn extends Wordlist {
+      constructor() {
+        super("en");
+      }
+      getWord(index) {
+        loadWords(this);
+        return wordlist[index];
+      }
+      getWordIndex(word) {
+        loadWords(this);
+        return wordlist.indexOf(word);
+      }
+    }
+    const langEn = new LangEn();
+    Wordlist.register(langEn);
+
+    const wordlists = {
+      en: langEn
+    };
+
+    const version$9 = "hdnode/5.7.0";
+
+    const logger$o = new Logger(version$9);
+    const N$1 = BigNumber$2.from("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141");
+    // "Bitcoin seed"
+    const MasterSecret = toUtf8Bytes("Bitcoin seed");
+    const HardenedBit = 0x80000000;
+    // Returns a byte with the MSB bits set
+    function getUpperMask(bits) {
+      return (1 << bits) - 1 << 8 - bits;
+    }
+    // Returns a byte with the LSB bits set
+    function getLowerMask(bits) {
+      return (1 << bits) - 1;
+    }
+    function bytes32(value) {
+      return hexZeroPad(hexlify(value), 32);
+    }
+    function base58check(data) {
+      return Base58.encode(concat([data, hexDataSlice(sha256$1(sha256$1(data)), 0, 4)]));
+    }
+    function getWordlist(wordlist) {
+      if (wordlist == null) {
+        return wordlists["en"];
+      }
+      if (typeof wordlist === "string") {
+        const words = wordlists[wordlist];
+        if (words == null) {
+          logger$o.throwArgumentError("unknown locale", "wordlist", wordlist);
+        }
+        return words;
+      }
+      return wordlist;
+    }
+    const _constructorGuard$1 = {};
+    const defaultPath = "m/44'/60'/0'/0/0";
+    class HDNode {
+      /**
+       *  This constructor should not be called directly.
+       *
+       *  Please use:
+       *   - fromMnemonic
+       *   - fromSeed
+       */
+      constructor(constructorGuard, privateKey, publicKey, parentFingerprint, chainCode, index, depth, mnemonicOrPath) {
+        /* istanbul ignore if */
+        if (constructorGuard !== _constructorGuard$1) {
+          throw new Error("HDNode constructor cannot be called directly");
+        }
+        if (privateKey) {
+          const signingKey = new SigningKey(privateKey);
+          defineReadOnly(this, "privateKey", signingKey.privateKey);
+          defineReadOnly(this, "publicKey", signingKey.compressedPublicKey);
+        } else {
+          defineReadOnly(this, "privateKey", null);
+          defineReadOnly(this, "publicKey", hexlify(publicKey));
+        }
+        defineReadOnly(this, "parentFingerprint", parentFingerprint);
+        defineReadOnly(this, "fingerprint", hexDataSlice(ripemd160(sha256$1(this.publicKey)), 0, 4));
+        defineReadOnly(this, "address", computeAddress(this.publicKey));
+        defineReadOnly(this, "chainCode", chainCode);
+        defineReadOnly(this, "index", index);
+        defineReadOnly(this, "depth", depth);
+        if (mnemonicOrPath == null) {
+          // From a source that does not preserve the path (e.g. extended keys)
+          defineReadOnly(this, "mnemonic", null);
+          defineReadOnly(this, "path", null);
+        } else if (typeof mnemonicOrPath === "string") {
+          // From a source that does not preserve the mnemonic (e.g. neutered)
+          defineReadOnly(this, "mnemonic", null);
+          defineReadOnly(this, "path", mnemonicOrPath);
+        } else {
+          // From a fully qualified source
+          defineReadOnly(this, "mnemonic", mnemonicOrPath);
+          defineReadOnly(this, "path", mnemonicOrPath.path);
+        }
+      }
+      get extendedKey() {
+        // We only support the mainnet values for now, but if anyone needs
+        // testnet values, let me know. I believe current sentiment is that
+        // we should always use mainnet, and use BIP-44 to derive the network
+        //   - Mainnet: public=0x0488B21E, private=0x0488ADE4
+        //   - Testnet: public=0x043587CF, private=0x04358394
+        if (this.depth >= 256) {
+          throw new Error("Depth too large!");
+        }
+        return base58check(concat([this.privateKey != null ? "0x0488ADE4" : "0x0488B21E", hexlify(this.depth), this.parentFingerprint, hexZeroPad(hexlify(this.index), 4), this.chainCode, this.privateKey != null ? concat(["0x00", this.privateKey]) : this.publicKey]));
+      }
+      neuter() {
+        return new HDNode(_constructorGuard$1, null, this.publicKey, this.parentFingerprint, this.chainCode, this.index, this.depth, this.path);
+      }
+      _derive(index) {
+        if (index > 0xffffffff) {
+          throw new Error("invalid index - " + String(index));
+        }
+        // Base path
+        let path = this.path;
+        if (path) {
+          path += "/" + (index & ~HardenedBit);
+        }
+        const data = new Uint8Array(37);
+        if (index & HardenedBit) {
+          if (!this.privateKey) {
+            throw new Error("cannot derive child of neutered node");
+          }
+          // Data = 0x00 || ser_256(k_par)
+          data.set(arrayify(this.privateKey), 1);
+          // Hardened path
+          if (path) {
+            path += "'";
+          }
+        } else {
+          // Data = ser_p(point(k_par))
+          data.set(arrayify(this.publicKey));
+        }
+        // Data += ser_32(i)
+        for (let i = 24; i >= 0; i -= 8) {
+          data[33 + (i >> 3)] = index >> 24 - i & 0xff;
+        }
+        const I = arrayify(computeHmac(SupportedAlgorithm.sha512, this.chainCode, data));
+        const IL = I.slice(0, 32);
+        const IR = I.slice(32);
+        // The private key
+        let ki = null;
+        // The public key
+        let Ki = null;
+        if (this.privateKey) {
+          ki = bytes32(BigNumber$2.from(IL).add(this.privateKey).mod(N$1));
+        } else {
+          const ek = new SigningKey(hexlify(IL));
+          Ki = ek._addPoint(this.publicKey);
+        }
+        let mnemonicOrPath = path;
+        const srcMnemonic = this.mnemonic;
+        if (srcMnemonic) {
+          mnemonicOrPath = Object.freeze({
+            phrase: srcMnemonic.phrase,
+            path: path,
+            locale: srcMnemonic.locale || "en"
+          });
+        }
+        return new HDNode(_constructorGuard$1, ki, Ki, this.fingerprint, bytes32(IR), index, this.depth + 1, mnemonicOrPath);
+      }
+      derivePath(path) {
+        const components = path.split("/");
+        if (components.length === 0 || components[0] === "m" && this.depth !== 0) {
+          throw new Error("invalid path - " + path);
+        }
+        if (components[0] === "m") {
+          components.shift();
+        }
+        let result = this;
+        for (let i = 0; i < components.length; i++) {
+          const component = components[i];
+          if (component.match(/^[0-9]+'$/)) {
+            const index = parseInt(component.substring(0, component.length - 1));
+            if (index >= HardenedBit) {
+              throw new Error("invalid path index - " + component);
+            }
+            result = result._derive(HardenedBit + index);
+          } else if (component.match(/^[0-9]+$/)) {
+            const index = parseInt(component);
+            if (index >= HardenedBit) {
+              throw new Error("invalid path index - " + component);
+            }
+            result = result._derive(index);
+          } else {
+            throw new Error("invalid path component - " + component);
+          }
+        }
+        return result;
+      }
+      static _fromSeed(seed, mnemonic) {
+        const seedArray = arrayify(seed);
+        if (seedArray.length < 16 || seedArray.length > 64) {
+          throw new Error("invalid seed");
+        }
+        const I = arrayify(computeHmac(SupportedAlgorithm.sha512, MasterSecret, seedArray));
+        return new HDNode(_constructorGuard$1, bytes32(I.slice(0, 32)), null, "0x00000000", bytes32(I.slice(32)), 0, 0, mnemonic);
+      }
+      static fromMnemonic(mnemonic, password, wordlist) {
+        // If a locale name was passed in, find the associated wordlist
+        wordlist = getWordlist(wordlist);
+        // Normalize the case and spacing in the mnemonic (throws if the mnemonic is invalid)
+        mnemonic = entropyToMnemonic(mnemonicToEntropy(mnemonic, wordlist), wordlist);
+        return HDNode._fromSeed(mnemonicToSeed(mnemonic, password), {
+          phrase: mnemonic,
+          path: "m",
+          locale: wordlist.locale
+        });
+      }
+      static fromSeed(seed) {
+        return HDNode._fromSeed(seed, null);
+      }
+      static fromExtendedKey(extendedKey) {
+        const bytes = Base58.decode(extendedKey);
+        if (bytes.length !== 82 || base58check(bytes.slice(0, 78)) !== extendedKey) {
+          logger$o.throwArgumentError("invalid extended key", "extendedKey", "[REDACTED]");
+        }
+        const depth = bytes[4];
+        const parentFingerprint = hexlify(bytes.slice(5, 9));
+        const index = parseInt(hexlify(bytes.slice(9, 13)).substring(2), 16);
+        const chainCode = hexlify(bytes.slice(13, 45));
+        const key = bytes.slice(45, 78);
+        switch (hexlify(bytes.slice(0, 4))) {
+          // Public Key
+          case "0x0488b21e":
+          case "0x043587cf":
+            return new HDNode(_constructorGuard$1, null, hexlify(key), parentFingerprint, chainCode, index, depth, null);
+          // Private Key
+          case "0x0488ade4":
+          case "0x04358394 ":
+            if (key[0] !== 0) {
+              break;
+            }
+            return new HDNode(_constructorGuard$1, hexlify(key.slice(1)), null, parentFingerprint, chainCode, index, depth, null);
+        }
+        return logger$o.throwArgumentError("invalid extended key", "extendedKey", "[REDACTED]");
+      }
+    }
+    function mnemonicToSeed(mnemonic, password) {
+      if (!password) {
+        password = "";
+      }
+      const salt = toUtf8Bytes("mnemonic" + password, UnicodeNormalizationForm.NFKD);
+      return pbkdf2$1(toUtf8Bytes(mnemonic, UnicodeNormalizationForm.NFKD), salt, 2048, 64, "sha512");
+    }
+    function mnemonicToEntropy(mnemonic, wordlist) {
+      wordlist = getWordlist(wordlist);
+      logger$o.checkNormalize();
+      const words = wordlist.split(mnemonic);
+      if (words.length % 3 !== 0) {
+        throw new Error("invalid mnemonic");
+      }
+      const entropy = arrayify(new Uint8Array(Math.ceil(11 * words.length / 8)));
+      let offset = 0;
+      for (let i = 0; i < words.length; i++) {
+        let index = wordlist.getWordIndex(words[i].normalize("NFKD"));
+        if (index === -1) {
+          throw new Error("invalid mnemonic");
+        }
+        for (let bit = 0; bit < 11; bit++) {
+          if (index & 1 << 10 - bit) {
+            entropy[offset >> 3] |= 1 << 7 - offset % 8;
+          }
+          offset++;
+        }
+      }
+      const entropyBits = 32 * words.length / 3;
+      const checksumBits = words.length / 3;
+      const checksumMask = getUpperMask(checksumBits);
+      const checksum = arrayify(sha256$1(entropy.slice(0, entropyBits / 8)))[0] & checksumMask;
+      if (checksum !== (entropy[entropy.length - 1] & checksumMask)) {
+        throw new Error("invalid checksum");
+      }
+      return hexlify(entropy.slice(0, entropyBits / 8));
+    }
+    function entropyToMnemonic(entropy, wordlist) {
+      wordlist = getWordlist(wordlist);
+      entropy = arrayify(entropy);
+      if (entropy.length % 4 !== 0 || entropy.length < 16 || entropy.length > 32) {
+        throw new Error("invalid entropy");
+      }
+      const indices = [0];
+      let remainingBits = 11;
+      for (let i = 0; i < entropy.length; i++) {
+        // Consume the whole byte (with still more to go)
+        if (remainingBits > 8) {
+          indices[indices.length - 1] <<= 8;
+          indices[indices.length - 1] |= entropy[i];
+          remainingBits -= 8;
+          // This byte will complete an 11-bit index
+        } else {
+          indices[indices.length - 1] <<= remainingBits;
+          indices[indices.length - 1] |= entropy[i] >> 8 - remainingBits;
+          // Start the next word
+          indices.push(entropy[i] & getLowerMask(8 - remainingBits));
+          remainingBits += 3;
+        }
+      }
+      // Compute the checksum bits
+      const checksumBits = entropy.length / 4;
+      const checksum = arrayify(sha256$1(entropy))[0] & getUpperMask(checksumBits);
+      // Shift the checksum into the word indices
+      indices[indices.length - 1] <<= checksumBits;
+      indices[indices.length - 1] |= checksum >> 8 - checksumBits;
+      return wordlist.join(indices.map(index => wordlist.getWord(index)));
+    }
+    function isValidMnemonic(mnemonic, wordlist) {
+      try {
+        mnemonicToEntropy(mnemonic, wordlist);
+        return true;
+      } catch (error) {}
+      return false;
+    }
+    function getAccountPath(index) {
+      if (typeof index !== "number" || index < 0 || index >= HardenedBit || index % 1) {
+        logger$o.throwArgumentError("invalid account index", "index", index);
+      }
+      return `m/44'/60'/${index}'/0/0`;
+    }
+
+    const version$8 = "random/5.7.0";
+
+    const logger$n = new Logger(version$8);
+    // Debugging line for testing browser lib in node
+    //const window = { crypto: { getRandomValues: () => { } } };
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis
+    function getGlobal() {
+      if (typeof self !== 'undefined') {
+        return self;
+      }
+      if (typeof window !== 'undefined') {
+        return window;
+      }
+      if (typeof global$1 !== 'undefined') {
+        return global$1;
+      }
+      throw new Error('unable to locate global object');
+    }
+    const anyGlobal = getGlobal();
+    let crypto$1 = anyGlobal.crypto || anyGlobal.msCrypto;
+    if (!crypto$1 || !crypto$1.getRandomValues) {
+      logger$n.warn("WARNING: Missing strong random number source");
+      crypto$1 = {
+        getRandomValues: function (buffer) {
+          return logger$n.throwError("no secure random source avaialble", Logger.errors.UNSUPPORTED_OPERATION, {
+            operation: "crypto.getRandomValues"
+          });
+        }
+      };
+    }
+    function randomBytes(length) {
+      if (length <= 0 || length > 1024 || length % 1 || length != length) {
+        logger$n.throwArgumentError("invalid length", "length", length);
+      }
+      const result = new Uint8Array(length);
+      crypto$1.getRandomValues(result);
+      return arrayify(result);
+    }
+
+    function shuffled(array) {
+      array = array.slice();
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+      }
+      return array;
+    }
+
+    var aesJsExports = {};
+    var aesJs = {
+      get exports(){ return aesJsExports; },
+      set exports(v){ aesJsExports = v; },
+    };
+
+    (function (module, exports) {
+
+      (function (root) {
+        function checkInt(value) {
+          return parseInt(value) === value;
+        }
+        function checkInts(arrayish) {
+          if (!checkInt(arrayish.length)) {
+            return false;
+          }
+          for (var i = 0; i < arrayish.length; i++) {
+            if (!checkInt(arrayish[i]) || arrayish[i] < 0 || arrayish[i] > 255) {
+              return false;
+            }
+          }
+          return true;
+        }
+        function coerceArray(arg, copy) {
+          // ArrayBuffer view
+          if (arg.buffer && ArrayBuffer.isView(arg) && arg.name === 'Uint8Array') {
+            if (copy) {
+              if (arg.slice) {
+                arg = arg.slice();
+              } else {
+                arg = Array.prototype.slice.call(arg);
+              }
+            }
+            return arg;
+          }
+
+          // It's an array; check it is a valid representation of a byte
+          if (Array.isArray(arg)) {
+            if (!checkInts(arg)) {
+              throw new Error('Array contains invalid value: ' + arg);
+            }
+            return new Uint8Array(arg);
+          }
+
+          // Something else, but behaves like an array (maybe a Buffer? Arguments?)
+          if (checkInt(arg.length) && checkInts(arg)) {
+            return new Uint8Array(arg);
+          }
+          throw new Error('unsupported array-like object');
+        }
+        function createArray(length) {
+          return new Uint8Array(length);
+        }
+        function copyArray(sourceArray, targetArray, targetStart, sourceStart, sourceEnd) {
+          if (sourceStart != null || sourceEnd != null) {
+            if (sourceArray.slice) {
+              sourceArray = sourceArray.slice(sourceStart, sourceEnd);
+            } else {
+              sourceArray = Array.prototype.slice.call(sourceArray, sourceStart, sourceEnd);
+            }
+          }
+          targetArray.set(sourceArray, targetStart);
+        }
+        var convertUtf8 = function () {
+          function toBytes(text) {
+            var result = [],
+              i = 0;
+            text = encodeURI(text);
+            while (i < text.length) {
+              var c = text.charCodeAt(i++);
+
+              // if it is a % sign, encode the following 2 bytes as a hex value
+              if (c === 37) {
+                result.push(parseInt(text.substr(i, 2), 16));
+                i += 2;
+
+                // otherwise, just the actual byte
+              } else {
+                result.push(c);
+              }
+            }
+            return coerceArray(result);
+          }
+          function fromBytes(bytes) {
+            var result = [],
+              i = 0;
+            while (i < bytes.length) {
+              var c = bytes[i];
+              if (c < 128) {
+                result.push(String.fromCharCode(c));
+                i++;
+              } else if (c > 191 && c < 224) {
+                result.push(String.fromCharCode((c & 0x1f) << 6 | bytes[i + 1] & 0x3f));
+                i += 2;
+              } else {
+                result.push(String.fromCharCode((c & 0x0f) << 12 | (bytes[i + 1] & 0x3f) << 6 | bytes[i + 2] & 0x3f));
+                i += 3;
+              }
+            }
+            return result.join('');
+          }
+          return {
+            toBytes: toBytes,
+            fromBytes: fromBytes
+          };
+        }();
+        var convertHex = function () {
+          function toBytes(text) {
+            var result = [];
+            for (var i = 0; i < text.length; i += 2) {
+              result.push(parseInt(text.substr(i, 2), 16));
+            }
+            return result;
+          }
+
+          // http://ixti.net/development/javascript/2011/11/11/base64-encodedecode-of-utf8-in-browser-with-js.html
+          var Hex = '0123456789abcdef';
+          function fromBytes(bytes) {
+            var result = [];
+            for (var i = 0; i < bytes.length; i++) {
+              var v = bytes[i];
+              result.push(Hex[(v & 0xf0) >> 4] + Hex[v & 0x0f]);
+            }
+            return result.join('');
+          }
+          return {
+            toBytes: toBytes,
+            fromBytes: fromBytes
+          };
+        }();
+
+        // Number of rounds by keysize
+        var numberOfRounds = {
+          16: 10,
+          24: 12,
+          32: 14
+        };
+
+        // Round constant words
+        var rcon = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91];
+
+        // S-box and Inverse S-box (S is for Substitution)
+        var S = [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0, 0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15, 0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75, 0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84, 0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf, 0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8, 0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2, 0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73, 0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb, 0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79, 0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08, 0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a, 0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e, 0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf, 0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16];
+        var Si = [0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb, 0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb, 0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e, 0x08, 0x2e, 0xa1, 0x66, 0x28, 0xd9, 0x24, 0xb2, 0x76, 0x5b, 0xa2, 0x49, 0x6d, 0x8b, 0xd1, 0x25, 0x72, 0xf8, 0xf6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xd4, 0xa4, 0x5c, 0xcc, 0x5d, 0x65, 0xb6, 0x92, 0x6c, 0x70, 0x48, 0x50, 0xfd, 0xed, 0xb9, 0xda, 0x5e, 0x15, 0x46, 0x57, 0xa7, 0x8d, 0x9d, 0x84, 0x90, 0xd8, 0xab, 0x00, 0x8c, 0xbc, 0xd3, 0x0a, 0xf7, 0xe4, 0x58, 0x05, 0xb8, 0xb3, 0x45, 0x06, 0xd0, 0x2c, 0x1e, 0x8f, 0xca, 0x3f, 0x0f, 0x02, 0xc1, 0xaf, 0xbd, 0x03, 0x01, 0x13, 0x8a, 0x6b, 0x3a, 0x91, 0x11, 0x41, 0x4f, 0x67, 0xdc, 0xea, 0x97, 0xf2, 0xcf, 0xce, 0xf0, 0xb4, 0xe6, 0x73, 0x96, 0xac, 0x74, 0x22, 0xe7, 0xad, 0x35, 0x85, 0xe2, 0xf9, 0x37, 0xe8, 0x1c, 0x75, 0xdf, 0x6e, 0x47, 0xf1, 0x1a, 0x71, 0x1d, 0x29, 0xc5, 0x89, 0x6f, 0xb7, 0x62, 0x0e, 0xaa, 0x18, 0xbe, 0x1b, 0xfc, 0x56, 0x3e, 0x4b, 0xc6, 0xd2, 0x79, 0x20, 0x9a, 0xdb, 0xc0, 0xfe, 0x78, 0xcd, 0x5a, 0xf4, 0x1f, 0xdd, 0xa8, 0x33, 0x88, 0x07, 0xc7, 0x31, 0xb1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xec, 0x5f, 0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef, 0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61, 0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d];
+
+        // Transformations for encryption
+        var T1 = [0xc66363a5, 0xf87c7c84, 0xee777799, 0xf67b7b8d, 0xfff2f20d, 0xd66b6bbd, 0xde6f6fb1, 0x91c5c554, 0x60303050, 0x02010103, 0xce6767a9, 0x562b2b7d, 0xe7fefe19, 0xb5d7d762, 0x4dababe6, 0xec76769a, 0x8fcaca45, 0x1f82829d, 0x89c9c940, 0xfa7d7d87, 0xeffafa15, 0xb25959eb, 0x8e4747c9, 0xfbf0f00b, 0x41adadec, 0xb3d4d467, 0x5fa2a2fd, 0x45afafea, 0x239c9cbf, 0x53a4a4f7, 0xe4727296, 0x9bc0c05b, 0x75b7b7c2, 0xe1fdfd1c, 0x3d9393ae, 0x4c26266a, 0x6c36365a, 0x7e3f3f41, 0xf5f7f702, 0x83cccc4f, 0x6834345c, 0x51a5a5f4, 0xd1e5e534, 0xf9f1f108, 0xe2717193, 0xabd8d873, 0x62313153, 0x2a15153f, 0x0804040c, 0x95c7c752, 0x46232365, 0x9dc3c35e, 0x30181828, 0x379696a1, 0x0a05050f, 0x2f9a9ab5, 0x0e070709, 0x24121236, 0x1b80809b, 0xdfe2e23d, 0xcdebeb26, 0x4e272769, 0x7fb2b2cd, 0xea75759f, 0x1209091b, 0x1d83839e, 0x582c2c74, 0x341a1a2e, 0x361b1b2d, 0xdc6e6eb2, 0xb45a5aee, 0x5ba0a0fb, 0xa45252f6, 0x763b3b4d, 0xb7d6d661, 0x7db3b3ce, 0x5229297b, 0xdde3e33e, 0x5e2f2f71, 0x13848497, 0xa65353f5, 0xb9d1d168, 0x00000000, 0xc1eded2c, 0x40202060, 0xe3fcfc1f, 0x79b1b1c8, 0xb65b5bed, 0xd46a6abe, 0x8dcbcb46, 0x67bebed9, 0x7239394b, 0x944a4ade, 0x984c4cd4, 0xb05858e8, 0x85cfcf4a, 0xbbd0d06b, 0xc5efef2a, 0x4faaaae5, 0xedfbfb16, 0x864343c5, 0x9a4d4dd7, 0x66333355, 0x11858594, 0x8a4545cf, 0xe9f9f910, 0x04020206, 0xfe7f7f81, 0xa05050f0, 0x783c3c44, 0x259f9fba, 0x4ba8a8e3, 0xa25151f3, 0x5da3a3fe, 0x804040c0, 0x058f8f8a, 0x3f9292ad, 0x219d9dbc, 0x70383848, 0xf1f5f504, 0x63bcbcdf, 0x77b6b6c1, 0xafdada75, 0x42212163, 0x20101030, 0xe5ffff1a, 0xfdf3f30e, 0xbfd2d26d, 0x81cdcd4c, 0x180c0c14, 0x26131335, 0xc3ecec2f, 0xbe5f5fe1, 0x359797a2, 0x884444cc, 0x2e171739, 0x93c4c457, 0x55a7a7f2, 0xfc7e7e82, 0x7a3d3d47, 0xc86464ac, 0xba5d5de7, 0x3219192b, 0xe6737395, 0xc06060a0, 0x19818198, 0x9e4f4fd1, 0xa3dcdc7f, 0x44222266, 0x542a2a7e, 0x3b9090ab, 0x0b888883, 0x8c4646ca, 0xc7eeee29, 0x6bb8b8d3, 0x2814143c, 0xa7dede79, 0xbc5e5ee2, 0x160b0b1d, 0xaddbdb76, 0xdbe0e03b, 0x64323256, 0x743a3a4e, 0x140a0a1e, 0x924949db, 0x0c06060a, 0x4824246c, 0xb85c5ce4, 0x9fc2c25d, 0xbdd3d36e, 0x43acacef, 0xc46262a6, 0x399191a8, 0x319595a4, 0xd3e4e437, 0xf279798b, 0xd5e7e732, 0x8bc8c843, 0x6e373759, 0xda6d6db7, 0x018d8d8c, 0xb1d5d564, 0x9c4e4ed2, 0x49a9a9e0, 0xd86c6cb4, 0xac5656fa, 0xf3f4f407, 0xcfeaea25, 0xca6565af, 0xf47a7a8e, 0x47aeaee9, 0x10080818, 0x6fbabad5, 0xf0787888, 0x4a25256f, 0x5c2e2e72, 0x381c1c24, 0x57a6a6f1, 0x73b4b4c7, 0x97c6c651, 0xcbe8e823, 0xa1dddd7c, 0xe874749c, 0x3e1f1f21, 0x964b4bdd, 0x61bdbddc, 0x0d8b8b86, 0x0f8a8a85, 0xe0707090, 0x7c3e3e42, 0x71b5b5c4, 0xcc6666aa, 0x904848d8, 0x06030305, 0xf7f6f601, 0x1c0e0e12, 0xc26161a3, 0x6a35355f, 0xae5757f9, 0x69b9b9d0, 0x17868691, 0x99c1c158, 0x3a1d1d27, 0x279e9eb9, 0xd9e1e138, 0xebf8f813, 0x2b9898b3, 0x22111133, 0xd26969bb, 0xa9d9d970, 0x078e8e89, 0x339494a7, 0x2d9b9bb6, 0x3c1e1e22, 0x15878792, 0xc9e9e920, 0x87cece49, 0xaa5555ff, 0x50282878, 0xa5dfdf7a, 0x038c8c8f, 0x59a1a1f8, 0x09898980, 0x1a0d0d17, 0x65bfbfda, 0xd7e6e631, 0x844242c6, 0xd06868b8, 0x824141c3, 0x299999b0, 0x5a2d2d77, 0x1e0f0f11, 0x7bb0b0cb, 0xa85454fc, 0x6dbbbbd6, 0x2c16163a];
+        var T2 = [0xa5c66363, 0x84f87c7c, 0x99ee7777, 0x8df67b7b, 0x0dfff2f2, 0xbdd66b6b, 0xb1de6f6f, 0x5491c5c5, 0x50603030, 0x03020101, 0xa9ce6767, 0x7d562b2b, 0x19e7fefe, 0x62b5d7d7, 0xe64dabab, 0x9aec7676, 0x458fcaca, 0x9d1f8282, 0x4089c9c9, 0x87fa7d7d, 0x15effafa, 0xebb25959, 0xc98e4747, 0x0bfbf0f0, 0xec41adad, 0x67b3d4d4, 0xfd5fa2a2, 0xea45afaf, 0xbf239c9c, 0xf753a4a4, 0x96e47272, 0x5b9bc0c0, 0xc275b7b7, 0x1ce1fdfd, 0xae3d9393, 0x6a4c2626, 0x5a6c3636, 0x417e3f3f, 0x02f5f7f7, 0x4f83cccc, 0x5c683434, 0xf451a5a5, 0x34d1e5e5, 0x08f9f1f1, 0x93e27171, 0x73abd8d8, 0x53623131, 0x3f2a1515, 0x0c080404, 0x5295c7c7, 0x65462323, 0x5e9dc3c3, 0x28301818, 0xa1379696, 0x0f0a0505, 0xb52f9a9a, 0x090e0707, 0x36241212, 0x9b1b8080, 0x3ddfe2e2, 0x26cdebeb, 0x694e2727, 0xcd7fb2b2, 0x9fea7575, 0x1b120909, 0x9e1d8383, 0x74582c2c, 0x2e341a1a, 0x2d361b1b, 0xb2dc6e6e, 0xeeb45a5a, 0xfb5ba0a0, 0xf6a45252, 0x4d763b3b, 0x61b7d6d6, 0xce7db3b3, 0x7b522929, 0x3edde3e3, 0x715e2f2f, 0x97138484, 0xf5a65353, 0x68b9d1d1, 0x00000000, 0x2cc1eded, 0x60402020, 0x1fe3fcfc, 0xc879b1b1, 0xedb65b5b, 0xbed46a6a, 0x468dcbcb, 0xd967bebe, 0x4b723939, 0xde944a4a, 0xd4984c4c, 0xe8b05858, 0x4a85cfcf, 0x6bbbd0d0, 0x2ac5efef, 0xe54faaaa, 0x16edfbfb, 0xc5864343, 0xd79a4d4d, 0x55663333, 0x94118585, 0xcf8a4545, 0x10e9f9f9, 0x06040202, 0x81fe7f7f, 0xf0a05050, 0x44783c3c, 0xba259f9f, 0xe34ba8a8, 0xf3a25151, 0xfe5da3a3, 0xc0804040, 0x8a058f8f, 0xad3f9292, 0xbc219d9d, 0x48703838, 0x04f1f5f5, 0xdf63bcbc, 0xc177b6b6, 0x75afdada, 0x63422121, 0x30201010, 0x1ae5ffff, 0x0efdf3f3, 0x6dbfd2d2, 0x4c81cdcd, 0x14180c0c, 0x35261313, 0x2fc3ecec, 0xe1be5f5f, 0xa2359797, 0xcc884444, 0x392e1717, 0x5793c4c4, 0xf255a7a7, 0x82fc7e7e, 0x477a3d3d, 0xacc86464, 0xe7ba5d5d, 0x2b321919, 0x95e67373, 0xa0c06060, 0x98198181, 0xd19e4f4f, 0x7fa3dcdc, 0x66442222, 0x7e542a2a, 0xab3b9090, 0x830b8888, 0xca8c4646, 0x29c7eeee, 0xd36bb8b8, 0x3c281414, 0x79a7dede, 0xe2bc5e5e, 0x1d160b0b, 0x76addbdb, 0x3bdbe0e0, 0x56643232, 0x4e743a3a, 0x1e140a0a, 0xdb924949, 0x0a0c0606, 0x6c482424, 0xe4b85c5c, 0x5d9fc2c2, 0x6ebdd3d3, 0xef43acac, 0xa6c46262, 0xa8399191, 0xa4319595, 0x37d3e4e4, 0x8bf27979, 0x32d5e7e7, 0x438bc8c8, 0x596e3737, 0xb7da6d6d, 0x8c018d8d, 0x64b1d5d5, 0xd29c4e4e, 0xe049a9a9, 0xb4d86c6c, 0xfaac5656, 0x07f3f4f4, 0x25cfeaea, 0xafca6565, 0x8ef47a7a, 0xe947aeae, 0x18100808, 0xd56fbaba, 0x88f07878, 0x6f4a2525, 0x725c2e2e, 0x24381c1c, 0xf157a6a6, 0xc773b4b4, 0x5197c6c6, 0x23cbe8e8, 0x7ca1dddd, 0x9ce87474, 0x213e1f1f, 0xdd964b4b, 0xdc61bdbd, 0x860d8b8b, 0x850f8a8a, 0x90e07070, 0x427c3e3e, 0xc471b5b5, 0xaacc6666, 0xd8904848, 0x05060303, 0x01f7f6f6, 0x121c0e0e, 0xa3c26161, 0x5f6a3535, 0xf9ae5757, 0xd069b9b9, 0x91178686, 0x5899c1c1, 0x273a1d1d, 0xb9279e9e, 0x38d9e1e1, 0x13ebf8f8, 0xb32b9898, 0x33221111, 0xbbd26969, 0x70a9d9d9, 0x89078e8e, 0xa7339494, 0xb62d9b9b, 0x223c1e1e, 0x92158787, 0x20c9e9e9, 0x4987cece, 0xffaa5555, 0x78502828, 0x7aa5dfdf, 0x8f038c8c, 0xf859a1a1, 0x80098989, 0x171a0d0d, 0xda65bfbf, 0x31d7e6e6, 0xc6844242, 0xb8d06868, 0xc3824141, 0xb0299999, 0x775a2d2d, 0x111e0f0f, 0xcb7bb0b0, 0xfca85454, 0xd66dbbbb, 0x3a2c1616];
+        var T3 = [0x63a5c663, 0x7c84f87c, 0x7799ee77, 0x7b8df67b, 0xf20dfff2, 0x6bbdd66b, 0x6fb1de6f, 0xc55491c5, 0x30506030, 0x01030201, 0x67a9ce67, 0x2b7d562b, 0xfe19e7fe, 0xd762b5d7, 0xabe64dab, 0x769aec76, 0xca458fca, 0x829d1f82, 0xc94089c9, 0x7d87fa7d, 0xfa15effa, 0x59ebb259, 0x47c98e47, 0xf00bfbf0, 0xadec41ad, 0xd467b3d4, 0xa2fd5fa2, 0xafea45af, 0x9cbf239c, 0xa4f753a4, 0x7296e472, 0xc05b9bc0, 0xb7c275b7, 0xfd1ce1fd, 0x93ae3d93, 0x266a4c26, 0x365a6c36, 0x3f417e3f, 0xf702f5f7, 0xcc4f83cc, 0x345c6834, 0xa5f451a5, 0xe534d1e5, 0xf108f9f1, 0x7193e271, 0xd873abd8, 0x31536231, 0x153f2a15, 0x040c0804, 0xc75295c7, 0x23654623, 0xc35e9dc3, 0x18283018, 0x96a13796, 0x050f0a05, 0x9ab52f9a, 0x07090e07, 0x12362412, 0x809b1b80, 0xe23ddfe2, 0xeb26cdeb, 0x27694e27, 0xb2cd7fb2, 0x759fea75, 0x091b1209, 0x839e1d83, 0x2c74582c, 0x1a2e341a, 0x1b2d361b, 0x6eb2dc6e, 0x5aeeb45a, 0xa0fb5ba0, 0x52f6a452, 0x3b4d763b, 0xd661b7d6, 0xb3ce7db3, 0x297b5229, 0xe33edde3, 0x2f715e2f, 0x84971384, 0x53f5a653, 0xd168b9d1, 0x00000000, 0xed2cc1ed, 0x20604020, 0xfc1fe3fc, 0xb1c879b1, 0x5bedb65b, 0x6abed46a, 0xcb468dcb, 0xbed967be, 0x394b7239, 0x4ade944a, 0x4cd4984c, 0x58e8b058, 0xcf4a85cf, 0xd06bbbd0, 0xef2ac5ef, 0xaae54faa, 0xfb16edfb, 0x43c58643, 0x4dd79a4d, 0x33556633, 0x85941185, 0x45cf8a45, 0xf910e9f9, 0x02060402, 0x7f81fe7f, 0x50f0a050, 0x3c44783c, 0x9fba259f, 0xa8e34ba8, 0x51f3a251, 0xa3fe5da3, 0x40c08040, 0x8f8a058f, 0x92ad3f92, 0x9dbc219d, 0x38487038, 0xf504f1f5, 0xbcdf63bc, 0xb6c177b6, 0xda75afda, 0x21634221, 0x10302010, 0xff1ae5ff, 0xf30efdf3, 0xd26dbfd2, 0xcd4c81cd, 0x0c14180c, 0x13352613, 0xec2fc3ec, 0x5fe1be5f, 0x97a23597, 0x44cc8844, 0x17392e17, 0xc45793c4, 0xa7f255a7, 0x7e82fc7e, 0x3d477a3d, 0x64acc864, 0x5de7ba5d, 0x192b3219, 0x7395e673, 0x60a0c060, 0x81981981, 0x4fd19e4f, 0xdc7fa3dc, 0x22664422, 0x2a7e542a, 0x90ab3b90, 0x88830b88, 0x46ca8c46, 0xee29c7ee, 0xb8d36bb8, 0x143c2814, 0xde79a7de, 0x5ee2bc5e, 0x0b1d160b, 0xdb76addb, 0xe03bdbe0, 0x32566432, 0x3a4e743a, 0x0a1e140a, 0x49db9249, 0x060a0c06, 0x246c4824, 0x5ce4b85c, 0xc25d9fc2, 0xd36ebdd3, 0xacef43ac, 0x62a6c462, 0x91a83991, 0x95a43195, 0xe437d3e4, 0x798bf279, 0xe732d5e7, 0xc8438bc8, 0x37596e37, 0x6db7da6d, 0x8d8c018d, 0xd564b1d5, 0x4ed29c4e, 0xa9e049a9, 0x6cb4d86c, 0x56faac56, 0xf407f3f4, 0xea25cfea, 0x65afca65, 0x7a8ef47a, 0xaee947ae, 0x08181008, 0xbad56fba, 0x7888f078, 0x256f4a25, 0x2e725c2e, 0x1c24381c, 0xa6f157a6, 0xb4c773b4, 0xc65197c6, 0xe823cbe8, 0xdd7ca1dd, 0x749ce874, 0x1f213e1f, 0x4bdd964b, 0xbddc61bd, 0x8b860d8b, 0x8a850f8a, 0x7090e070, 0x3e427c3e, 0xb5c471b5, 0x66aacc66, 0x48d89048, 0x03050603, 0xf601f7f6, 0x0e121c0e, 0x61a3c261, 0x355f6a35, 0x57f9ae57, 0xb9d069b9, 0x86911786, 0xc15899c1, 0x1d273a1d, 0x9eb9279e, 0xe138d9e1, 0xf813ebf8, 0x98b32b98, 0x11332211, 0x69bbd269, 0xd970a9d9, 0x8e89078e, 0x94a73394, 0x9bb62d9b, 0x1e223c1e, 0x87921587, 0xe920c9e9, 0xce4987ce, 0x55ffaa55, 0x28785028, 0xdf7aa5df, 0x8c8f038c, 0xa1f859a1, 0x89800989, 0x0d171a0d, 0xbfda65bf, 0xe631d7e6, 0x42c68442, 0x68b8d068, 0x41c38241, 0x99b02999, 0x2d775a2d, 0x0f111e0f, 0xb0cb7bb0, 0x54fca854, 0xbbd66dbb, 0x163a2c16];
+        var T4 = [0x6363a5c6, 0x7c7c84f8, 0x777799ee, 0x7b7b8df6, 0xf2f20dff, 0x6b6bbdd6, 0x6f6fb1de, 0xc5c55491, 0x30305060, 0x01010302, 0x6767a9ce, 0x2b2b7d56, 0xfefe19e7, 0xd7d762b5, 0xababe64d, 0x76769aec, 0xcaca458f, 0x82829d1f, 0xc9c94089, 0x7d7d87fa, 0xfafa15ef, 0x5959ebb2, 0x4747c98e, 0xf0f00bfb, 0xadadec41, 0xd4d467b3, 0xa2a2fd5f, 0xafafea45, 0x9c9cbf23, 0xa4a4f753, 0x727296e4, 0xc0c05b9b, 0xb7b7c275, 0xfdfd1ce1, 0x9393ae3d, 0x26266a4c, 0x36365a6c, 0x3f3f417e, 0xf7f702f5, 0xcccc4f83, 0x34345c68, 0xa5a5f451, 0xe5e534d1, 0xf1f108f9, 0x717193e2, 0xd8d873ab, 0x31315362, 0x15153f2a, 0x04040c08, 0xc7c75295, 0x23236546, 0xc3c35e9d, 0x18182830, 0x9696a137, 0x05050f0a, 0x9a9ab52f, 0x0707090e, 0x12123624, 0x80809b1b, 0xe2e23ddf, 0xebeb26cd, 0x2727694e, 0xb2b2cd7f, 0x75759fea, 0x09091b12, 0x83839e1d, 0x2c2c7458, 0x1a1a2e34, 0x1b1b2d36, 0x6e6eb2dc, 0x5a5aeeb4, 0xa0a0fb5b, 0x5252f6a4, 0x3b3b4d76, 0xd6d661b7, 0xb3b3ce7d, 0x29297b52, 0xe3e33edd, 0x2f2f715e, 0x84849713, 0x5353f5a6, 0xd1d168b9, 0x00000000, 0xeded2cc1, 0x20206040, 0xfcfc1fe3, 0xb1b1c879, 0x5b5bedb6, 0x6a6abed4, 0xcbcb468d, 0xbebed967, 0x39394b72, 0x4a4ade94, 0x4c4cd498, 0x5858e8b0, 0xcfcf4a85, 0xd0d06bbb, 0xefef2ac5, 0xaaaae54f, 0xfbfb16ed, 0x4343c586, 0x4d4dd79a, 0x33335566, 0x85859411, 0x4545cf8a, 0xf9f910e9, 0x02020604, 0x7f7f81fe, 0x5050f0a0, 0x3c3c4478, 0x9f9fba25, 0xa8a8e34b, 0x5151f3a2, 0xa3a3fe5d, 0x4040c080, 0x8f8f8a05, 0x9292ad3f, 0x9d9dbc21, 0x38384870, 0xf5f504f1, 0xbcbcdf63, 0xb6b6c177, 0xdada75af, 0x21216342, 0x10103020, 0xffff1ae5, 0xf3f30efd, 0xd2d26dbf, 0xcdcd4c81, 0x0c0c1418, 0x13133526, 0xecec2fc3, 0x5f5fe1be, 0x9797a235, 0x4444cc88, 0x1717392e, 0xc4c45793, 0xa7a7f255, 0x7e7e82fc, 0x3d3d477a, 0x6464acc8, 0x5d5de7ba, 0x19192b32, 0x737395e6, 0x6060a0c0, 0x81819819, 0x4f4fd19e, 0xdcdc7fa3, 0x22226644, 0x2a2a7e54, 0x9090ab3b, 0x8888830b, 0x4646ca8c, 0xeeee29c7, 0xb8b8d36b, 0x14143c28, 0xdede79a7, 0x5e5ee2bc, 0x0b0b1d16, 0xdbdb76ad, 0xe0e03bdb, 0x32325664, 0x3a3a4e74, 0x0a0a1e14, 0x4949db92, 0x06060a0c, 0x24246c48, 0x5c5ce4b8, 0xc2c25d9f, 0xd3d36ebd, 0xacacef43, 0x6262a6c4, 0x9191a839, 0x9595a431, 0xe4e437d3, 0x79798bf2, 0xe7e732d5, 0xc8c8438b, 0x3737596e, 0x6d6db7da, 0x8d8d8c01, 0xd5d564b1, 0x4e4ed29c, 0xa9a9e049, 0x6c6cb4d8, 0x5656faac, 0xf4f407f3, 0xeaea25cf, 0x6565afca, 0x7a7a8ef4, 0xaeaee947, 0x08081810, 0xbabad56f, 0x787888f0, 0x25256f4a, 0x2e2e725c, 0x1c1c2438, 0xa6a6f157, 0xb4b4c773, 0xc6c65197, 0xe8e823cb, 0xdddd7ca1, 0x74749ce8, 0x1f1f213e, 0x4b4bdd96, 0xbdbddc61, 0x8b8b860d, 0x8a8a850f, 0x707090e0, 0x3e3e427c, 0xb5b5c471, 0x6666aacc, 0x4848d890, 0x03030506, 0xf6f601f7, 0x0e0e121c, 0x6161a3c2, 0x35355f6a, 0x5757f9ae, 0xb9b9d069, 0x86869117, 0xc1c15899, 0x1d1d273a, 0x9e9eb927, 0xe1e138d9, 0xf8f813eb, 0x9898b32b, 0x11113322, 0x6969bbd2, 0xd9d970a9, 0x8e8e8907, 0x9494a733, 0x9b9bb62d, 0x1e1e223c, 0x87879215, 0xe9e920c9, 0xcece4987, 0x5555ffaa, 0x28287850, 0xdfdf7aa5, 0x8c8c8f03, 0xa1a1f859, 0x89898009, 0x0d0d171a, 0xbfbfda65, 0xe6e631d7, 0x4242c684, 0x6868b8d0, 0x4141c382, 0x9999b029, 0x2d2d775a, 0x0f0f111e, 0xb0b0cb7b, 0x5454fca8, 0xbbbbd66d, 0x16163a2c];
+
+        // Transformations for decryption
+        var T5 = [0x51f4a750, 0x7e416553, 0x1a17a4c3, 0x3a275e96, 0x3bab6bcb, 0x1f9d45f1, 0xacfa58ab, 0x4be30393, 0x2030fa55, 0xad766df6, 0x88cc7691, 0xf5024c25, 0x4fe5d7fc, 0xc52acbd7, 0x26354480, 0xb562a38f, 0xdeb15a49, 0x25ba1b67, 0x45ea0e98, 0x5dfec0e1, 0xc32f7502, 0x814cf012, 0x8d4697a3, 0x6bd3f9c6, 0x038f5fe7, 0x15929c95, 0xbf6d7aeb, 0x955259da, 0xd4be832d, 0x587421d3, 0x49e06929, 0x8ec9c844, 0x75c2896a, 0xf48e7978, 0x99583e6b, 0x27b971dd, 0xbee14fb6, 0xf088ad17, 0xc920ac66, 0x7dce3ab4, 0x63df4a18, 0xe51a3182, 0x97513360, 0x62537f45, 0xb16477e0, 0xbb6bae84, 0xfe81a01c, 0xf9082b94, 0x70486858, 0x8f45fd19, 0x94de6c87, 0x527bf8b7, 0xab73d323, 0x724b02e2, 0xe31f8f57, 0x6655ab2a, 0xb2eb2807, 0x2fb5c203, 0x86c57b9a, 0xd33708a5, 0x302887f2, 0x23bfa5b2, 0x02036aba, 0xed16825c, 0x8acf1c2b, 0xa779b492, 0xf307f2f0, 0x4e69e2a1, 0x65daf4cd, 0x0605bed5, 0xd134621f, 0xc4a6fe8a, 0x342e539d, 0xa2f355a0, 0x058ae132, 0xa4f6eb75, 0x0b83ec39, 0x4060efaa, 0x5e719f06, 0xbd6e1051, 0x3e218af9, 0x96dd063d, 0xdd3e05ae, 0x4de6bd46, 0x91548db5, 0x71c45d05, 0x0406d46f, 0x605015ff, 0x1998fb24, 0xd6bde997, 0x894043cc, 0x67d99e77, 0xb0e842bd, 0x07898b88, 0xe7195b38, 0x79c8eedb, 0xa17c0a47, 0x7c420fe9, 0xf8841ec9, 0x00000000, 0x09808683, 0x322bed48, 0x1e1170ac, 0x6c5a724e, 0xfd0efffb, 0x0f853856, 0x3daed51e, 0x362d3927, 0x0a0fd964, 0x685ca621, 0x9b5b54d1, 0x24362e3a, 0x0c0a67b1, 0x9357e70f, 0xb4ee96d2, 0x1b9b919e, 0x80c0c54f, 0x61dc20a2, 0x5a774b69, 0x1c121a16, 0xe293ba0a, 0xc0a02ae5, 0x3c22e043, 0x121b171d, 0x0e090d0b, 0xf28bc7ad, 0x2db6a8b9, 0x141ea9c8, 0x57f11985, 0xaf75074c, 0xee99ddbb, 0xa37f60fd, 0xf701269f, 0x5c72f5bc, 0x44663bc5, 0x5bfb7e34, 0x8b432976, 0xcb23c6dc, 0xb6edfc68, 0xb8e4f163, 0xd731dcca, 0x42638510, 0x13972240, 0x84c61120, 0x854a247d, 0xd2bb3df8, 0xaef93211, 0xc729a16d, 0x1d9e2f4b, 0xdcb230f3, 0x0d8652ec, 0x77c1e3d0, 0x2bb3166c, 0xa970b999, 0x119448fa, 0x47e96422, 0xa8fc8cc4, 0xa0f03f1a, 0x567d2cd8, 0x223390ef, 0x87494ec7, 0xd938d1c1, 0x8ccaa2fe, 0x98d40b36, 0xa6f581cf, 0xa57ade28, 0xdab78e26, 0x3fadbfa4, 0x2c3a9de4, 0x5078920d, 0x6a5fcc9b, 0x547e4662, 0xf68d13c2, 0x90d8b8e8, 0x2e39f75e, 0x82c3aff5, 0x9f5d80be, 0x69d0937c, 0x6fd52da9, 0xcf2512b3, 0xc8ac993b, 0x10187da7, 0xe89c636e, 0xdb3bbb7b, 0xcd267809, 0x6e5918f4, 0xec9ab701, 0x834f9aa8, 0xe6956e65, 0xaaffe67e, 0x21bccf08, 0xef15e8e6, 0xbae79bd9, 0x4a6f36ce, 0xea9f09d4, 0x29b07cd6, 0x31a4b2af, 0x2a3f2331, 0xc6a59430, 0x35a266c0, 0x744ebc37, 0xfc82caa6, 0xe090d0b0, 0x33a7d815, 0xf104984a, 0x41ecdaf7, 0x7fcd500e, 0x1791f62f, 0x764dd68d, 0x43efb04d, 0xccaa4d54, 0xe49604df, 0x9ed1b5e3, 0x4c6a881b, 0xc12c1fb8, 0x4665517f, 0x9d5eea04, 0x018c355d, 0xfa877473, 0xfb0b412e, 0xb3671d5a, 0x92dbd252, 0xe9105633, 0x6dd64713, 0x9ad7618c, 0x37a10c7a, 0x59f8148e, 0xeb133c89, 0xcea927ee, 0xb761c935, 0xe11ce5ed, 0x7a47b13c, 0x9cd2df59, 0x55f2733f, 0x1814ce79, 0x73c737bf, 0x53f7cdea, 0x5ffdaa5b, 0xdf3d6f14, 0x7844db86, 0xcaaff381, 0xb968c43e, 0x3824342c, 0xc2a3405f, 0x161dc372, 0xbce2250c, 0x283c498b, 0xff0d9541, 0x39a80171, 0x080cb3de, 0xd8b4e49c, 0x6456c190, 0x7bcb8461, 0xd532b670, 0x486c5c74, 0xd0b85742];
+        var T6 = [0x5051f4a7, 0x537e4165, 0xc31a17a4, 0x963a275e, 0xcb3bab6b, 0xf11f9d45, 0xabacfa58, 0x934be303, 0x552030fa, 0xf6ad766d, 0x9188cc76, 0x25f5024c, 0xfc4fe5d7, 0xd7c52acb, 0x80263544, 0x8fb562a3, 0x49deb15a, 0x6725ba1b, 0x9845ea0e, 0xe15dfec0, 0x02c32f75, 0x12814cf0, 0xa38d4697, 0xc66bd3f9, 0xe7038f5f, 0x9515929c, 0xebbf6d7a, 0xda955259, 0x2dd4be83, 0xd3587421, 0x2949e069, 0x448ec9c8, 0x6a75c289, 0x78f48e79, 0x6b99583e, 0xdd27b971, 0xb6bee14f, 0x17f088ad, 0x66c920ac, 0xb47dce3a, 0x1863df4a, 0x82e51a31, 0x60975133, 0x4562537f, 0xe0b16477, 0x84bb6bae, 0x1cfe81a0, 0x94f9082b, 0x58704868, 0x198f45fd, 0x8794de6c, 0xb7527bf8, 0x23ab73d3, 0xe2724b02, 0x57e31f8f, 0x2a6655ab, 0x07b2eb28, 0x032fb5c2, 0x9a86c57b, 0xa5d33708, 0xf2302887, 0xb223bfa5, 0xba02036a, 0x5ced1682, 0x2b8acf1c, 0x92a779b4, 0xf0f307f2, 0xa14e69e2, 0xcd65daf4, 0xd50605be, 0x1fd13462, 0x8ac4a6fe, 0x9d342e53, 0xa0a2f355, 0x32058ae1, 0x75a4f6eb, 0x390b83ec, 0xaa4060ef, 0x065e719f, 0x51bd6e10, 0xf93e218a, 0x3d96dd06, 0xaedd3e05, 0x464de6bd, 0xb591548d, 0x0571c45d, 0x6f0406d4, 0xff605015, 0x241998fb, 0x97d6bde9, 0xcc894043, 0x7767d99e, 0xbdb0e842, 0x8807898b, 0x38e7195b, 0xdb79c8ee, 0x47a17c0a, 0xe97c420f, 0xc9f8841e, 0x00000000, 0x83098086, 0x48322bed, 0xac1e1170, 0x4e6c5a72, 0xfbfd0eff, 0x560f8538, 0x1e3daed5, 0x27362d39, 0x640a0fd9, 0x21685ca6, 0xd19b5b54, 0x3a24362e, 0xb10c0a67, 0x0f9357e7, 0xd2b4ee96, 0x9e1b9b91, 0x4f80c0c5, 0xa261dc20, 0x695a774b, 0x161c121a, 0x0ae293ba, 0xe5c0a02a, 0x433c22e0, 0x1d121b17, 0x0b0e090d, 0xadf28bc7, 0xb92db6a8, 0xc8141ea9, 0x8557f119, 0x4caf7507, 0xbbee99dd, 0xfda37f60, 0x9ff70126, 0xbc5c72f5, 0xc544663b, 0x345bfb7e, 0x768b4329, 0xdccb23c6, 0x68b6edfc, 0x63b8e4f1, 0xcad731dc, 0x10426385, 0x40139722, 0x2084c611, 0x7d854a24, 0xf8d2bb3d, 0x11aef932, 0x6dc729a1, 0x4b1d9e2f, 0xf3dcb230, 0xec0d8652, 0xd077c1e3, 0x6c2bb316, 0x99a970b9, 0xfa119448, 0x2247e964, 0xc4a8fc8c, 0x1aa0f03f, 0xd8567d2c, 0xef223390, 0xc787494e, 0xc1d938d1, 0xfe8ccaa2, 0x3698d40b, 0xcfa6f581, 0x28a57ade, 0x26dab78e, 0xa43fadbf, 0xe42c3a9d, 0x0d507892, 0x9b6a5fcc, 0x62547e46, 0xc2f68d13, 0xe890d8b8, 0x5e2e39f7, 0xf582c3af, 0xbe9f5d80, 0x7c69d093, 0xa96fd52d, 0xb3cf2512, 0x3bc8ac99, 0xa710187d, 0x6ee89c63, 0x7bdb3bbb, 0x09cd2678, 0xf46e5918, 0x01ec9ab7, 0xa8834f9a, 0x65e6956e, 0x7eaaffe6, 0x0821bccf, 0xe6ef15e8, 0xd9bae79b, 0xce4a6f36, 0xd4ea9f09, 0xd629b07c, 0xaf31a4b2, 0x312a3f23, 0x30c6a594, 0xc035a266, 0x37744ebc, 0xa6fc82ca, 0xb0e090d0, 0x1533a7d8, 0x4af10498, 0xf741ecda, 0x0e7fcd50, 0x2f1791f6, 0x8d764dd6, 0x4d43efb0, 0x54ccaa4d, 0xdfe49604, 0xe39ed1b5, 0x1b4c6a88, 0xb8c12c1f, 0x7f466551, 0x049d5eea, 0x5d018c35, 0x73fa8774, 0x2efb0b41, 0x5ab3671d, 0x5292dbd2, 0x33e91056, 0x136dd647, 0x8c9ad761, 0x7a37a10c, 0x8e59f814, 0x89eb133c, 0xeecea927, 0x35b761c9, 0xede11ce5, 0x3c7a47b1, 0x599cd2df, 0x3f55f273, 0x791814ce, 0xbf73c737, 0xea53f7cd, 0x5b5ffdaa, 0x14df3d6f, 0x867844db, 0x81caaff3, 0x3eb968c4, 0x2c382434, 0x5fc2a340, 0x72161dc3, 0x0cbce225, 0x8b283c49, 0x41ff0d95, 0x7139a801, 0xde080cb3, 0x9cd8b4e4, 0x906456c1, 0x617bcb84, 0x70d532b6, 0x74486c5c, 0x42d0b857];
+        var T7 = [0xa75051f4, 0x65537e41, 0xa4c31a17, 0x5e963a27, 0x6bcb3bab, 0x45f11f9d, 0x58abacfa, 0x03934be3, 0xfa552030, 0x6df6ad76, 0x769188cc, 0x4c25f502, 0xd7fc4fe5, 0xcbd7c52a, 0x44802635, 0xa38fb562, 0x5a49deb1, 0x1b6725ba, 0x0e9845ea, 0xc0e15dfe, 0x7502c32f, 0xf012814c, 0x97a38d46, 0xf9c66bd3, 0x5fe7038f, 0x9c951592, 0x7aebbf6d, 0x59da9552, 0x832dd4be, 0x21d35874, 0x692949e0, 0xc8448ec9, 0x896a75c2, 0x7978f48e, 0x3e6b9958, 0x71dd27b9, 0x4fb6bee1, 0xad17f088, 0xac66c920, 0x3ab47dce, 0x4a1863df, 0x3182e51a, 0x33609751, 0x7f456253, 0x77e0b164, 0xae84bb6b, 0xa01cfe81, 0x2b94f908, 0x68587048, 0xfd198f45, 0x6c8794de, 0xf8b7527b, 0xd323ab73, 0x02e2724b, 0x8f57e31f, 0xab2a6655, 0x2807b2eb, 0xc2032fb5, 0x7b9a86c5, 0x08a5d337, 0x87f23028, 0xa5b223bf, 0x6aba0203, 0x825ced16, 0x1c2b8acf, 0xb492a779, 0xf2f0f307, 0xe2a14e69, 0xf4cd65da, 0xbed50605, 0x621fd134, 0xfe8ac4a6, 0x539d342e, 0x55a0a2f3, 0xe132058a, 0xeb75a4f6, 0xec390b83, 0xefaa4060, 0x9f065e71, 0x1051bd6e, 0x8af93e21, 0x063d96dd, 0x05aedd3e, 0xbd464de6, 0x8db59154, 0x5d0571c4, 0xd46f0406, 0x15ff6050, 0xfb241998, 0xe997d6bd, 0x43cc8940, 0x9e7767d9, 0x42bdb0e8, 0x8b880789, 0x5b38e719, 0xeedb79c8, 0x0a47a17c, 0x0fe97c42, 0x1ec9f884, 0x00000000, 0x86830980, 0xed48322b, 0x70ac1e11, 0x724e6c5a, 0xfffbfd0e, 0x38560f85, 0xd51e3dae, 0x3927362d, 0xd9640a0f, 0xa621685c, 0x54d19b5b, 0x2e3a2436, 0x67b10c0a, 0xe70f9357, 0x96d2b4ee, 0x919e1b9b, 0xc54f80c0, 0x20a261dc, 0x4b695a77, 0x1a161c12, 0xba0ae293, 0x2ae5c0a0, 0xe0433c22, 0x171d121b, 0x0d0b0e09, 0xc7adf28b, 0xa8b92db6, 0xa9c8141e, 0x198557f1, 0x074caf75, 0xddbbee99, 0x60fda37f, 0x269ff701, 0xf5bc5c72, 0x3bc54466, 0x7e345bfb, 0x29768b43, 0xc6dccb23, 0xfc68b6ed, 0xf163b8e4, 0xdccad731, 0x85104263, 0x22401397, 0x112084c6, 0x247d854a, 0x3df8d2bb, 0x3211aef9, 0xa16dc729, 0x2f4b1d9e, 0x30f3dcb2, 0x52ec0d86, 0xe3d077c1, 0x166c2bb3, 0xb999a970, 0x48fa1194, 0x642247e9, 0x8cc4a8fc, 0x3f1aa0f0, 0x2cd8567d, 0x90ef2233, 0x4ec78749, 0xd1c1d938, 0xa2fe8cca, 0x0b3698d4, 0x81cfa6f5, 0xde28a57a, 0x8e26dab7, 0xbfa43fad, 0x9de42c3a, 0x920d5078, 0xcc9b6a5f, 0x4662547e, 0x13c2f68d, 0xb8e890d8, 0xf75e2e39, 0xaff582c3, 0x80be9f5d, 0x937c69d0, 0x2da96fd5, 0x12b3cf25, 0x993bc8ac, 0x7da71018, 0x636ee89c, 0xbb7bdb3b, 0x7809cd26, 0x18f46e59, 0xb701ec9a, 0x9aa8834f, 0x6e65e695, 0xe67eaaff, 0xcf0821bc, 0xe8e6ef15, 0x9bd9bae7, 0x36ce4a6f, 0x09d4ea9f, 0x7cd629b0, 0xb2af31a4, 0x23312a3f, 0x9430c6a5, 0x66c035a2, 0xbc37744e, 0xcaa6fc82, 0xd0b0e090, 0xd81533a7, 0x984af104, 0xdaf741ec, 0x500e7fcd, 0xf62f1791, 0xd68d764d, 0xb04d43ef, 0x4d54ccaa, 0x04dfe496, 0xb5e39ed1, 0x881b4c6a, 0x1fb8c12c, 0x517f4665, 0xea049d5e, 0x355d018c, 0x7473fa87, 0x412efb0b, 0x1d5ab367, 0xd25292db, 0x5633e910, 0x47136dd6, 0x618c9ad7, 0x0c7a37a1, 0x148e59f8, 0x3c89eb13, 0x27eecea9, 0xc935b761, 0xe5ede11c, 0xb13c7a47, 0xdf599cd2, 0x733f55f2, 0xce791814, 0x37bf73c7, 0xcdea53f7, 0xaa5b5ffd, 0x6f14df3d, 0xdb867844, 0xf381caaf, 0xc43eb968, 0x342c3824, 0x405fc2a3, 0xc372161d, 0x250cbce2, 0x498b283c, 0x9541ff0d, 0x017139a8, 0xb3de080c, 0xe49cd8b4, 0xc1906456, 0x84617bcb, 0xb670d532, 0x5c74486c, 0x5742d0b8];
+        var T8 = [0xf4a75051, 0x4165537e, 0x17a4c31a, 0x275e963a, 0xab6bcb3b, 0x9d45f11f, 0xfa58abac, 0xe303934b, 0x30fa5520, 0x766df6ad, 0xcc769188, 0x024c25f5, 0xe5d7fc4f, 0x2acbd7c5, 0x35448026, 0x62a38fb5, 0xb15a49de, 0xba1b6725, 0xea0e9845, 0xfec0e15d, 0x2f7502c3, 0x4cf01281, 0x4697a38d, 0xd3f9c66b, 0x8f5fe703, 0x929c9515, 0x6d7aebbf, 0x5259da95, 0xbe832dd4, 0x7421d358, 0xe0692949, 0xc9c8448e, 0xc2896a75, 0x8e7978f4, 0x583e6b99, 0xb971dd27, 0xe14fb6be, 0x88ad17f0, 0x20ac66c9, 0xce3ab47d, 0xdf4a1863, 0x1a3182e5, 0x51336097, 0x537f4562, 0x6477e0b1, 0x6bae84bb, 0x81a01cfe, 0x082b94f9, 0x48685870, 0x45fd198f, 0xde6c8794, 0x7bf8b752, 0x73d323ab, 0x4b02e272, 0x1f8f57e3, 0x55ab2a66, 0xeb2807b2, 0xb5c2032f, 0xc57b9a86, 0x3708a5d3, 0x2887f230, 0xbfa5b223, 0x036aba02, 0x16825ced, 0xcf1c2b8a, 0x79b492a7, 0x07f2f0f3, 0x69e2a14e, 0xdaf4cd65, 0x05bed506, 0x34621fd1, 0xa6fe8ac4, 0x2e539d34, 0xf355a0a2, 0x8ae13205, 0xf6eb75a4, 0x83ec390b, 0x60efaa40, 0x719f065e, 0x6e1051bd, 0x218af93e, 0xdd063d96, 0x3e05aedd, 0xe6bd464d, 0x548db591, 0xc45d0571, 0x06d46f04, 0x5015ff60, 0x98fb2419, 0xbde997d6, 0x4043cc89, 0xd99e7767, 0xe842bdb0, 0x898b8807, 0x195b38e7, 0xc8eedb79, 0x7c0a47a1, 0x420fe97c, 0x841ec9f8, 0x00000000, 0x80868309, 0x2bed4832, 0x1170ac1e, 0x5a724e6c, 0x0efffbfd, 0x8538560f, 0xaed51e3d, 0x2d392736, 0x0fd9640a, 0x5ca62168, 0x5b54d19b, 0x362e3a24, 0x0a67b10c, 0x57e70f93, 0xee96d2b4, 0x9b919e1b, 0xc0c54f80, 0xdc20a261, 0x774b695a, 0x121a161c, 0x93ba0ae2, 0xa02ae5c0, 0x22e0433c, 0x1b171d12, 0x090d0b0e, 0x8bc7adf2, 0xb6a8b92d, 0x1ea9c814, 0xf1198557, 0x75074caf, 0x99ddbbee, 0x7f60fda3, 0x01269ff7, 0x72f5bc5c, 0x663bc544, 0xfb7e345b, 0x4329768b, 0x23c6dccb, 0xedfc68b6, 0xe4f163b8, 0x31dccad7, 0x63851042, 0x97224013, 0xc6112084, 0x4a247d85, 0xbb3df8d2, 0xf93211ae, 0x29a16dc7, 0x9e2f4b1d, 0xb230f3dc, 0x8652ec0d, 0xc1e3d077, 0xb3166c2b, 0x70b999a9, 0x9448fa11, 0xe9642247, 0xfc8cc4a8, 0xf03f1aa0, 0x7d2cd856, 0x3390ef22, 0x494ec787, 0x38d1c1d9, 0xcaa2fe8c, 0xd40b3698, 0xf581cfa6, 0x7ade28a5, 0xb78e26da, 0xadbfa43f, 0x3a9de42c, 0x78920d50, 0x5fcc9b6a, 0x7e466254, 0x8d13c2f6, 0xd8b8e890, 0x39f75e2e, 0xc3aff582, 0x5d80be9f, 0xd0937c69, 0xd52da96f, 0x2512b3cf, 0xac993bc8, 0x187da710, 0x9c636ee8, 0x3bbb7bdb, 0x267809cd, 0x5918f46e, 0x9ab701ec, 0x4f9aa883, 0x956e65e6, 0xffe67eaa, 0xbccf0821, 0x15e8e6ef, 0xe79bd9ba, 0x6f36ce4a, 0x9f09d4ea, 0xb07cd629, 0xa4b2af31, 0x3f23312a, 0xa59430c6, 0xa266c035, 0x4ebc3774, 0x82caa6fc, 0x90d0b0e0, 0xa7d81533, 0x04984af1, 0xecdaf741, 0xcd500e7f, 0x91f62f17, 0x4dd68d76, 0xefb04d43, 0xaa4d54cc, 0x9604dfe4, 0xd1b5e39e, 0x6a881b4c, 0x2c1fb8c1, 0x65517f46, 0x5eea049d, 0x8c355d01, 0x877473fa, 0x0b412efb, 0x671d5ab3, 0xdbd25292, 0x105633e9, 0xd647136d, 0xd7618c9a, 0xa10c7a37, 0xf8148e59, 0x133c89eb, 0xa927eece, 0x61c935b7, 0x1ce5ede1, 0x47b13c7a, 0xd2df599c, 0xf2733f55, 0x14ce7918, 0xc737bf73, 0xf7cdea53, 0xfdaa5b5f, 0x3d6f14df, 0x44db8678, 0xaff381ca, 0x68c43eb9, 0x24342c38, 0xa3405fc2, 0x1dc37216, 0xe2250cbc, 0x3c498b28, 0x0d9541ff, 0xa8017139, 0x0cb3de08, 0xb4e49cd8, 0x56c19064, 0xcb84617b, 0x32b670d5, 0x6c5c7448, 0xb85742d0];
+
+        // Transformations for decryption key expansion
+        var U1 = [0x00000000, 0x0e090d0b, 0x1c121a16, 0x121b171d, 0x3824342c, 0x362d3927, 0x24362e3a, 0x2a3f2331, 0x70486858, 0x7e416553, 0x6c5a724e, 0x62537f45, 0x486c5c74, 0x4665517f, 0x547e4662, 0x5a774b69, 0xe090d0b0, 0xee99ddbb, 0xfc82caa6, 0xf28bc7ad, 0xd8b4e49c, 0xd6bde997, 0xc4a6fe8a, 0xcaaff381, 0x90d8b8e8, 0x9ed1b5e3, 0x8ccaa2fe, 0x82c3aff5, 0xa8fc8cc4, 0xa6f581cf, 0xb4ee96d2, 0xbae79bd9, 0xdb3bbb7b, 0xd532b670, 0xc729a16d, 0xc920ac66, 0xe31f8f57, 0xed16825c, 0xff0d9541, 0xf104984a, 0xab73d323, 0xa57ade28, 0xb761c935, 0xb968c43e, 0x9357e70f, 0x9d5eea04, 0x8f45fd19, 0x814cf012, 0x3bab6bcb, 0x35a266c0, 0x27b971dd, 0x29b07cd6, 0x038f5fe7, 0x0d8652ec, 0x1f9d45f1, 0x119448fa, 0x4be30393, 0x45ea0e98, 0x57f11985, 0x59f8148e, 0x73c737bf, 0x7dce3ab4, 0x6fd52da9, 0x61dc20a2, 0xad766df6, 0xa37f60fd, 0xb16477e0, 0xbf6d7aeb, 0x955259da, 0x9b5b54d1, 0x894043cc, 0x87494ec7, 0xdd3e05ae, 0xd33708a5, 0xc12c1fb8, 0xcf2512b3, 0xe51a3182, 0xeb133c89, 0xf9082b94, 0xf701269f, 0x4de6bd46, 0x43efb04d, 0x51f4a750, 0x5ffdaa5b, 0x75c2896a, 0x7bcb8461, 0x69d0937c, 0x67d99e77, 0x3daed51e, 0x33a7d815, 0x21bccf08, 0x2fb5c203, 0x058ae132, 0x0b83ec39, 0x1998fb24, 0x1791f62f, 0x764dd68d, 0x7844db86, 0x6a5fcc9b, 0x6456c190, 0x4e69e2a1, 0x4060efaa, 0x527bf8b7, 0x5c72f5bc, 0x0605bed5, 0x080cb3de, 0x1a17a4c3, 0x141ea9c8, 0x3e218af9, 0x302887f2, 0x223390ef, 0x2c3a9de4, 0x96dd063d, 0x98d40b36, 0x8acf1c2b, 0x84c61120, 0xaef93211, 0xa0f03f1a, 0xb2eb2807, 0xbce2250c, 0xe6956e65, 0xe89c636e, 0xfa877473, 0xf48e7978, 0xdeb15a49, 0xd0b85742, 0xc2a3405f, 0xccaa4d54, 0x41ecdaf7, 0x4fe5d7fc, 0x5dfec0e1, 0x53f7cdea, 0x79c8eedb, 0x77c1e3d0, 0x65daf4cd, 0x6bd3f9c6, 0x31a4b2af, 0x3fadbfa4, 0x2db6a8b9, 0x23bfa5b2, 0x09808683, 0x07898b88, 0x15929c95, 0x1b9b919e, 0xa17c0a47, 0xaf75074c, 0xbd6e1051, 0xb3671d5a, 0x99583e6b, 0x97513360, 0x854a247d, 0x8b432976, 0xd134621f, 0xdf3d6f14, 0xcd267809, 0xc32f7502, 0xe9105633, 0xe7195b38, 0xf5024c25, 0xfb0b412e, 0x9ad7618c, 0x94de6c87, 0x86c57b9a, 0x88cc7691, 0xa2f355a0, 0xacfa58ab, 0xbee14fb6, 0xb0e842bd, 0xea9f09d4, 0xe49604df, 0xf68d13c2, 0xf8841ec9, 0xd2bb3df8, 0xdcb230f3, 0xcea927ee, 0xc0a02ae5, 0x7a47b13c, 0x744ebc37, 0x6655ab2a, 0x685ca621, 0x42638510, 0x4c6a881b, 0x5e719f06, 0x5078920d, 0x0a0fd964, 0x0406d46f, 0x161dc372, 0x1814ce79, 0x322bed48, 0x3c22e043, 0x2e39f75e, 0x2030fa55, 0xec9ab701, 0xe293ba0a, 0xf088ad17, 0xfe81a01c, 0xd4be832d, 0xdab78e26, 0xc8ac993b, 0xc6a59430, 0x9cd2df59, 0x92dbd252, 0x80c0c54f, 0x8ec9c844, 0xa4f6eb75, 0xaaffe67e, 0xb8e4f163, 0xb6edfc68, 0x0c0a67b1, 0x02036aba, 0x10187da7, 0x1e1170ac, 0x342e539d, 0x3a275e96, 0x283c498b, 0x26354480, 0x7c420fe9, 0x724b02e2, 0x605015ff, 0x6e5918f4, 0x44663bc5, 0x4a6f36ce, 0x587421d3, 0x567d2cd8, 0x37a10c7a, 0x39a80171, 0x2bb3166c, 0x25ba1b67, 0x0f853856, 0x018c355d, 0x13972240, 0x1d9e2f4b, 0x47e96422, 0x49e06929, 0x5bfb7e34, 0x55f2733f, 0x7fcd500e, 0x71c45d05, 0x63df4a18, 0x6dd64713, 0xd731dcca, 0xd938d1c1, 0xcb23c6dc, 0xc52acbd7, 0xef15e8e6, 0xe11ce5ed, 0xf307f2f0, 0xfd0efffb, 0xa779b492, 0xa970b999, 0xbb6bae84, 0xb562a38f, 0x9f5d80be, 0x91548db5, 0x834f9aa8, 0x8d4697a3];
+        var U2 = [0x00000000, 0x0b0e090d, 0x161c121a, 0x1d121b17, 0x2c382434, 0x27362d39, 0x3a24362e, 0x312a3f23, 0x58704868, 0x537e4165, 0x4e6c5a72, 0x4562537f, 0x74486c5c, 0x7f466551, 0x62547e46, 0x695a774b, 0xb0e090d0, 0xbbee99dd, 0xa6fc82ca, 0xadf28bc7, 0x9cd8b4e4, 0x97d6bde9, 0x8ac4a6fe, 0x81caaff3, 0xe890d8b8, 0xe39ed1b5, 0xfe8ccaa2, 0xf582c3af, 0xc4a8fc8c, 0xcfa6f581, 0xd2b4ee96, 0xd9bae79b, 0x7bdb3bbb, 0x70d532b6, 0x6dc729a1, 0x66c920ac, 0x57e31f8f, 0x5ced1682, 0x41ff0d95, 0x4af10498, 0x23ab73d3, 0x28a57ade, 0x35b761c9, 0x3eb968c4, 0x0f9357e7, 0x049d5eea, 0x198f45fd, 0x12814cf0, 0xcb3bab6b, 0xc035a266, 0xdd27b971, 0xd629b07c, 0xe7038f5f, 0xec0d8652, 0xf11f9d45, 0xfa119448, 0x934be303, 0x9845ea0e, 0x8557f119, 0x8e59f814, 0xbf73c737, 0xb47dce3a, 0xa96fd52d, 0xa261dc20, 0xf6ad766d, 0xfda37f60, 0xe0b16477, 0xebbf6d7a, 0xda955259, 0xd19b5b54, 0xcc894043, 0xc787494e, 0xaedd3e05, 0xa5d33708, 0xb8c12c1f, 0xb3cf2512, 0x82e51a31, 0x89eb133c, 0x94f9082b, 0x9ff70126, 0x464de6bd, 0x4d43efb0, 0x5051f4a7, 0x5b5ffdaa, 0x6a75c289, 0x617bcb84, 0x7c69d093, 0x7767d99e, 0x1e3daed5, 0x1533a7d8, 0x0821bccf, 0x032fb5c2, 0x32058ae1, 0x390b83ec, 0x241998fb, 0x2f1791f6, 0x8d764dd6, 0x867844db, 0x9b6a5fcc, 0x906456c1, 0xa14e69e2, 0xaa4060ef, 0xb7527bf8, 0xbc5c72f5, 0xd50605be, 0xde080cb3, 0xc31a17a4, 0xc8141ea9, 0xf93e218a, 0xf2302887, 0xef223390, 0xe42c3a9d, 0x3d96dd06, 0x3698d40b, 0x2b8acf1c, 0x2084c611, 0x11aef932, 0x1aa0f03f, 0x07b2eb28, 0x0cbce225, 0x65e6956e, 0x6ee89c63, 0x73fa8774, 0x78f48e79, 0x49deb15a, 0x42d0b857, 0x5fc2a340, 0x54ccaa4d, 0xf741ecda, 0xfc4fe5d7, 0xe15dfec0, 0xea53f7cd, 0xdb79c8ee, 0xd077c1e3, 0xcd65daf4, 0xc66bd3f9, 0xaf31a4b2, 0xa43fadbf, 0xb92db6a8, 0xb223bfa5, 0x83098086, 0x8807898b, 0x9515929c, 0x9e1b9b91, 0x47a17c0a, 0x4caf7507, 0x51bd6e10, 0x5ab3671d, 0x6b99583e, 0x60975133, 0x7d854a24, 0x768b4329, 0x1fd13462, 0x14df3d6f, 0x09cd2678, 0x02c32f75, 0x33e91056, 0x38e7195b, 0x25f5024c, 0x2efb0b41, 0x8c9ad761, 0x8794de6c, 0x9a86c57b, 0x9188cc76, 0xa0a2f355, 0xabacfa58, 0xb6bee14f, 0xbdb0e842, 0xd4ea9f09, 0xdfe49604, 0xc2f68d13, 0xc9f8841e, 0xf8d2bb3d, 0xf3dcb230, 0xeecea927, 0xe5c0a02a, 0x3c7a47b1, 0x37744ebc, 0x2a6655ab, 0x21685ca6, 0x10426385, 0x1b4c6a88, 0x065e719f, 0x0d507892, 0x640a0fd9, 0x6f0406d4, 0x72161dc3, 0x791814ce, 0x48322bed, 0x433c22e0, 0x5e2e39f7, 0x552030fa, 0x01ec9ab7, 0x0ae293ba, 0x17f088ad, 0x1cfe81a0, 0x2dd4be83, 0x26dab78e, 0x3bc8ac99, 0x30c6a594, 0x599cd2df, 0x5292dbd2, 0x4f80c0c5, 0x448ec9c8, 0x75a4f6eb, 0x7eaaffe6, 0x63b8e4f1, 0x68b6edfc, 0xb10c0a67, 0xba02036a, 0xa710187d, 0xac1e1170, 0x9d342e53, 0x963a275e, 0x8b283c49, 0x80263544, 0xe97c420f, 0xe2724b02, 0xff605015, 0xf46e5918, 0xc544663b, 0xce4a6f36, 0xd3587421, 0xd8567d2c, 0x7a37a10c, 0x7139a801, 0x6c2bb316, 0x6725ba1b, 0x560f8538, 0x5d018c35, 0x40139722, 0x4b1d9e2f, 0x2247e964, 0x2949e069, 0x345bfb7e, 0x3f55f273, 0x0e7fcd50, 0x0571c45d, 0x1863df4a, 0x136dd647, 0xcad731dc, 0xc1d938d1, 0xdccb23c6, 0xd7c52acb, 0xe6ef15e8, 0xede11ce5, 0xf0f307f2, 0xfbfd0eff, 0x92a779b4, 0x99a970b9, 0x84bb6bae, 0x8fb562a3, 0xbe9f5d80, 0xb591548d, 0xa8834f9a, 0xa38d4697];
+        var U3 = [0x00000000, 0x0d0b0e09, 0x1a161c12, 0x171d121b, 0x342c3824, 0x3927362d, 0x2e3a2436, 0x23312a3f, 0x68587048, 0x65537e41, 0x724e6c5a, 0x7f456253, 0x5c74486c, 0x517f4665, 0x4662547e, 0x4b695a77, 0xd0b0e090, 0xddbbee99, 0xcaa6fc82, 0xc7adf28b, 0xe49cd8b4, 0xe997d6bd, 0xfe8ac4a6, 0xf381caaf, 0xb8e890d8, 0xb5e39ed1, 0xa2fe8cca, 0xaff582c3, 0x8cc4a8fc, 0x81cfa6f5, 0x96d2b4ee, 0x9bd9bae7, 0xbb7bdb3b, 0xb670d532, 0xa16dc729, 0xac66c920, 0x8f57e31f, 0x825ced16, 0x9541ff0d, 0x984af104, 0xd323ab73, 0xde28a57a, 0xc935b761, 0xc43eb968, 0xe70f9357, 0xea049d5e, 0xfd198f45, 0xf012814c, 0x6bcb3bab, 0x66c035a2, 0x71dd27b9, 0x7cd629b0, 0x5fe7038f, 0x52ec0d86, 0x45f11f9d, 0x48fa1194, 0x03934be3, 0x0e9845ea, 0x198557f1, 0x148e59f8, 0x37bf73c7, 0x3ab47dce, 0x2da96fd5, 0x20a261dc, 0x6df6ad76, 0x60fda37f, 0x77e0b164, 0x7aebbf6d, 0x59da9552, 0x54d19b5b, 0x43cc8940, 0x4ec78749, 0x05aedd3e, 0x08a5d337, 0x1fb8c12c, 0x12b3cf25, 0x3182e51a, 0x3c89eb13, 0x2b94f908, 0x269ff701, 0xbd464de6, 0xb04d43ef, 0xa75051f4, 0xaa5b5ffd, 0x896a75c2, 0x84617bcb, 0x937c69d0, 0x9e7767d9, 0xd51e3dae, 0xd81533a7, 0xcf0821bc, 0xc2032fb5, 0xe132058a, 0xec390b83, 0xfb241998, 0xf62f1791, 0xd68d764d, 0xdb867844, 0xcc9b6a5f, 0xc1906456, 0xe2a14e69, 0xefaa4060, 0xf8b7527b, 0xf5bc5c72, 0xbed50605, 0xb3de080c, 0xa4c31a17, 0xa9c8141e, 0x8af93e21, 0x87f23028, 0x90ef2233, 0x9de42c3a, 0x063d96dd, 0x0b3698d4, 0x1c2b8acf, 0x112084c6, 0x3211aef9, 0x3f1aa0f0, 0x2807b2eb, 0x250cbce2, 0x6e65e695, 0x636ee89c, 0x7473fa87, 0x7978f48e, 0x5a49deb1, 0x5742d0b8, 0x405fc2a3, 0x4d54ccaa, 0xdaf741ec, 0xd7fc4fe5, 0xc0e15dfe, 0xcdea53f7, 0xeedb79c8, 0xe3d077c1, 0xf4cd65da, 0xf9c66bd3, 0xb2af31a4, 0xbfa43fad, 0xa8b92db6, 0xa5b223bf, 0x86830980, 0x8b880789, 0x9c951592, 0x919e1b9b, 0x0a47a17c, 0x074caf75, 0x1051bd6e, 0x1d5ab367, 0x3e6b9958, 0x33609751, 0x247d854a, 0x29768b43, 0x621fd134, 0x6f14df3d, 0x7809cd26, 0x7502c32f, 0x5633e910, 0x5b38e719, 0x4c25f502, 0x412efb0b, 0x618c9ad7, 0x6c8794de, 0x7b9a86c5, 0x769188cc, 0x55a0a2f3, 0x58abacfa, 0x4fb6bee1, 0x42bdb0e8, 0x09d4ea9f, 0x04dfe496, 0x13c2f68d, 0x1ec9f884, 0x3df8d2bb, 0x30f3dcb2, 0x27eecea9, 0x2ae5c0a0, 0xb13c7a47, 0xbc37744e, 0xab2a6655, 0xa621685c, 0x85104263, 0x881b4c6a, 0x9f065e71, 0x920d5078, 0xd9640a0f, 0xd46f0406, 0xc372161d, 0xce791814, 0xed48322b, 0xe0433c22, 0xf75e2e39, 0xfa552030, 0xb701ec9a, 0xba0ae293, 0xad17f088, 0xa01cfe81, 0x832dd4be, 0x8e26dab7, 0x993bc8ac, 0x9430c6a5, 0xdf599cd2, 0xd25292db, 0xc54f80c0, 0xc8448ec9, 0xeb75a4f6, 0xe67eaaff, 0xf163b8e4, 0xfc68b6ed, 0x67b10c0a, 0x6aba0203, 0x7da71018, 0x70ac1e11, 0x539d342e, 0x5e963a27, 0x498b283c, 0x44802635, 0x0fe97c42, 0x02e2724b, 0x15ff6050, 0x18f46e59, 0x3bc54466, 0x36ce4a6f, 0x21d35874, 0x2cd8567d, 0x0c7a37a1, 0x017139a8, 0x166c2bb3, 0x1b6725ba, 0x38560f85, 0x355d018c, 0x22401397, 0x2f4b1d9e, 0x642247e9, 0x692949e0, 0x7e345bfb, 0x733f55f2, 0x500e7fcd, 0x5d0571c4, 0x4a1863df, 0x47136dd6, 0xdccad731, 0xd1c1d938, 0xc6dccb23, 0xcbd7c52a, 0xe8e6ef15, 0xe5ede11c, 0xf2f0f307, 0xfffbfd0e, 0xb492a779, 0xb999a970, 0xae84bb6b, 0xa38fb562, 0x80be9f5d, 0x8db59154, 0x9aa8834f, 0x97a38d46];
+        var U4 = [0x00000000, 0x090d0b0e, 0x121a161c, 0x1b171d12, 0x24342c38, 0x2d392736, 0x362e3a24, 0x3f23312a, 0x48685870, 0x4165537e, 0x5a724e6c, 0x537f4562, 0x6c5c7448, 0x65517f46, 0x7e466254, 0x774b695a, 0x90d0b0e0, 0x99ddbbee, 0x82caa6fc, 0x8bc7adf2, 0xb4e49cd8, 0xbde997d6, 0xa6fe8ac4, 0xaff381ca, 0xd8b8e890, 0xd1b5e39e, 0xcaa2fe8c, 0xc3aff582, 0xfc8cc4a8, 0xf581cfa6, 0xee96d2b4, 0xe79bd9ba, 0x3bbb7bdb, 0x32b670d5, 0x29a16dc7, 0x20ac66c9, 0x1f8f57e3, 0x16825ced, 0x0d9541ff, 0x04984af1, 0x73d323ab, 0x7ade28a5, 0x61c935b7, 0x68c43eb9, 0x57e70f93, 0x5eea049d, 0x45fd198f, 0x4cf01281, 0xab6bcb3b, 0xa266c035, 0xb971dd27, 0xb07cd629, 0x8f5fe703, 0x8652ec0d, 0x9d45f11f, 0x9448fa11, 0xe303934b, 0xea0e9845, 0xf1198557, 0xf8148e59, 0xc737bf73, 0xce3ab47d, 0xd52da96f, 0xdc20a261, 0x766df6ad, 0x7f60fda3, 0x6477e0b1, 0x6d7aebbf, 0x5259da95, 0x5b54d19b, 0x4043cc89, 0x494ec787, 0x3e05aedd, 0x3708a5d3, 0x2c1fb8c1, 0x2512b3cf, 0x1a3182e5, 0x133c89eb, 0x082b94f9, 0x01269ff7, 0xe6bd464d, 0xefb04d43, 0xf4a75051, 0xfdaa5b5f, 0xc2896a75, 0xcb84617b, 0xd0937c69, 0xd99e7767, 0xaed51e3d, 0xa7d81533, 0xbccf0821, 0xb5c2032f, 0x8ae13205, 0x83ec390b, 0x98fb2419, 0x91f62f17, 0x4dd68d76, 0x44db8678, 0x5fcc9b6a, 0x56c19064, 0x69e2a14e, 0x60efaa40, 0x7bf8b752, 0x72f5bc5c, 0x05bed506, 0x0cb3de08, 0x17a4c31a, 0x1ea9c814, 0x218af93e, 0x2887f230, 0x3390ef22, 0x3a9de42c, 0xdd063d96, 0xd40b3698, 0xcf1c2b8a, 0xc6112084, 0xf93211ae, 0xf03f1aa0, 0xeb2807b2, 0xe2250cbc, 0x956e65e6, 0x9c636ee8, 0x877473fa, 0x8e7978f4, 0xb15a49de, 0xb85742d0, 0xa3405fc2, 0xaa4d54cc, 0xecdaf741, 0xe5d7fc4f, 0xfec0e15d, 0xf7cdea53, 0xc8eedb79, 0xc1e3d077, 0xdaf4cd65, 0xd3f9c66b, 0xa4b2af31, 0xadbfa43f, 0xb6a8b92d, 0xbfa5b223, 0x80868309, 0x898b8807, 0x929c9515, 0x9b919e1b, 0x7c0a47a1, 0x75074caf, 0x6e1051bd, 0x671d5ab3, 0x583e6b99, 0x51336097, 0x4a247d85, 0x4329768b, 0x34621fd1, 0x3d6f14df, 0x267809cd, 0x2f7502c3, 0x105633e9, 0x195b38e7, 0x024c25f5, 0x0b412efb, 0xd7618c9a, 0xde6c8794, 0xc57b9a86, 0xcc769188, 0xf355a0a2, 0xfa58abac, 0xe14fb6be, 0xe842bdb0, 0x9f09d4ea, 0x9604dfe4, 0x8d13c2f6, 0x841ec9f8, 0xbb3df8d2, 0xb230f3dc, 0xa927eece, 0xa02ae5c0, 0x47b13c7a, 0x4ebc3774, 0x55ab2a66, 0x5ca62168, 0x63851042, 0x6a881b4c, 0x719f065e, 0x78920d50, 0x0fd9640a, 0x06d46f04, 0x1dc37216, 0x14ce7918, 0x2bed4832, 0x22e0433c, 0x39f75e2e, 0x30fa5520, 0x9ab701ec, 0x93ba0ae2, 0x88ad17f0, 0x81a01cfe, 0xbe832dd4, 0xb78e26da, 0xac993bc8, 0xa59430c6, 0xd2df599c, 0xdbd25292, 0xc0c54f80, 0xc9c8448e, 0xf6eb75a4, 0xffe67eaa, 0xe4f163b8, 0xedfc68b6, 0x0a67b10c, 0x036aba02, 0x187da710, 0x1170ac1e, 0x2e539d34, 0x275e963a, 0x3c498b28, 0x35448026, 0x420fe97c, 0x4b02e272, 0x5015ff60, 0x5918f46e, 0x663bc544, 0x6f36ce4a, 0x7421d358, 0x7d2cd856, 0xa10c7a37, 0xa8017139, 0xb3166c2b, 0xba1b6725, 0x8538560f, 0x8c355d01, 0x97224013, 0x9e2f4b1d, 0xe9642247, 0xe0692949, 0xfb7e345b, 0xf2733f55, 0xcd500e7f, 0xc45d0571, 0xdf4a1863, 0xd647136d, 0x31dccad7, 0x38d1c1d9, 0x23c6dccb, 0x2acbd7c5, 0x15e8e6ef, 0x1ce5ede1, 0x07f2f0f3, 0x0efffbfd, 0x79b492a7, 0x70b999a9, 0x6bae84bb, 0x62a38fb5, 0x5d80be9f, 0x548db591, 0x4f9aa883, 0x4697a38d];
+        function convertToInt32(bytes) {
+          var result = [];
+          for (var i = 0; i < bytes.length; i += 4) {
+            result.push(bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3]);
+          }
+          return result;
+        }
+        var AES = function (key) {
+          if (!(this instanceof AES)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          Object.defineProperty(this, 'key', {
+            value: coerceArray(key, true)
+          });
+          this._prepare();
+        };
+        AES.prototype._prepare = function () {
+          var rounds = numberOfRounds[this.key.length];
+          if (rounds == null) {
+            throw new Error('invalid key size (must be 16, 24 or 32 bytes)');
+          }
+
+          // encryption round keys
+          this._Ke = [];
+
+          // decryption round keys
+          this._Kd = [];
+          for (var i = 0; i <= rounds; i++) {
+            this._Ke.push([0, 0, 0, 0]);
+            this._Kd.push([0, 0, 0, 0]);
+          }
+          var roundKeyCount = (rounds + 1) * 4;
+          var KC = this.key.length / 4;
+
+          // convert the key into ints
+          var tk = convertToInt32(this.key);
+
+          // copy values into round key arrays
+          var index;
+          for (var i = 0; i < KC; i++) {
+            index = i >> 2;
+            this._Ke[index][i % 4] = tk[i];
+            this._Kd[rounds - index][i % 4] = tk[i];
+          }
+
+          // key expansion (fips-197 section 5.2)
+          var rconpointer = 0;
+          var t = KC,
+            tt;
+          while (t < roundKeyCount) {
+            tt = tk[KC - 1];
+            tk[0] ^= S[tt >> 16 & 0xFF] << 24 ^ S[tt >> 8 & 0xFF] << 16 ^ S[tt & 0xFF] << 8 ^ S[tt >> 24 & 0xFF] ^ rcon[rconpointer] << 24;
+            rconpointer += 1;
+
+            // key expansion (for non-256 bit)
+            if (KC != 8) {
+              for (var i = 1; i < KC; i++) {
+                tk[i] ^= tk[i - 1];
+              }
+
+              // key expansion for 256-bit keys is "slightly different" (fips-197)
+            } else {
+              for (var i = 1; i < KC / 2; i++) {
+                tk[i] ^= tk[i - 1];
+              }
+              tt = tk[KC / 2 - 1];
+              tk[KC / 2] ^= S[tt & 0xFF] ^ S[tt >> 8 & 0xFF] << 8 ^ S[tt >> 16 & 0xFF] << 16 ^ S[tt >> 24 & 0xFF] << 24;
+              for (var i = KC / 2 + 1; i < KC; i++) {
+                tk[i] ^= tk[i - 1];
+              }
+            }
+
+            // copy values into round key arrays
+            var i = 0,
+              r,
+              c;
+            while (i < KC && t < roundKeyCount) {
+              r = t >> 2;
+              c = t % 4;
+              this._Ke[r][c] = tk[i];
+              this._Kd[rounds - r][c] = tk[i++];
+              t++;
+            }
+          }
+
+          // inverse-cipher-ify the decryption round key (fips-197 section 5.3)
+          for (var r = 1; r < rounds; r++) {
+            for (var c = 0; c < 4; c++) {
+              tt = this._Kd[r][c];
+              this._Kd[r][c] = U1[tt >> 24 & 0xFF] ^ U2[tt >> 16 & 0xFF] ^ U3[tt >> 8 & 0xFF] ^ U4[tt & 0xFF];
+            }
+          }
+        };
+        AES.prototype.encrypt = function (plaintext) {
+          if (plaintext.length != 16) {
+            throw new Error('invalid plaintext size (must be 16 bytes)');
+          }
+          var rounds = this._Ke.length - 1;
+          var a = [0, 0, 0, 0];
+
+          // convert plaintext to (ints ^ key)
+          var t = convertToInt32(plaintext);
+          for (var i = 0; i < 4; i++) {
+            t[i] ^= this._Ke[0][i];
+          }
+
+          // apply round transforms
+          for (var r = 1; r < rounds; r++) {
+            for (var i = 0; i < 4; i++) {
+              a[i] = T1[t[i] >> 24 & 0xff] ^ T2[t[(i + 1) % 4] >> 16 & 0xff] ^ T3[t[(i + 2) % 4] >> 8 & 0xff] ^ T4[t[(i + 3) % 4] & 0xff] ^ this._Ke[r][i];
+            }
+            t = a.slice();
+          }
+
+          // the last round is special
+          var result = createArray(16),
+            tt;
+          for (var i = 0; i < 4; i++) {
+            tt = this._Ke[rounds][i];
+            result[4 * i] = (S[t[i] >> 24 & 0xff] ^ tt >> 24) & 0xff;
+            result[4 * i + 1] = (S[t[(i + 1) % 4] >> 16 & 0xff] ^ tt >> 16) & 0xff;
+            result[4 * i + 2] = (S[t[(i + 2) % 4] >> 8 & 0xff] ^ tt >> 8) & 0xff;
+            result[4 * i + 3] = (S[t[(i + 3) % 4] & 0xff] ^ tt) & 0xff;
+          }
+          return result;
+        };
+        AES.prototype.decrypt = function (ciphertext) {
+          if (ciphertext.length != 16) {
+            throw new Error('invalid ciphertext size (must be 16 bytes)');
+          }
+          var rounds = this._Kd.length - 1;
+          var a = [0, 0, 0, 0];
+
+          // convert plaintext to (ints ^ key)
+          var t = convertToInt32(ciphertext);
+          for (var i = 0; i < 4; i++) {
+            t[i] ^= this._Kd[0][i];
+          }
+
+          // apply round transforms
+          for (var r = 1; r < rounds; r++) {
+            for (var i = 0; i < 4; i++) {
+              a[i] = T5[t[i] >> 24 & 0xff] ^ T6[t[(i + 3) % 4] >> 16 & 0xff] ^ T7[t[(i + 2) % 4] >> 8 & 0xff] ^ T8[t[(i + 1) % 4] & 0xff] ^ this._Kd[r][i];
+            }
+            t = a.slice();
+          }
+
+          // the last round is special
+          var result = createArray(16),
+            tt;
+          for (var i = 0; i < 4; i++) {
+            tt = this._Kd[rounds][i];
+            result[4 * i] = (Si[t[i] >> 24 & 0xff] ^ tt >> 24) & 0xff;
+            result[4 * i + 1] = (Si[t[(i + 3) % 4] >> 16 & 0xff] ^ tt >> 16) & 0xff;
+            result[4 * i + 2] = (Si[t[(i + 2) % 4] >> 8 & 0xff] ^ tt >> 8) & 0xff;
+            result[4 * i + 3] = (Si[t[(i + 1) % 4] & 0xff] ^ tt) & 0xff;
+          }
+          return result;
+        };
+
+        /**
+         *  Mode Of Operation - Electonic Codebook (ECB)
+         */
+        var ModeOfOperationECB = function (key) {
+          if (!(this instanceof ModeOfOperationECB)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          this.description = "Electronic Code Block";
+          this.name = "ecb";
+          this._aes = new AES(key);
+        };
+        ModeOfOperationECB.prototype.encrypt = function (plaintext) {
+          plaintext = coerceArray(plaintext);
+          if (plaintext.length % 16 !== 0) {
+            throw new Error('invalid plaintext size (must be multiple of 16 bytes)');
+          }
+          var ciphertext = createArray(plaintext.length);
+          var block = createArray(16);
+          for (var i = 0; i < plaintext.length; i += 16) {
+            copyArray(plaintext, block, 0, i, i + 16);
+            block = this._aes.encrypt(block);
+            copyArray(block, ciphertext, i);
+          }
+          return ciphertext;
+        };
+        ModeOfOperationECB.prototype.decrypt = function (ciphertext) {
+          ciphertext = coerceArray(ciphertext);
+          if (ciphertext.length % 16 !== 0) {
+            throw new Error('invalid ciphertext size (must be multiple of 16 bytes)');
+          }
+          var plaintext = createArray(ciphertext.length);
+          var block = createArray(16);
+          for (var i = 0; i < ciphertext.length; i += 16) {
+            copyArray(ciphertext, block, 0, i, i + 16);
+            block = this._aes.decrypt(block);
+            copyArray(block, plaintext, i);
+          }
+          return plaintext;
+        };
+
+        /**
+         *  Mode Of Operation - Cipher Block Chaining (CBC)
+         */
+        var ModeOfOperationCBC = function (key, iv) {
+          if (!(this instanceof ModeOfOperationCBC)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          this.description = "Cipher Block Chaining";
+          this.name = "cbc";
+          if (!iv) {
+            iv = createArray(16);
+          } else if (iv.length != 16) {
+            throw new Error('invalid initialation vector size (must be 16 bytes)');
+          }
+          this._lastCipherblock = coerceArray(iv, true);
+          this._aes = new AES(key);
+        };
+        ModeOfOperationCBC.prototype.encrypt = function (plaintext) {
+          plaintext = coerceArray(plaintext);
+          if (plaintext.length % 16 !== 0) {
+            throw new Error('invalid plaintext size (must be multiple of 16 bytes)');
+          }
+          var ciphertext = createArray(plaintext.length);
+          var block = createArray(16);
+          for (var i = 0; i < plaintext.length; i += 16) {
+            copyArray(plaintext, block, 0, i, i + 16);
+            for (var j = 0; j < 16; j++) {
+              block[j] ^= this._lastCipherblock[j];
+            }
+            this._lastCipherblock = this._aes.encrypt(block);
+            copyArray(this._lastCipherblock, ciphertext, i);
+          }
+          return ciphertext;
+        };
+        ModeOfOperationCBC.prototype.decrypt = function (ciphertext) {
+          ciphertext = coerceArray(ciphertext);
+          if (ciphertext.length % 16 !== 0) {
+            throw new Error('invalid ciphertext size (must be multiple of 16 bytes)');
+          }
+          var plaintext = createArray(ciphertext.length);
+          var block = createArray(16);
+          for (var i = 0; i < ciphertext.length; i += 16) {
+            copyArray(ciphertext, block, 0, i, i + 16);
+            block = this._aes.decrypt(block);
+            for (var j = 0; j < 16; j++) {
+              plaintext[i + j] = block[j] ^ this._lastCipherblock[j];
+            }
+            copyArray(ciphertext, this._lastCipherblock, 0, i, i + 16);
+          }
+          return plaintext;
+        };
+
+        /**
+         *  Mode Of Operation - Cipher Feedback (CFB)
+         */
+        var ModeOfOperationCFB = function (key, iv, segmentSize) {
+          if (!(this instanceof ModeOfOperationCFB)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          this.description = "Cipher Feedback";
+          this.name = "cfb";
+          if (!iv) {
+            iv = createArray(16);
+          } else if (iv.length != 16) {
+            throw new Error('invalid initialation vector size (must be 16 size)');
+          }
+          if (!segmentSize) {
+            segmentSize = 1;
+          }
+          this.segmentSize = segmentSize;
+          this._shiftRegister = coerceArray(iv, true);
+          this._aes = new AES(key);
+        };
+        ModeOfOperationCFB.prototype.encrypt = function (plaintext) {
+          if (plaintext.length % this.segmentSize != 0) {
+            throw new Error('invalid plaintext size (must be segmentSize bytes)');
+          }
+          var encrypted = coerceArray(plaintext, true);
+          var xorSegment;
+          for (var i = 0; i < encrypted.length; i += this.segmentSize) {
+            xorSegment = this._aes.encrypt(this._shiftRegister);
+            for (var j = 0; j < this.segmentSize; j++) {
+              encrypted[i + j] ^= xorSegment[j];
+            }
+
+            // Shift the register
+            copyArray(this._shiftRegister, this._shiftRegister, 0, this.segmentSize);
+            copyArray(encrypted, this._shiftRegister, 16 - this.segmentSize, i, i + this.segmentSize);
+          }
+          return encrypted;
+        };
+        ModeOfOperationCFB.prototype.decrypt = function (ciphertext) {
+          if (ciphertext.length % this.segmentSize != 0) {
+            throw new Error('invalid ciphertext size (must be segmentSize bytes)');
+          }
+          var plaintext = coerceArray(ciphertext, true);
+          var xorSegment;
+          for (var i = 0; i < plaintext.length; i += this.segmentSize) {
+            xorSegment = this._aes.encrypt(this._shiftRegister);
+            for (var j = 0; j < this.segmentSize; j++) {
+              plaintext[i + j] ^= xorSegment[j];
+            }
+
+            // Shift the register
+            copyArray(this._shiftRegister, this._shiftRegister, 0, this.segmentSize);
+            copyArray(ciphertext, this._shiftRegister, 16 - this.segmentSize, i, i + this.segmentSize);
+          }
+          return plaintext;
+        };
+
+        /**
+         *  Mode Of Operation - Output Feedback (OFB)
+         */
+        var ModeOfOperationOFB = function (key, iv) {
+          if (!(this instanceof ModeOfOperationOFB)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          this.description = "Output Feedback";
+          this.name = "ofb";
+          if (!iv) {
+            iv = createArray(16);
+          } else if (iv.length != 16) {
+            throw new Error('invalid initialation vector size (must be 16 bytes)');
+          }
+          this._lastPrecipher = coerceArray(iv, true);
+          this._lastPrecipherIndex = 16;
+          this._aes = new AES(key);
+        };
+        ModeOfOperationOFB.prototype.encrypt = function (plaintext) {
+          var encrypted = coerceArray(plaintext, true);
+          for (var i = 0; i < encrypted.length; i++) {
+            if (this._lastPrecipherIndex === 16) {
+              this._lastPrecipher = this._aes.encrypt(this._lastPrecipher);
+              this._lastPrecipherIndex = 0;
+            }
+            encrypted[i] ^= this._lastPrecipher[this._lastPrecipherIndex++];
+          }
+          return encrypted;
+        };
+
+        // Decryption is symetric
+        ModeOfOperationOFB.prototype.decrypt = ModeOfOperationOFB.prototype.encrypt;
+
+        /**
+         *  Counter object for CTR common mode of operation
+         */
+        var Counter = function (initialValue) {
+          if (!(this instanceof Counter)) {
+            throw Error('Counter must be instanitated with `new`');
+          }
+
+          // We allow 0, but anything false-ish uses the default 1
+          if (initialValue !== 0 && !initialValue) {
+            initialValue = 1;
+          }
+          if (typeof initialValue === 'number') {
+            this._counter = createArray(16);
+            this.setValue(initialValue);
+          } else {
+            this.setBytes(initialValue);
+          }
+        };
+        Counter.prototype.setValue = function (value) {
+          if (typeof value !== 'number' || parseInt(value) != value) {
+            throw new Error('invalid counter value (must be an integer)');
+          }
+          for (var index = 15; index >= 0; --index) {
+            this._counter[index] = value % 256;
+            value = value >> 8;
+          }
+        };
+        Counter.prototype.setBytes = function (bytes) {
+          bytes = coerceArray(bytes, true);
+          if (bytes.length != 16) {
+            throw new Error('invalid counter bytes size (must be 16 bytes)');
+          }
+          this._counter = bytes;
+        };
+        Counter.prototype.increment = function () {
+          for (var i = 15; i >= 0; i--) {
+            if (this._counter[i] === 255) {
+              this._counter[i] = 0;
+            } else {
+              this._counter[i]++;
+              break;
+            }
+          }
+        };
+
+        /**
+         *  Mode Of Operation - Counter (CTR)
+         */
+        var ModeOfOperationCTR = function (key, counter) {
+          if (!(this instanceof ModeOfOperationCTR)) {
+            throw Error('AES must be instanitated with `new`');
+          }
+          this.description = "Counter";
+          this.name = "ctr";
+          if (!(counter instanceof Counter)) {
+            counter = new Counter(counter);
+          }
+          this._counter = counter;
+          this._remainingCounter = null;
+          this._remainingCounterIndex = 16;
+          this._aes = new AES(key);
+        };
+        ModeOfOperationCTR.prototype.encrypt = function (plaintext) {
+          var encrypted = coerceArray(plaintext, true);
+          for (var i = 0; i < encrypted.length; i++) {
+            if (this._remainingCounterIndex === 16) {
+              this._remainingCounter = this._aes.encrypt(this._counter._counter);
+              this._remainingCounterIndex = 0;
+              this._counter.increment();
+            }
+            encrypted[i] ^= this._remainingCounter[this._remainingCounterIndex++];
+          }
+          return encrypted;
+        };
+
+        // Decryption is symetric
+        ModeOfOperationCTR.prototype.decrypt = ModeOfOperationCTR.prototype.encrypt;
+
+        ///////////////////////
+        // Padding
+
+        // See:https://tools.ietf.org/html/rfc2315
+        function pkcs7pad(data) {
+          data = coerceArray(data, true);
+          var padder = 16 - data.length % 16;
+          var result = createArray(data.length + padder);
+          copyArray(data, result);
+          for (var i = data.length; i < result.length; i++) {
+            result[i] = padder;
+          }
+          return result;
+        }
+        function pkcs7strip(data) {
+          data = coerceArray(data, true);
+          if (data.length < 16) {
+            throw new Error('PKCS#7 invalid length');
+          }
+          var padder = data[data.length - 1];
+          if (padder > 16) {
+            throw new Error('PKCS#7 padding byte out of range');
+          }
+          var length = data.length - padder;
+          for (var i = 0; i < padder; i++) {
+            if (data[length + i] !== padder) {
+              throw new Error('PKCS#7 invalid padding byte');
+            }
+          }
+          var result = createArray(length);
+          copyArray(data, result, 0, 0, length);
+          return result;
+        }
+
+        ///////////////////////
+        // Exporting
+
+        // The block cipher
+        var aesjs = {
+          AES: AES,
+          Counter: Counter,
+          ModeOfOperation: {
+            ecb: ModeOfOperationECB,
+            cbc: ModeOfOperationCBC,
+            cfb: ModeOfOperationCFB,
+            ofb: ModeOfOperationOFB,
+            ctr: ModeOfOperationCTR
+          },
+          utils: {
+            hex: convertHex,
+            utf8: convertUtf8
+          },
+          padding: {
+            pkcs7: {
+              pad: pkcs7pad,
+              strip: pkcs7strip
+            }
+          },
+          _arrayTest: {
+            coerceArray: coerceArray,
+            createArray: createArray,
+            copyArray: copyArray
+          }
+        };
+
+        // node.js
+        {
+          module.exports = aesjs;
+
+          // RequireJS/AMD
+          // http://www.requirejs.org/docs/api.html
+          // https://github.com/amdjs/amdjs-api/wiki/AMD
+        }
+      })();
+    })(aesJs);
+    var aes = aesJsExports;
+
+    const version$7 = "json-wallets/5.7.0";
+
+    function looseArrayify(hexString) {
+      if (typeof hexString === 'string' && hexString.substring(0, 2) !== '0x') {
+        hexString = '0x' + hexString;
+      }
+      return arrayify(hexString);
+    }
+    function zpad(value, length) {
+      value = String(value);
+      while (value.length < length) {
+        value = '0' + value;
+      }
+      return value;
+    }
+    function getPassword(password) {
+      if (typeof password === 'string') {
+        return toUtf8Bytes(password, UnicodeNormalizationForm.NFKC);
+      }
+      return arrayify(password);
+    }
+    function searchPath(object, path) {
+      let currentChild = object;
+      const comps = path.toLowerCase().split('/');
+      for (let i = 0; i < comps.length; i++) {
+        // Search for a child object with a case-insensitive matching key
+        let matchingChild = null;
+        for (const key in currentChild) {
+          if (key.toLowerCase() === comps[i]) {
+            matchingChild = currentChild[key];
+            break;
+          }
+        }
+        // Didn't find one. :'(
+        if (matchingChild === null) {
+          return null;
+        }
+        // Now check this child...
+        currentChild = matchingChild;
+      }
+      return currentChild;
+    }
+    // See: https://www.ietf.org/rfc/rfc4122.txt (Section 4.4)
+    function uuidV4(randomBytes) {
+      const bytes = arrayify(randomBytes);
+      // Section: 4.1.3:
+      // - time_hi_and_version[12:16] = 0b0100
+      bytes[6] = bytes[6] & 0x0f | 0x40;
+      // Section 4.4
+      // - clock_seq_hi_and_reserved[6] = 0b0
+      // - clock_seq_hi_and_reserved[7] = 0b1
+      bytes[8] = bytes[8] & 0x3f | 0x80;
+      const value = hexlify(bytes);
+      return [value.substring(2, 10), value.substring(10, 14), value.substring(14, 18), value.substring(18, 22), value.substring(22, 34)].join("-");
+    }
+
+    const logger$m = new Logger(version$7);
+    class CrowdsaleAccount extends Description {
+      isCrowdsaleAccount(value) {
+        return !!(value && value._isCrowdsaleAccount);
+      }
+    }
+    // See: https://github.com/ethereum/pyethsaletool
+    function decrypt$1(json, password) {
+      const data = JSON.parse(json);
+      password = getPassword(password);
+      // Ethereum Address
+      const ethaddr = getAddress(searchPath(data, "ethaddr"));
+      // Encrypted Seed
+      const encseed = looseArrayify(searchPath(data, "encseed"));
+      if (!encseed || encseed.length % 16 !== 0) {
+        logger$m.throwArgumentError("invalid encseed", "json", json);
+      }
+      const key = arrayify(pbkdf2$1(password, password, 2000, 32, "sha256")).slice(0, 16);
+      const iv = encseed.slice(0, 16);
+      const encryptedSeed = encseed.slice(16);
+      // Decrypt the seed
+      const aesCbc = new aes.ModeOfOperation.cbc(key, iv);
+      const seed = aes.padding.pkcs7.strip(arrayify(aesCbc.decrypt(encryptedSeed)));
+      // This wallet format is weird... Convert the binary encoded hex to a string.
+      let seedHex = "";
+      for (let i = 0; i < seed.length; i++) {
+        seedHex += String.fromCharCode(seed[i]);
+      }
+      const seedHexBytes = toUtf8Bytes(seedHex);
+      const privateKey = keccak256$1(seedHexBytes);
+      return new CrowdsaleAccount({
+        _isCrowdsaleAccount: true,
+        address: ethaddr,
+        privateKey: privateKey
+      });
+    }
+
+    function isCrowdsaleWallet(json) {
+      let data = null;
+      try {
+        data = JSON.parse(json);
+      } catch (error) {
+        return false;
+      }
+      return data.encseed && data.ethaddr;
+    }
+    function isKeystoreWallet(json) {
+      let data = null;
+      try {
+        data = JSON.parse(json);
+      } catch (error) {
+        return false;
+      }
+      if (!data.version || parseInt(data.version) !== data.version || parseInt(data.version) !== 3) {
+        return false;
+      }
+      // @TODO: Put more checks to make sure it has kdf, iv and all that good stuff
+      return true;
+    }
+    //export function isJsonWallet(json: string): boolean {
+    //    return (isSecretStorageWallet(json) || isCrowdsaleWallet(json));
+    //}
+    function getJsonWalletAddress(json) {
+      if (isCrowdsaleWallet(json)) {
+        try {
+          return getAddress(JSON.parse(json).ethaddr);
+        } catch (error) {
+          return null;
+        }
+      }
+      if (isKeystoreWallet(json)) {
+        try {
+          return getAddress(JSON.parse(json).address);
+        } catch (error) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+    var scryptExports = {};
+    var scrypt$1 = {
+      get exports(){ return scryptExports; },
+      set exports(v){ scryptExports = v; },
+    };
+
+    (function (module, exports) {
+
+      (function (root) {
+        const MAX_VALUE = 0x7fffffff;
+
+        // The SHA256 and PBKDF2 implementation are from scrypt-async-js:
+        // See: https://github.com/dchest/scrypt-async-js
+        function SHA256(m) {
+          const K = new Uint32Array([0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]);
+          let h0 = 0x6a09e667,
+            h1 = 0xbb67ae85,
+            h2 = 0x3c6ef372,
+            h3 = 0xa54ff53a;
+          let h4 = 0x510e527f,
+            h5 = 0x9b05688c,
+            h6 = 0x1f83d9ab,
+            h7 = 0x5be0cd19;
+          const w = new Uint32Array(64);
+          function blocks(p) {
+            let off = 0,
+              len = p.length;
+            while (len >= 64) {
+              let a = h0,
+                b = h1,
+                c = h2,
+                d = h3,
+                e = h4,
+                f = h5,
+                g = h6,
+                h = h7,
+                u,
+                i,
+                j,
+                t1,
+                t2;
+              for (i = 0; i < 16; i++) {
+                j = off + i * 4;
+                w[i] = (p[j] & 0xff) << 24 | (p[j + 1] & 0xff) << 16 | (p[j + 2] & 0xff) << 8 | p[j + 3] & 0xff;
+              }
+              for (i = 16; i < 64; i++) {
+                u = w[i - 2];
+                t1 = (u >>> 17 | u << 32 - 17) ^ (u >>> 19 | u << 32 - 19) ^ u >>> 10;
+                u = w[i - 15];
+                t2 = (u >>> 7 | u << 32 - 7) ^ (u >>> 18 | u << 32 - 18) ^ u >>> 3;
+                w[i] = (t1 + w[i - 7] | 0) + (t2 + w[i - 16] | 0) | 0;
+              }
+              for (i = 0; i < 64; i++) {
+                t1 = (((e >>> 6 | e << 32 - 6) ^ (e >>> 11 | e << 32 - 11) ^ (e >>> 25 | e << 32 - 25)) + (e & f ^ ~e & g) | 0) + (h + (K[i] + w[i] | 0) | 0) | 0;
+                t2 = ((a >>> 2 | a << 32 - 2) ^ (a >>> 13 | a << 32 - 13) ^ (a >>> 22 | a << 32 - 22)) + (a & b ^ a & c ^ b & c) | 0;
+                h = g;
+                g = f;
+                f = e;
+                e = d + t1 | 0;
+                d = c;
+                c = b;
+                b = a;
+                a = t1 + t2 | 0;
+              }
+              h0 = h0 + a | 0;
+              h1 = h1 + b | 0;
+              h2 = h2 + c | 0;
+              h3 = h3 + d | 0;
+              h4 = h4 + e | 0;
+              h5 = h5 + f | 0;
+              h6 = h6 + g | 0;
+              h7 = h7 + h | 0;
+              off += 64;
+              len -= 64;
+            }
+          }
+          blocks(m);
+          let i,
+            bytesLeft = m.length % 64,
+            bitLenHi = m.length / 0x20000000 | 0,
+            bitLenLo = m.length << 3,
+            numZeros = bytesLeft < 56 ? 56 : 120,
+            p = m.slice(m.length - bytesLeft, m.length);
+          p.push(0x80);
+          for (i = bytesLeft + 1; i < numZeros; i++) {
+            p.push(0);
+          }
+          p.push(bitLenHi >>> 24 & 0xff);
+          p.push(bitLenHi >>> 16 & 0xff);
+          p.push(bitLenHi >>> 8 & 0xff);
+          p.push(bitLenHi >>> 0 & 0xff);
+          p.push(bitLenLo >>> 24 & 0xff);
+          p.push(bitLenLo >>> 16 & 0xff);
+          p.push(bitLenLo >>> 8 & 0xff);
+          p.push(bitLenLo >>> 0 & 0xff);
+          blocks(p);
+          return [h0 >>> 24 & 0xff, h0 >>> 16 & 0xff, h0 >>> 8 & 0xff, h0 >>> 0 & 0xff, h1 >>> 24 & 0xff, h1 >>> 16 & 0xff, h1 >>> 8 & 0xff, h1 >>> 0 & 0xff, h2 >>> 24 & 0xff, h2 >>> 16 & 0xff, h2 >>> 8 & 0xff, h2 >>> 0 & 0xff, h3 >>> 24 & 0xff, h3 >>> 16 & 0xff, h3 >>> 8 & 0xff, h3 >>> 0 & 0xff, h4 >>> 24 & 0xff, h4 >>> 16 & 0xff, h4 >>> 8 & 0xff, h4 >>> 0 & 0xff, h5 >>> 24 & 0xff, h5 >>> 16 & 0xff, h5 >>> 8 & 0xff, h5 >>> 0 & 0xff, h6 >>> 24 & 0xff, h6 >>> 16 & 0xff, h6 >>> 8 & 0xff, h6 >>> 0 & 0xff, h7 >>> 24 & 0xff, h7 >>> 16 & 0xff, h7 >>> 8 & 0xff, h7 >>> 0 & 0xff];
+        }
+        function PBKDF2_HMAC_SHA256_OneIter(password, salt, dkLen) {
+          // compress password if it's longer than hash block length
+          password = password.length <= 64 ? password : SHA256(password);
+          const innerLen = 64 + salt.length + 4;
+          const inner = new Array(innerLen);
+          const outerKey = new Array(64);
+          let i;
+          let dk = [];
+
+          // inner = (password ^ ipad) || salt || counter
+          for (i = 0; i < 64; i++) {
+            inner[i] = 0x36;
+          }
+          for (i = 0; i < password.length; i++) {
+            inner[i] ^= password[i];
+          }
+          for (i = 0; i < salt.length; i++) {
+            inner[64 + i] = salt[i];
+          }
+          for (i = innerLen - 4; i < innerLen; i++) {
+            inner[i] = 0;
+          }
+
+          // outerKey = password ^ opad
+          for (i = 0; i < 64; i++) outerKey[i] = 0x5c;
+          for (i = 0; i < password.length; i++) outerKey[i] ^= password[i];
+
+          // increments counter inside inner
+          function incrementCounter() {
+            for (let i = innerLen - 1; i >= innerLen - 4; i--) {
+              inner[i]++;
+              if (inner[i] <= 0xff) return;
+              inner[i] = 0;
+            }
+          }
+
+          // output blocks = SHA256(outerKey || SHA256(inner)) ...
+          while (dkLen >= 32) {
+            incrementCounter();
+            dk = dk.concat(SHA256(outerKey.concat(SHA256(inner))));
+            dkLen -= 32;
+          }
+          if (dkLen > 0) {
+            incrementCounter();
+            dk = dk.concat(SHA256(outerKey.concat(SHA256(inner))).slice(0, dkLen));
+          }
+          return dk;
+        }
+
+        // The following is an adaptation of scryptsy
+        // See: https://www.npmjs.com/package/scryptsy
+        function blockmix_salsa8(BY, Yi, r, x, _X) {
+          let i;
+          arraycopy(BY, (2 * r - 1) * 16, _X, 0, 16);
+          for (i = 0; i < 2 * r; i++) {
+            blockxor(BY, i * 16, _X, 16);
+            salsa20_8(_X, x);
+            arraycopy(_X, 0, BY, Yi + i * 16, 16);
+          }
+          for (i = 0; i < r; i++) {
+            arraycopy(BY, Yi + i * 2 * 16, BY, i * 16, 16);
+          }
+          for (i = 0; i < r; i++) {
+            arraycopy(BY, Yi + (i * 2 + 1) * 16, BY, (i + r) * 16, 16);
+          }
+        }
+        function R(a, b) {
+          return a << b | a >>> 32 - b;
+        }
+        function salsa20_8(B, x) {
+          arraycopy(B, 0, x, 0, 16);
+          for (let i = 8; i > 0; i -= 2) {
+            x[4] ^= R(x[0] + x[12], 7);
+            x[8] ^= R(x[4] + x[0], 9);
+            x[12] ^= R(x[8] + x[4], 13);
+            x[0] ^= R(x[12] + x[8], 18);
+            x[9] ^= R(x[5] + x[1], 7);
+            x[13] ^= R(x[9] + x[5], 9);
+            x[1] ^= R(x[13] + x[9], 13);
+            x[5] ^= R(x[1] + x[13], 18);
+            x[14] ^= R(x[10] + x[6], 7);
+            x[2] ^= R(x[14] + x[10], 9);
+            x[6] ^= R(x[2] + x[14], 13);
+            x[10] ^= R(x[6] + x[2], 18);
+            x[3] ^= R(x[15] + x[11], 7);
+            x[7] ^= R(x[3] + x[15], 9);
+            x[11] ^= R(x[7] + x[3], 13);
+            x[15] ^= R(x[11] + x[7], 18);
+            x[1] ^= R(x[0] + x[3], 7);
+            x[2] ^= R(x[1] + x[0], 9);
+            x[3] ^= R(x[2] + x[1], 13);
+            x[0] ^= R(x[3] + x[2], 18);
+            x[6] ^= R(x[5] + x[4], 7);
+            x[7] ^= R(x[6] + x[5], 9);
+            x[4] ^= R(x[7] + x[6], 13);
+            x[5] ^= R(x[4] + x[7], 18);
+            x[11] ^= R(x[10] + x[9], 7);
+            x[8] ^= R(x[11] + x[10], 9);
+            x[9] ^= R(x[8] + x[11], 13);
+            x[10] ^= R(x[9] + x[8], 18);
+            x[12] ^= R(x[15] + x[14], 7);
+            x[13] ^= R(x[12] + x[15], 9);
+            x[14] ^= R(x[13] + x[12], 13);
+            x[15] ^= R(x[14] + x[13], 18);
+          }
+          for (let i = 0; i < 16; ++i) {
+            B[i] += x[i];
+          }
+        }
+
+        // naive approach... going back to loop unrolling may yield additional performance
+        function blockxor(S, Si, D, len) {
+          for (let i = 0; i < len; i++) {
+            D[i] ^= S[Si + i];
+          }
+        }
+        function arraycopy(src, srcPos, dest, destPos, length) {
+          while (length--) {
+            dest[destPos++] = src[srcPos++];
+          }
+        }
+        function checkBufferish(o) {
+          if (!o || typeof o.length !== 'number') {
+            return false;
+          }
+          for (let i = 0; i < o.length; i++) {
+            const v = o[i];
+            if (typeof v !== 'number' || v % 1 || v < 0 || v >= 256) {
+              return false;
+            }
+          }
+          return true;
+        }
+        function ensureInteger(value, name) {
+          if (typeof value !== "number" || value % 1) {
+            throw new Error('invalid ' + name);
+          }
+          return value;
+        }
+
+        // N = Cpu cost, r = Memory cost, p = parallelization cost
+        // callback(error, progress, key)
+        function _scrypt(password, salt, N, r, p, dkLen, callback) {
+          N = ensureInteger(N, 'N');
+          r = ensureInteger(r, 'r');
+          p = ensureInteger(p, 'p');
+          dkLen = ensureInteger(dkLen, 'dkLen');
+          if (N === 0 || (N & N - 1) !== 0) {
+            throw new Error('N must be power of 2');
+          }
+          if (N > MAX_VALUE / 128 / r) {
+            throw new Error('N too large');
+          }
+          if (r > MAX_VALUE / 128 / p) {
+            throw new Error('r too large');
+          }
+          if (!checkBufferish(password)) {
+            throw new Error('password must be an array or buffer');
+          }
+          password = Array.prototype.slice.call(password);
+          if (!checkBufferish(salt)) {
+            throw new Error('salt must be an array or buffer');
+          }
+          salt = Array.prototype.slice.call(salt);
+          let b = PBKDF2_HMAC_SHA256_OneIter(password, salt, p * 128 * r);
+          const B = new Uint32Array(p * 32 * r);
+          for (let i = 0; i < B.length; i++) {
+            const j = i * 4;
+            B[i] = (b[j + 3] & 0xff) << 24 | (b[j + 2] & 0xff) << 16 | (b[j + 1] & 0xff) << 8 | (b[j + 0] & 0xff) << 0;
+          }
+          const XY = new Uint32Array(64 * r);
+          const V = new Uint32Array(32 * r * N);
+          const Yi = 32 * r;
+
+          // scratch space
+          const x = new Uint32Array(16); // salsa20_8
+          const _X = new Uint32Array(16); // blockmix_salsa8
+
+          const totalOps = p * N * 2;
+          let currentOp = 0;
+          let lastPercent10 = null;
+
+          // Set this to true to abandon the scrypt on the next step
+          let stop = false;
+
+          // State information
+          let state = 0;
+          let i0 = 0,
+            i1;
+          let Bi;
+
+          // How many blockmix_salsa8 can we do per step?
+          const limit = callback ? parseInt(1000 / r) : 0xffffffff;
+
+          // Trick from scrypt-async; if there is a setImmediate shim in place, use it
+          const nextTick = typeof setImmediate !== 'undefined' ? setImmediate : setTimeout;
+
+          // This is really all I changed; making scryptsy a state machine so we occasionally
+          // stop and give other evnts on the evnt loop a chance to run. ~RicMoo
+          const incrementalSMix = function () {
+            if (stop) {
+              return callback(new Error('cancelled'), currentOp / totalOps);
+            }
+            let steps;
+            switch (state) {
+              case 0:
+                // for (var i = 0; i < p; i++)...
+                Bi = i0 * 32 * r;
+                arraycopy(B, Bi, XY, 0, Yi); // ROMix - 1
+
+                state = 1; // Move to ROMix 2
+                i1 = 0;
+
+              // Fall through
+
+              case 1:
+                // Run up to 1000 steps of the first inner smix loop
+                steps = N - i1;
+                if (steps > limit) {
+                  steps = limit;
+                }
+                for (let i = 0; i < steps; i++) {
+                  // ROMix - 2
+                  arraycopy(XY, 0, V, (i1 + i) * Yi, Yi); // ROMix - 3
+                  blockmix_salsa8(XY, Yi, r, x, _X); // ROMix - 4
+                }
+
+                // for (var i = 0; i < N; i++)
+                i1 += steps;
+                currentOp += steps;
+                if (callback) {
+                  // Call the callback with the progress (optionally stopping us)
+                  const percent10 = parseInt(1000 * currentOp / totalOps);
+                  if (percent10 !== lastPercent10) {
+                    stop = callback(null, currentOp / totalOps);
+                    if (stop) {
+                      break;
+                    }
+                    lastPercent10 = percent10;
+                  }
+                }
+                if (i1 < N) {
+                  break;
+                }
+                i1 = 0; // Move to ROMix 6
+                state = 2;
+
+              // Fall through
+
+              case 2:
+                // Run up to 1000 steps of the second inner smix loop
+                steps = N - i1;
+                if (steps > limit) {
+                  steps = limit;
+                }
+                for (let i = 0; i < steps; i++) {
+                  // ROMix - 6
+                  const offset = (2 * r - 1) * 16; // ROMix - 7
+                  const j = XY[offset] & N - 1;
+                  blockxor(V, j * Yi, XY, Yi); // ROMix - 8 (inner)
+                  blockmix_salsa8(XY, Yi, r, x, _X); // ROMix - 9 (outer)
+                }
+
+                // for (var i = 0; i < N; i++)...
+                i1 += steps;
+                currentOp += steps;
+
+                // Call the callback with the progress (optionally stopping us)
+                if (callback) {
+                  const percent10 = parseInt(1000 * currentOp / totalOps);
+                  if (percent10 !== lastPercent10) {
+                    stop = callback(null, currentOp / totalOps);
+                    if (stop) {
+                      break;
+                    }
+                    lastPercent10 = percent10;
+                  }
+                }
+                if (i1 < N) {
+                  break;
+                }
+                arraycopy(XY, 0, B, Bi, Yi); // ROMix - 10
+
+                // for (var i = 0; i < p; i++)...
+                i0++;
+                if (i0 < p) {
+                  state = 0;
+                  break;
+                }
+                b = [];
+                for (let i = 0; i < B.length; i++) {
+                  b.push(B[i] >> 0 & 0xff);
+                  b.push(B[i] >> 8 & 0xff);
+                  b.push(B[i] >> 16 & 0xff);
+                  b.push(B[i] >> 24 & 0xff);
+                }
+                const derivedKey = PBKDF2_HMAC_SHA256_OneIter(password, b, dkLen);
+
+                // Send the result to the callback
+                if (callback) {
+                  callback(null, 1.0, derivedKey);
+                }
+
+                // Done; don't break (which would reschedule)
+                return derivedKey;
+            }
+
+            // Schedule the next steps
+            if (callback) {
+              nextTick(incrementalSMix);
+            }
+          };
+
+          // Run the smix state machine until completion
+          if (!callback) {
+            while (true) {
+              const derivedKey = incrementalSMix();
+              if (derivedKey != undefined) {
+                return derivedKey;
+              }
+            }
+          }
+
+          // Bootstrap the async incremental smix
+          incrementalSMix();
+        }
+        const lib = {
+          scrypt: function (password, salt, N, r, p, dkLen, progressCallback) {
+            return new Promise(function (resolve, reject) {
+              let lastProgress = 0;
+              if (progressCallback) {
+                progressCallback(0);
+              }
+              _scrypt(password, salt, N, r, p, dkLen, function (error, progress, key) {
+                if (error) {
+                  reject(error);
+                } else if (key) {
+                  if (progressCallback && lastProgress !== 1) {
+                    progressCallback(1);
+                  }
+                  resolve(new Uint8Array(key));
+                } else if (progressCallback && progress !== lastProgress) {
+                  lastProgress = progress;
+                  return progressCallback(progress);
+                }
+              });
+            });
+          },
+          syncScrypt: function (password, salt, N, r, p, dkLen) {
+            return new Uint8Array(_scrypt(password, salt, N, r, p, dkLen));
+          }
+        };
+
+        // node.js
+        {
+          module.exports = lib;
+
+          // RequireJS/AMD
+          // http://www.requirejs.org/docs/api.html
+          // https://github.com/amdjs/amdjs-api/wiki/AMD
+        }
+      })();
+    })(scrypt$1);
+    var scrypt = scryptExports;
+
+    var __awaiter$a = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$l = new Logger(version$7);
+    // Exported Types
+    function hasMnemonic$1(value) {
+      return value != null && value.mnemonic && value.mnemonic.phrase;
+    }
+    class KeystoreAccount extends Description {
+      isKeystoreAccount(value) {
+        return !!(value && value._isKeystoreAccount);
+      }
+    }
+    function _decrypt(data, key, ciphertext) {
+      const cipher = searchPath(data, "crypto/cipher");
+      if (cipher === "aes-128-ctr") {
+        const iv = looseArrayify(searchPath(data, "crypto/cipherparams/iv"));
+        const counter = new aes.Counter(iv);
+        const aesCtr = new aes.ModeOfOperation.ctr(key, counter);
+        return arrayify(aesCtr.decrypt(ciphertext));
+      }
+      return null;
+    }
+    function _getAccount(data, key) {
+      const ciphertext = looseArrayify(searchPath(data, "crypto/ciphertext"));
+      const computedMAC = hexlify(keccak256$1(concat([key.slice(16, 32), ciphertext]))).substring(2);
+      if (computedMAC !== searchPath(data, "crypto/mac").toLowerCase()) {
+        throw new Error("invalid password");
+      }
+      const privateKey = _decrypt(data, key.slice(0, 16), ciphertext);
+      if (!privateKey) {
+        logger$l.throwError("unsupported cipher", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "decrypt"
+        });
+      }
+      const mnemonicKey = key.slice(32, 64);
+      const address = computeAddress(privateKey);
+      if (data.address) {
+        let check = data.address.toLowerCase();
+        if (check.substring(0, 2) !== "0x") {
+          check = "0x" + check;
+        }
+        if (getAddress(check) !== address) {
+          throw new Error("address mismatch");
+        }
+      }
+      const account = {
+        _isKeystoreAccount: true,
+        address: address,
+        privateKey: hexlify(privateKey)
+      };
+      // Version 0.1 x-ethers metadata must contain an encrypted mnemonic phrase
+      if (searchPath(data, "x-ethers/version") === "0.1") {
+        const mnemonicCiphertext = looseArrayify(searchPath(data, "x-ethers/mnemonicCiphertext"));
+        const mnemonicIv = looseArrayify(searchPath(data, "x-ethers/mnemonicCounter"));
+        const mnemonicCounter = new aes.Counter(mnemonicIv);
+        const mnemonicAesCtr = new aes.ModeOfOperation.ctr(mnemonicKey, mnemonicCounter);
+        const path = searchPath(data, "x-ethers/path") || defaultPath;
+        const locale = searchPath(data, "x-ethers/locale") || "en";
+        const entropy = arrayify(mnemonicAesCtr.decrypt(mnemonicCiphertext));
+        try {
+          const mnemonic = entropyToMnemonic(entropy, locale);
+          const node = HDNode.fromMnemonic(mnemonic, null, locale).derivePath(path);
+          if (node.privateKey != account.privateKey) {
+            throw new Error("mnemonic mismatch");
+          }
+          account.mnemonic = node.mnemonic;
+        } catch (error) {
+          // If we don't have the locale wordlist installed to
+          // read this mnemonic, just bail and don't set the
+          // mnemonic
+          if (error.code !== Logger.errors.INVALID_ARGUMENT || error.argument !== "wordlist") {
+            throw error;
+          }
+        }
+      }
+      return new KeystoreAccount(account);
+    }
+    function pbkdf2Sync(passwordBytes, salt, count, dkLen, prfFunc) {
+      return arrayify(pbkdf2$1(passwordBytes, salt, count, dkLen, prfFunc));
+    }
+    function pbkdf2(passwordBytes, salt, count, dkLen, prfFunc) {
+      return Promise.resolve(pbkdf2Sync(passwordBytes, salt, count, dkLen, prfFunc));
+    }
+    function _computeKdfKey(data, password, pbkdf2Func, scryptFunc, progressCallback) {
+      const passwordBytes = getPassword(password);
+      const kdf = searchPath(data, "crypto/kdf");
+      if (kdf && typeof kdf === "string") {
+        const throwError = function (name, value) {
+          return logger$l.throwArgumentError("invalid key-derivation function parameters", name, value);
+        };
+        if (kdf.toLowerCase() === "scrypt") {
+          const salt = looseArrayify(searchPath(data, "crypto/kdfparams/salt"));
+          const N = parseInt(searchPath(data, "crypto/kdfparams/n"));
+          const r = parseInt(searchPath(data, "crypto/kdfparams/r"));
+          const p = parseInt(searchPath(data, "crypto/kdfparams/p"));
+          // Check for all required parameters
+          if (!N || !r || !p) {
+            throwError("kdf", kdf);
+          }
+          // Make sure N is a power of 2
+          if ((N & N - 1) !== 0) {
+            throwError("N", N);
+          }
+          const dkLen = parseInt(searchPath(data, "crypto/kdfparams/dklen"));
+          if (dkLen !== 32) {
+            throwError("dklen", dkLen);
+          }
+          return scryptFunc(passwordBytes, salt, N, r, p, 64, progressCallback);
+        } else if (kdf.toLowerCase() === "pbkdf2") {
+          const salt = looseArrayify(searchPath(data, "crypto/kdfparams/salt"));
+          let prfFunc = null;
+          const prf = searchPath(data, "crypto/kdfparams/prf");
+          if (prf === "hmac-sha256") {
+            prfFunc = "sha256";
+          } else if (prf === "hmac-sha512") {
+            prfFunc = "sha512";
+          } else {
+            throwError("prf", prf);
+          }
+          const count = parseInt(searchPath(data, "crypto/kdfparams/c"));
+          const dkLen = parseInt(searchPath(data, "crypto/kdfparams/dklen"));
+          if (dkLen !== 32) {
+            throwError("dklen", dkLen);
+          }
+          return pbkdf2Func(passwordBytes, salt, count, dkLen, prfFunc);
+        }
+      }
+      return logger$l.throwArgumentError("unsupported key-derivation function", "kdf", kdf);
+    }
+    function decryptSync(json, password) {
+      const data = JSON.parse(json);
+      const key = _computeKdfKey(data, password, pbkdf2Sync, scrypt.syncScrypt);
+      return _getAccount(data, key);
+    }
+    function decrypt(json, password, progressCallback) {
+      return __awaiter$a(this, void 0, void 0, function* () {
+        const data = JSON.parse(json);
+        const key = yield _computeKdfKey(data, password, pbkdf2, scrypt.scrypt, progressCallback);
+        return _getAccount(data, key);
+      });
+    }
+    function encrypt(account, password, options, progressCallback) {
+      try {
+        // Check the address matches the private key
+        if (getAddress(account.address) !== computeAddress(account.privateKey)) {
+          throw new Error("address/privateKey mismatch");
+        }
+        // Check the mnemonic (if any) matches the private key
+        if (hasMnemonic$1(account)) {
+          const mnemonic = account.mnemonic;
+          const node = HDNode.fromMnemonic(mnemonic.phrase, null, mnemonic.locale).derivePath(mnemonic.path || defaultPath);
+          if (node.privateKey != account.privateKey) {
+            throw new Error("mnemonic mismatch");
+          }
+        }
+      } catch (e) {
+        return Promise.reject(e);
+      }
+      // The options are optional, so adjust the call as needed
+      if (typeof options === "function" && !progressCallback) {
+        progressCallback = options;
+        options = {};
+      }
+      if (!options) {
+        options = {};
+      }
+      const privateKey = arrayify(account.privateKey);
+      const passwordBytes = getPassword(password);
+      let entropy = null;
+      let path = null;
+      let locale = null;
+      if (hasMnemonic$1(account)) {
+        const srcMnemonic = account.mnemonic;
+        entropy = arrayify(mnemonicToEntropy(srcMnemonic.phrase, srcMnemonic.locale || "en"));
+        path = srcMnemonic.path || defaultPath;
+        locale = srcMnemonic.locale || "en";
+      }
+      let client = options.client;
+      if (!client) {
+        client = "ethers.js";
+      }
+      // Check/generate the salt
+      let salt = null;
+      if (options.salt) {
+        salt = arrayify(options.salt);
+      } else {
+        salt = randomBytes(32);
+      }
+      // Override initialization vector
+      let iv = null;
+      if (options.iv) {
+        iv = arrayify(options.iv);
+        if (iv.length !== 16) {
+          throw new Error("invalid iv");
+        }
+      } else {
+        iv = randomBytes(16);
+      }
+      // Override the uuid
+      let uuidRandom = null;
+      if (options.uuid) {
+        uuidRandom = arrayify(options.uuid);
+        if (uuidRandom.length !== 16) {
+          throw new Error("invalid uuid");
+        }
+      } else {
+        uuidRandom = randomBytes(16);
+      }
+      // Override the scrypt password-based key derivation function parameters
+      let N = 1 << 17,
+        r = 8,
+        p = 1;
+      if (options.scrypt) {
+        if (options.scrypt.N) {
+          N = options.scrypt.N;
+        }
+        if (options.scrypt.r) {
+          r = options.scrypt.r;
+        }
+        if (options.scrypt.p) {
+          p = options.scrypt.p;
+        }
+      }
+      // We take 64 bytes:
+      //   - 32 bytes   As normal for the Web3 secret storage (derivedKey, macPrefix)
+      //   - 32 bytes   AES key to encrypt mnemonic with (required here to be Ethers Wallet)
+      return scrypt.scrypt(passwordBytes, salt, N, r, p, 64, progressCallback).then(key => {
+        key = arrayify(key);
+        // This will be used to encrypt the wallet (as per Web3 secret storage)
+        const derivedKey = key.slice(0, 16);
+        const macPrefix = key.slice(16, 32);
+        // This will be used to encrypt the mnemonic phrase (if any)
+        const mnemonicKey = key.slice(32, 64);
+        // Encrypt the private key
+        const counter = new aes.Counter(iv);
+        const aesCtr = new aes.ModeOfOperation.ctr(derivedKey, counter);
+        const ciphertext = arrayify(aesCtr.encrypt(privateKey));
+        // Compute the message authentication code, used to check the password
+        const mac = keccak256$1(concat([macPrefix, ciphertext]));
+        // See: https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+        const data = {
+          address: account.address.substring(2).toLowerCase(),
+          id: uuidV4(uuidRandom),
+          version: 3,
+          crypto: {
+            cipher: "aes-128-ctr",
+            cipherparams: {
+              iv: hexlify(iv).substring(2)
+            },
+            ciphertext: hexlify(ciphertext).substring(2),
+            kdf: "scrypt",
+            kdfparams: {
+              salt: hexlify(salt).substring(2),
+              n: N,
+              dklen: 32,
+              p: p,
+              r: r
+            },
+            mac: mac.substring(2)
+          }
+        };
+        // If we have a mnemonic, encrypt it into the JSON wallet
+        if (entropy) {
+          const mnemonicIv = randomBytes(16);
+          const mnemonicCounter = new aes.Counter(mnemonicIv);
+          const mnemonicAesCtr = new aes.ModeOfOperation.ctr(mnemonicKey, mnemonicCounter);
+          const mnemonicCiphertext = arrayify(mnemonicAesCtr.encrypt(entropy));
+          const now = new Date();
+          const timestamp = now.getUTCFullYear() + "-" + zpad(now.getUTCMonth() + 1, 2) + "-" + zpad(now.getUTCDate(), 2) + "T" + zpad(now.getUTCHours(), 2) + "-" + zpad(now.getUTCMinutes(), 2) + "-" + zpad(now.getUTCSeconds(), 2) + ".0Z";
+          data["x-ethers"] = {
+            client: client,
+            gethFilename: "UTC--" + timestamp + "--" + data.address,
+            mnemonicCounter: hexlify(mnemonicIv).substring(2),
+            mnemonicCiphertext: hexlify(mnemonicCiphertext).substring(2),
+            path: path,
+            locale: locale,
+            version: "0.1"
+          };
+        }
+        return JSON.stringify(data);
+      });
+    }
+
+    function decryptJsonWallet(json, password, progressCallback) {
+      if (isCrowdsaleWallet(json)) {
+        if (progressCallback) {
+          progressCallback(0);
+        }
+        const account = decrypt$1(json, password);
+        if (progressCallback) {
+          progressCallback(1);
+        }
+        return Promise.resolve(account);
+      }
+      if (isKeystoreWallet(json)) {
+        return decrypt(json, password, progressCallback);
+      }
+      return Promise.reject(new Error("invalid JSON wallet"));
+    }
+    function decryptJsonWalletSync(json, password) {
+      if (isCrowdsaleWallet(json)) {
+        return decrypt$1(json, password);
+      }
+      if (isKeystoreWallet(json)) {
+        return decryptSync(json, password);
+      }
+      throw new Error("invalid JSON wallet");
+    }
+
+    const version$6 = "wallet/5.7.0";
+
+    var __awaiter$9 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$k = new Logger(version$6);
+    function isAccount(value) {
+      return value != null && isHexString(value.privateKey, 32) && value.address != null;
+    }
+    function hasMnemonic(value) {
+      const mnemonic = value.mnemonic;
+      return mnemonic && mnemonic.phrase;
+    }
+    class Wallet extends Signer {
+      constructor(privateKey, provider) {
+        super();
+        if (isAccount(privateKey)) {
+          const signingKey = new SigningKey(privateKey.privateKey);
+          defineReadOnly(this, "_signingKey", () => signingKey);
+          defineReadOnly(this, "address", computeAddress(this.publicKey));
+          if (this.address !== getAddress(privateKey.address)) {
+            logger$k.throwArgumentError("privateKey/address mismatch", "privateKey", "[REDACTED]");
+          }
+          if (hasMnemonic(privateKey)) {
+            const srcMnemonic = privateKey.mnemonic;
+            defineReadOnly(this, "_mnemonic", () => ({
+              phrase: srcMnemonic.phrase,
+              path: srcMnemonic.path || defaultPath,
+              locale: srcMnemonic.locale || "en"
+            }));
+            const mnemonic = this.mnemonic;
+            const node = HDNode.fromMnemonic(mnemonic.phrase, null, mnemonic.locale).derivePath(mnemonic.path);
+            if (computeAddress(node.privateKey) !== this.address) {
+              logger$k.throwArgumentError("mnemonic/address mismatch", "privateKey", "[REDACTED]");
+            }
+          } else {
+            defineReadOnly(this, "_mnemonic", () => null);
+          }
+        } else {
+          if (SigningKey.isSigningKey(privateKey)) {
+            /* istanbul ignore if */
+            if (privateKey.curve !== "secp256k1") {
+              logger$k.throwArgumentError("unsupported curve; must be secp256k1", "privateKey", "[REDACTED]");
+            }
+            defineReadOnly(this, "_signingKey", () => privateKey);
+          } else {
+            // A lot of common tools do not prefix private keys with a 0x (see: #1166)
+            if (typeof privateKey === "string") {
+              if (privateKey.match(/^[0-9a-f]*$/i) && privateKey.length === 64) {
+                privateKey = "0x" + privateKey;
+              }
+            }
+            const signingKey = new SigningKey(privateKey);
+            defineReadOnly(this, "_signingKey", () => signingKey);
+          }
+          defineReadOnly(this, "_mnemonic", () => null);
+          defineReadOnly(this, "address", computeAddress(this.publicKey));
+        }
+        /* istanbul ignore if */
+        if (provider && !Provider.isProvider(provider)) {
+          logger$k.throwArgumentError("invalid provider", "provider", provider);
+        }
+        defineReadOnly(this, "provider", provider || null);
+      }
+      get mnemonic() {
+        return this._mnemonic();
+      }
+      get privateKey() {
+        return this._signingKey().privateKey;
+      }
+      get publicKey() {
+        return this._signingKey().publicKey;
+      }
+      getAddress() {
+        return Promise.resolve(this.address);
+      }
+      connect(provider) {
+        return new Wallet(this, provider);
+      }
+      signTransaction(transaction) {
+        return resolveProperties(transaction).then(tx => {
+          if (tx.from != null) {
+            if (getAddress(tx.from) !== this.address) {
+              logger$k.throwArgumentError("transaction from address mismatch", "transaction.from", transaction.from);
+            }
+            delete tx.from;
+          }
+          const signature = this._signingKey().signDigest(keccak256$1(serialize$1(tx)));
+          return serialize$1(tx, signature);
+        });
+      }
+      signMessage(message) {
+        return __awaiter$9(this, void 0, void 0, function* () {
+          return joinSignature(this._signingKey().signDigest(hashMessage(message)));
+        });
+      }
+      _signTypedData(domain, types, value) {
+        return __awaiter$9(this, void 0, void 0, function* () {
+          // Populate any ENS names
+          const populated = yield TypedDataEncoder.resolveNames(domain, types, value, name => {
+            if (this.provider == null) {
+              logger$k.throwError("cannot resolve ENS names without a provider", Logger.errors.UNSUPPORTED_OPERATION, {
+                operation: "resolveName",
+                value: name
+              });
+            }
+            return this.provider.resolveName(name);
+          });
+          return joinSignature(this._signingKey().signDigest(TypedDataEncoder.hash(populated.domain, types, populated.value)));
+        });
+      }
+      encrypt(password, options, progressCallback) {
+        if (typeof options === "function" && !progressCallback) {
+          progressCallback = options;
+          options = {};
+        }
+        if (progressCallback && typeof progressCallback !== "function") {
+          throw new Error("invalid callback");
+        }
+        if (!options) {
+          options = {};
+        }
+        return encrypt(this, password, options, progressCallback);
+      }
+      /**
+       *  Static methods to create Wallet instances.
+       */
+      static createRandom(options) {
+        let entropy = randomBytes(16);
+        if (!options) {
+          options = {};
+        }
+        if (options.extraEntropy) {
+          entropy = arrayify(hexDataSlice(keccak256$1(concat([entropy, options.extraEntropy])), 0, 16));
+        }
+        const mnemonic = entropyToMnemonic(entropy, options.locale);
+        return Wallet.fromMnemonic(mnemonic, options.path, options.locale);
+      }
+      static fromEncryptedJson(json, password, progressCallback) {
+        return decryptJsonWallet(json, password, progressCallback).then(account => {
+          return new Wallet(account);
+        });
+      }
+      static fromEncryptedJsonSync(json, password) {
+        return new Wallet(decryptJsonWalletSync(json, password));
+      }
+      static fromMnemonic(mnemonic, path, wordlist) {
+        if (!path) {
+          path = defaultPath;
+        }
+        return new Wallet(HDNode.fromMnemonic(mnemonic, null, wordlist).derivePath(path));
+      }
+    }
+    function verifyMessage(message, signature) {
+      return recoverAddress(hashMessage(message), signature);
+    }
+    function verifyTypedData(domain, types, value, signature) {
+      return recoverAddress(TypedDataEncoder.hash(domain, types, value), signature);
+    }
+
+    const version$5 = "networks/5.7.1";
+
+    const logger$j = new Logger(version$5);
     function isRenetworkable(value) {
       return value && typeof value.renetwork === "function";
     }
@@ -25509,13 +28518,13 @@
       // Not a standard network; check that it is a valid network in general
       if (!standard) {
         if (typeof network.chainId !== "number") {
-          logger$6.throwArgumentError("invalid network chainId", "network", network);
+          logger$j.throwArgumentError("invalid network chainId", "network", network);
         }
         return network;
       }
       // Make sure the chainId matches the expected network chainId (or is 0; disable EIP-155)
       if (network.chainId !== 0 && network.chainId !== standard.chainId) {
-        logger$6.throwArgumentError("network chainId mismatch", "network", network);
+        logger$j.throwArgumentError("network chainId mismatch", "network", network);
       }
       // @TODO: In the next major version add an attach function to a defaultProvider
       // class and move the _defaultProvider internal to this file (extend Network)
@@ -25536,9 +28545,9 @@
       };
     }
 
-    const version$2 = "web/5.7.1";
+    const version$4 = "web/5.7.1";
 
-    var __awaiter$3 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$8 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -25566,7 +28575,7 @@
       });
     };
     function getUrl(href, options) {
-      return __awaiter$3(this, void 0, void 0, function* () {
+      return __awaiter$8(this, void 0, void 0, function* () {
         if (options == null) {
           options = {};
         }
@@ -25621,7 +28630,7 @@
       });
     }
 
-    var __awaiter$2 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$7 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -25648,7 +28657,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$5 = new Logger(version$2);
+    const logger$i = new Logger(version$4);
     function staller(duration) {
       return new Promise(resolve => {
         setTimeout(resolve, duration);
@@ -25685,10 +28694,10 @@
     function _fetchData(connection, body, processFunc) {
       // How many times to retry in the event of a throttle
       const attemptLimit = typeof connection === "object" && connection.throttleLimit != null ? connection.throttleLimit : 12;
-      logger$5.assertArgument(attemptLimit > 0 && attemptLimit % 1 === 0, "invalid connection throttle limit", "connection.throttleLimit", attemptLimit);
+      logger$i.assertArgument(attemptLimit > 0 && attemptLimit % 1 === 0, "invalid connection throttle limit", "connection.throttleLimit", attemptLimit);
       const throttleCallback = typeof connection === "object" ? connection.throttleCallback : null;
       const throttleSlotInterval = typeof connection === "object" && typeof connection.throttleSlotInterval === "number" ? connection.throttleSlotInterval : 100;
-      logger$5.assertArgument(throttleSlotInterval > 0 && throttleSlotInterval % 1 === 0, "invalid connection throttle slot interval", "connection.throttleSlotInterval", throttleSlotInterval);
+      logger$i.assertArgument(throttleSlotInterval > 0 && throttleSlotInterval % 1 === 0, "invalid connection throttle slot interval", "connection.throttleSlotInterval", throttleSlotInterval);
       const errorPassThrough = typeof connection === "object" ? !!connection.errorPassThrough : false;
       const headers = {};
       let url = null;
@@ -25702,7 +28711,7 @@
         url = connection;
       } else if (typeof connection === "object") {
         if (connection == null || connection.url == null) {
-          logger$5.throwArgumentError("missing URL", "connection.url", connection);
+          logger$i.throwArgumentError("missing URL", "connection.url", connection);
         }
         url = connection.url;
         if (typeof connection.timeout === "number" && connection.timeout > 0) {
@@ -25722,7 +28731,7 @@
         options.allowGzip = !!connection.allowGzip;
         if (connection.user != null && connection.password != null) {
           if (url.substring(0, 6) !== "https:" && connection.allowInsecureAuthentication !== true) {
-            logger$5.throwError("basic authentication requires a secure https url", Logger.errors.INVALID_ARGUMENT, {
+            logger$i.throwError("basic authentication requires a secure https url", Logger.errors.INVALID_ARGUMENT, {
               argument: "url",
               url: url,
               user: connection.user,
@@ -25760,7 +28769,7 @@
           }
           return Promise.resolve(result);
         } catch (error) {
-          logger$5.throwError("processing response error", Logger.errors.SERVER_ERROR, {
+          logger$i.throwError("processing response error", Logger.errors.SERVER_ERROR, {
             body: bodyify(dataMatch[1], dataMatch[2]),
             error: error,
             requestBody: null,
@@ -25800,7 +28809,7 @@
                 return;
               }
               timer = null;
-              reject(logger$5.makeError("timeout", Logger.errors.TIMEOUT, {
+              reject(logger$i.makeError("timeout", Logger.errors.TIMEOUT, {
                 requestBody: bodyify(options.body, flatHeaders["content-type"]),
                 requestMethod: options.method,
                 timeout: timeout,
@@ -25822,7 +28831,7 @@
         };
       }();
       const runningFetch = function () {
-        return __awaiter$2(this, void 0, void 0, function* () {
+        return __awaiter$7(this, void 0, void 0, function* () {
           for (let attempt = 0; attempt < attemptLimit; attempt++) {
             let response = null;
             try {
@@ -25859,7 +28868,7 @@
               response = error.response;
               if (response == null) {
                 runningTimeout.cancel();
-                logger$5.throwError("missing response", Logger.errors.SERVER_ERROR, {
+                logger$i.throwError("missing response", Logger.errors.SERVER_ERROR, {
                   requestBody: bodyify(options.body, flatHeaders["content-type"]),
                   requestMethod: options.method,
                   serverError: error,
@@ -25872,7 +28881,7 @@
               body = null;
             } else if (!errorPassThrough && (response.statusCode < 200 || response.statusCode >= 300)) {
               runningTimeout.cancel();
-              logger$5.throwError("bad response", Logger.errors.SERVER_ERROR, {
+              logger$i.throwError("bad response", Logger.errors.SERVER_ERROR, {
                 status: response.statusCode,
                 headers: response.headers,
                 body: bodyify(body, response.headers ? response.headers["content-type"] : null),
@@ -25901,7 +28910,7 @@
                   }
                 }
                 runningTimeout.cancel();
-                logger$5.throwError("processing response error", Logger.errors.SERVER_ERROR, {
+                logger$i.throwError("processing response error", Logger.errors.SERVER_ERROR, {
                   body: bodyify(body, response.headers ? response.headers["content-type"] : null),
                   error: error,
                   requestBody: bodyify(options.body, flatHeaders["content-type"]),
@@ -25915,7 +28924,7 @@
             // The "body" is now a Uint8Array.
             return body;
           }
-          return logger$5.throwError("failed response", Logger.errors.SERVER_ERROR, {
+          return logger$i.throwError("failed response", Logger.errors.SERVER_ERROR, {
             requestBody: bodyify(options.body, flatHeaders["content-type"]),
             requestMethod: options.method,
             url: url
@@ -25931,7 +28940,7 @@
           try {
             result = JSON.parse(toUtf8String(value));
           } catch (error) {
-            logger$5.throwError("invalid JSON", Logger.errors.SERVER_ERROR, {
+            logger$i.throwError("invalid JSON", Logger.errors.SERVER_ERROR, {
               body: value,
               error: error
             });
@@ -26191,9 +29200,9 @@
       fromWords: fromWords
     };
 
-    const version$1 = "providers/5.7.2";
+    const version$3 = "providers/5.7.2";
 
-    const logger$4 = new Logger(version$1);
+    const logger$h = new Logger(version$3);
     class Formatter {
       constructor() {
         this.formats = this.getDefaultFormats();
@@ -26360,7 +29369,7 @@
             return value.toLowerCase();
           }
         }
-        return logger$4.throwArgumentError("invalid hash", "value", value);
+        return logger$h.throwArgumentError("invalid hash", "value", value);
       }
       data(value, strict) {
         const result = this.hex(value, strict);
@@ -26410,7 +29419,7 @@
       hash(value, strict) {
         const result = this.hex(value, strict);
         if (hexDataLength(result) !== 32) {
-          return logger$4.throwArgumentError("invalid hash", "value", value);
+          return logger$h.throwArgumentError("invalid hash", "value", value);
         }
         return result;
       }
@@ -26522,7 +29531,7 @@
             if (value === 0 || value === 1) {
               // Make sure if both are specified, they match
               if (result.status != null && result.status !== value) {
-                logger$4.throwArgumentError("alt-root-status/status mismatch", "value", {
+                logger$h.throwArgumentError("alt-root-status/status mismatch", "value", {
                   root: result.root,
                   status: result.status
                 });
@@ -26530,11 +29539,11 @@
               result.status = value;
               delete result.root;
             } else {
-              logger$4.throwArgumentError("invalid alt-root-status", "value.root", result.root);
+              logger$h.throwArgumentError("invalid alt-root-status", "value.root", result.root);
             }
           } else if (result.root.length !== 66) {
             // Must be a valid bytes32
-            logger$4.throwArgumentError("invalid root hash", "value.root", result.root);
+            logger$h.throwArgumentError("invalid root hash", "value.root", result.root);
           }
         }
         if (result.status != null) {
@@ -26604,8 +29613,34 @@
         };
       }
     }
+    function isCommunityResourcable(value) {
+      return value && typeof value.isCommunityResource === "function";
+    }
+    function isCommunityResource(value) {
+      return isCommunityResourcable(value) && value.isCommunityResource();
+    }
+    // Show the throttle message only once
+    let throttleMessage = false;
+    function showThrottleMessage() {
+      if (throttleMessage) {
+        return;
+      }
+      throttleMessage = true;
+      console.log("========= NOTICE =========");
+      console.log("Request-Rate Exceeded  (this message will not be repeated)");
+      console.log("");
+      console.log("The default API keys for each service are provided as a highly-throttled,");
+      console.log("community resource for low-traffic projects and early prototyping.");
+      console.log("");
+      console.log("While your application will continue to function, we highly recommended");
+      console.log("signing up for your own API keys to improve performance, increase your");
+      console.log("request rate/limit and enable other perks, such as metrics and advanced APIs.");
+      console.log("");
+      console.log("For more details: https:/\/docs.ethers.io/api-keys/");
+      console.log("==========================");
+    }
 
-    var __awaiter$1 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$6 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -26632,7 +29667,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$3 = new Logger(version$1);
+    const logger$g = new Logger(version$3);
     const MAX_CCIP_REDIRECTS = 10;
     //////////////////////////////
     // Event Serializeing
@@ -26641,7 +29676,7 @@
         return "null";
       }
       if (hexDataLength(topic) !== 32) {
-        logger$3.throwArgumentError("invalid topic", "topic", topic);
+        logger$g.throwArgumentError("invalid topic", "topic", topic);
       }
       return topic.toLowerCase();
     }
@@ -26693,7 +29728,7 @@
       } else if (Array.isArray(eventName)) {
         return "filter:*:" + serializeTopics(eventName);
       } else if (ForkEvent.isForkEvent(eventName)) {
-        logger$3.warn("not implemented");
+        logger$g.warn("not implemented");
         throw new Error("not implemented");
       } else if (eventName && typeof eventName === "object") {
         return "filter:" + (eventName.address || "*") + ":" + serializeTopics(eventName.topics || []);
@@ -26705,7 +29740,7 @@
     function getTime() {
       return new Date().getTime();
     }
-    function stall(duration) {
+    function stall$1(duration) {
       return new Promise(resolve => {
         setTimeout(resolve, duration);
       });
@@ -26809,7 +29844,7 @@
     }
     // Compute the Base58Check encoded data (checksum is first 4 bytes of sha256d)
     function base58Encode(data) {
-      return Base58.encode(concat([data, hexDataSlice(sha256(sha256(data)), 0, 4)]));
+      return Base58.encode(concat([data, hexDataSlice(sha256$1(sha256$1(data)), 0, 4)]));
     }
     const matcherIpfs = new RegExp("^(ipfs):/\/(.*)$", "i");
     const matchers = [new RegExp("^(https):/\/(.*)$", "i"), new RegExp("^(data):(.*)$", "i"), matcherIpfs, new RegExp("^eip155:[0-9]+/(erc[0-9]+):(.*)$", "i")];
@@ -26834,7 +29869,7 @@
       } else if (link.match(/^ipfs:\/\//i)) {
         link = link.substring(7);
       } else {
-        logger$3.throwArgumentError("unsupported IPFS format", "link", link);
+        logger$g.throwArgumentError("unsupported IPFS format", "link", link);
       }
       return `https:/\/gateway.ipfs.io/ipfs/${link}`;
     }
@@ -26903,7 +29938,7 @@
         return this._supportsEip2544;
       }
       _fetch(selector, parameters) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           // e.g. keccak256("addr(bytes32,uint256)")
           const tx = {
             to: this.address,
@@ -26920,7 +29955,7 @@
           try {
             let result = yield this.provider.call(tx);
             if (arrayify(result).length % 32 === 4) {
-              logger$3.throwError("resolver threw error", Logger.errors.CALL_EXCEPTION, {
+              logger$g.throwError("resolver threw error", Logger.errors.CALL_EXCEPTION, {
                 transaction: tx,
                 data: result
               });
@@ -26938,7 +29973,7 @@
         });
       }
       _fetchBytes(selector, parameters) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const result = yield this._fetch(selector, parameters);
           if (result != null) {
             return _parseBytes(result, 0);
@@ -26949,7 +29984,7 @@
       _getAddress(coinType, hexBytes) {
         const coinInfo = coinInfos[String(coinType)];
         if (coinInfo == null) {
-          logger$3.throwError(`unsupported coin type: ${coinType}`, Logger.errors.UNSUPPORTED_OPERATION, {
+          logger$g.throwError(`unsupported coin type: ${coinType}`, Logger.errors.UNSUPPORTED_OPERATION, {
             operation: `getAddress(${coinType})`
           });
         }
@@ -26998,7 +30033,7 @@
         return null;
       }
       getAddress(coinType) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           if (coinType == null) {
             coinType = 60;
           }
@@ -27028,7 +30063,7 @@
           // Compute the address
           const address = this._getAddress(coinType, hexBytes);
           if (address == null) {
-            logger$3.throwError(`invalid or unsupported coin data`, Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$g.throwError(`invalid or unsupported coin data`, Logger.errors.UNSUPPORTED_OPERATION, {
               operation: `getAddress(${coinType})`,
               coinType: coinType,
               data: hexBytes
@@ -27038,7 +30073,7 @@
         });
       }
       getAvatar() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const linkage = [{
             type: "name",
             content: this.name
@@ -27202,7 +30237,7 @@
         });
       }
       getContentHash() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           // keccak256("contenthash()")
           const hexBytes = yield this._fetchBytes("0xbc1c58d1");
           // No contenthash
@@ -27245,14 +30280,14 @@
               return "sia:/\/" + hash;
             }
           }
-          return logger$3.throwError(`invalid or unsupported content hash data`, Logger.errors.UNSUPPORTED_OPERATION, {
+          return logger$g.throwError(`invalid or unsupported content hash data`, Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "getContentHash()",
             data: hexBytes
           });
         });
       }
       getText(key) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           // The key encoded as parameter to fetchBytes
           let keyBytes = toUtf8Bytes(key);
           // The nodehash consumes the first slot, so the string pointer targets
@@ -27310,7 +30345,7 @@
             defineReadOnly(this, "_network", knownNetwork);
             this.emit("network", knownNetwork, null);
           } else {
-            logger$3.throwArgumentError("invalid network", "network", network);
+            logger$g.throwArgumentError("invalid network", "network", network);
           }
         }
         this._maxInternalBlockNumber = -1024;
@@ -27320,7 +30355,7 @@
         this._fastQueryDate = 0;
       }
       _ready() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           if (this._network == null) {
             let network = null;
             if (this._networkPromise) {
@@ -27335,7 +30370,7 @@
             // This should never happen; every Provider sub-class should have
             // suggested a network by here (or have thrown).
             if (!network) {
-              logger$3.throwError("no network detected", Logger.errors.UNKNOWN_ERROR, {});
+              logger$g.throwError("no network detected", Logger.errors.UNKNOWN_ERROR, {});
             }
             // Possible this call stacked so do not call defineReadOnly again
             if (this._network == null) {
@@ -27378,7 +30413,7 @@
         return getNetwork(network == null ? "homestead" : network);
       }
       ccipReadFetch(tx, calldata, urls) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           if (this.disableCcipRead || urls.length === 0) {
             return null;
           }
@@ -27407,7 +30442,7 @@
             const errorMessage = result.message || "unknown error";
             // 4xx indicates the result is not present; stop
             if (result.status >= 400 && result.status < 500) {
-              return logger$3.throwError(`response not found during CCIP fetch: ${errorMessage}`, Logger.errors.SERVER_ERROR, {
+              return logger$g.throwError(`response not found during CCIP fetch: ${errorMessage}`, Logger.errors.SERVER_ERROR, {
                 url,
                 errorMessage
               });
@@ -27415,7 +30450,7 @@
             // 5xx indicates server issue; try the next url
             errorMessages.push(errorMessage);
           }
-          return logger$3.throwError(`error encountered during CCIP fetch: ${errorMessages.map(m => JSON.stringify(m)).join(", ")}`, Logger.errors.SERVER_ERROR, {
+          return logger$g.throwError(`error encountered during CCIP fetch: ${errorMessages.map(m => JSON.stringify(m)).join(", ")}`, Logger.errors.SERVER_ERROR, {
             urls,
             errorMessages
           });
@@ -27424,7 +30459,7 @@
       // Fetches the blockNumber, but will reuse any result that is less
       // than maxAge old or has been requested since the last request
       _getInternalBlockNumber(maxAge) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this._ready();
           // Allowing stale data up to maxAge old
           if (maxAge > 0) {
@@ -27491,7 +30526,7 @@
         });
       }
       poll() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const pollId = nextPollId++;
           // Track all running promises, so we can trigger a post-poll once they are complete
           const runners = [];
@@ -27515,8 +30550,8 @@
             this._emitted.block = blockNumber - 1;
           }
           if (Math.abs(this._emitted.block - blockNumber) > 1000) {
-            logger$3.warn(`network block skew detected; skipping block events (emitted=${this._emitted.block} blockNumber${blockNumber})`);
-            this.emit("error", logger$3.makeError("network block skew detected", Logger.errors.NETWORK_ERROR, {
+            logger$g.warn(`network block skew detected; skipping block events (emitted=${this._emitted.block} blockNumber${blockNumber})`);
+            this.emit("error", logger$g.makeError("network block skew detected", Logger.errors.NETWORK_ERROR, {
               blockNumber: blockNumber,
               event: "blockSkew",
               previousBlockNumber: this._emitted.block
@@ -27651,14 +30686,14 @@
       // This method should query the network if the underlying network
       // can change, such as when connected to a JSON-RPC backend
       detectNetwork() {
-        return __awaiter$1(this, void 0, void 0, function* () {
-          return logger$3.throwError("provider does not support network detection", Logger.errors.UNSUPPORTED_OPERATION, {
+        return __awaiter$6(this, void 0, void 0, function* () {
+          return logger$g.throwError("provider does not support network detection", Logger.errors.UNSUPPORTED_OPERATION, {
             operation: "provider.detectNetwork"
           });
         });
       }
       getNetwork() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const network = yield this._ready();
           // Make sure we are still connected to the same network; this is
           // only an external call for backends which can have the underlying
@@ -27681,10 +30716,10 @@
               // so any events have a chance to unregister, so we stall an
               // additional event loop before returning from /this/ call
               this.emit("network", currentNetwork, network);
-              yield stall(0);
+              yield stall$1(0);
               return this._network;
             }
-            const error = logger$3.makeError("underlying network changed", Logger.errors.NETWORK_ERROR, {
+            const error = logger$g.makeError("underlying network changed", Logger.errors.NETWORK_ERROR, {
               event: "changed",
               network: network,
               detectedNetwork: currentNetwork
@@ -27773,12 +30808,12 @@
         }
       }
       waitForTransaction(transactionHash, confirmations, timeout) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           return this._waitForTransaction(transactionHash, confirmations == null ? 1 : confirmations, timeout || 0, null);
         });
       }
       _waitForTransaction(transactionHash, confirmations, timeout, replaceable) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const receipt = yield this.getTransactionReceipt(transactionHash);
           // Receipt is already good
           if ((receipt ? receipt.confirmations : 0) >= confirmations) {
@@ -27814,15 +30849,15 @@
             if (replaceable) {
               let lastBlockNumber = replaceable.startBlock;
               let scannedBlock = null;
-              const replaceHandler = blockNumber => __awaiter$1(this, void 0, void 0, function* () {
+              const replaceHandler = blockNumber => __awaiter$6(this, void 0, void 0, function* () {
                 if (done) {
                   return;
                 }
                 // Wait 1 second; this is only used in the case of a fault, so
                 // we will trade off a little bit of latency for more consistent
                 // results and fewer JSON-RPC calls
-                yield stall(1000);
-                this.getTransactionCount(replaceable.from).then(nonce => __awaiter$1(this, void 0, void 0, function* () {
+                yield stall$1(1000);
+                this.getTransactionCount(replaceable.from).then(nonce => __awaiter$6(this, void 0, void 0, function* () {
                   if (done) {
                     return;
                   }
@@ -27876,7 +30911,7 @@
                             reason = "cancelled";
                           }
                           // Explain why we were replaced
-                          reject(logger$3.makeError("transaction was replaced", Logger.errors.TRANSACTION_REPLACED, {
+                          reject(logger$g.makeError("transaction was replaced", Logger.errors.TRANSACTION_REPLACED, {
                             cancelled: reason === "replaced" || reason === "cancelled",
                             reason,
                             replacement: this._wrapTransaction(tx),
@@ -27913,7 +30948,7 @@
                 if (alreadyDone()) {
                   return;
                 }
-                reject(logger$3.makeError("timeout exceeded", Logger.errors.TIMEOUT, {
+                reject(logger$g.makeError("timeout exceeded", Logger.errors.TIMEOUT, {
                   timeout: timeout
                 }));
               }, timeout);
@@ -27928,18 +30963,18 @@
         });
       }
       getBlockNumber() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           return this._getInternalBlockNumber(0);
         });
       }
       getGasPrice() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const result = yield this.perform("getGasPrice", {});
           try {
             return BigNumber$2.from(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "getGasPrice",
               result,
               error
@@ -27948,7 +30983,7 @@
         });
       }
       getBalance(addressOrName, blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             address: this._getAddress(addressOrName),
@@ -27958,7 +30993,7 @@
           try {
             return BigNumber$2.from(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "getBalance",
               params,
               result,
@@ -27968,7 +31003,7 @@
         });
       }
       getTransactionCount(addressOrName, blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             address: this._getAddress(addressOrName),
@@ -27978,7 +31013,7 @@
           try {
             return BigNumber$2.from(result).toNumber();
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "getTransactionCount",
               params,
               result,
@@ -27988,7 +31023,7 @@
         });
       }
       getCode(addressOrName, blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             address: this._getAddress(addressOrName),
@@ -27998,7 +31033,7 @@
           try {
             return hexlify(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "getCode",
               params,
               result,
@@ -28008,7 +31043,7 @@
         });
       }
       getStorageAt(addressOrName, position, blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             address: this._getAddress(addressOrName),
@@ -28019,7 +31054,7 @@
           try {
             return hexlify(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "getStorageAt",
               params,
               result,
@@ -28036,12 +31071,12 @@
         const result = tx;
         // Check the hash we expect is the same as the hash the server reported
         if (hash != null && tx.hash !== hash) {
-          logger$3.throwError("Transaction hash mismatch from Provider.sendTransaction.", Logger.errors.UNKNOWN_ERROR, {
+          logger$g.throwError("Transaction hash mismatch from Provider.sendTransaction.", Logger.errors.UNKNOWN_ERROR, {
             expectedHash: tx.hash,
             returnedHash: hash
           });
         }
-        result.wait = (confirms, timeout) => __awaiter$1(this, void 0, void 0, function* () {
+        result.wait = (confirms, timeout) => __awaiter$6(this, void 0, void 0, function* () {
           if (confirms == null) {
             confirms = 1;
           }
@@ -28067,7 +31102,7 @@
           // No longer pending, allow the polling loop to garbage collect this
           this._emitted["t:" + tx.hash] = receipt.blockNumber;
           if (receipt.status === 0) {
-            logger$3.throwError("transaction failed", Logger.errors.CALL_EXCEPTION, {
+            logger$g.throwError("transaction failed", Logger.errors.CALL_EXCEPTION, {
               transactionHash: tx.hash,
               transaction: tx,
               receipt: receipt
@@ -28078,7 +31113,7 @@
         return result;
       }
       sendTransaction(signedTransaction) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const hexTx = yield Promise.resolve(signedTransaction).then(t => hexlify(t));
           const tx = this.formatter.transaction(signedTransaction);
@@ -28099,7 +31134,7 @@
         });
       }
       _getTransactionRequest(transaction) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           const values = yield transaction;
           const tx = {};
           ["from", "to"].forEach(key => {
@@ -28133,7 +31168,7 @@
         });
       }
       _getFilter(filter) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           filter = yield filter;
           const result = {};
           if (filter.address != null) {
@@ -28155,9 +31190,9 @@
         });
       }
       _call(transaction, blockTag, attempt) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           if (attempt >= MAX_CCIP_REDIRECTS) {
-            logger$3.throwError("CCIP read exceeded maximum redirections", Logger.errors.SERVER_ERROR, {
+            logger$g.throwError("CCIP read exceeded maximum redirections", Logger.errors.SERVER_ERROR, {
               redirects: attempt,
               transaction
             });
@@ -28174,7 +31209,7 @@
               // Check the sender of the OffchainLookup matches the transaction
               const sender = hexDataSlice(data, 0, 32);
               if (!BigNumber$2.from(sender).eq(txSender)) {
-                logger$3.throwError("CCIP Read sender did not match", Logger.errors.CALL_EXCEPTION, {
+                logger$g.throwError("CCIP Read sender did not match", Logger.errors.CALL_EXCEPTION, {
                   name: "OffchainLookup",
                   signature: "OffchainLookup(address,string[],bytes,bytes4,bytes)",
                   transaction,
@@ -28189,7 +31224,7 @@
               for (let u = 0; u < urlsLength; u++) {
                 const url = _parseString(urlsData, u * 32);
                 if (url == null) {
-                  logger$3.throwError("CCIP Read contained corrupt URL string", Logger.errors.CALL_EXCEPTION, {
+                  logger$g.throwError("CCIP Read contained corrupt URL string", Logger.errors.CALL_EXCEPTION, {
                     name: "OffchainLookup",
                     signature: "OffchainLookup(address,string[],bytes,bytes4,bytes)",
                     transaction,
@@ -28202,7 +31237,7 @@
               const calldata = _parseBytes(data, 64);
               // Get the callbackSelector (bytes4)
               if (!BigNumber$2.from(hexDataSlice(data, 100, 128)).isZero()) {
-                logger$3.throwError("CCIP Read callback selector included junk", Logger.errors.CALL_EXCEPTION, {
+                logger$g.throwError("CCIP Read callback selector included junk", Logger.errors.CALL_EXCEPTION, {
                   name: "OffchainLookup",
                   signature: "OffchainLookup(address,string[],bytes,bytes4,bytes)",
                   transaction,
@@ -28214,7 +31249,7 @@
               const extraData = _parseBytes(data, 128);
               const ccipResult = yield this.ccipReadFetch(transaction, calldata, urls);
               if (ccipResult == null) {
-                logger$3.throwError("CCIP Read disabled or provided no URLs", Logger.errors.CALL_EXCEPTION, {
+                logger$g.throwError("CCIP Read disabled or provided no URLs", Logger.errors.CALL_EXCEPTION, {
                   name: "OffchainLookup",
                   signature: "OffchainLookup(address,string[],bytes,bytes4,bytes)",
                   transaction,
@@ -28235,7 +31270,7 @@
           try {
             return hexlify(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "call",
               params: {
                 transaction,
@@ -28248,7 +31283,7 @@
         });
       }
       call(transaction, blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const resolved = yield resolveProperties({
             transaction: this._getTransactionRequest(transaction),
@@ -28259,7 +31294,7 @@
         });
       }
       estimateGas(transaction) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             transaction: this._getTransactionRequest(transaction)
@@ -28268,7 +31303,7 @@
           try {
             return BigNumber$2.from(result);
           } catch (error) {
-            return logger$3.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
+            return logger$g.throwError("bad result from backend", Logger.errors.SERVER_ERROR, {
               method: "estimateGas",
               params,
               result,
@@ -28278,14 +31313,14 @@
         });
       }
       _getAddress(addressOrName) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           addressOrName = yield addressOrName;
           if (typeof addressOrName !== "string") {
-            logger$3.throwArgumentError("invalid address or ENS name", "name", addressOrName);
+            logger$g.throwArgumentError("invalid address or ENS name", "name", addressOrName);
           }
           const address = yield this.resolveName(addressOrName);
           if (address == null) {
-            logger$3.throwError("ENS name not configured", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$g.throwError("ENS name not configured", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: `resolveName(${JSON.stringify(addressOrName)})`
             });
           }
@@ -28293,7 +31328,7 @@
         });
       }
       _getBlock(blockHashOrBlockTag, includeTransactions) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           blockHashOrBlockTag = yield blockHashOrBlockTag;
           // If blockTag is a number (not "latest", etc), this is the block number
@@ -28310,10 +31345,10 @@
                 blockNumber = parseInt(params.blockTag.substring(2), 16);
               }
             } catch (error) {
-              logger$3.throwArgumentError("invalid block hash or block tag", "blockHashOrBlockTag", blockHashOrBlockTag);
+              logger$g.throwArgumentError("invalid block hash or block tag", "blockHashOrBlockTag", blockHashOrBlockTag);
             }
           }
-          return poll(() => __awaiter$1(this, void 0, void 0, function* () {
+          return poll(() => __awaiter$6(this, void 0, void 0, function* () {
             const block = yield this.perform("getBlock", params);
             // Block was not found
             if (block == null) {
@@ -28370,13 +31405,13 @@
         return this._getBlock(blockHashOrBlockTag, true);
       }
       getTransaction(transactionHash) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           transactionHash = yield transactionHash;
           const params = {
             transactionHash: this.formatter.hash(transactionHash, true)
           };
-          return poll(() => __awaiter$1(this, void 0, void 0, function* () {
+          return poll(() => __awaiter$6(this, void 0, void 0, function* () {
             const result = yield this.perform("getTransaction", params);
             if (result == null) {
               if (this._emitted["t:" + transactionHash] == null) {
@@ -28403,13 +31438,13 @@
         });
       }
       getTransactionReceipt(transactionHash) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           transactionHash = yield transactionHash;
           const params = {
             transactionHash: this.formatter.hash(transactionHash, true)
           };
-          return poll(() => __awaiter$1(this, void 0, void 0, function* () {
+          return poll(() => __awaiter$6(this, void 0, void 0, function* () {
             const result = yield this.perform("getTransactionReceipt", params);
             if (result == null) {
               if (this._emitted["t:" + transactionHash] == null) {
@@ -28440,7 +31475,7 @@
         });
       }
       getLogs(filter) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           const params = yield resolveProperties({
             filter: this._getFilter(filter)
@@ -28455,17 +31490,17 @@
         });
       }
       getEtherPrice() {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           yield this.getNetwork();
           return this.perform("getEtherPrice", {});
         });
       }
       _getBlockTag(blockTag) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           blockTag = yield blockTag;
           if (typeof blockTag === "number" && blockTag < 0) {
             if (blockTag % 1) {
-              logger$3.throwArgumentError("invalid BlockTag", "blockTag", blockTag);
+              logger$g.throwArgumentError("invalid BlockTag", "blockTag", blockTag);
             }
             let blockNumber = yield this._getInternalBlockNumber(100 + 2 * this.pollingInterval);
             blockNumber += blockTag;
@@ -28478,7 +31513,7 @@
         });
       }
       getResolver(name) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           let currentName = name;
           while (true) {
             if (currentName === "" || currentName === ".") {
@@ -28506,14 +31541,14 @@
         });
       }
       _getResolver(name, operation) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           if (operation == null) {
             operation = "ENS";
           }
           const network = yield this.getNetwork();
           // No ENS...
           if (!network.ensAddress) {
-            logger$3.throwError("network does not support ENS", Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$g.throwError("network does not support ENS", Logger.errors.UNSUPPORTED_OPERATION, {
               operation,
               network: network.name
             });
@@ -28532,7 +31567,7 @@
         });
       }
       resolveName(name) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           name = yield name;
           // If it is already an address, nothing to resolve
           try {
@@ -28544,7 +31579,7 @@
             }
           }
           if (typeof name !== "string") {
-            logger$3.throwArgumentError("invalid ENS name", "name", name);
+            logger$g.throwArgumentError("invalid ENS name", "name", name);
           }
           // Get the addr from the resolver
           const resolver = yield this.getResolver(name);
@@ -28555,7 +31590,7 @@
         });
       }
       lookupAddress(address) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           address = yield address;
           address = this.formatter.address(address);
           const node = address.substring(2).toLowerCase() + ".addr.reverse";
@@ -28576,7 +31611,7 @@
         });
       }
       getAvatar(nameOrAddress) {
-        return __awaiter$1(this, void 0, void 0, function* () {
+        return __awaiter$6(this, void 0, void 0, function* () {
           let resolver = null;
           if (isHexString(nameOrAddress)) {
             // Address; reverse lookup
@@ -28627,7 +31662,7 @@
         });
       }
       perform(method, params) {
-        return logger$3.throwError(method + " not implemented", Logger.errors.NOT_IMPLEMENTED, {
+        return logger$g.throwError(method + " not implemented", Logger.errors.NOT_IMPLEMENTED, {
           operation: method
         });
       }
@@ -28733,7 +31768,7 @@
       }
     }
 
-    var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    var __awaiter$5 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function (resolve) {
           resolve(value);
@@ -28760,7 +31795,7 @@
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    const logger$2 = new Logger(version$1);
+    const logger$f = new Logger(version$3);
     const errorGas = ["call", "estimateGas"];
     function spelunk(value, requireData) {
       if (value == null) {
@@ -28794,7 +31829,7 @@
       }
       return null;
     }
-    function checkError(method, error, params) {
+    function checkError$1(method, error, params) {
       const transaction = params.transaction || params.signedTransaction;
       // Undo the "convenience" some nodes are attempting to prevent backwards
       // incompatibility; maybe for v6 consider forwarding reverts as errors
@@ -28804,7 +31839,7 @@
           return result.data;
         }
         // Nothing descriptive..
-        logger$2.throwError("missing revert data in call exception; Transaction reverted without a reason string", Logger.errors.CALL_EXCEPTION, {
+        logger$f.throwError("missing revert data in call exception; Transaction reverted without a reason string", Logger.errors.CALL_EXCEPTION, {
           data: "0x",
           transaction,
           error
@@ -28818,7 +31853,7 @@
         }
         // Found "reverted", this is a CALL_EXCEPTION
         if (result) {
-          logger$2.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
+          logger$f.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
             reason: result.message,
             method,
             transaction,
@@ -28838,7 +31873,7 @@
       message = (message || "").toLowerCase();
       // "insufficient funds for gas * price + value + cost(data)"
       if (message.match(/insufficient funds|base fee exceeds gas limit|InsufficientFunds/i)) {
-        logger$2.throwError("insufficient funds for intrinsic transaction cost", Logger.errors.INSUFFICIENT_FUNDS, {
+        logger$f.throwError("insufficient funds for intrinsic transaction cost", Logger.errors.INSUFFICIENT_FUNDS, {
           error,
           method,
           transaction
@@ -28846,7 +31881,7 @@
       }
       // "nonce too low"
       if (message.match(/nonce (is )?too low/i)) {
-        logger$2.throwError("nonce has already been used", Logger.errors.NONCE_EXPIRED, {
+        logger$f.throwError("nonce has already been used", Logger.errors.NONCE_EXPIRED, {
           error,
           method,
           transaction
@@ -28854,7 +31889,7 @@
       }
       // "replacement transaction underpriced"
       if (message.match(/replacement transaction underpriced|transaction gas price.*too low/i)) {
-        logger$2.throwError("replacement fee too low", Logger.errors.REPLACEMENT_UNDERPRICED, {
+        logger$f.throwError("replacement fee too low", Logger.errors.REPLACEMENT_UNDERPRICED, {
           error,
           method,
           transaction
@@ -28862,14 +31897,14 @@
       }
       // "replacement transaction underpriced"
       if (message.match(/only replay-protected/i)) {
-        logger$2.throwError("legacy pre-eip-155 transactions not supported", Logger.errors.UNSUPPORTED_OPERATION, {
+        logger$f.throwError("legacy pre-eip-155 transactions not supported", Logger.errors.UNSUPPORTED_OPERATION, {
           error,
           method,
           transaction
         });
       }
       if (errorGas.indexOf(method) >= 0 && message.match(/gas required exceeds allowance|always failing transaction|execution reverted|revert/)) {
-        logger$2.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
+        logger$f.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
           error,
           method,
           transaction
@@ -28882,7 +31917,7 @@
         setTimeout(resolve, timeout);
       });
     }
-    function getResult(payload) {
+    function getResult$1(payload) {
       if (payload.error) {
         // @TODO: not any
         const error = new Error(payload.error.message);
@@ -28916,11 +31951,11 @@
           defineReadOnly(this, "_index", addressOrIndex);
           defineReadOnly(this, "_address", null);
         } else {
-          logger$2.throwArgumentError("invalid address or index", "addressOrIndex", addressOrIndex);
+          logger$f.throwArgumentError("invalid address or index", "addressOrIndex", addressOrIndex);
         }
       }
       connect(provider) {
-        return logger$2.throwError("cannot alter JSON-RPC Signer connection", Logger.errors.UNSUPPORTED_OPERATION, {
+        return logger$f.throwError("cannot alter JSON-RPC Signer connection", Logger.errors.UNSUPPORTED_OPERATION, {
           operation: "connect"
         });
       }
@@ -28933,7 +31968,7 @@
         }
         return this.provider.send("eth_accounts", []).then(accounts => {
           if (accounts.length <= this._index) {
-            logger$2.throwError("unknown account #" + this._index, Logger.errors.UNSUPPORTED_OPERATION, {
+            logger$f.throwError("unknown account #" + this._index, Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "getAddress"
             });
           }
@@ -28957,13 +31992,13 @@
           transaction.gasLimit = this.provider.estimateGas(estimate);
         }
         if (transaction.to != null) {
-          transaction.to = Promise.resolve(transaction.to).then(to => __awaiter(this, void 0, void 0, function* () {
+          transaction.to = Promise.resolve(transaction.to).then(to => __awaiter$5(this, void 0, void 0, function* () {
             if (to == null) {
               return null;
             }
             const address = yield this.provider.resolveName(to);
             if (address == null) {
-              logger$2.throwArgumentError("provided ENS name resolves to null", "tx.to", to);
+              logger$f.throwArgumentError("provided ENS name resolves to null", "tx.to", to);
             }
             return address;
           }));
@@ -28977,7 +32012,7 @@
         }) => {
           if (tx.from != null) {
             if (tx.from.toLowerCase() !== sender) {
-              logger$2.throwArgumentError("from address mismatch", "transaction", transaction);
+              logger$f.throwArgumentError("from address mismatch", "transaction", transaction);
             }
           } else {
             tx.from = sender;
@@ -28989,22 +32024,22 @@
             return hash;
           }, error => {
             if (typeof error.message === "string" && error.message.match(/user denied/i)) {
-              logger$2.throwError("user rejected transaction", Logger.errors.ACTION_REJECTED, {
+              logger$f.throwError("user rejected transaction", Logger.errors.ACTION_REJECTED, {
                 action: "sendTransaction",
                 transaction: tx
               });
             }
-            return checkError("sendTransaction", error, hexTx);
+            return checkError$1("sendTransaction", error, hexTx);
           });
         });
       }
       signTransaction(transaction) {
-        return logger$2.throwError("signing transactions is unsupported", Logger.errors.UNSUPPORTED_OPERATION, {
+        return logger$f.throwError("signing transactions is unsupported", Logger.errors.UNSUPPORTED_OPERATION, {
           operation: "signTransaction"
         });
       }
       sendTransaction(transaction) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           // This cannot be mined any earlier than any recent block
           const blockNumber = yield this.provider._getInternalBlockNumber(100 + 2 * this.provider.pollingInterval);
           // Send the transaction
@@ -29013,7 +32048,7 @@
             // Unfortunately, JSON-RPC only provides and opaque transaction hash
             // for a response, and we need the actual transaction, so we poll
             // for it; it should show up very quickly
-            return yield poll(() => __awaiter(this, void 0, void 0, function* () {
+            return yield poll(() => __awaiter$5(this, void 0, void 0, function* () {
               const tx = yield this.provider.getTransaction(hash);
               if (tx === null) {
                 return undefined;
@@ -29029,14 +32064,14 @@
         });
       }
       signMessage(message) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           const data = typeof message === "string" ? toUtf8Bytes(message) : message;
           const address = yield this.getAddress();
           try {
             return yield this.provider.send("personal_sign", [hexlify(data), address.toLowerCase()]);
           } catch (error) {
             if (typeof error.message === "string" && error.message.match(/user denied/i)) {
-              logger$2.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
+              logger$f.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
                 action: "signMessage",
                 from: address,
                 messageData: message
@@ -29047,7 +32082,7 @@
         });
       }
       _legacySignMessage(message) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           const data = typeof message === "string" ? toUtf8Bytes(message) : message;
           const address = yield this.getAddress();
           try {
@@ -29055,7 +32090,7 @@
             return yield this.provider.send("eth_sign", [address.toLowerCase(), hexlify(data)]);
           } catch (error) {
             if (typeof error.message === "string" && error.message.match(/user denied/i)) {
-              logger$2.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
+              logger$f.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
                 action: "_legacySignMessage",
                 from: address,
                 messageData: message
@@ -29066,7 +32101,7 @@
         });
       }
       _signTypedData(domain, types, value) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           // Populate any ENS names (in-place)
           const populated = yield TypedDataEncoder.resolveNames(domain, types, value, name => {
             return this.provider.resolveName(name);
@@ -29076,7 +32111,7 @@
             return yield this.provider.send("eth_signTypedData_v4", [address.toLowerCase(), JSON.stringify(TypedDataEncoder.getPayload(populated.domain, types, populated.value))]);
           } catch (error) {
             if (typeof error.message === "string" && error.message.match(/user denied/i)) {
-              logger$2.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
+              logger$f.throwError("user rejected signing", Logger.errors.ACTION_REJECTED, {
                 action: "_signTypedData",
                 from: address,
                 messageData: {
@@ -29091,7 +32126,7 @@
         });
       }
       unlock(password) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           const provider = this.provider;
           const address = yield this.getAddress();
           return provider.send("personal_unlockAccount", [address.toLowerCase(), password, null]);
@@ -29180,7 +32215,7 @@
         return this._cache["detectNetwork"];
       }
       _uncachedDetectNetwork() {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           yield timer(0);
           let chainId = null;
           try {
@@ -29195,14 +32230,14 @@
             try {
               return getNetwork(BigNumber$2.from(chainId).toNumber());
             } catch (error) {
-              return logger$2.throwError("could not detect network", Logger.errors.NETWORK_ERROR, {
+              return logger$f.throwError("could not detect network", Logger.errors.NETWORK_ERROR, {
                 chainId: chainId,
                 event: "invalidNetwork",
                 serverError: error
               });
             }
           }
-          return logger$2.throwError("could not detect network", Logger.errors.NETWORK_ERROR, {
+          return logger$f.throwError("could not detect network", Logger.errors.NETWORK_ERROR, {
             event: "noNetwork"
           });
         });
@@ -29236,7 +32271,7 @@
         if (cache && this._cache[method]) {
           return this._cache[method];
         }
-        const result = fetchJson(this.connection, JSON.stringify(request), getResult).then(result => {
+        const result = fetchJson(this.connection, JSON.stringify(request), getResult$1).then(result => {
           this.emit("debug", {
             action: "response",
             request: request,
@@ -29312,7 +32347,7 @@
         return null;
       }
       perform(method, params) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$5(this, void 0, void 0, function* () {
           // Legacy networks do not like the type field being passed along (which
           // is fair), so we delete type if it is 0 and a non-EIP-1559 network
           if (method === "call" || method === "estimateGas") {
@@ -29332,14 +32367,14 @@
           }
           const args = this.prepareRequest(method, params);
           if (args == null) {
-            logger$2.throwError(method + " not implemented", Logger.errors.NOT_IMPLEMENTED, {
+            logger$f.throwError(method + " not implemented", Logger.errors.NOT_IMPLEMENTED, {
               operation: method
             });
           }
           try {
             return yield this.send(args[0], args[1]);
           } catch (error) {
-            return checkError(method, error, params);
+            return checkError$1(method, error, params);
           }
         });
       }
@@ -29442,7 +32477,1981 @@
       }
     }
 
-    const logger$1 = new Logger(version$1);
+    let WS = null;
+    try {
+      WS = WebSocket;
+      if (WS == null) {
+        throw new Error("inject please");
+      }
+    } catch (error) {
+      const logger = new Logger(version$3);
+      WS = function () {
+        logger.throwError("WebSockets not supported in this environment", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "new WebSocket()"
+        });
+      };
+    }
+
+    var __awaiter$4 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$e = new Logger(version$3);
+    /**
+     *  Notes:
+     *
+     *  This provider differs a bit from the polling providers. One main
+     *  difference is how it handles consistency. The polling providers
+     *  will stall responses to ensure a consistent state, while this
+     *  WebSocket provider assumes the connected backend will manage this.
+     *
+     *  For example, if a polling provider emits an event which indicates
+     *  the event occurred in blockhash XXX, a call to fetch that block by
+     *  its hash XXX, if not present will retry until it is present. This
+     *  can occur when querying a pool of nodes that are mildly out of sync
+     *  with each other.
+     */
+    let NextId = 1;
+    // For more info about the Real-time Event API see:
+    //   https://geth.ethereum.org/docs/rpc/pubsub
+    class WebSocketProvider extends JsonRpcProvider {
+      constructor(url, network) {
+        // This will be added in the future; please open an issue to expedite
+        if (network === "any") {
+          logger$e.throwError("WebSocketProvider does not support 'any' network yet", Logger.errors.UNSUPPORTED_OPERATION, {
+            operation: "network:any"
+          });
+        }
+        if (typeof url === "string") {
+          super(url, network);
+        } else {
+          super("_websocket", network);
+        }
+        this._pollingInterval = -1;
+        this._wsReady = false;
+        if (typeof url === "string") {
+          defineReadOnly(this, "_websocket", new WS(this.connection.url));
+        } else {
+          defineReadOnly(this, "_websocket", url);
+        }
+        defineReadOnly(this, "_requests", {});
+        defineReadOnly(this, "_subs", {});
+        defineReadOnly(this, "_subIds", {});
+        defineReadOnly(this, "_detectNetwork", super.detectNetwork());
+        // Stall sending requests until the socket is open...
+        this.websocket.onopen = () => {
+          this._wsReady = true;
+          Object.keys(this._requests).forEach(id => {
+            this.websocket.send(this._requests[id].payload);
+          });
+        };
+        this.websocket.onmessage = messageEvent => {
+          const data = messageEvent.data;
+          const result = JSON.parse(data);
+          if (result.id != null) {
+            const id = String(result.id);
+            const request = this._requests[id];
+            delete this._requests[id];
+            if (result.result !== undefined) {
+              request.callback(null, result.result);
+              this.emit("debug", {
+                action: "response",
+                request: JSON.parse(request.payload),
+                response: result.result,
+                provider: this
+              });
+            } else {
+              let error = null;
+              if (result.error) {
+                error = new Error(result.error.message || "unknown error");
+                defineReadOnly(error, "code", result.error.code || null);
+                defineReadOnly(error, "response", data);
+              } else {
+                error = new Error("unknown error");
+              }
+              request.callback(error, undefined);
+              this.emit("debug", {
+                action: "response",
+                error: error,
+                request: JSON.parse(request.payload),
+                provider: this
+              });
+            }
+          } else if (result.method === "eth_subscription") {
+            // Subscription...
+            const sub = this._subs[result.params.subscription];
+            if (sub) {
+              //this.emit.apply(this,                  );
+              sub.processFunc(result.params.result);
+            }
+          } else {
+            console.warn("this should not happen");
+          }
+        };
+        // This Provider does not actually poll, but we want to trigger
+        // poll events for things that depend on them (like stalling for
+        // block and transaction lookups)
+        const fauxPoll = setInterval(() => {
+          this.emit("poll");
+        }, 1000);
+        if (fauxPoll.unref) {
+          fauxPoll.unref();
+        }
+      }
+      // Cannot narrow the type of _websocket, as that is not backwards compatible
+      // so we add a getter and let the WebSocket be a public API.
+      get websocket() {
+        return this._websocket;
+      }
+      detectNetwork() {
+        return this._detectNetwork;
+      }
+      get pollingInterval() {
+        return 0;
+      }
+      resetEventsBlock(blockNumber) {
+        logger$e.throwError("cannot reset events block on WebSocketProvider", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "resetEventBlock"
+        });
+      }
+      set pollingInterval(value) {
+        logger$e.throwError("cannot set polling interval on WebSocketProvider", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "setPollingInterval"
+        });
+      }
+      poll() {
+        return __awaiter$4(this, void 0, void 0, function* () {
+          return null;
+        });
+      }
+      set polling(value) {
+        if (!value) {
+          return;
+        }
+        logger$e.throwError("cannot set polling on WebSocketProvider", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "setPolling"
+        });
+      }
+      send(method, params) {
+        const rid = NextId++;
+        return new Promise((resolve, reject) => {
+          function callback(error, result) {
+            if (error) {
+              return reject(error);
+            }
+            return resolve(result);
+          }
+          const payload = JSON.stringify({
+            method: method,
+            params: params,
+            id: rid,
+            jsonrpc: "2.0"
+          });
+          this.emit("debug", {
+            action: "request",
+            request: JSON.parse(payload),
+            provider: this
+          });
+          this._requests[String(rid)] = {
+            callback,
+            payload
+          };
+          if (this._wsReady) {
+            this.websocket.send(payload);
+          }
+        });
+      }
+      static defaultUrl() {
+        return "ws:/\/localhost:8546";
+      }
+      _subscribe(tag, param, processFunc) {
+        return __awaiter$4(this, void 0, void 0, function* () {
+          let subIdPromise = this._subIds[tag];
+          if (subIdPromise == null) {
+            subIdPromise = Promise.all(param).then(param => {
+              return this.send("eth_subscribe", param);
+            });
+            this._subIds[tag] = subIdPromise;
+          }
+          const subId = yield subIdPromise;
+          this._subs[subId] = {
+            tag,
+            processFunc
+          };
+        });
+      }
+      _startEvent(event) {
+        switch (event.type) {
+          case "block":
+            this._subscribe("block", ["newHeads"], result => {
+              const blockNumber = BigNumber$2.from(result.number).toNumber();
+              this._emitted.block = blockNumber;
+              this.emit("block", blockNumber);
+            });
+            break;
+          case "pending":
+            this._subscribe("pending", ["newPendingTransactions"], result => {
+              this.emit("pending", result);
+            });
+            break;
+          case "filter":
+            this._subscribe(event.tag, ["logs", this._getFilter(event.filter)], result => {
+              if (result.removed == null) {
+                result.removed = false;
+              }
+              this.emit(event.filter, this.formatter.filterLog(result));
+            });
+            break;
+          case "tx":
+            {
+              const emitReceipt = event => {
+                const hash = event.hash;
+                this.getTransactionReceipt(hash).then(receipt => {
+                  if (!receipt) {
+                    return;
+                  }
+                  this.emit(hash, receipt);
+                });
+              };
+              // In case it is already mined
+              emitReceipt(event);
+              // To keep things simple, we start up a single newHeads subscription
+              // to keep an eye out for transactions we are watching for.
+              // Starting a subscription for an event (i.e. "tx") that is already
+              // running is (basically) a nop.
+              this._subscribe("tx", ["newHeads"], result => {
+                this._events.filter(e => e.type === "tx").forEach(emitReceipt);
+              });
+              break;
+            }
+          // Nothing is needed
+          case "debug":
+          case "poll":
+          case "willPoll":
+          case "didPoll":
+          case "error":
+            break;
+          default:
+            console.log("unhandled:", event);
+            break;
+        }
+      }
+      _stopEvent(event) {
+        let tag = event.tag;
+        if (event.type === "tx") {
+          // There are remaining transaction event listeners
+          if (this._events.filter(e => e.type === "tx").length) {
+            return;
+          }
+          tag = "tx";
+        } else if (this.listenerCount(event.event)) {
+          // There are remaining event listeners
+          return;
+        }
+        const subId = this._subIds[tag];
+        if (!subId) {
+          return;
+        }
+        delete this._subIds[tag];
+        subId.then(subId => {
+          if (!this._subs[subId]) {
+            return;
+          }
+          delete this._subs[subId];
+          this.send("eth_unsubscribe", [subId]);
+        });
+      }
+      destroy() {
+        return __awaiter$4(this, void 0, void 0, function* () {
+          // Wait until we have connected before trying to disconnect
+          if (this.websocket.readyState === WS.CONNECTING) {
+            yield new Promise(resolve => {
+              this.websocket.onopen = function () {
+                resolve(true);
+              };
+              this.websocket.onerror = function () {
+                resolve(false);
+              };
+            });
+          }
+          // Hangup
+          // See: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
+          this.websocket.close(1000);
+        });
+      }
+    }
+
+    var __awaiter$3 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$d = new Logger(version$3);
+    // A StaticJsonRpcProvider is useful when you *know* for certain that
+    // the backend will never change, as it never calls eth_chainId to
+    // verify its backend. However, if the backend does change, the effects
+    // are undefined and may include:
+    // - inconsistent results
+    // - locking up the UI
+    // - block skew warnings
+    // - wrong results
+    // If the network is not explicit (i.e. auto-detection is expected), the
+    // node MUST be running and available to respond to requests BEFORE this
+    // is instantiated.
+    class StaticJsonRpcProvider extends JsonRpcProvider {
+      detectNetwork() {
+        const _super = Object.create(null, {
+          detectNetwork: {
+            get: () => super.detectNetwork
+          }
+        });
+        return __awaiter$3(this, void 0, void 0, function* () {
+          let network = this.network;
+          if (network == null) {
+            network = yield _super.detectNetwork.call(this);
+            if (!network) {
+              logger$d.throwError("no network detected", Logger.errors.UNKNOWN_ERROR, {});
+            }
+            // If still not set, set it
+            if (this._network == null) {
+              // A static network does not support "any"
+              defineReadOnly(this, "_network", network);
+              this.emit("network", network, null);
+            }
+          }
+          return network;
+        });
+      }
+    }
+    class UrlJsonRpcProvider extends StaticJsonRpcProvider {
+      constructor(network, apiKey) {
+        logger$d.checkAbstract(new.target, UrlJsonRpcProvider);
+        // Normalize the Network and API Key
+        network = getStatic(new.target, "getNetwork")(network);
+        apiKey = getStatic(new.target, "getApiKey")(apiKey);
+        const connection = getStatic(new.target, "getUrl")(network, apiKey);
+        super(connection, network);
+        if (typeof apiKey === "string") {
+          defineReadOnly(this, "apiKey", apiKey);
+        } else if (apiKey != null) {
+          Object.keys(apiKey).forEach(key => {
+            defineReadOnly(this, key, apiKey[key]);
+          });
+        }
+      }
+      _startPending() {
+        logger$d.warn("WARNING: API provider does not support pending filters");
+      }
+      isCommunityResource() {
+        return false;
+      }
+      getSigner(address) {
+        return logger$d.throwError("API provider does not support signing", Logger.errors.UNSUPPORTED_OPERATION, {
+          operation: "getSigner"
+        });
+      }
+      listAccounts() {
+        return Promise.resolve([]);
+      }
+      // Return a defaultApiKey if null, otherwise validate the API key
+      static getApiKey(apiKey) {
+        return apiKey;
+      }
+      // Returns the url or connection for the given network and API key. The
+      // API key will have been sanitized by the getApiKey first, so any validation
+      // or transformations can be done there.
+      static getUrl(network, apiKey) {
+        return logger$d.throwError("not implemented; sub-classes must override getUrl", Logger.errors.NOT_IMPLEMENTED, {
+          operation: "getUrl"
+        });
+      }
+    }
+
+    const logger$c = new Logger(version$3);
+    // This key was provided to ethers.js by Alchemy to be used by the
+    // default provider, but it is recommended that for your own
+    // production environments, that you acquire your own API key at:
+    //   https://dashboard.alchemyapi.io
+    const defaultApiKey$2 = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+    class AlchemyWebSocketProvider extends WebSocketProvider {
+      constructor(network, apiKey) {
+        const provider = new AlchemyProvider(network, apiKey);
+        const url = provider.connection.url.replace(/^http/i, "ws").replace(".alchemyapi.", ".ws.alchemyapi.");
+        super(url, provider.network);
+        defineReadOnly(this, "apiKey", provider.apiKey);
+      }
+      isCommunityResource() {
+        return this.apiKey === defaultApiKey$2;
+      }
+    }
+    class AlchemyProvider extends UrlJsonRpcProvider {
+      static getWebSocketProvider(network, apiKey) {
+        return new AlchemyWebSocketProvider(network, apiKey);
+      }
+      static getApiKey(apiKey) {
+        if (apiKey == null) {
+          return defaultApiKey$2;
+        }
+        if (apiKey && typeof apiKey !== "string") {
+          logger$c.throwArgumentError("invalid apiKey", "apiKey", apiKey);
+        }
+        return apiKey;
+      }
+      static getUrl(network, apiKey) {
+        let host = null;
+        switch (network.name) {
+          case "homestead":
+            host = "eth-mainnet.alchemyapi.io/v2/";
+            break;
+          case "goerli":
+            host = "eth-goerli.g.alchemy.com/v2/";
+            break;
+          case "matic":
+            host = "polygon-mainnet.g.alchemy.com/v2/";
+            break;
+          case "maticmum":
+            host = "polygon-mumbai.g.alchemy.com/v2/";
+            break;
+          case "arbitrum":
+            host = "arb-mainnet.g.alchemy.com/v2/";
+            break;
+          case "arbitrum-goerli":
+            host = "arb-goerli.g.alchemy.com/v2/";
+            break;
+          case "optimism":
+            host = "opt-mainnet.g.alchemy.com/v2/";
+            break;
+          case "optimism-goerli":
+            host = "opt-goerli.g.alchemy.com/v2/";
+            break;
+          default:
+            logger$c.throwArgumentError("unsupported network", "network", arguments[0]);
+        }
+        return {
+          allowGzip: true,
+          url: "https:/" + "/" + host + apiKey,
+          throttleCallback: (attempt, url) => {
+            if (apiKey === defaultApiKey$2) {
+              showThrottleMessage();
+            }
+            return Promise.resolve(true);
+          }
+        };
+      }
+      isCommunityResource() {
+        return this.apiKey === defaultApiKey$2;
+      }
+    }
+
+    const logger$b = new Logger(version$3);
+    const defaultApiKey$1 = "9f7d929b018cdffb338517efa06f58359e86ff1ffd350bc889738523659e7972";
+    function getHost(name) {
+      switch (name) {
+        case "homestead":
+          return "rpc.ankr.com/eth/";
+        case "ropsten":
+          return "rpc.ankr.com/eth_ropsten/";
+        case "rinkeby":
+          return "rpc.ankr.com/eth_rinkeby/";
+        case "goerli":
+          return "rpc.ankr.com/eth_goerli/";
+        case "matic":
+          return "rpc.ankr.com/polygon/";
+        case "arbitrum":
+          return "rpc.ankr.com/arbitrum/";
+      }
+      return logger$b.throwArgumentError("unsupported network", "name", name);
+    }
+    class AnkrProvider extends UrlJsonRpcProvider {
+      isCommunityResource() {
+        return this.apiKey === defaultApiKey$1;
+      }
+      static getApiKey(apiKey) {
+        if (apiKey == null) {
+          return defaultApiKey$1;
+        }
+        return apiKey;
+      }
+      static getUrl(network, apiKey) {
+        if (apiKey == null) {
+          apiKey = defaultApiKey$1;
+        }
+        const connection = {
+          allowGzip: true,
+          url: "https:/\/" + getHost(network.name) + apiKey,
+          throttleCallback: (attempt, url) => {
+            if (apiKey.apiKey === defaultApiKey$1) {
+              showThrottleMessage();
+            }
+            return Promise.resolve(true);
+          }
+        };
+        if (apiKey.projectSecret != null) {
+          connection.user = "";
+          connection.password = apiKey.projectSecret;
+        }
+        return connection;
+      }
+    }
+
+    var __awaiter$2 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$a = new Logger(version$3);
+    class CloudflareProvider extends UrlJsonRpcProvider {
+      static getApiKey(apiKey) {
+        if (apiKey != null) {
+          logger$a.throwArgumentError("apiKey not supported for cloudflare", "apiKey", apiKey);
+        }
+        return null;
+      }
+      static getUrl(network, apiKey) {
+        let host = null;
+        switch (network.name) {
+          case "homestead":
+            host = "https://cloudflare-eth.com/";
+            break;
+          default:
+            logger$a.throwArgumentError("unsupported network", "network", arguments[0]);
+        }
+        return host;
+      }
+      perform(method, params) {
+        const _super = Object.create(null, {
+          perform: {
+            get: () => super.perform
+          }
+        });
+        return __awaiter$2(this, void 0, void 0, function* () {
+          // The Cloudflare provider does not support eth_blockNumber,
+          // so we get the latest block and pull it from that
+          if (method === "getBlockNumber") {
+            const block = yield _super.perform.call(this, "getBlock", {
+              blockTag: "latest"
+            });
+            return block.number;
+          }
+          return _super.perform.call(this, method, params);
+        });
+      }
+    }
+
+    var __awaiter$1 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$9 = new Logger(version$3);
+    // The transaction has already been sanitized by the calls in Provider
+    function getTransactionPostData(transaction) {
+      const result = {};
+      for (let key in transaction) {
+        if (transaction[key] == null) {
+          continue;
+        }
+        let value = transaction[key];
+        if (key === "type" && value === 0) {
+          continue;
+        }
+        // Quantity-types require no leading zero, unless 0
+        if ({
+          type: true,
+          gasLimit: true,
+          gasPrice: true,
+          maxFeePerGs: true,
+          maxPriorityFeePerGas: true,
+          nonce: true,
+          value: true
+        }[key]) {
+          value = hexValue(hexlify(value));
+        } else if (key === "accessList") {
+          value = "[" + accessListify(value).map(set => {
+            return `{address:"${set.address}",storageKeys:["${set.storageKeys.join('","')}"]}`;
+          }).join(",") + "]";
+        } else {
+          value = hexlify(value);
+        }
+        result[key] = value;
+      }
+      return result;
+    }
+    function getResult(result) {
+      // getLogs, getHistory have weird success responses
+      if (result.status == 0 && (result.message === "No records found" || result.message === "No transactions found")) {
+        return result.result;
+      }
+      if (result.status != 1 || typeof result.message !== "string" || !result.message.match(/^OK/)) {
+        const error = new Error("invalid response");
+        error.result = JSON.stringify(result);
+        if ((result.result || "").toLowerCase().indexOf("rate limit") >= 0) {
+          error.throttleRetry = true;
+        }
+        throw error;
+      }
+      return result.result;
+    }
+    function getJsonResult(result) {
+      // This response indicates we are being throttled
+      if (result && result.status == 0 && result.message == "NOTOK" && (result.result || "").toLowerCase().indexOf("rate limit") >= 0) {
+        const error = new Error("throttled response");
+        error.result = JSON.stringify(result);
+        error.throttleRetry = true;
+        throw error;
+      }
+      if (result.jsonrpc != "2.0") {
+        // @TODO: not any
+        const error = new Error("invalid response");
+        error.result = JSON.stringify(result);
+        throw error;
+      }
+      if (result.error) {
+        // @TODO: not any
+        const error = new Error(result.error.message || "unknown error");
+        if (result.error.code) {
+          error.code = result.error.code;
+        }
+        if (result.error.data) {
+          error.data = result.error.data;
+        }
+        throw error;
+      }
+      return result.result;
+    }
+    // The blockTag was normalized as a string by the Provider pre-perform operations
+    function checkLogTag(blockTag) {
+      if (blockTag === "pending") {
+        throw new Error("pending not supported");
+      }
+      if (blockTag === "latest") {
+        return blockTag;
+      }
+      return parseInt(blockTag.substring(2), 16);
+    }
+    function checkError(method, error, transaction) {
+      // Undo the "convenience" some nodes are attempting to prevent backwards
+      // incompatibility; maybe for v6 consider forwarding reverts as errors
+      if (method === "call" && error.code === Logger.errors.SERVER_ERROR) {
+        const e = error.error;
+        // Etherscan keeps changing their string
+        if (e && (e.message.match(/reverted/i) || e.message.match(/VM execution error/i))) {
+          // Etherscan prefixes the data like "Reverted 0x1234"
+          let data = e.data;
+          if (data) {
+            data = "0x" + data.replace(/^.*0x/i, "");
+          }
+          if (isHexString(data)) {
+            return data;
+          }
+          logger$9.throwError("missing revert data in call exception", Logger.errors.CALL_EXCEPTION, {
+            error,
+            data: "0x"
+          });
+        }
+      }
+      // Get the message from any nested error structure
+      let message = error.message;
+      if (error.code === Logger.errors.SERVER_ERROR) {
+        if (error.error && typeof error.error.message === "string") {
+          message = error.error.message;
+        } else if (typeof error.body === "string") {
+          message = error.body;
+        } else if (typeof error.responseText === "string") {
+          message = error.responseText;
+        }
+      }
+      message = (message || "").toLowerCase();
+      // "Insufficient funds. The account you tried to send transaction from does not have enough funds. Required 21464000000000 and got: 0"
+      if (message.match(/insufficient funds/)) {
+        logger$9.throwError("insufficient funds for intrinsic transaction cost", Logger.errors.INSUFFICIENT_FUNDS, {
+          error,
+          method,
+          transaction
+        });
+      }
+      // "Transaction with the same hash was already imported."
+      if (message.match(/same hash was already imported|transaction nonce is too low|nonce too low/)) {
+        logger$9.throwError("nonce has already been used", Logger.errors.NONCE_EXPIRED, {
+          error,
+          method,
+          transaction
+        });
+      }
+      // "Transaction gas price is too low. There is another transaction with same nonce in the queue. Try increasing the gas price or incrementing the nonce."
+      if (message.match(/another transaction with same nonce/)) {
+        logger$9.throwError("replacement fee too low", Logger.errors.REPLACEMENT_UNDERPRICED, {
+          error,
+          method,
+          transaction
+        });
+      }
+      if (message.match(/execution failed due to an exception|execution reverted/)) {
+        logger$9.throwError("cannot estimate gas; transaction may fail or may require manual gas limit", Logger.errors.UNPREDICTABLE_GAS_LIMIT, {
+          error,
+          method,
+          transaction
+        });
+      }
+      throw error;
+    }
+    class EtherscanProvider extends BaseProvider {
+      constructor(network, apiKey) {
+        super(network);
+        defineReadOnly(this, "baseUrl", this.getBaseUrl());
+        defineReadOnly(this, "apiKey", apiKey || null);
+      }
+      getBaseUrl() {
+        switch (this.network ? this.network.name : "invalid") {
+          case "homestead":
+            return "https:/\/api.etherscan.io";
+          case "goerli":
+            return "https:/\/api-goerli.etherscan.io";
+          case "sepolia":
+            return "https:/\/api-sepolia.etherscan.io";
+          case "matic":
+            return "https:/\/api.polygonscan.com";
+          case "maticmum":
+            return "https:/\/api-testnet.polygonscan.com";
+          case "arbitrum":
+            return "https:/\/api.arbiscan.io";
+          case "arbitrum-goerli":
+            return "https:/\/api-goerli.arbiscan.io";
+          case "optimism":
+            return "https:/\/api-optimistic.etherscan.io";
+          case "optimism-goerli":
+            return "https:/\/api-goerli-optimistic.etherscan.io";
+        }
+        return logger$9.throwArgumentError("unsupported network", "network", this.network.name);
+      }
+      getUrl(module, params) {
+        const query = Object.keys(params).reduce((accum, key) => {
+          const value = params[key];
+          if (value != null) {
+            accum += `&${key}=${value}`;
+          }
+          return accum;
+        }, "");
+        const apiKey = this.apiKey ? `&apikey=${this.apiKey}` : "";
+        return `${this.baseUrl}/api?module=${module}${query}${apiKey}`;
+      }
+      getPostUrl() {
+        return `${this.baseUrl}/api`;
+      }
+      getPostData(module, params) {
+        params.module = module;
+        params.apikey = this.apiKey;
+        return params;
+      }
+      fetch(module, params, post) {
+        return __awaiter$1(this, void 0, void 0, function* () {
+          const url = post ? this.getPostUrl() : this.getUrl(module, params);
+          const payload = post ? this.getPostData(module, params) : null;
+          const procFunc = module === "proxy" ? getJsonResult : getResult;
+          this.emit("debug", {
+            action: "request",
+            request: url,
+            provider: this
+          });
+          const connection = {
+            url: url,
+            throttleSlotInterval: 1000,
+            throttleCallback: (attempt, url) => {
+              if (this.isCommunityResource()) {
+                showThrottleMessage();
+              }
+              return Promise.resolve(true);
+            }
+          };
+          let payloadStr = null;
+          if (payload) {
+            connection.headers = {
+              "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+            };
+            payloadStr = Object.keys(payload).map(key => {
+              return `${key}=${payload[key]}`;
+            }).join("&");
+          }
+          const result = yield fetchJson(connection, payloadStr, procFunc || getJsonResult);
+          this.emit("debug", {
+            action: "response",
+            request: url,
+            response: deepCopy(result),
+            provider: this
+          });
+          return result;
+        });
+      }
+      detectNetwork() {
+        return __awaiter$1(this, void 0, void 0, function* () {
+          return this.network;
+        });
+      }
+      perform(method, params) {
+        const _super = Object.create(null, {
+          perform: {
+            get: () => super.perform
+          }
+        });
+        return __awaiter$1(this, void 0, void 0, function* () {
+          switch (method) {
+            case "getBlockNumber":
+              return this.fetch("proxy", {
+                action: "eth_blockNumber"
+              });
+            case "getGasPrice":
+              return this.fetch("proxy", {
+                action: "eth_gasPrice"
+              });
+            case "getBalance":
+              // Returns base-10 result
+              return this.fetch("account", {
+                action: "balance",
+                address: params.address,
+                tag: params.blockTag
+              });
+            case "getTransactionCount":
+              return this.fetch("proxy", {
+                action: "eth_getTransactionCount",
+                address: params.address,
+                tag: params.blockTag
+              });
+            case "getCode":
+              return this.fetch("proxy", {
+                action: "eth_getCode",
+                address: params.address,
+                tag: params.blockTag
+              });
+            case "getStorageAt":
+              return this.fetch("proxy", {
+                action: "eth_getStorageAt",
+                address: params.address,
+                position: params.position,
+                tag: params.blockTag
+              });
+            case "sendTransaction":
+              return this.fetch("proxy", {
+                action: "eth_sendRawTransaction",
+                hex: params.signedTransaction
+              }, true).catch(error => {
+                return checkError("sendTransaction", error, params.signedTransaction);
+              });
+            case "getBlock":
+              if (params.blockTag) {
+                return this.fetch("proxy", {
+                  action: "eth_getBlockByNumber",
+                  tag: params.blockTag,
+                  boolean: params.includeTransactions ? "true" : "false"
+                });
+              }
+              throw new Error("getBlock by blockHash not implemented");
+            case "getTransaction":
+              return this.fetch("proxy", {
+                action: "eth_getTransactionByHash",
+                txhash: params.transactionHash
+              });
+            case "getTransactionReceipt":
+              return this.fetch("proxy", {
+                action: "eth_getTransactionReceipt",
+                txhash: params.transactionHash
+              });
+            case "call":
+              {
+                if (params.blockTag !== "latest") {
+                  throw new Error("EtherscanProvider does not support blockTag for call");
+                }
+                const postData = getTransactionPostData(params.transaction);
+                postData.module = "proxy";
+                postData.action = "eth_call";
+                try {
+                  return yield this.fetch("proxy", postData, true);
+                } catch (error) {
+                  return checkError("call", error, params.transaction);
+                }
+              }
+            case "estimateGas":
+              {
+                const postData = getTransactionPostData(params.transaction);
+                postData.module = "proxy";
+                postData.action = "eth_estimateGas";
+                try {
+                  return yield this.fetch("proxy", postData, true);
+                } catch (error) {
+                  return checkError("estimateGas", error, params.transaction);
+                }
+              }
+            case "getLogs":
+              {
+                const args = {
+                  action: "getLogs"
+                };
+                if (params.filter.fromBlock) {
+                  args.fromBlock = checkLogTag(params.filter.fromBlock);
+                }
+                if (params.filter.toBlock) {
+                  args.toBlock = checkLogTag(params.filter.toBlock);
+                }
+                if (params.filter.address) {
+                  args.address = params.filter.address;
+                }
+                // @TODO: We can handle slightly more complicated logs using the logs API
+                if (params.filter.topics && params.filter.topics.length > 0) {
+                  if (params.filter.topics.length > 1) {
+                    logger$9.throwError("unsupported topic count", Logger.errors.UNSUPPORTED_OPERATION, {
+                      topics: params.filter.topics
+                    });
+                  }
+                  if (params.filter.topics.length === 1) {
+                    const topic0 = params.filter.topics[0];
+                    if (typeof topic0 !== "string" || topic0.length !== 66) {
+                      logger$9.throwError("unsupported topic format", Logger.errors.UNSUPPORTED_OPERATION, {
+                        topic0: topic0
+                      });
+                    }
+                    args.topic0 = topic0;
+                  }
+                }
+                const logs = yield this.fetch("logs", args);
+                // Cache txHash => blockHash
+                let blocks = {};
+                // Add any missing blockHash to the logs
+                for (let i = 0; i < logs.length; i++) {
+                  const log = logs[i];
+                  if (log.blockHash != null) {
+                    continue;
+                  }
+                  if (blocks[log.blockNumber] == null) {
+                    const block = yield this.getBlock(log.blockNumber);
+                    if (block) {
+                      blocks[log.blockNumber] = block.hash;
+                    }
+                  }
+                  log.blockHash = blocks[log.blockNumber];
+                }
+                return logs;
+              }
+            case "getEtherPrice":
+              if (this.network.name !== "homestead") {
+                return 0.0;
+              }
+              return parseFloat((yield this.fetch("stats", {
+                action: "ethprice"
+              })).ethusd);
+          }
+          return _super.perform.call(this, method, params);
+        });
+      }
+      // Note: The `page` page parameter only allows pagination within the
+      //       10,000 window available without a page and offset parameter
+      //       Error: Result window is too large, PageNo x Offset size must
+      //              be less than or equal to 10000
+      getHistory(addressOrName, startBlock, endBlock) {
+        return __awaiter$1(this, void 0, void 0, function* () {
+          const params = {
+            action: "txlist",
+            address: yield this.resolveName(addressOrName),
+            startblock: startBlock == null ? 0 : startBlock,
+            endblock: endBlock == null ? 99999999 : endBlock,
+            sort: "asc"
+          };
+          const result = yield this.fetch("account", params);
+          return result.map(tx => {
+            ["contractAddress", "to"].forEach(function (key) {
+              if (tx[key] == "") {
+                delete tx[key];
+              }
+            });
+            if (tx.creates == null && tx.contractAddress != null) {
+              tx.creates = tx.contractAddress;
+            }
+            const item = this.formatter.transactionResponse(tx);
+            if (tx.timeStamp) {
+              item.timestamp = parseInt(tx.timeStamp);
+            }
+            return item;
+          });
+        });
+      }
+      isCommunityResource() {
+        return this.apiKey == null;
+      }
+    }
+
+    var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function (resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    const logger$8 = new Logger(version$3);
+    function now() {
+      return new Date().getTime();
+    }
+    // Returns to network as long as all agree, or null if any is null.
+    // Throws an error if any two networks do not match.
+    function checkNetworks(networks) {
+      let result = null;
+      for (let i = 0; i < networks.length; i++) {
+        const network = networks[i];
+        // Null! We do not know our network; bail.
+        if (network == null) {
+          return null;
+        }
+        if (result) {
+          // Make sure the network matches the previous networks
+          if (!(result.name === network.name && result.chainId === network.chainId && (result.ensAddress === network.ensAddress || result.ensAddress == null && network.ensAddress == null))) {
+            logger$8.throwArgumentError("provider mismatch", "networks", networks);
+          }
+        } else {
+          result = network;
+        }
+      }
+      return result;
+    }
+    function median(values, maxDelta) {
+      values = values.slice().sort();
+      const middle = Math.floor(values.length / 2);
+      // Odd length; take the middle
+      if (values.length % 2) {
+        return values[middle];
+      }
+      // Even length; take the average of the two middle
+      const a = values[middle - 1],
+        b = values[middle];
+      if (maxDelta != null && Math.abs(a - b) > maxDelta) {
+        return null;
+      }
+      return (a + b) / 2;
+    }
+    function serialize(value) {
+      if (value === null) {
+        return "null";
+      } else if (typeof value === "number" || typeof value === "boolean") {
+        return JSON.stringify(value);
+      } else if (typeof value === "string") {
+        return value;
+      } else if (BigNumber$2.isBigNumber(value)) {
+        return value.toString();
+      } else if (Array.isArray(value)) {
+        return JSON.stringify(value.map(i => serialize(i)));
+      } else if (typeof value === "object") {
+        const keys = Object.keys(value);
+        keys.sort();
+        return "{" + keys.map(key => {
+          let v = value[key];
+          if (typeof v === "function") {
+            v = "[function]";
+          } else {
+            v = serialize(v);
+          }
+          return JSON.stringify(key) + ":" + v;
+        }).join(",") + "}";
+      }
+      throw new Error("unknown value type: " + typeof value);
+    }
+    // Next request ID to use for emitting debug info
+    let nextRid = 1;
+    function stall(duration) {
+      let cancel = null;
+      let timer = null;
+      let promise = new Promise(resolve => {
+        cancel = function () {
+          if (timer) {
+            clearTimeout(timer);
+            timer = null;
+          }
+          resolve();
+        };
+        timer = setTimeout(cancel, duration);
+      });
+      const wait = func => {
+        promise = promise.then(func);
+        return promise;
+      };
+      function getPromise() {
+        return promise;
+      }
+      return {
+        cancel,
+        getPromise,
+        wait
+      };
+    }
+    const ForwardErrors = [Logger.errors.CALL_EXCEPTION, Logger.errors.INSUFFICIENT_FUNDS, Logger.errors.NONCE_EXPIRED, Logger.errors.REPLACEMENT_UNDERPRICED, Logger.errors.UNPREDICTABLE_GAS_LIMIT];
+    const ForwardProperties = ["address", "args", "errorArgs", "errorSignature", "method", "transaction"];
+    function exposeDebugConfig(config, now) {
+      const result = {
+        weight: config.weight
+      };
+      Object.defineProperty(result, "provider", {
+        get: () => config.provider
+      });
+      if (config.start) {
+        result.start = config.start;
+      }
+      if (now) {
+        result.duration = now - config.start;
+      }
+      if (config.done) {
+        if (config.error) {
+          result.error = config.error;
+        } else {
+          result.result = config.result || null;
+        }
+      }
+      return result;
+    }
+    function normalizedTally(normalize, quorum) {
+      return function (configs) {
+        // Count the votes for each result
+        const tally = {};
+        configs.forEach(c => {
+          const value = normalize(c.result);
+          if (!tally[value]) {
+            tally[value] = {
+              count: 0,
+              result: c.result
+            };
+          }
+          tally[value].count++;
+        });
+        // Check for a quorum on any given result
+        const keys = Object.keys(tally);
+        for (let i = 0; i < keys.length; i++) {
+          const check = tally[keys[i]];
+          if (check.count >= quorum) {
+            return check.result;
+          }
+        }
+        // No quroum
+        return undefined;
+      };
+    }
+    function getProcessFunc(provider, method, params) {
+      let normalize = serialize;
+      switch (method) {
+        case "getBlockNumber":
+          // Return the median value, unless there is (median + 1) is also
+          // present, in which case that is probably true and the median
+          // is going to be stale soon. In the event of a malicious node,
+          // the lie will be true soon enough.
+          return function (configs) {
+            const values = configs.map(c => c.result);
+            // Get the median block number
+            let blockNumber = median(configs.map(c => c.result), 2);
+            if (blockNumber == null) {
+              return undefined;
+            }
+            blockNumber = Math.ceil(blockNumber);
+            // If the next block height is present, its prolly safe to use
+            if (values.indexOf(blockNumber + 1) >= 0) {
+              blockNumber++;
+            }
+            // Don't ever roll back the blockNumber
+            if (blockNumber >= provider._highestBlockNumber) {
+              provider._highestBlockNumber = blockNumber;
+            }
+            return provider._highestBlockNumber;
+          };
+        case "getGasPrice":
+          // Return the middle (round index up) value, similar to median
+          // but do not average even entries and choose the higher.
+          // Malicious actors must compromise 50% of the nodes to lie.
+          return function (configs) {
+            const values = configs.map(c => c.result);
+            values.sort();
+            return values[Math.floor(values.length / 2)];
+          };
+        case "getEtherPrice":
+          // Returns the median price. Malicious actors must compromise at
+          // least 50% of the nodes to lie (in a meaningful way).
+          return function (configs) {
+            return median(configs.map(c => c.result));
+          };
+        // No additional normalizing required; serialize is enough
+        case "getBalance":
+        case "getTransactionCount":
+        case "getCode":
+        case "getStorageAt":
+        case "call":
+        case "estimateGas":
+        case "getLogs":
+          break;
+        // We drop the confirmations from transactions as it is approximate
+        case "getTransaction":
+        case "getTransactionReceipt":
+          normalize = function (tx) {
+            if (tx == null) {
+              return null;
+            }
+            tx = shallowCopy(tx);
+            tx.confirmations = -1;
+            return serialize(tx);
+          };
+          break;
+        // We drop the confirmations from transactions as it is approximate
+        case "getBlock":
+          // We drop the confirmations from transactions as it is approximate
+          if (params.includeTransactions) {
+            normalize = function (block) {
+              if (block == null) {
+                return null;
+              }
+              block = shallowCopy(block);
+              block.transactions = block.transactions.map(tx => {
+                tx = shallowCopy(tx);
+                tx.confirmations = -1;
+                return tx;
+              });
+              return serialize(block);
+            };
+          } else {
+            normalize = function (block) {
+              if (block == null) {
+                return null;
+              }
+              return serialize(block);
+            };
+          }
+          break;
+        default:
+          throw new Error("unknown method: " + method);
+      }
+      // Return the result if and only if the expected quorum is
+      // satisfied and agreed upon for the final result.
+      return normalizedTally(normalize, provider.quorum);
+    }
+    // If we are doing a blockTag query, we need to make sure the backend is
+    // caught up to the FallbackProvider, before sending a request to it.
+    function waitForSync(config, blockNumber) {
+      return __awaiter(this, void 0, void 0, function* () {
+        const provider = config.provider;
+        if (provider.blockNumber != null && provider.blockNumber >= blockNumber || blockNumber === -1) {
+          return provider;
+        }
+        return poll(() => {
+          return new Promise((resolve, reject) => {
+            setTimeout(function () {
+              // We are synced
+              if (provider.blockNumber >= blockNumber) {
+                return resolve(provider);
+              }
+              // We're done; just quit
+              if (config.cancelled) {
+                return resolve(null);
+              }
+              // Try again, next block
+              return resolve(undefined);
+            }, 0);
+          });
+        }, {
+          oncePoll: provider
+        });
+      });
+    }
+    function getRunner(config, currentBlockNumber, method, params) {
+      return __awaiter(this, void 0, void 0, function* () {
+        let provider = config.provider;
+        switch (method) {
+          case "getBlockNumber":
+          case "getGasPrice":
+            return provider[method]();
+          case "getEtherPrice":
+            if (provider.getEtherPrice) {
+              return provider.getEtherPrice();
+            }
+            break;
+          case "getBalance":
+          case "getTransactionCount":
+          case "getCode":
+            if (params.blockTag && isHexString(params.blockTag)) {
+              provider = yield waitForSync(config, currentBlockNumber);
+            }
+            return provider[method](params.address, params.blockTag || "latest");
+          case "getStorageAt":
+            if (params.blockTag && isHexString(params.blockTag)) {
+              provider = yield waitForSync(config, currentBlockNumber);
+            }
+            return provider.getStorageAt(params.address, params.position, params.blockTag || "latest");
+          case "getBlock":
+            if (params.blockTag && isHexString(params.blockTag)) {
+              provider = yield waitForSync(config, currentBlockNumber);
+            }
+            return provider[params.includeTransactions ? "getBlockWithTransactions" : "getBlock"](params.blockTag || params.blockHash);
+          case "call":
+          case "estimateGas":
+            if (params.blockTag && isHexString(params.blockTag)) {
+              provider = yield waitForSync(config, currentBlockNumber);
+            }
+            if (method === "call" && params.blockTag) {
+              return provider[method](params.transaction, params.blockTag);
+            }
+            return provider[method](params.transaction);
+          case "getTransaction":
+          case "getTransactionReceipt":
+            return provider[method](params.transactionHash);
+          case "getLogs":
+            {
+              let filter = params.filter;
+              if (filter.fromBlock && isHexString(filter.fromBlock) || filter.toBlock && isHexString(filter.toBlock)) {
+                provider = yield waitForSync(config, currentBlockNumber);
+              }
+              return provider.getLogs(filter);
+            }
+        }
+        return logger$8.throwError("unknown method error", Logger.errors.UNKNOWN_ERROR, {
+          method: method,
+          params: params
+        });
+      });
+    }
+    class FallbackProvider extends BaseProvider {
+      constructor(providers, quorum) {
+        if (providers.length === 0) {
+          logger$8.throwArgumentError("missing providers", "providers", providers);
+        }
+        const providerConfigs = providers.map((configOrProvider, index) => {
+          if (Provider.isProvider(configOrProvider)) {
+            const stallTimeout = isCommunityResource(configOrProvider) ? 2000 : 750;
+            const priority = 1;
+            return Object.freeze({
+              provider: configOrProvider,
+              weight: 1,
+              stallTimeout,
+              priority
+            });
+          }
+          const config = shallowCopy(configOrProvider);
+          if (config.priority == null) {
+            config.priority = 1;
+          }
+          if (config.stallTimeout == null) {
+            config.stallTimeout = isCommunityResource(configOrProvider) ? 2000 : 750;
+          }
+          if (config.weight == null) {
+            config.weight = 1;
+          }
+          const weight = config.weight;
+          if (weight % 1 || weight > 512 || weight < 1) {
+            logger$8.throwArgumentError("invalid weight; must be integer in [1, 512]", `providers[${index}].weight`, weight);
+          }
+          return Object.freeze(config);
+        });
+        const total = providerConfigs.reduce((accum, c) => accum + c.weight, 0);
+        if (quorum == null) {
+          quorum = total / 2;
+        } else if (quorum > total) {
+          logger$8.throwArgumentError("quorum will always fail; larger than total weight", "quorum", quorum);
+        }
+        // Are all providers' networks are known
+        let networkOrReady = checkNetworks(providerConfigs.map(c => c.provider.network));
+        // Not all networks are known; we must stall
+        if (networkOrReady == null) {
+          networkOrReady = new Promise((resolve, reject) => {
+            setTimeout(() => {
+              this.detectNetwork().then(resolve, reject);
+            }, 0);
+          });
+        }
+        super(networkOrReady);
+        // Preserve a copy, so we do not get mutated
+        defineReadOnly(this, "providerConfigs", Object.freeze(providerConfigs));
+        defineReadOnly(this, "quorum", quorum);
+        this._highestBlockNumber = -1;
+      }
+      detectNetwork() {
+        return __awaiter(this, void 0, void 0, function* () {
+          const networks = yield Promise.all(this.providerConfigs.map(c => c.provider.getNetwork()));
+          return checkNetworks(networks);
+        });
+      }
+      perform(method, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+          // Sending transactions is special; always broadcast it to all backends
+          if (method === "sendTransaction") {
+            const results = yield Promise.all(this.providerConfigs.map(c => {
+              return c.provider.sendTransaction(params.signedTransaction).then(result => {
+                return result.hash;
+              }, error => {
+                return error;
+              });
+            }));
+            // Any success is good enough (other errors are likely "already seen" errors
+            for (let i = 0; i < results.length; i++) {
+              const result = results[i];
+              if (typeof result === "string") {
+                return result;
+              }
+            }
+            // They were all an error; pick the first error
+            throw results[0];
+          }
+          // We need to make sure we are in sync with our backends, so we need
+          // to know this before we can make a lot of calls
+          if (this._highestBlockNumber === -1 && method !== "getBlockNumber") {
+            yield this.getBlockNumber();
+          }
+          const processFunc = getProcessFunc(this, method, params);
+          // Shuffle the providers and then sort them by their priority; we
+          // shallowCopy them since we will store the result in them too
+          const configs = shuffled(this.providerConfigs.map(shallowCopy));
+          configs.sort((a, b) => a.priority - b.priority);
+          const currentBlockNumber = this._highestBlockNumber;
+          let i = 0;
+          let first = true;
+          while (true) {
+            const t0 = now();
+            // Compute the inflight weight (exclude anything past)
+            let inflightWeight = configs.filter(c => c.runner && t0 - c.start < c.stallTimeout).reduce((accum, c) => accum + c.weight, 0);
+            // Start running enough to meet quorum
+            while (inflightWeight < this.quorum && i < configs.length) {
+              const config = configs[i++];
+              const rid = nextRid++;
+              config.start = now();
+              config.staller = stall(config.stallTimeout);
+              config.staller.wait(() => {
+                config.staller = null;
+              });
+              config.runner = getRunner(config, currentBlockNumber, method, params).then(result => {
+                config.done = true;
+                config.result = result;
+                if (this.listenerCount("debug")) {
+                  this.emit("debug", {
+                    action: "request",
+                    rid: rid,
+                    backend: exposeDebugConfig(config, now()),
+                    request: {
+                      method: method,
+                      params: deepCopy(params)
+                    },
+                    provider: this
+                  });
+                }
+              }, error => {
+                config.done = true;
+                config.error = error;
+                if (this.listenerCount("debug")) {
+                  this.emit("debug", {
+                    action: "request",
+                    rid: rid,
+                    backend: exposeDebugConfig(config, now()),
+                    request: {
+                      method: method,
+                      params: deepCopy(params)
+                    },
+                    provider: this
+                  });
+                }
+              });
+              if (this.listenerCount("debug")) {
+                this.emit("debug", {
+                  action: "request",
+                  rid: rid,
+                  backend: exposeDebugConfig(config, null),
+                  request: {
+                    method: method,
+                    params: deepCopy(params)
+                  },
+                  provider: this
+                });
+              }
+              inflightWeight += config.weight;
+            }
+            // Wait for anything meaningful to finish or stall out
+            const waiting = [];
+            configs.forEach(c => {
+              if (c.done || !c.runner) {
+                return;
+              }
+              waiting.push(c.runner);
+              if (c.staller) {
+                waiting.push(c.staller.getPromise());
+              }
+            });
+            if (waiting.length) {
+              yield Promise.race(waiting);
+            }
+            // Check the quorum and process the results; the process function
+            // may additionally decide the quorum is not met
+            const results = configs.filter(c => c.done && c.error == null);
+            if (results.length >= this.quorum) {
+              const result = processFunc(results);
+              if (result !== undefined) {
+                // Shut down any stallers
+                configs.forEach(c => {
+                  if (c.staller) {
+                    c.staller.cancel();
+                  }
+                  c.cancelled = true;
+                });
+                return result;
+              }
+              if (!first) {
+                yield stall(100).getPromise();
+              }
+              first = false;
+            }
+            // No result, check for errors that should be forwarded
+            const errors = configs.reduce((accum, c) => {
+              if (!c.done || c.error == null) {
+                return accum;
+              }
+              const code = c.error.code;
+              if (ForwardErrors.indexOf(code) >= 0) {
+                if (!accum[code]) {
+                  accum[code] = {
+                    error: c.error,
+                    weight: 0
+                  };
+                }
+                accum[code].weight += c.weight;
+              }
+              return accum;
+            }, {});
+            Object.keys(errors).forEach(errorCode => {
+              const tally = errors[errorCode];
+              if (tally.weight < this.quorum) {
+                return;
+              }
+              // Shut down any stallers
+              configs.forEach(c => {
+                if (c.staller) {
+                  c.staller.cancel();
+                }
+                c.cancelled = true;
+              });
+              const e = tally.error;
+              const props = {};
+              ForwardProperties.forEach(name => {
+                if (e[name] == null) {
+                  return;
+                }
+                props[name] = e[name];
+              });
+              logger$8.throwError(e.reason || e.message, errorCode, props);
+            });
+            // All configs have run to completion; we will never get more data
+            if (configs.filter(c => !c.done).length === 0) {
+              break;
+            }
+          }
+          // Shut down any stallers; shouldn't be any
+          configs.forEach(c => {
+            if (c.staller) {
+              c.staller.cancel();
+            }
+            c.cancelled = true;
+          });
+          return logger$8.throwError("failed to meet quorum", Logger.errors.SERVER_ERROR, {
+            method: method,
+            params: params,
+            //results: configs.map((c) => c.result),
+            //errors: configs.map((c) => c.error),
+            results: configs.map(c => exposeDebugConfig(c)),
+            provider: this
+          });
+        });
+      }
+    }
+
+    const IpcProvider = null;
+
+    const logger$7 = new Logger(version$3);
+    const defaultProjectId = "84842078b09946638c03157f83405213";
+    class InfuraWebSocketProvider extends WebSocketProvider {
+      constructor(network, apiKey) {
+        const provider = new InfuraProvider(network, apiKey);
+        const connection = provider.connection;
+        if (connection.password) {
+          logger$7.throwError("INFURA WebSocket project secrets unsupported", Logger.errors.UNSUPPORTED_OPERATION, {
+            operation: "InfuraProvider.getWebSocketProvider()"
+          });
+        }
+        const url = connection.url.replace(/^http/i, "ws").replace("/v3/", "/ws/v3/");
+        super(url, network);
+        defineReadOnly(this, "apiKey", provider.projectId);
+        defineReadOnly(this, "projectId", provider.projectId);
+        defineReadOnly(this, "projectSecret", provider.projectSecret);
+      }
+      isCommunityResource() {
+        return this.projectId === defaultProjectId;
+      }
+    }
+    class InfuraProvider extends UrlJsonRpcProvider {
+      static getWebSocketProvider(network, apiKey) {
+        return new InfuraWebSocketProvider(network, apiKey);
+      }
+      static getApiKey(apiKey) {
+        const apiKeyObj = {
+          apiKey: defaultProjectId,
+          projectId: defaultProjectId,
+          projectSecret: null
+        };
+        if (apiKey == null) {
+          return apiKeyObj;
+        }
+        if (typeof apiKey === "string") {
+          apiKeyObj.projectId = apiKey;
+        } else if (apiKey.projectSecret != null) {
+          logger$7.assertArgument(typeof apiKey.projectId === "string", "projectSecret requires a projectId", "projectId", apiKey.projectId);
+          logger$7.assertArgument(typeof apiKey.projectSecret === "string", "invalid projectSecret", "projectSecret", "[REDACTED]");
+          apiKeyObj.projectId = apiKey.projectId;
+          apiKeyObj.projectSecret = apiKey.projectSecret;
+        } else if (apiKey.projectId) {
+          apiKeyObj.projectId = apiKey.projectId;
+        }
+        apiKeyObj.apiKey = apiKeyObj.projectId;
+        return apiKeyObj;
+      }
+      static getUrl(network, apiKey) {
+        let host = null;
+        switch (network ? network.name : "unknown") {
+          case "homestead":
+            host = "mainnet.infura.io";
+            break;
+          case "goerli":
+            host = "goerli.infura.io";
+            break;
+          case "sepolia":
+            host = "sepolia.infura.io";
+            break;
+          case "matic":
+            host = "polygon-mainnet.infura.io";
+            break;
+          case "maticmum":
+            host = "polygon-mumbai.infura.io";
+            break;
+          case "optimism":
+            host = "optimism-mainnet.infura.io";
+            break;
+          case "optimism-goerli":
+            host = "optimism-goerli.infura.io";
+            break;
+          case "arbitrum":
+            host = "arbitrum-mainnet.infura.io";
+            break;
+          case "arbitrum-goerli":
+            host = "arbitrum-goerli.infura.io";
+            break;
+          default:
+            logger$7.throwError("unsupported network", Logger.errors.INVALID_ARGUMENT, {
+              argument: "network",
+              value: network
+            });
+        }
+        const connection = {
+          allowGzip: true,
+          url: "https:/" + "/" + host + "/v3/" + apiKey.projectId,
+          throttleCallback: (attempt, url) => {
+            if (apiKey.projectId === defaultProjectId) {
+              showThrottleMessage();
+            }
+            return Promise.resolve(true);
+          }
+        };
+        if (apiKey.projectSecret != null) {
+          connection.user = "";
+          connection.password = apiKey.projectSecret;
+        }
+        return connection;
+      }
+      isCommunityResource() {
+        return this.projectId === defaultProjectId;
+      }
+    }
+
+    // Experimental
+    class JsonRpcBatchProvider extends JsonRpcProvider {
+      send(method, params) {
+        const request = {
+          method: method,
+          params: params,
+          id: this._nextId++,
+          jsonrpc: "2.0"
+        };
+        if (this._pendingBatch == null) {
+          this._pendingBatch = [];
+        }
+        const inflightRequest = {
+          request,
+          resolve: null,
+          reject: null
+        };
+        const promise = new Promise((resolve, reject) => {
+          inflightRequest.resolve = resolve;
+          inflightRequest.reject = reject;
+        });
+        this._pendingBatch.push(inflightRequest);
+        if (!this._pendingBatchAggregator) {
+          // Schedule batch for next event loop + short duration
+          this._pendingBatchAggregator = setTimeout(() => {
+            // Get teh current batch and clear it, so new requests
+            // go into the next batch
+            const batch = this._pendingBatch;
+            this._pendingBatch = null;
+            this._pendingBatchAggregator = null;
+            // Get the request as an array of requests
+            const request = batch.map(inflight => inflight.request);
+            this.emit("debug", {
+              action: "requestBatch",
+              request: deepCopy(request),
+              provider: this
+            });
+            return fetchJson(this.connection, JSON.stringify(request)).then(result => {
+              this.emit("debug", {
+                action: "response",
+                request: request,
+                response: result,
+                provider: this
+              });
+              // For each result, feed it to the correct Promise, depending
+              // on whether it was a success or error
+              batch.forEach((inflightRequest, index) => {
+                const payload = result[index];
+                if (payload.error) {
+                  const error = new Error(payload.error.message);
+                  error.code = payload.error.code;
+                  error.data = payload.error.data;
+                  inflightRequest.reject(error);
+                } else {
+                  inflightRequest.resolve(payload.result);
+                }
+              });
+            }, error => {
+              this.emit("debug", {
+                action: "response",
+                error: error,
+                request: request,
+                provider: this
+              });
+              batch.forEach(inflightRequest => {
+                inflightRequest.reject(error);
+              });
+            });
+          }, 10);
+        }
+        return promise;
+      }
+    }
+
+    /* istanbul ignore file */
+    const logger$6 = new Logger(version$3);
+    // Special API key provided by Nodesmith for ethers.js
+    const defaultApiKey = "ETHERS_JS_SHARED";
+    class NodesmithProvider extends UrlJsonRpcProvider {
+      static getApiKey(apiKey) {
+        if (apiKey && typeof apiKey !== "string") {
+          logger$6.throwArgumentError("invalid apiKey", "apiKey", apiKey);
+        }
+        return apiKey || defaultApiKey;
+      }
+      static getUrl(network, apiKey) {
+        logger$6.warn("NodeSmith will be discontinued on 2019-12-20; please migrate to another platform.");
+        let host = null;
+        switch (network.name) {
+          case "homestead":
+            host = "https://ethereum.api.nodesmith.io/v1/mainnet/jsonrpc";
+            break;
+          case "ropsten":
+            host = "https://ethereum.api.nodesmith.io/v1/ropsten/jsonrpc";
+            break;
+          case "rinkeby":
+            host = "https://ethereum.api.nodesmith.io/v1/rinkeby/jsonrpc";
+            break;
+          case "goerli":
+            host = "https://ethereum.api.nodesmith.io/v1/goerli/jsonrpc";
+            break;
+          case "kovan":
+            host = "https://ethereum.api.nodesmith.io/v1/kovan/jsonrpc";
+            break;
+          default:
+            logger$6.throwArgumentError("unsupported network", "network", arguments[0]);
+        }
+        return host + "?apiKey=" + apiKey;
+      }
+    }
+
+    const logger$5 = new Logger(version$3);
+    const defaultApplicationId = "62e1ad51b37b8e00394bda3b";
+    class PocketProvider extends UrlJsonRpcProvider {
+      static getApiKey(apiKey) {
+        const apiKeyObj = {
+          applicationId: null,
+          loadBalancer: true,
+          applicationSecretKey: null
+        };
+        // Parse applicationId and applicationSecretKey
+        if (apiKey == null) {
+          apiKeyObj.applicationId = defaultApplicationId;
+        } else if (typeof apiKey === "string") {
+          apiKeyObj.applicationId = apiKey;
+        } else if (apiKey.applicationSecretKey != null) {
+          apiKeyObj.applicationId = apiKey.applicationId;
+          apiKeyObj.applicationSecretKey = apiKey.applicationSecretKey;
+        } else if (apiKey.applicationId) {
+          apiKeyObj.applicationId = apiKey.applicationId;
+        } else {
+          logger$5.throwArgumentError("unsupported PocketProvider apiKey", "apiKey", apiKey);
+        }
+        return apiKeyObj;
+      }
+      static getUrl(network, apiKey) {
+        let host = null;
+        switch (network ? network.name : "unknown") {
+          case "goerli":
+            host = "eth-goerli.gateway.pokt.network";
+            break;
+          case "homestead":
+            host = "eth-mainnet.gateway.pokt.network";
+            break;
+          case "kovan":
+            host = "poa-kovan.gateway.pokt.network";
+            break;
+          case "matic":
+            host = "poly-mainnet.gateway.pokt.network";
+            break;
+          case "maticmum":
+            host = "polygon-mumbai-rpc.gateway.pokt.network";
+            break;
+          case "rinkeby":
+            host = "eth-rinkeby.gateway.pokt.network";
+            break;
+          case "ropsten":
+            host = "eth-ropsten.gateway.pokt.network";
+            break;
+          default:
+            logger$5.throwError("unsupported network", Logger.errors.INVALID_ARGUMENT, {
+              argument: "network",
+              value: network
+            });
+        }
+        const url = `https:/\/${host}/v1/lb/${apiKey.applicationId}`;
+        const connection = {
+          headers: {},
+          url
+        };
+        if (apiKey.applicationSecretKey != null) {
+          connection.user = "";
+          connection.password = apiKey.applicationSecretKey;
+        }
+        return connection;
+      }
+      isCommunityResource() {
+        return this.applicationId === defaultApplicationId;
+      }
+    }
+
+    const logger$4 = new Logger(version$3);
     let _nextId = 1;
     function buildWeb3LegacyFetcher(provider, sendFunc) {
       const fetcher = "Web3LegacyFetcher";
@@ -29528,7 +34537,7 @@
     class Web3Provider extends JsonRpcProvider {
       constructor(provider, network) {
         if (provider == null) {
-          logger$1.throwArgumentError("missing provider", "provider", provider);
+          logger$4.throwArgumentError("missing provider", "provider", provider);
         }
         let path = null;
         let jsonRpcFetchFunc = null;
@@ -29552,7 +34561,7 @@
           } else if (provider.send) {
             jsonRpcFetchFunc = buildWeb3LegacyFetcher(provider, provider.send.bind(provider));
           } else {
-            logger$1.throwArgumentError("unsupported provider", "provider", provider);
+            logger$4.throwArgumentError("unsupported provider", "provider", provider);
           }
           if (!path) {
             path = "unknown:";
@@ -29567,10 +34576,214 @@
       }
     }
 
-    const version = "units/5.7.0";
+    const logger$3 = new Logger(version$3);
+    ////////////////////////
+    // Helper Functions
+    function getDefaultProvider(network, options) {
+      if (network == null) {
+        network = "homestead";
+      }
+      // If passed a URL, figure out the right type of provider based on the scheme
+      if (typeof network === "string") {
+        // @TODO: Add support for IpcProvider; maybe if it ends in ".ipc"?
+        // Handle http and ws (and their secure variants)
+        const match = network.match(/^(ws|http)s?:/i);
+        if (match) {
+          switch (match[1].toLowerCase()) {
+            case "http":
+            case "https":
+              return new JsonRpcProvider(network);
+            case "ws":
+            case "wss":
+              return new WebSocketProvider(network);
+            default:
+              logger$3.throwArgumentError("unsupported URL scheme", "network", network);
+          }
+        }
+      }
+      const n = getNetwork(network);
+      if (!n || !n._defaultProvider) {
+        logger$3.throwError("unsupported getDefaultProvider network", Logger.errors.NETWORK_ERROR, {
+          operation: "getDefaultProvider",
+          network: network
+        });
+      }
+      return n._defaultProvider({
+        FallbackProvider,
+        AlchemyProvider,
+        AnkrProvider,
+        CloudflareProvider,
+        EtherscanProvider,
+        InfuraProvider,
+        JsonRpcProvider,
+        NodesmithProvider,
+        PocketProvider,
+        Web3Provider,
+        IpcProvider
+      }, options);
+    }
 
-    const logger = new Logger(version);
+    var index = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        AlchemyProvider: AlchemyProvider,
+        AlchemyWebSocketProvider: AlchemyWebSocketProvider,
+        AnkrProvider: AnkrProvider,
+        BaseProvider: BaseProvider,
+        CloudflareProvider: CloudflareProvider,
+        EtherscanProvider: EtherscanProvider,
+        FallbackProvider: FallbackProvider,
+        Formatter: Formatter,
+        InfuraProvider: InfuraProvider,
+        InfuraWebSocketProvider: InfuraWebSocketProvider,
+        IpcProvider: IpcProvider,
+        JsonRpcBatchProvider: JsonRpcBatchProvider,
+        JsonRpcProvider: JsonRpcProvider,
+        JsonRpcSigner: JsonRpcSigner,
+        NodesmithProvider: NodesmithProvider,
+        PocketProvider: PocketProvider,
+        Provider: Provider,
+        Resolver: Resolver,
+        StaticJsonRpcProvider: StaticJsonRpcProvider,
+        UrlJsonRpcProvider: UrlJsonRpcProvider,
+        Web3Provider: Web3Provider,
+        WebSocketProvider: WebSocketProvider,
+        getDefaultProvider: getDefaultProvider,
+        getNetwork: getNetwork,
+        isCommunityResourcable: isCommunityResourcable,
+        isCommunityResource: isCommunityResource,
+        showThrottleMessage: showThrottleMessage
+    });
+
+    const version$2 = "solidity/5.7.0";
+
+    const regexBytes = new RegExp("^bytes([0-9]+)$");
+    const regexNumber = new RegExp("^(u?int)([0-9]*)$");
+    const regexArray = new RegExp("^(.*)\\[([0-9]*)\\]$");
+    const Zeros = "0000000000000000000000000000000000000000000000000000000000000000";
+    const logger$2 = new Logger(version$2);
+    function _pack(type, value, isArray) {
+      switch (type) {
+        case "address":
+          if (isArray) {
+            return zeroPad(value, 32);
+          }
+          return arrayify(value);
+        case "string":
+          return toUtf8Bytes(value);
+        case "bytes":
+          return arrayify(value);
+        case "bool":
+          value = value ? "0x01" : "0x00";
+          if (isArray) {
+            return zeroPad(value, 32);
+          }
+          return arrayify(value);
+      }
+      let match = type.match(regexNumber);
+      if (match) {
+        //let signed = (match[1] === "int")
+        let size = parseInt(match[2] || "256");
+        if (match[2] && String(size) !== match[2] || size % 8 !== 0 || size === 0 || size > 256) {
+          logger$2.throwArgumentError("invalid number type", "type", type);
+        }
+        if (isArray) {
+          size = 256;
+        }
+        value = BigNumber$2.from(value).toTwos(size);
+        return zeroPad(value, size / 8);
+      }
+      match = type.match(regexBytes);
+      if (match) {
+        const size = parseInt(match[1]);
+        if (String(size) !== match[1] || size === 0 || size > 32) {
+          logger$2.throwArgumentError("invalid bytes type", "type", type);
+        }
+        if (arrayify(value).byteLength !== size) {
+          logger$2.throwArgumentError(`invalid value for ${type}`, "value", value);
+        }
+        if (isArray) {
+          return arrayify((value + Zeros).substring(0, 66));
+        }
+        return value;
+      }
+      match = type.match(regexArray);
+      if (match && Array.isArray(value)) {
+        const baseType = match[1];
+        const count = parseInt(match[2] || String(value.length));
+        if (count != value.length) {
+          logger$2.throwArgumentError(`invalid array length for ${type}`, "value", value);
+        }
+        const result = [];
+        value.forEach(function (value) {
+          result.push(_pack(baseType, value, true));
+        });
+        return concat(result);
+      }
+      return logger$2.throwArgumentError("invalid type", "type", type);
+    }
+    // @TODO: Array Enum
+    function pack(types, values) {
+      if (types.length != values.length) {
+        logger$2.throwArgumentError("wrong number of values; expected ${ types.length }", "values", values);
+      }
+      const tight = [];
+      types.forEach(function (type, index) {
+        tight.push(_pack(type, values[index]));
+      });
+      return hexlify(concat(tight));
+    }
+    function keccak256(types, values) {
+      return keccak256$1(pack(types, values));
+    }
+    function sha256(types, values) {
+      return sha256$1(pack(types, values));
+    }
+
+    const version$1 = "units/5.7.0";
+
+    const logger$1 = new Logger(version$1);
     const names = ["wei", "kwei", "mwei", "gwei", "szabo", "finney", "ether"];
+    // Some environments have issues with RegEx that contain back-tracking, so we cannot
+    // use them.
+    function commify(value) {
+      const comps = String(value).split(".");
+      if (comps.length > 2 || !comps[0].match(/^-?[0-9]*$/) || comps[1] && !comps[1].match(/^[0-9]*$/) || value === "." || value === "-.") {
+        logger$1.throwArgumentError("invalid value", "value", value);
+      }
+      // Make sure we have at least one whole digit (0 if none)
+      let whole = comps[0];
+      let negative = "";
+      if (whole.substring(0, 1) === "-") {
+        negative = "-";
+        whole = whole.substring(1);
+      }
+      // Make sure we have at least 1 whole digit with no leading zeros
+      while (whole.substring(0, 1) === "0") {
+        whole = whole.substring(1);
+      }
+      if (whole === "") {
+        whole = "0";
+      }
+      let suffix = "";
+      if (comps.length === 2) {
+        suffix = "." + (comps[1] || "0");
+      }
+      while (suffix.length > 2 && suffix[suffix.length - 1] === "0") {
+        suffix = suffix.substring(0, suffix.length - 1);
+      }
+      const formatted = [];
+      while (whole.length) {
+        if (whole.length <= 3) {
+          formatted.unshift(whole);
+          break;
+        } else {
+          const index = whole.length - 3;
+          formatted.unshift(whole.substring(index));
+          whole = whole.substring(0, index);
+        }
+      }
+      return negative + formatted.join(",") + suffix;
+    }
     function formatUnits(value, unitName) {
       if (typeof unitName === "string") {
         const index = names.indexOf(unitName);
@@ -29582,7 +34795,7 @@
     }
     function parseUnits(value, unitName) {
       if (typeof value !== "string") {
-        logger.throwArgumentError("value must be a string", "value", value);
+        logger$1.throwArgumentError("value must be a string", "value", value);
       }
       if (typeof unitName === "string") {
         const index = names.indexOf(unitName);
@@ -29595,6 +34808,166 @@
     function formatEther(wei) {
       return formatUnits(wei, 18);
     }
+    function parseEther(ether) {
+      return parseUnits(ether, 18);
+    }
+
+    var utils = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        AbiCoder: AbiCoder,
+        ConstructorFragment: ConstructorFragment,
+        ErrorFragment: ErrorFragment,
+        EventFragment: EventFragment,
+        FormatTypes: FormatTypes,
+        Fragment: Fragment,
+        FunctionFragment: FunctionFragment,
+        HDNode: HDNode,
+        Indexed: Indexed,
+        Interface: Interface,
+        LogDescription: LogDescription,
+        Logger: Logger,
+        ParamType: ParamType,
+        RLP: index$3,
+        SigningKey: SigningKey,
+        get SupportedAlgorithm () { return SupportedAlgorithm; },
+        TransactionDescription: TransactionDescription,
+        get TransactionTypes () { return TransactionTypes; },
+        get UnicodeNormalizationForm () { return UnicodeNormalizationForm; },
+        Utf8ErrorFuncs: Utf8ErrorFuncs,
+        get Utf8ErrorReason () { return Utf8ErrorReason; },
+        _TypedDataEncoder: TypedDataEncoder,
+        _fetchData: _fetchData,
+        _toEscapedUtf8String: _toEscapedUtf8String,
+        accessListify: accessListify,
+        arrayify: arrayify,
+        base58: Base58,
+        base64: index$1,
+        checkProperties: checkProperties,
+        checkResultErrors: checkResultErrors,
+        commify: commify,
+        computeAddress: computeAddress,
+        computeHmac: computeHmac,
+        computePublicKey: computePublicKey,
+        concat: concat,
+        deepCopy: deepCopy,
+        defaultAbiCoder: defaultAbiCoder,
+        defaultPath: defaultPath,
+        defineReadOnly: defineReadOnly,
+        dnsEncode: dnsEncode,
+        entropyToMnemonic: entropyToMnemonic,
+        fetchJson: fetchJson,
+        formatBytes32String: formatBytes32String,
+        formatEther: formatEther,
+        formatUnits: formatUnits,
+        getAccountPath: getAccountPath,
+        getAddress: getAddress,
+        getContractAddress: getContractAddress,
+        getCreate2Address: getCreate2Address,
+        getIcapAddress: getIcapAddress,
+        getJsonWalletAddress: getJsonWalletAddress,
+        getStatic: getStatic,
+        hashMessage: hashMessage,
+        hexConcat: hexConcat,
+        hexDataLength: hexDataLength,
+        hexDataSlice: hexDataSlice,
+        hexStripZeros: hexStripZeros,
+        hexValue: hexValue,
+        hexZeroPad: hexZeroPad,
+        hexlify: hexlify,
+        id: id,
+        isAddress: isAddress,
+        isBytes: isBytes,
+        isBytesLike: isBytesLike,
+        isHexString: isHexString,
+        isValidMnemonic: isValidMnemonic,
+        isValidName: isValidName,
+        joinSignature: joinSignature,
+        keccak256: keccak256$1,
+        mnemonicToEntropy: mnemonicToEntropy,
+        mnemonicToSeed: mnemonicToSeed,
+        namehash: namehash,
+        nameprep: nameprep,
+        parseBytes32String: parseBytes32String,
+        parseEther: parseEther,
+        parseTransaction: parse,
+        parseUnits: parseUnits,
+        poll: poll,
+        randomBytes: randomBytes,
+        recoverAddress: recoverAddress,
+        recoverPublicKey: recoverPublicKey,
+        resolveProperties: resolveProperties,
+        ripemd160: ripemd160,
+        serializeTransaction: serialize$1,
+        sha256: sha256$1,
+        sha512: sha512,
+        shallowCopy: shallowCopy,
+        shuffled: shuffled,
+        solidityKeccak256: keccak256,
+        solidityPack: pack,
+        soliditySha256: sha256,
+        splitSignature: splitSignature,
+        stripZeros: stripZeros,
+        toUtf8Bytes: toUtf8Bytes,
+        toUtf8CodePoints: toUtf8CodePoints,
+        toUtf8String: toUtf8String,
+        verifyMessage: verifyMessage,
+        verifyTypedData: verifyTypedData,
+        zeroPad: zeroPad
+    });
+
+    const version = "ethers/5.7.2";
+
+    const logger = new Logger(version);
+
+    var ethers = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        BaseContract: BaseContract,
+        BigNumber: BigNumber$2,
+        Contract: Contract,
+        ContractFactory: ContractFactory,
+        FixedNumber: FixedNumber,
+        Signer: Signer,
+        VoidSigner: VoidSigner,
+        Wallet: Wallet,
+        Wordlist: Wordlist,
+        constants: index$2,
+        get errors () { return ErrorCode; },
+        getDefaultProvider: getDefaultProvider,
+        logger: logger,
+        providers: index,
+        utils: utils,
+        version: version,
+        wordlists: wordlists
+    });
+
+    try {
+      const anyGlobal = window;
+      if (anyGlobal._ethers == null) {
+        anyGlobal._ethers = ethers;
+      }
+    } catch (error) {}
+
+    var lib_esm = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        BaseContract: BaseContract,
+        BigNumber: BigNumber$2,
+        Contract: Contract,
+        ContractFactory: ContractFactory,
+        FixedNumber: FixedNumber,
+        Signer: Signer,
+        VoidSigner: VoidSigner,
+        Wallet: Wallet,
+        Wordlist: Wordlist,
+        constants: index$2,
+        get errors () { return ErrorCode; },
+        ethers: ethers,
+        getDefaultProvider: getDefaultProvider,
+        logger: logger,
+        providers: index,
+        utils: utils,
+        version: version,
+        wordlists: wordlists
+    });
 
     var domain;
 
@@ -33350,18 +38723,25 @@
                 rpcUrl: networkInfo.RpcUrl,
                 chainId: networkInfo.ChainId,
             };
-            this.magic = new _t("pk_live_EA9DDC458FE21B24", {
-                extensions: [new l()],
-                network: network,
-            });
-            this.ether = new Web3Provider(this.magic.rpcProvider);
+            if (networkInfo.ChainId == 80001) {
+                // @ts-ignore
+                await window.ethereum.enable();
+                // @ts-ignore
+                this.ether = new Web3Provider(window.ethereum);
+            }
+            else {
+                this.magic = new _t("pk_live_EA9DDC458FE21B24", {
+                    extensions: [new l()],
+                    network: network,
+                });
+                this.ether = new Web3Provider(this.magic.rpcProvider);
+            }
             let accounts = await this.ether.listAccounts();
             console.log("accounts after new Magic", accounts);
             // Assign Constants
             this.account = accounts[0];
             this.provider = this.ether.provider;
             this.chainId = networkInfo.ChainId;
-            console.log("walletInfo:", await this.magic.connect.getWalletInfo());
             this.subscribeToEvents(this.provider);
             return {
                 provider: this.provider,
@@ -33383,6 +38763,1022 @@
             this.chainId = null;
             this.provider = null;
         };
+    }
+
+    var dist = {};
+
+    var require$$0 = /*@__PURE__*/getAugmentedNamespace(lib_esm);
+
+    var HttpRequest = {};
+
+    var hasRequiredHttpRequest;
+    function requireHttpRequest() {
+      if (hasRequiredHttpRequest) return HttpRequest;
+      hasRequiredHttpRequest = 1;
+      var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+        return mod && mod.__esModule ? mod : {
+          "default": mod
+        };
+      };
+      Object.defineProperty(HttpRequest, "__esModule", {
+        value: true
+      });
+      const index_1 = __importDefault(requireDist());
+      let HttpRequest$1 = class HttpRequest {
+        constructor() {}
+        async postAuth(path, data) {
+          if (!index_1.default.Bearer) {
+            throw new Error('You are not logged in.');
+          }
+          return await this.post(path, data);
+        }
+        async post(path, data) {
+          if (!data) {
+            data = {};
+          }
+          data.chainId = index_1.default.Network?.ChainId;
+          data.address = index_1.default.WalletAddress;
+          let url = this.getUrl(path);
+          let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Authentication': 'Bearer: ' + index_1.default.Bearer,
+              'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(data)
+          });
+          let obj = await response.json();
+          if (obj.success) return obj.result;
+          throw new Error(obj.error);
+        }
+        async getAuth(path, data) {
+          if (!index_1.default.Bearer) {
+            throw new Error('You are not logged in.');
+          }
+          return this.get(path, data);
+        }
+        async get(path, data) {
+          if (!index_1.default.Bearer) {
+            throw new Error('You are not logged in.');
+          }
+          let params = new URLSearchParams(data);
+          if (!params.has('chainId')) {
+            params.set('chainId', index_1.default.Network.ChainId.toString());
+          }
+          if (!params.has('address')) {
+            params.set('address', index_1.default.WalletAddress);
+          }
+          let response = await fetch(this.getUrl(path) + '?' + params.toString(), {
+            method: 'GET',
+            headers: {
+              'Authentication': 'Bearer: ' + index_1.default.Bearer,
+              'Content-Type': 'application/json'
+            }
+          });
+          let obj = await response.json();
+          return obj.result ? obj.result : obj;
+        }
+        getUrl(path) {
+          if (path.startsWith('http')) return path;
+          if (!index_1.default.Network) {
+            throw new Error('No network available. User connected to unsupported network');
+          }
+          if (!path.startsWith('/')) path = '/' + path;
+          return index_1.default.Network.ServerUrl + path;
+        }
+        static eventSource;
+        static actionMap;
+        async listen(method, action) {
+          if (!index_1.default.Bearer) {
+            throw new Error('You are not logged in.');
+          }
+          if (!HttpRequest.actionMap) {
+            HttpRequest.actionMap = new Map();
+          }
+          HttpRequest.actionMap.set(method, action);
+          if (!HttpRequest.eventSource) {
+            HttpRequest.eventSource = new EventSource(this.getUrl('/listenForChanges?jwt=' + index_1.default.Bearer));
+            HttpRequest.eventSource.onmessage = async event => {
+              if (event.data == 'ok') return;
+              this.runActions(event);
+            };
+          }
+        }
+        runActions(e) {
+          let obj = this.getEventSourceObject(e);
+          let action = HttpRequest.actionMap.get(obj.methodName);
+          if (action) {
+            action(obj);
+          }
+        }
+        getEventSourceObject(e) {
+          let data = e.data;
+          if (!data || data == 'ok') return;
+          try {
+            return JSON.parse(data);
+          } catch (error) {
+            throw new Error('Error parsing event source object:' + e);
+          }
+        }
+      };
+      HttpRequest.default = HttpRequest$1;
+      return HttpRequest;
+    }
+
+    var NetworkType$1 = {};
+
+    var LocalhostNetwork$1 = {};
+
+    var LocalhostNetworkDefaults$1 = {};
+
+    var TestNetwork$2 = {};
+
+    var Network$2 = {};
+
+    Object.defineProperty(Network$2, "__esModule", {
+      value: true
+    });
+    let Network$1 = class Network {
+      ServerUrl = "";
+      ChainId = 0;
+      Name = "";
+      ChainName = '';
+      NativeCurrencyName = "";
+      NativeSymbol = "";
+      NativeDecimal = 18;
+      RpcUrl = '';
+      BlockExplorer = '';
+      TestNetwork = true;
+      FaucetUrl = '';
+      BuyUrl = '';
+      KYC_ADDRESS = "";
+      AUSD_ADDRESS = "";
+      LIMINAL_MARKET_ADDRESS = "";
+      MARKET_CALENDAR_ADDRESS = "";
+      LM_ADDRESS = '';
+      SERVICE_CONTRACT_ADDRESS = '';
+      NO_FEE_SERVICE_CONTRACT_ADDRESS = "0x0d82EF4e843c1ca7bd2aa9B2Aa4239bd70b306df";
+      static RpcUrl = '';
+      static ChainId = 0;
+      constructor() {}
+      get ChainIdHex() {
+        return '0x' + this.ChainId.toString(16);
+      }
+    };
+    Network$2.default = Network$1;
+
+    var __importDefault$5 = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(TestNetwork$2, "__esModule", {
+      value: true
+    });
+    const Network_1 = __importDefault$5(Network$2);
+    let TestNetwork$1 = class TestNetwork extends Network_1.default {
+      constructor() {
+        super();
+        this.ServerUrl = "https://testnet.liminal.market";
+        this.TestNetwork = true;
+      }
+    };
+    TestNetwork$2.default = TestNetwork$1;
+
+    var __importDefault$4 = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(LocalhostNetworkDefaults$1, "__esModule", {
+      value: true
+    });
+    const TestNetwork_1$1 = __importDefault$4(TestNetwork$2);
+    //localhost
+    class LocalhostNetworkDefaults extends TestNetwork_1$1.default {
+      constructor() {
+        super();
+        this.ChainId = LocalhostNetworkDefaults.ChainId;
+        this.Name = "localhost";
+        this.ChainName = 'localhost test';
+        this.NativeCurrencyName = "Ethereum";
+        this.NativeSymbol = "ETH";
+        this.NativeDecimal = 18;
+        this.RpcUrl = LocalhostNetworkDefaults.RpcUrl;
+        this.BlockExplorer = 'https://rinkeby.etherscan.io';
+        this.ServerUrl = "http://127.0.0.1:10000";
+      }
+      static RpcUrl = 'http://127.0.0.1:8545/';
+      static ChainId = 31337;
+    }
+    LocalhostNetworkDefaults$1.default = LocalhostNetworkDefaults;
+
+    var __importDefault$3 = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(LocalhostNetwork$1, "__esModule", {
+      value: true
+    });
+    const LocalhostNetworkDefaults_1 = __importDefault$3(LocalhostNetworkDefaults$1);
+    class LocalhostNetwork extends LocalhostNetworkDefaults_1.default {
+      constructor() {
+        super();
+      }
+      KYC_ADDRESS = "0xA700528a2B9Bd3126c96378b76f2c99f5F0e0F76";
+      AUSD_ADDRESS = "0x7ad1630b2E9F0e5401f220A33B473C7E5551dd3e";
+      LIMINAL_MARKET_ADDRESS = "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18";
+      MARKET_CALENDAR_ADDRESS = "0x12bA221061255c11EA4895C363633bD43F28F9c3";
+      LM_ADDRESS = "0x012c686711d9532f7fD68fe6a40d86477288F1dc";
+      SERVICE_CONTRACT_ADDRESS = "0x9B946889657e8f2D943A3841282fBf5751241E85";
+      NO_FEE_SERVICE_CONTRACT_ADDRESS = "0x0d82EF4e843c1ca7bd2aa9B2Aa4239bd70b306df";
+    }
+    LocalhostNetwork$1.default = LocalhostNetwork;
+
+    var MumbaiNetwork$1 = {};
+
+    var MumbaiNetworkDefaults$1 = {};
+
+    var __importDefault$2 = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(MumbaiNetworkDefaults$1, "__esModule", {
+      value: true
+    });
+    const TestNetwork_1 = __importDefault$2(TestNetwork$2);
+    class MumbaiNetworkDefaults extends TestNetwork_1.default {
+      constructor() {
+        super();
+        this.Name = "mumbai";
+        this.ChainName = 'Polygon Mumbai';
+        this.NativeCurrencyName = "Matic";
+        this.NativeSymbol = "MATIC";
+        this.NativeDecimal = 18;
+        this.BlockExplorer = 'https://mumbai.polygonscan.com/';
+        this.FaucetUrl = 'https://faucet.polygon.technology/';
+        this.BuyUrl = 'https://www.moonpay.com/buy/matic';
+        this.ChainId = MumbaiNetworkDefaults.ChainId;
+        this.RpcUrl = MumbaiNetworkDefaults.RpcUrl;
+      }
+      static RpcUrl = 'https://polygon-mumbai.g.alchemy.com/v2/FILTBk8FT9RzcRVxkMXIg7Ipl8JCNdK2';
+      static ChainId = 80001;
+    }
+    MumbaiNetworkDefaults$1.default = MumbaiNetworkDefaults;
+
+    var __importDefault$1 = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(MumbaiNetwork$1, "__esModule", {
+      value: true
+    });
+    const MumbaiNetworkDefaults_1 = __importDefault$1(MumbaiNetworkDefaults$1);
+    class MumbaiNetwork extends MumbaiNetworkDefaults_1.default {
+      KYC_ADDRESS = "0xA5C844558a93590A32D1110D7031531A0bBf0773";
+      AUSD_ADDRESS = "0xc4d1f8D35DB0f0d3E91a3fc8485792F4Df60C387";
+      LIMINAL_MARKET_ADDRESS = "0x0D8c3D4F4B29EfC3c54172803dA8a7f1CA2E6189";
+      MARKET_CALENDAR_ADDRESS = "0x67Dad7E344C6137DF922924a0aAb26bba862BFDe";
+      LM_ADDRESS = "0x808C2F1bBE4C7fE72F77e84F57C346603E63291e";
+      SERVICE_CONTRACT_ADDRESS = "0x0827C71852ba59661aAd9f1fab25B377B3f39C40";
+    }
+    MumbaiNetwork$1.default = MumbaiNetwork;
+
+    var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+      return mod && mod.__esModule ? mod : {
+        "default": mod
+      };
+    };
+    Object.defineProperty(NetworkType$1, "__esModule", {
+      value: true
+    });
+    const LocalhostNetwork_1 = __importDefault(LocalhostNetwork$1);
+    const MumbaiNetwork_1 = __importDefault(MumbaiNetwork$1);
+    class NetworkType {
+      static Networks = [LocalhostNetwork_1.default, MumbaiNetwork_1.default];
+      static getInstance(chainId) {
+        let networkInfo = undefined;
+        NetworkType.Networks.forEach(networkInfoType => {
+          let tmp = new networkInfoType();
+          if (tmp.ChainId == chainId) {
+            networkInfo = tmp;
+          }
+        });
+        return networkInfo;
+      }
+    }
+    NetworkType$1.default = NetworkType;
+
+    var AccountService = {};
+
+    var Helper$1 = {};
+
+    Object.defineProperty(Helper$1, "__esModule", {
+      value: true
+    });
+    class Helper {
+      static AddressZero = '0x0000000000000000000000000000000000000000';
+      static setCookie(name, value) {
+        if (typeof document == 'undefined') return;
+        let date = new Date();
+        this.deleteCookie(name);
+        document.cookie = name + "=" + value + "; expires=Mon, 2 Dec " + (date.getFullYear() + 1) + " 12:00:00 UTC;path=/;SameSite=Strict;";
+      }
+      static getCookieValue(name) {
+        if (typeof document == 'undefined') return;
+        return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
+      }
+      static deleteCookie(name) {
+        if (typeof document == 'undefined') return;
+        document.cookie = name + "=0; expires=Mon, 2 Dec 2020 12:00:00 UTC;path=/";
+      }
+    }
+    Helper$1.default = Helper;
+
+    var hasRequiredAccountService;
+    function requireAccountService() {
+      if (hasRequiredAccountService) return AccountService;
+      hasRequiredAccountService = 1;
+      var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+        return mod && mod.__esModule ? mod : {
+          "default": mod
+        };
+      };
+      Object.defineProperty(AccountService, "__esModule", {
+        value: true
+      });
+      const HttpRequest_1 = __importDefault(requireHttpRequest());
+      const index_1 = __importDefault(requireDist());
+      const Helper_1 = __importDefault(Helper$1);
+      let AccountService$1 = class AccountService {
+        signInMessage = "You are logging into Liminal.market.\n\nNonce:";
+        httpRequest;
+        constructor() {
+          this.httpRequest = new HttpRequest_1.default();
+        }
+        async kycStatus() {
+          let result = await this.httpRequest.getAuth("isValidKyc");
+          if (!result.isValidKyc && result.status == 'ACTIVE') {
+            result.message = 'Kyc status is being written down on blockchain. This can take few minutes. Ask again in few minutes';
+          } else if (result.isValidKyc) {
+            result.message = 'This account can execute trades';
+          } else if (!result.isValidKyc) {
+            result.message = 'KYC for this account has not been approved. Current status is ' + result.status;
+          }
+          if (result.alpacaId) {
+            result.brokerId = result.alpacaId;
+            delete result.alpacaId;
+          }
+          return result;
+        }
+        async login() {
+          let account = await this.autoLogin();
+          if (account) return account;
+          let response = await this.httpRequest.post('/me/nonce', {
+            address: index_1.default.WalletAddress
+          });
+          let signingMessage = this.signInMessage + response.nonce;
+          let signedMessage = await index_1.default.Signer.signMessage(signingMessage);
+          let loginResponse = await this.httpRequest.post('me/validate', {
+            address: index_1.default.WalletAddress,
+            signedMessage
+          });
+          account = loginResponse;
+          account.brokerId = loginResponse.alpacaId;
+          delete account.alpacaId;
+          if (!account.address) {
+            throw new Error('Login not successful:' + JSON.stringify(account));
+          }
+          index_1.default.Bearer = account.token;
+          let base64 = btoa(JSON.stringify(account.token));
+          Helper_1.default.setCookie('validate', base64);
+          return account;
+        }
+        async fundSandboxAccount(accountFunded) {
+          await this.httpRequest.listen('BalanceSet', async obj => {
+            if (accountFunded) accountFunded(obj);
+          });
+          return await this.httpRequest.postAuth('/fundUser');
+        }
+        async createSandboxAccount(firstName, lastName, email, accountReadyEvent) {
+          let response = await this.httpRequest.postAuth("sandboxCreateAccount", {
+            given_name: firstName,
+            family_name: lastName,
+            email_address: email
+          });
+          if (accountReadyEvent) {
+            await this.httpRequest.listen('BalanceSet', async event => {
+              accountReadyEvent(event);
+            });
+          }
+          return response;
+        }
+        async autoLogin() {
+          try {
+            let validate = Helper_1.default.getCookieValue('validate');
+            if (validate) {
+              let token = JSON.parse(atob(validate));
+              index_1.default.Bearer = token;
+              let result = await this.httpRequest.post('/me/jwt');
+              if (result.jwt) {
+                let account = {};
+                account.brokerId = result.alpacaId;
+                account.chainId = result.chainId;
+                account.token = token;
+                account.address = result.address;
+                return account;
+              }
+            }
+          } catch (e) {
+            Helper_1.default.deleteCookie('validate');
+          }
+          return;
+        }
+      };
+      AccountService.default = AccountService$1;
+      return AccountService;
+    }
+
+    var BlockchainService$1 = {};
+
+    var hasRequiredBlockchainService;
+    function requireBlockchainService() {
+      if (hasRequiredBlockchainService) return BlockchainService$1;
+      hasRequiredBlockchainService = 1;
+      var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+        return mod && mod.__esModule ? mod : {
+          "default": mod
+        };
+      };
+      Object.defineProperty(BlockchainService$1, "__esModule", {
+        value: true
+      });
+      const ethers_1 = require$$0;
+      const index_1 = __importDefault(requireDist());
+      const HttpRequest_1 = __importDefault(requireHttpRequest());
+      class BlockchainService {
+        httpRequest;
+        constructor() {
+          this.httpRequest = new HttpRequest_1.default();
+        }
+        async executeOrder(side, symbol, quantity) {
+          if (symbol.toLowerCase() == 'ausd') {
+            throw new Error('You cannot send order for aUSD.');
+          }
+          let amountOrQty = 'quantity';
+          let qty = ethers_1.ethers.utils.formatEther(quantity);
+          if (side == 'buy') {
+            amountOrQty = 'amount';
+            qty = '$' + qty;
+          }
+          let time = new Date();
+          let signMessage = `I confirm following order:\n${side} ${symbol} for the ${amountOrQty} of ${qty}
+
+---------------
+ChainId:${index_1.default.Network.ChainId}
+ServiceContract:${index_1.default.ServiceContractAddress}
+Time:${time.toISOString()}
+`;
+          let signedMessage = await index_1.default.Signer.signMessage(signMessage);
+          return await this.httpRequest.postAuth('/executeOrder', {
+            signedMessage: signedMessage,
+            side: side,
+            symbol: symbol,
+            qty: quantity,
+            spender: index_1.default.ServiceContractAddress,
+            chainId: index_1.default.Network.ChainId,
+            time: time.getTime()
+          });
+        }
+      }
+      BlockchainService$1.default = BlockchainService;
+      return BlockchainService$1;
+    }
+
+    var abis = {};
+
+    Object.defineProperty(abis, "__esModule", {
+      value: true
+    });
+    class Abis {
+      static LiminalMarketExternalServiceAbi = [{
+        "inputs": [{
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }, {
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        }, {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }],
+        "name": "buySecurityToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }, {
+        "inputs": [{
+          "internalType": "address",
+          "name": "walletAddress",
+          "type": "address"
+        }, {
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        }, {
+          "internalType": "uint256",
+          "name": "quantity",
+          "type": "uint256"
+        }],
+        "name": "sellSecurityToken",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }];
+      static LiminalMarketAbi = [{
+        "anonymous": false,
+        "inputs": [{
+          "indexed": false,
+          "internalType": "string",
+          "name": "orderId",
+          "type": "string"
+        }, {
+          "indexed": false,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }, {
+          "indexed": false,
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tsl",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "filledQty",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "filledAvgPrice",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "string",
+          "name": "side",
+          "type": "string"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "filledAt",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "serviceFee",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "aUsdBalance",
+          "type": "uint256"
+        }, {
+          "indexed": false,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        }],
+        "name": "OrderExecuted",
+        "type": "event"
+      }, {
+        "inputs": [{
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        }],
+        "name": "getSecurityToken",
+        "outputs": [{
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+      static BalanceOfAbi = [{
+        "inputs": [{
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }],
+        "name": "balanceOf",
+        "outputs": [{
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+    }
+    abis.default = Abis;
+
+    var Listener$1 = {};
+
+    var hasRequiredListener;
+    function requireListener() {
+      if (hasRequiredListener) return Listener$1;
+      hasRequiredListener = 1;
+      var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+        return mod && mod.__esModule ? mod : {
+          "default": mod
+        };
+      };
+      Object.defineProperty(Listener$1, "__esModule", {
+        value: true
+      });
+      const HttpRequest_1 = __importDefault(requireHttpRequest());
+      class Listener {
+        static httpRequest = new HttpRequest_1.default();
+        static set onUpdatingAUsdOnChain(action) {
+          this.httpRequest.listen('UpdatingAUsdOnChain', async event => {
+            await action(event);
+          });
+        }
+        static set onBalanceSet(action) {
+          this.httpRequest.listen('BalanceSet', async event => {
+            await action(event);
+          });
+        }
+        static set onOrderSentToMarket(action) {
+          this.httpRequest.listen('OrderSentToMarket', async event => {
+            await action(event);
+          });
+        }
+        static set onOrderExecutedWritingToChain(action) {
+          this.httpRequest.listen('OrderExecutedWritingBlockchain', async event => {
+            await action(event);
+          });
+        }
+        static set onOrderExecuted(action) {
+          this.httpRequest.listen('OrderExecuted', async event => {
+            await action(event);
+          });
+        }
+      }
+      Listener$1.default = Listener;
+      return Listener$1;
+    }
+
+    var hasRequiredDist;
+    function requireDist() {
+      if (hasRequiredDist) return dist;
+      hasRequiredDist = 1;
+      var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function (mod) {
+        return mod && mod.__esModule ? mod : {
+          "default": mod
+        };
+      };
+      Object.defineProperty(dist, "__esModule", {
+        value: true
+      });
+      const ethers_1 = require$$0;
+      const HttpRequest_1 = __importDefault(requireHttpRequest());
+      const NetworkType_1 = __importDefault(NetworkType$1);
+      const TestNetwork_1 = __importDefault(TestNetwork$2);
+      const AccountService_1 = __importDefault(requireAccountService());
+      const BlockchainService_1 = __importDefault(requireBlockchainService());
+      const abis_1 = __importDefault(abis);
+      const Listener_1 = __importDefault(requireListener());
+      class LiminalMarket {
+        httpRequest;
+        blockchainService;
+        accountService;
+        account;
+        static Provider;
+        static Signer;
+        static ServiceContractAddress;
+        static Network;
+        static WalletAddress;
+        static Bearer;
+        static Instance;
+        constructor() {
+          this.httpRequest = new HttpRequest_1.default();
+          this.blockchainService = new BlockchainService_1.default();
+          this.accountService = new AccountService_1.default();
+          this.account = {};
+        }
+        static async getInstanceUsingPrivateKey(privateKey, chainId, serviceContractAddress) {
+          LiminalMarket.Network = NetworkType_1.default.getInstance(chainId) ?? new TestNetwork_1.default();
+          if (LiminalMarket.Network.ChainId == 0) {
+            throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
+          }
+          let provider = new ethers_1.ethers.providers.JsonRpcProvider(LiminalMarket.Network.RpcUrl);
+          let wallet = new ethers_1.Wallet(privateKey, provider);
+          return await this.getInstanceByWallet(wallet, serviceContractAddress);
+        }
+        static async getInstance(provider, serviceContractAddress) {
+          if (!provider) {
+            // @ts-ignore
+            provider = new ethers_1.ethers.providers.Web3Provider(window.ethereum);
+          }
+          let signer = await provider.getSigner();
+          if (!signer) {
+            throw new Error('Provider needs to have a signer.');
+          }
+          let address = await signer.getAddress();
+          if (!address) {
+            throw new Error('No account could be access');
+          }
+          let network = await provider.getNetwork();
+          return await this.load(address, provider, signer, network.chainId, serviceContractAddress);
+        }
+        static async getInstanceByWallet(wallet, serviceContractAddress) {
+          if (this.Instance) return this.Instance;
+          if (!wallet) {
+            throw new Error('Provider cannot be null');
+          }
+          let chainId = await wallet.getChainId();
+          return await this.load(wallet.address, wallet.provider, wallet, chainId, serviceContractAddress);
+        }
+        static async load(walletAddress, provider, signer, chainId, serviceContractAddress) {
+          LiminalMarket.Provider = provider;
+          LiminalMarket.Signer = signer;
+          LiminalMarket.Network = NetworkType_1.default.getInstance(chainId) ?? new TestNetwork_1.default();
+          if (LiminalMarket.Network.ChainId == 0) {
+            throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
+          }
+          LiminalMarket.ServiceContractAddress = serviceContractAddress ? serviceContractAddress : LiminalMarket.Network.NO_FEE_SERVICE_CONTRACT_ADDRESS;
+          if (!LiminalMarket.ServiceContractAddress) {
+            throw new Error('ServiceContractAddress cannot be empty. You can get service contract address by signing contract at https://liminal.market/contract. No cost (except gas)');
+          }
+          if (LiminalMarket.ServiceContractAddress == LiminalMarket.Network.NO_FEE_SERVICE_CONTRACT_ADDRESS) {
+            console.debug('No service contract address set. You will not receive any service fee. Check out https://liminal.market/contract/');
+          }
+          LiminalMarket.WalletAddress = walletAddress;
+          let liminalMarket = new LiminalMarket();
+          liminalMarket.account = await liminalMarket.accountService.login();
+          this.Instance = liminalMarket;
+          return liminalMarket;
+        }
+        static get Listener() {
+          return Listener_1.default;
+        }
+        /**
+         * Return true if market is open, else false
+         */
+        async isMarketOpen() {
+          return (await this.httpRequest.get('isOpen')).marketIsOpen;
+        }
+        /**
+         * Returns true if the user has been created at the broker, false if he does not exist at broker
+         * If it returns false, you can call createSandboxAccount to create the user at broker.
+         */
+        hasAccount() {
+          return this.account.brokerId !== undefined;
+        }
+        /**
+         * Create user on sandbox at the broker. This is for running on Mumbai testnet.
+         *
+         * @param {function} accountReadyEvent - function is called when the account is ready
+         */
+        async createSandboxAccount(firstName, lastName, email, accountReadyEvent) {
+          return await this.accountService.createSandboxAccount(firstName, lastName, email, accountReadyEvent);
+        }
+        /**
+         * Returns the status of the account. Most important is if KYC has been approved.
+         * Trades cannot be executed if KYC is not valid.
+         */
+        async kycStatus() {
+          let accountService = new AccountService_1.default();
+          return await accountService.kycStatus();
+        }
+        /**
+         * Funds wallets sandbox account. There are limitation on how frequently you can fund your account.
+         **/
+        async fundSandboxAccount(accountFunded) {
+          return await this.accountService.fundSandboxAccount(accountFunded);
+        }
+        /**
+         * Get the balance of aUSD token.
+         * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
+         */
+        async getAUSDBalance(address) {
+          if (!address) address = LiminalMarket.WalletAddress;
+          return await this.getSecurityTokenQuantity(LiminalMarket.Network.AUSD_ADDRESS, address);
+        }
+        /**
+         * Return all symbols available in the system.
+         */
+        async getSymbols() {
+          return await this.httpRequest.get('https://app.liminal.market/securities/securities.json');
+        }
+        /**
+         * Returns the position wallet address has. It is also possible to query any wallet address
+         * @param address
+         */
+        async getPositions(address) {
+          if (!address) address = LiminalMarket.WalletAddress;
+          return await this.httpRequest.get('positions', {
+            address: address
+          });
+        }
+        /**
+         * Get the balance of a security token.
+         * @param {string} [address] - Optional. Uses the address from the provider is address is not provided
+         */
+        async getSecurityTokenQuantity(symbolOrAddress, address) {
+          if (!address) address = LiminalMarket.WalletAddress;
+          if (symbolOrAddress.indexOf('0x') == -1) {
+            symbolOrAddress = await this.getSecurityTokenAddress(symbolOrAddress);
+            if (symbolOrAddress == ethers_1.ethers.constants.AddressZero) return ethers_1.BigNumber.from(0);
+          }
+          const contract = new ethers_1.ethers.Contract(symbolOrAddress, abis_1.default.BalanceOfAbi, LiminalMarket.Provider);
+          return await contract['balanceOf'](address);
+        }
+        /**
+         * Get the address of a security token (symbol)
+         */
+        async getSecurityTokenAddress(symbol) {
+          const contract = new ethers_1.ethers.Contract(LiminalMarket.Network.LIMINAL_MARKET_ADDRESS, abis_1.default.LiminalMarketAbi, LiminalMarket.Provider);
+          return await contract['getSecurityToken'](symbol);
+        }
+        /**
+         * Send the command to buy a security token
+         * @param {string}  symbol - Symbol of the security to buy, e.g. AAPL for Apple.
+         * @param {string}  amount - Dollar amount in Wei, $100 is equal to 100 * 10**18. Buying for $54.32 would be 5432 * 10**16
+         * @param {function} [orderExecutedEvent] - Optional. Listens for the orderExecuted event on chain, then calls your function.
+         *
+         * */
+        async buySecurityToken(symbol, amount) {
+          return await this.blockchainService.executeOrder('buy', symbol, amount);
+        }
+        /**
+         * Send the command to sell a security token
+         * @param {string}  symbol - Symbol of the security to buy, e.g. AAPL for Apple.
+         * @param {string}  quantity - Quantity of shares to sell in Wei. Selling 10 shares would be 10 * 10**18. Selling 1.234 shares would be 123 * 10*15
+         * @param {function} [orderExecutedEvent] - Optional. Listens for the orderExecuted event on chain, then calls your function.
+         *
+         * */
+        async sellSecurityToken(symbol, quantity) {
+          return await this.blockchainService.executeOrder('sell', symbol, quantity);
+        }
+        /**
+         * Send the command to execute order depending on side (buy or sell)
+         * @param {string}  symbol - Symbol of the security to buy, e.g. AAPL for Apple.
+         * @param {string}  quantity - Quantity of shares to sell in Wei. Selling 10 shares would be 10 * 10**18. Selling 1.234 shares would be 123 * 10*15
+         * @param {function} [orderExecutedEvent] - Optional. Listens for the orderExecuted event on chain, then calls your function.
+         *
+         * */
+        async executeOrder(side, symbol, quantity) {
+          if (side != 'buy' && side != 'sell') {
+            throw new Error('side [' + side + '] is not valid. You can only set "buy" or "sell"');
+          }
+          return await this.blockchainService.executeOrder(side, symbol, quantity);
+        }
+      }
+      dist.default = LiminalMarket;
+      return dist;
+    }
+
+    var distExports = requireDist();
+    var LiminalMarket = /*@__PURE__*/getDefaultExportFromCjs(distExports);
+
+    class AuthenticateService extends BaseService {
+        constructor() {
+            super();
+        }
+        static async enableWeb3() {
+            if (WidgetGlobals.User.connector)
+                return WidgetGlobals.User.connector;
+            let magicWeb3Connector = new MagicWeb3Connector();
+            let connector = await magicWeb3Connector.activate();
+            WidgetGlobals.User.connector = connector;
+            WidgetGlobals.User.magic = connector.magic;
+            WidgetGlobals.User.provider = connector.provider;
+            WidgetGlobals.User.ether = connector.ether;
+            WidgetGlobals.User.signer = connector.signer;
+            return connector;
+        }
+        async logOut() {
+            let cookieHelper = new CookieHelper(document);
+            cookieHelper.deleteCookie("validate");
+            if (!WidgetGlobals.User.ether) {
+                let connection = await AuthenticateService.enableWeb3();
+                WidgetGlobals.User.magic = connection.magic;
+            }
+            WidgetGlobals.User.magic?.connect.disconnect();
+            WidgetGlobals.User = new User(null, "", WidgetGlobals.Network.ChainId, "");
+        }
+        async login() {
+            let connector = await AuthenticateService.enableWeb3();
+            WidgetGlobals.User = new User(connector.provider, connector.account, connector.chainId, connector.ether);
+            WidgetGlobals.User.magic = connector.magic;
+            WidgetGlobals.User.signer = connector.signer;
+            WidgetGlobals.User.isLoggedIn = true;
+        }
+        async isAuthenticated() {
+            let provider = await AuthenticateService.enableWeb3();
+            let liminalMarket = await LiminalMarket.getInstance(provider.ether, "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18");
+            if (liminalMarket.account.token == "")
+                return false;
+            WidgetGlobals.User.address = liminalMarket.account.address;
+            WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
+            WidgetGlobals.User.chainId = liminalMarket.account.chainId;
+            WidgetGlobals.User.isLoggedIn = true;
+            WidgetGlobals.User.LiminalMarket = liminalMarket;
+            WidgetGlobals.User.token = liminalMarket.account.token;
+            console.log("liminalMarket.account.token", liminalMarket.account.token);
+            return liminalMarket;
+        }
+        async authenticateUser(enableWeb3Callback, authenticatedCallback) {
+            let connector = await AuthenticateService.enableWeb3();
+            let liminalMarket = await this.isAuthenticated();
+            if (!liminalMarket) {
+                await this.logOut();
+                return;
+            }
+            if (enableWeb3Callback && connector.provider) {
+                enableWeb3Callback(connector.provider);
+            }
+            if (connector.chainId != WidgetGlobals.Network.ChainId) {
+                let userNetwork = NetworkInfo.getNetworkInfoByChainId(connector.chainId);
+                if (userNetwork) {
+                    NetworkInfo.setNetworkByChainId(connector.chainId);
+                }
+                else {
+                    let modal = new SwitchNetworkModal();
+                    modal.show();
+                    return;
+                }
+            }
+            WidgetGlobals.User.setValidate(liminalMarket.account.token);
+            WidgetGlobals.User.token = liminalMarket.account.token;
+            WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;
+            WidgetGlobals.User.address = liminalMarket.account.address;
+            WidgetGlobals.User.isLoggedIn = true;
+            if (authenticatedCallback) {
+                authenticatedCallback();
+            }
+            else {
+                location.reload();
+            }
+        }
+    }
+
+    class localhostContractAddresses {
+        KYC_ADDRESS = "0xA700528a2B9Bd3126c96378b76f2c99f5F0e0F76";
+        AUSD_ADDRESS = "0x7ad1630b2E9F0e5401f220A33B473C7E5551dd3e";
+        LIMINAL_MARKET_ADDRESS = "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18";
+        MARKET_CALENDAR_ADDRESS = "0x12bA221061255c11EA4895C363633bD43F28F9c3";
+    }
+
+    class mumbaiContractAddresses {
+        KYC_ADDRESS = "0xA5C844558a93590A32D1110D7031531A0bBf0773";
+        AUSD_ADDRESS = "0xc4d1f8D35DB0f0d3E91a3fc8485792F4Df60C387";
+        LIMINAL_MARKET_ADDRESS = "0x0D8c3D4F4B29EfC3c54172803dA8a7f1CA2E6189";
+        MARKET_CALENDAR_ADDRESS = "0x67Dad7E344C6137DF922924a0aAb26bba862BFDe";
+    }
+
+    class fujiContractAddresses {
+        KYC_ADDRESS = "0x0594D04FDB5C98Fb7F777a799139424Ae2414AaD";
+        AUSD_ADDRESS = "0xbAc482aE0b0d652854df377be566445984A021ED";
+        LIMINAL_MARKET_ADDRESS = "0x098A512B017408008a23ECe22843788799CDebFd";
+        MARKET_CALENDAR_ADDRESS = "0x77E6A62Be8398B18d2dA81CDB6Eb097bD8132ccB";
+    }
+
+    class polygonContractAddresses {
+        KYC_ADDRESS = "0xc7dA98E282cc30BD4fe0a7dE38372F876DB577E4";
+        AUSD_ADDRESS = "0x9B780e71C2a8492E805e17616EB878f2e3874E21";
+        LIMINAL_MARKET_ADDRESS = "0x8B4fc0bcaED76a6569525d8Fe51E57cAd32FDd94";
+        MARKET_CALENDAR_ADDRESS = "0x77b54CbF3e1370af13da41196B4d99cd02eBcC44";
+    }
+
+    class ContractInfo {
+        static getContractInfo(networkName) {
+            let contractInfos = {
+                localhostContractAddresses,
+                mumbaiContractAddresses,
+                fujiContractAddresses,
+                polygonContractAddresses,
+            };
+            if (!networkName) {
+                networkName = WidgetGlobals.Network.Name;
+            }
+            const contractInfoType = contractInfos[networkName + "ContractAddresses"];
+            return new contractInfoType();
+        }
     }
 
     /*
@@ -36002,228 +42398,6 @@
     var BigNumber = clone();
     var BigNumber$1 = BigNumber;
 
-    const roundNumber = function (number) {
-        return Math.round(number * 100) / 100;
-    };
-    const roundNumberDecimal = function (number, decimal) {
-        let hundred = parseInt('1' + '0'.repeat(decimal));
-        return Math.round(number * hundred) / hundred;
-    };
-    const roundBigNumber = function (number) {
-        return new BigNumber$1(Math.round(number.toNumber() * 100) / 100);
-    };
-    const roundBigNumberDecimal = function (number, decimal) {
-        let hundred = parseInt('1' + '0'.repeat(decimal));
-        return new BigNumber$1(Math.round(number.toNumber() * hundred) / hundred);
-    };
-    const AddressZero = "0x0000000000000000000000000000000000000000";
-    const isJSON = function (str) {
-        try {
-            return JSON.parse(str);
-        }
-        catch (e) {
-            return false;
-        }
-    };
-    const shortEth = function (ethAddress) {
-        if (!ethAddress)
-            return '';
-        return ethAddress.substring(0, 6) + "..." + ethAddress.substring(ethAddress.length - 4);
-    };
-    const showBar = function (text) {
-        let header = document.querySelector('header');
-        if (!header)
-            return;
-        let warningHtml = '<div class="errorBar">' + text + '</div>';
-        header.insertAdjacentHTML('beforebegin', warningHtml);
-    };
-
-    class AuthenticateService extends BaseService {
-        constructor() {
-            super();
-        }
-        static async enableWeb3() {
-            if (WidgetGlobals.User.connector)
-                return WidgetGlobals.User.connector;
-            let magicWeb3Connector = new MagicWeb3Connector();
-            let connector = await magicWeb3Connector.activate();
-            WidgetGlobals.User.connector = connector;
-            WidgetGlobals.User.magic = connector.magic;
-            WidgetGlobals.User.provider = connector.provider;
-            WidgetGlobals.User.ether = connector.ether;
-            WidgetGlobals.User.signer = connector.signer;
-            return connector;
-        }
-        async logOut() {
-            let cookieHelper = new CookieHelper(document);
-            cookieHelper.deleteCookie("validate");
-            if (!WidgetGlobals.User.ether) {
-                let connection = await AuthenticateService.enableWeb3();
-                WidgetGlobals.User.magic = connection.magic;
-            }
-            WidgetGlobals.User.magic.connect.disconnect();
-            WidgetGlobals.User = new User(null, "", WidgetGlobals.Network.ChainId, "");
-        }
-        async login() {
-            let connector = await AuthenticateService.enableWeb3();
-            WidgetGlobals.User = new User(connector.provider, connector.account, connector.chainId, connector.ether);
-            WidgetGlobals.User.magic = connector.magic;
-            WidgetGlobals.User.signer = connector.signer;
-            WidgetGlobals.User.isLoggedIn = true;
-        }
-        async isAuthenticated() {
-            let cookieHelper = new CookieHelper();
-            let validate = cookieHelper.getCookieValue("validate");
-            if (!validate)
-                return false;
-            try {
-                let obj = JSON.parse(atob(validate));
-                WidgetGlobals.User.token = obj.token;
-                let result = await this.post("/me/jwt");
-                if (!result.jwt) {
-                    await this.logOut();
-                    return false;
-                }
-                await AuthenticateService.enableWeb3();
-                WidgetGlobals.User.address = result.address;
-                WidgetGlobals.User.alpacaId = result.alpacaId;
-                WidgetGlobals.User.chainId = result.chainId;
-                WidgetGlobals.User.isLoggedIn = true;
-                return true;
-            }
-            catch (e) {
-                cookieHelper.deleteCookie("validate");
-                console.info(e);
-                return false;
-            }
-        }
-        async authenticateUser(enableWeb3Callback, authenticatedCallback) {
-            let connector = await AuthenticateService.enableWeb3();
-            if (enableWeb3Callback && connector.provider) {
-                enableWeb3Callback(connector.provider);
-            }
-            if (connector.chainId != WidgetGlobals.Network.ChainId) {
-                let userNetwork = NetworkInfo.getNetworkInfoByChainId(connector.chainId);
-                if (userNetwork) {
-                    NetworkInfo.setNetworkByChainId(connector.chainId);
-                }
-                else {
-                    let modal = new SwitchNetworkModal();
-                    modal.show();
-                    return;
-                }
-            }
-            let response = await this.post("/me/nonce", {
-                address: connector.account,
-            });
-            let obj = {
-                signingMessage: "You are logging into Liminal.market.\n\nNonce:" + response.nonce,
-                connector: MagicWeb3Connector,
-            };
-            console.log("isWebview", WalletHelper.isWebview());
-            // @ts-ignore
-            console.log("win.Ethereum", window.ethereum);
-            //        console.log('Ethereum', ethereum);
-            console.log("connector.ether", connector.ether);
-            console.log("network", WidgetGlobals.Network);
-            // @ts-ignore
-            if (window.ethereum) {
-                console.log("Ethereum", 
-                // @ts-ignore
-                window.ethereum.networkVersion, 
-                // @ts-ignore
-                window.ethereum.chainId, WidgetGlobals.Network.ChainIdHex);
-                if (WalletHelper.isWebview()) ;
-            }
-            console.log("calling signMessage");
-            const signedMessage = await connector.ether
-                .getSigner()
-                .signMessage(obj.signingMessage)
-                .then((result) => {
-                console.log("then signMessage:", result);
-                return result;
-            })
-                .catch(async (e) => {
-                console.log(e);
-                await this.logOut();
-                if (e.message &&
-                    e.message.toLowerCase().indexOf("wrong network") != -1) {
-                    await this.authenticateUser(enableWeb3Callback, authenticatedCallback);
-                    //showBar('Your wallet is on wrong network. I expect you to be on ' + WidgetGlobals.Network.Name + '(chainId:' + WidgetGlobals.Network.ChainId + ') network');
-                }
-                else {
-                    showBar("Error signing in:" + e.message);
-                    return;
-                }
-            });
-            if (!signedMessage)
-                return;
-            let loginResponse = await this.post("me/validate", {
-                address: connector.account,
-                signedMessage,
-            });
-            if (!loginResponse.address) {
-                await this.logOut();
-                return;
-            }
-            WidgetGlobals.User.setValidate(loginResponse);
-            WidgetGlobals.User.token = loginResponse.token;
-            WidgetGlobals.User.alpacaId = loginResponse.alpacaId;
-            WidgetGlobals.User.address = loginResponse.address;
-            WidgetGlobals.User.isLoggedIn = true;
-            if (authenticatedCallback) {
-                authenticatedCallback();
-            }
-            else {
-                location.reload();
-            }
-        }
-    }
-
-    class localhostContractAddresses {
-        KYC_ADDRESS = "0xA700528a2B9Bd3126c96378b76f2c99f5F0e0F76";
-        AUSD_ADDRESS = "0x7ad1630b2E9F0e5401f220A33B473C7E5551dd3e";
-        LIMINAL_MARKET_ADDRESS = "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18";
-        MARKET_CALENDAR_ADDRESS = "0x12bA221061255c11EA4895C363633bD43F28F9c3";
-    }
-
-    class mumbaiContractAddresses {
-        KYC_ADDRESS = "0x9e2B28D9F841300bE3B64e505dEcA36c35250609";
-        AUSD_ADDRESS = "0x38F2B1E9F11937dD276D64521535b15280A7F137";
-        LIMINAL_MARKET_ADDRESS = "0x6e9C29e416dc9F7A6A03ffebaB3f02Ef62a1baE4";
-        MARKET_CALENDAR_ADDRESS = "0xc6B29dfd4FD756EF94b3A3FF7a531F4467BDDA75";
-    }
-
-    class fujiContractAddresses {
-        KYC_ADDRESS = "0x0594D04FDB5C98Fb7F777a799139424Ae2414AaD";
-        AUSD_ADDRESS = "0xbAc482aE0b0d652854df377be566445984A021ED";
-        LIMINAL_MARKET_ADDRESS = "0x098A512B017408008a23ECe22843788799CDebFd";
-        MARKET_CALENDAR_ADDRESS = "0x77E6A62Be8398B18d2dA81CDB6Eb097bD8132ccB";
-    }
-
-    class polygonContractAddresses {
-        KYC_ADDRESS = "0xc7dA98E282cc30BD4fe0a7dE38372F876DB577E4";
-        AUSD_ADDRESS = "0x9B780e71C2a8492E805e17616EB878f2e3874E21";
-        LIMINAL_MARKET_ADDRESS = "0x8B4fc0bcaED76a6569525d8Fe51E57cAd32FDd94";
-        MARKET_CALENDAR_ADDRESS = "0x77b54CbF3e1370af13da41196B4d99cd02eBcC44";
-    }
-
-    class ContractInfo {
-        static getContractInfo(networkName) {
-            let contractInfos = {
-                localhostContractAddresses,
-                mumbaiContractAddresses,
-                fujiContractAddresses,
-                polygonContractAddresses,
-            };
-            if (!networkName) {
-                networkName = WidgetGlobals.Network.Name;
-            }
-            const contractInfoType = contractInfos[networkName + "ContractAddresses"];
-            return new contractInfoType();
-        }
-    }
-
     let EventService$1 = class EventService {
         contracts;
         constructor() {
@@ -36563,10 +42737,10 @@
                     networks.push(tmp);
                 }
                 else {
-                    if (networkType == NetworkType.Mainnet && !tmp.TestNetwork) {
+                    if (networkType == NetworkType$2.Mainnet && !tmp.TestNetwork) {
                         networks.push(tmp);
                     }
-                    else if (networkType == NetworkType.Testnet && tmp.TestNetwork) {
+                    else if (networkType == NetworkType$2.Testnet && tmp.TestNetwork) {
                         networks.push(tmp);
                     }
                 }
@@ -36723,6 +42897,35 @@
     }
 
     var UserInfoElement = "<div id=\"userMenuPanel\">\n    <a href=\"#\" id=\"userInfoAction\" aria-expanded=\"false\">\n        <img src=\"https://effigy.im/a/{{ethAddress}}.png\" width=\"24\">\n        <span id=\"user_info_ethAddress\">{{shortEthAddress}}</span>\n    </a>\n\n    <div id=\"userInfoDropdown\" class=\"d-none\">\n        <div class=\"grid account_info\">\n            <h6>Account</h6>\n            <a id=\"disconnectFromNetwork\" href=\"#\">Disconnect</a>\n\n        </div>\n        <div class=\"edit_account\">\n            <a id=\"editName\" href=\"#\">Edit name</a><br>\n            <a id=\"editContact\" href=\"#\">Edit contact info</a><br>\n            <a id=\"editTrustedContact\" href=\"#\">Edit trusted contact</a>\n        </div>\n        <hr>\n        <div class=\"grid\">\n            <div>\n                <img src=\"https://effigy.im/a/{{ethAddress}}.png\">\n            </div>\n            <div>\n                <strong class=\"d-block\"><a href=\"{{blockchainExplorer}}{{ethAddress}}\" target=\"_blank\">{{shortEthAddress}}</a></strong>\n                <br>\n                {{#if isMagic}}\n                <a href=\"#\" id=\"wallet\">Open my wallet</a>\n                {{/if}}\n                <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View\n                    positions</a>\n            </div>\n        </div>\n        <hr>\n        <div class=\"hidden\" id=\"userInfoAUsdBalance\">\n            <div class=\"grid\">\n                <div><img src=\"https://app.liminal.market/img/ausd.png\"></div>\n                <div>\n                    <strong class=\"d-block\">aUSD <span id=\"user_info_ausd_balance\"></span></strong>\n                    <a href=\"\" class=\"add_aUSD_to_wallet\">Add aUSD to wallet</a>\n                </div>\n            </div>\n            <div id=\"fund_account_options\">\n                <h6>Fund your account</h6>\n                <div class=\"grid\">\n                    <a href=\"#\" class=\"fund_account\">Fund my account</a>\n                    <!--\n                    <a href=\"#\" id=\"withdraw_from_account\">Withdraw from account</a>\n                    -->\n                </div>\n            </div>\n            <hr>\n        </div>\n        <div class=\"grid\">\n            <strong class=\"d-block\">Network</strong>\n            <small>{{networkName}}<br>\n                <!--\n                <a href=\"#\" id=\"switch_network\">Change network</a>\n                -->\n            </small>\n        </div>\n\n    </div>\n\n</div>";
+
+    const roundNumber = function (number) {
+        return Math.round(number * 100) / 100;
+    };
+    const roundNumberDecimal = function (number, decimal) {
+        let hundred = parseInt('1' + '0'.repeat(decimal));
+        return Math.round(number * hundred) / hundred;
+    };
+    const roundBigNumber = function (number) {
+        return new BigNumber$1(Math.round(number.toNumber() * 100) / 100);
+    };
+    const roundBigNumberDecimal = function (number, decimal) {
+        let hundred = parseInt('1' + '0'.repeat(decimal));
+        return new BigNumber$1(Math.round(number.toNumber() * hundred) / hundred);
+    };
+    const AddressZero = "0x0000000000000000000000000000000000000000";
+    const isJSON = function (str) {
+        try {
+            return JSON.parse(str);
+        }
+        catch (e) {
+            return false;
+        }
+    };
+    const shortEth = function (ethAddress) {
+        if (!ethAddress)
+            return '';
+        return ethAddress.substring(0, 6) + "..." + ethAddress.substring(ethAddress.length - 4);
+    };
 
     var KycEditNameHtml = "<fieldset id=\"kycEditName\">\n    <div class=\"warningBar\">\n        <strong>Warning</strong><br>\n        You can only change the name once. Be careful of what you change.\n        <br><br>\n        After you change this information a new KYC process will be started, and you will NOT be able to do any\n        trades\n        until it has been approved.\n    </div>\n    <div>\n        <label for=\"given_name\">Legal First name</label>\n        <input required id=\"given_name\" name=\"given_name\" placeholder=\"Ron\" value=\"{{given_name}}\" autocomplete=\"given-name\">\n    </div>\n    <div>\n        <label for=\"middle_name\">Legal Middle name</label>\n        <input id=\"middle_name\" name=\"middle_name\" placeholder=\"\" value=\"{{middle_name}}\" autocomplete=\"additional-name\">\n    </div>\n    <div>\n        <label for=\"family_name\">Legal Last name</label>\n        <input required id=\"family_name\" name=\"family_name\" placeholder=\"Swanson\" value=\"{{family_name}}\" autocomplete=\"family-name\">\n    </div>\n\n    <div class=\"buttons\">\n        <button id=\"kycEditNameConfirm\">Confirm</button>\n    </div>\n</fieldset>\n\n<fieldset class=\"hidden\" id=\"confirmNameFieldset\">\n    <div class=\"confirm_name\">\n        <label for=\"confirm_name\" id=\"label_confirm_name\">Please type</label>\n        <input name=\"confirm_name\" id=\"confirm_name\">\n    </div>\n\n    <div class=\"input_error\" id=\"kycEditNameError\"></div>\n\n    <div class=\"buttons grid\">\n        <button id=\"kycEditNameBack\">Back</button>\n        <button type=\"submit\" id=\"kycEditNameSave\">Confirm</button>\n    </div>\n</fieldset>";
 
@@ -37413,15 +43616,6 @@
 
     var FakeFundingHtml = "<article>\n    <div id=\"beforeFunding\">\n        To use liminal.market you need some aUSD. aUSD is the same value as USD.\n        We can give you some aUSD (this is all fake money), so you can play with the system.\n\n        First, you need to add aUSD to you wallet.\n\n        <button id=\"addTokenToWallet\">Add aUSD to wallet</button>\n        <blockquote id=\"needToCopy\" class=\"d-none\">\n            If the button didn't work, you can copy the address here and import it into your wallet\n            <input value=\"{{aUSDAddress}}\">\n        </blockquote>\n        When you have aUSD to you wallet, you can request some money to trade with.\n\n        <button id=\"requestFakeAUSD\">Request some aUSD</button>\n        <div class=\"warningBar notificationBar d-none\" id=\"fundingError\"></div>\n    </div>\n    <div id=\"afterFunding\" class=\"d-none center\">\n        We have now sending aUSD to your wallet. This usually takes few minutes, so lets wait.\n        <br><br>\n        When you have the aUSD in you wallet, we will tell you.\n        <div>\n            <h3>Current aUSD balance</h3>\n            <div id=\"currentAUSDBalance\"></div>\n        </div>\n        <div class=\"hidden center\" id=\"fake_funding_writing_to_ausd\">\n            <strong aria-busy=\"true\">Writing amount to aUSD token. Few more seconds...</strong>\n        </div>\n    </div>\n    <div id=\"errorAfterTryFunding\" class=\"d-none\">\n        We had an error while trying to fund you. We'll be cracking at the issue soon to fix it.\n        Try again in few minutes. If not, try again in few hours.\n    </div>\n\n</article>";
 
-    class FundingService extends BaseService {
-        constructor() {
-            super();
-        }
-        async requestFakeFunding() {
-            return await this.post('fundUser');
-        }
-    }
-
     var SelectFundingTypeHtml = "<p>Setup your bank relationship with Liminal.market. Please choose the type of transfer you want to make</p>\n<ul class=\"funding_type\">\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"ach_transfer\" value=\"1\"> ACH bank transfer (US)</label>\n    </li>\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"wire_transfer\" value=\"2\"> Wire transfer\n        (International)</label></li>\n</ul>\n<div id=\"selectFundingTypeError\" class=\"input_error\"></div>\n<button id=\"next_bank_information\">Next: Bank information</button>\n";
 
     class SelectFundingType {
@@ -37954,9 +44148,8 @@
             let requestFakeAUSD = document.getElementById("requestFakeAUSD");
             requestFakeAUSD?.addEventListener("click", async (evt) => {
                 requestFakeAUSD.setAttribute("aria-busy", "true");
-                let fundingService = new FundingService();
-                let result = await fundingService.requestFakeFunding().catch((reason) => {
-                    this.errorWhileFunding({});
+                let result = await WidgetGlobals.User.LiminalMarket.fundSandboxAccount(async (obj) => {
+                    console.log("Funding is done", obj);
                 });
                 if (!result)
                     return;
@@ -38365,7 +44558,7 @@
                     userInfoDropdown?.classList.add("d-none");
                     return;
                 }
-                WidgetGlobals.User.magic.connect.showWallet().catch(async (e) => {
+                WidgetGlobals.User.magic?.connect.showWallet().catch(async (e) => {
                     this.walletLoaded = false;
                     if (e.message.indexOf("User denied account access") != -1) {
                         await this.authenticationService.logOut();
@@ -38587,115 +44780,6 @@
         }
         web3EnabledResult(walletConnectionInfo) {
             this.providerInfo = new ProviderInfo(walletConnectionInfo);
-        }
-    }
-
-    var MarketIsClosedHtml = "<div class=\"center\">\n    The stock market is currently closed.<br>\nIt is usually open monday to friday between 9:30 AM and 4:00 PM EST (9:30 - 16:00 EST).\n    <br><br>\nToday is {{dayOfWeek}}\n<br><br>\nYour current time is {{currentTime}} ({{GMT}})\n    <br><br>\nThat means the market is open your time between\n{{openFrom}} - {{openTo}}\n</div>";
-
-    class BlockchainError extends GeneralError {
-        static ErrorFromContract = -1;
-        static UserCancelled = 1;
-        static AddressIsNotValidKYC = 2;
-        static MarketIsClosed = 3;
-        constructor(e) {
-            super(e);
-            this.message = e.toString();
-            if (this.userDeniedTransactionSignature()) {
-                this.code = BlockchainError.UserCancelled;
-            }
-            else if (this.addressIsNotValidKYC()) {
-                this.code = BlockchainError.AddressIsNotValidKYC;
-            }
-            else if (this.isMarketClosed()) {
-                this.code = BlockchainError.MarketIsClosed;
-                this.callback = this.marketIsClosedModal;
-            }
-            if (e.data && e.data.message) {
-                let msg = e.data.message;
-                let searchStr = "reverted with reason string";
-                let idx = msg.indexOf(searchStr) + searchStr.length;
-                if (idx != -1) {
-                    this.message = msg.substring(idx).trim().replace(/'/g, "");
-                    this.code = BlockchainError.ErrorFromContract;
-                }
-            }
-        }
-        userDeniedTransactionSignature() {
-            return this.message.indexOf("denied transaction signature") !== -1;
-        }
-        addressIsNotValidKYC() {
-            return this.message.indexOf("address is not kyc valid") !== -1;
-        }
-        isMarketClosed() {
-            let searchStr = "Market is closed";
-            return this.message.indexOf(searchStr) !== -1;
-        }
-        marketIsClosedModal() {
-            let [openHour, closeHour] = DateHelper.getOpenAndCloseHours();
-            let time = new Date().toTimeString().split(" ");
-            let obj = {
-                currentTime: time[0],
-                GMT: time[1],
-                dayOfWeek: DateHelper.getWeekday(),
-                openFrom: openHour,
-                openTo: closeHour,
-            };
-            let modal = new Modal();
-            let template = WidgetGlobals.HandlebarsInstance.compile(MarketIsClosedHtml);
-            modal.showModal("Market is closed", template(obj));
-        }
-    }
-
-    class KYCService extends BlockchainService {
-        static KYCInfo;
-        static KycResponse;
-        constructor() {
-            super();
-        }
-        async getKYCAbi() {
-            if (KYCService.KYCInfo)
-                return KYCService.KYCInfo.abi;
-            const response = await fetch("https://app.liminal.market/abi/KYC.json");
-            KYCService.KYCInfo = await response.json();
-            return KYCService.KYCInfo.abi;
-        }
-        async hasValidKYC() {
-            if (KYCService.KycResponse && KYCService.KycResponse.isValidKyc)
-                return KYCService.KycResponse;
-            KYCService.KycResponse = (await this.get("isValidKyc").catch((reason) => {
-                let blockchainError = new BlockchainError(reason);
-                if (blockchainError.addressIsNotValidKYC()) {
-                    return false;
-                }
-                ErrorInfo.report(blockchainError);
-                return false;
-            }));
-            if (KYCService.KycResponse.alpacaId) {
-                WidgetGlobals.User.alpacaId = KYCService.KycResponse.alpacaId;
-                let aUsdBalance = new AUsdBalance();
-                await aUsdBalance.loadAUSDBalanceUI();
-            }
-            return KYCService.KycResponse;
-        }
-        async sandboxCreateAccount(firstName, lastName, email) {
-            return await this.post("sandboxCreateAccount", {
-                given_name: firstName,
-                family_name: lastName,
-                email_address: email,
-            });
-        }
-        async saveKYCInfo(data) {
-            return await this.post("kycRegistration", data);
-        }
-        async updateKYCInfo(data) {
-            return await this.post("updateAccount", data);
-        }
-        isValidAccountId(str) {
-            const regex = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$");
-            return regex.test(str);
-        }
-        async updateDocuments(params) {
-            return await this.post("kycActionRequiredUpdate", params);
         }
     }
 
@@ -39060,6 +45144,115 @@
                     }
                 }, 800);
             });
+        }
+    }
+
+    var MarketIsClosedHtml = "<div class=\"center\">\n    The stock market is currently closed.<br>\nIt is usually open monday to friday between 9:30 AM and 4:00 PM EST (9:30 - 16:00 EST).\n    <br><br>\nToday is {{dayOfWeek}}\n<br><br>\nYour current time is {{currentTime}} ({{GMT}})\n    <br><br>\nThat means the market is open your time between\n{{openFrom}} - {{openTo}}\n</div>";
+
+    class BlockchainError extends GeneralError {
+        static ErrorFromContract = -1;
+        static UserCancelled = 1;
+        static AddressIsNotValidKYC = 2;
+        static MarketIsClosed = 3;
+        constructor(e) {
+            super(e);
+            this.message = e.toString();
+            if (this.userDeniedTransactionSignature()) {
+                this.code = BlockchainError.UserCancelled;
+            }
+            else if (this.addressIsNotValidKYC()) {
+                this.code = BlockchainError.AddressIsNotValidKYC;
+            }
+            else if (this.isMarketClosed()) {
+                this.code = BlockchainError.MarketIsClosed;
+                this.callback = this.marketIsClosedModal;
+            }
+            if (e.data && e.data.message) {
+                let msg = e.data.message;
+                let searchStr = "reverted with reason string";
+                let idx = msg.indexOf(searchStr) + searchStr.length;
+                if (idx != -1) {
+                    this.message = msg.substring(idx).trim().replace(/'/g, "");
+                    this.code = BlockchainError.ErrorFromContract;
+                }
+            }
+        }
+        userDeniedTransactionSignature() {
+            return this.message.indexOf("denied transaction signature") !== -1;
+        }
+        addressIsNotValidKYC() {
+            return this.message.indexOf("address is not kyc valid") !== -1;
+        }
+        isMarketClosed() {
+            let searchStr = "Market is closed";
+            return this.message.indexOf(searchStr) !== -1;
+        }
+        marketIsClosedModal() {
+            let [openHour, closeHour] = DateHelper.getOpenAndCloseHours();
+            let time = new Date().toTimeString().split(" ");
+            let obj = {
+                currentTime: time[0],
+                GMT: time[1],
+                dayOfWeek: DateHelper.getWeekday(),
+                openFrom: openHour,
+                openTo: closeHour,
+            };
+            let modal = new Modal();
+            let template = WidgetGlobals.HandlebarsInstance.compile(MarketIsClosedHtml);
+            modal.showModal("Market is closed", template(obj));
+        }
+    }
+
+    class KYCService extends BlockchainService {
+        static KYCInfo;
+        static KycResponse;
+        constructor() {
+            super();
+        }
+        async getKYCAbi() {
+            if (KYCService.KYCInfo)
+                return KYCService.KYCInfo.abi;
+            const response = await fetch("https://app.liminal.market/abi/KYC.json");
+            KYCService.KYCInfo = await response.json();
+            return KYCService.KYCInfo.abi;
+        }
+        async hasValidKYC() {
+            if (KYCService.KycResponse && KYCService.KycResponse.isValidKyc)
+                return KYCService.KycResponse;
+            KYCService.KycResponse = (await this.get("isValidKyc").catch((reason) => {
+                let blockchainError = new BlockchainError(reason);
+                if (blockchainError.addressIsNotValidKYC()) {
+                    return false;
+                }
+                ErrorInfo.report(blockchainError);
+                return false;
+            }));
+            if (KYCService.KycResponse.alpacaId) {
+                WidgetGlobals.User.alpacaId = KYCService.KycResponse.alpacaId;
+                let aUsdBalance = new AUsdBalance();
+                await aUsdBalance.loadAUSDBalanceUI();
+            }
+            return KYCService.KycResponse;
+        }
+        async sandboxCreateAccount(firstName, lastName, email) {
+            return await this.post("sandboxCreateAccount", {
+                given_name: firstName,
+                family_name: lastName,
+                email_address: email,
+            });
+        }
+        async saveKYCInfo(data) {
+            return await this.post("kycRegistration", data);
+        }
+        async updateKYCInfo(data) {
+            return await this.post("updateAccount", data);
+        }
+        isValidAccountId(str) {
+            const regex = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$");
+            return regex.test(str);
+        }
+        async updateDocuments(params) {
+            return await this.post("kycActionRequiredUpdate", params);
         }
     }
 
@@ -40197,73 +46390,74 @@
             this.executeTradeButton = executeTradeButton;
         }
         getButtonText() {
-            let txt = 'Finish registration';
+            let txt = "Finish registration";
             switch (this.kycResponse.status) {
-                case 'SUBMITTED':
-                case 'ONBOARDING':
-                case 'INACTIVE':
-                case 'APPROVED':
-                case 'EDITED':
-                case 'APPROVAL_PENDING':
-                    txt = 'Submitted to KYC processor';
+                case "SUBMITTED":
+                case "ONBOARDING":
+                case "INACTIVE":
+                case "APPROVED":
+                case "EDITED":
+                case "APPROVAL_PENDING":
+                    txt = "Submitted to KYC processor";
                     break;
-                case 'ACTION_REQUIRED':
-                    txt = 'Action required. Click to continue';
+                case "ACTION_REQUIRED":
+                    txt = "Action required. Click to continue";
                     break;
-                case 'REJECTED':
-                    txt = 'Your application was rejected';
+                case "REJECTED":
+                    txt = "Your application was rejected";
                     break;
-                case 'DISABLED':
-                    txt = 'Your account has been disabled';
+                case "DISABLED":
+                    txt = "Your account has been disabled";
                     break;
-                case 'ACTIVE':
-                case 'ACCOUNT_UPDATED':
-                    txt = 'You are approved. KYC is being sent to blockchain. Give it few minutes';
+                case "ACTIVE":
+                case "ACCOUNT_UPDATED":
+                    txt =
+                        "You are approved. KYC is being sent to blockchain. Give it few minutes";
                     break;
-                case 'ACCOUNT_CLOSED':
-                    txt = 'Your account has been closed';
+                case "ACCOUNT_CLOSED":
+                    txt = "Your account has been closed";
                     break;
             }
-            return txt + '<small>Click for more info</small>';
+            return txt + "<small>Click for more info</small>";
         }
         getButtonClickEvent(executeTradeButton) {
             switch (this.kycResponse.status) {
-                case 'SUBMITTED':
-                case 'ONBOARDING':
-                case 'INACTIVE':
-                case 'APPROVED':
-                case 'EDITED':
-                case 'APPROVAL_PENDING':
-                    return this.showModal('Application is being processed', "You need to wait for KYC to be approved. Then you'll be able to do trades. " +
+                case "SUBMITTED":
+                case "ONBOARDING":
+                case "INACTIVE":
+                case "APPROVED":
+                case "EDITED":
+                case "APPROVAL_PENDING":
+                    return this.showModal("Application is being processed", "You need to wait for KYC to be approved. Then you'll be able to do trades. " +
                         "This usually takes few minutes for the first submission, but can take longer for second submission. " +
                         "We will email you when you are approved or if there are problems<br /><br />" +
                         "If this status has been for more than 1 day, and you haven't gotten any email from us. Please email us at " +
                         "<a target='_blank' href='mailto:info@liminal.market?subject=My application is being processed for to long&body=Hi, can you help me to find out what the problem is, the KYC process has not changed for some time? My name is _______ and I used the email _______ to register at liminal.market'>info@liminal.market</a>");
-                case 'ACTION_REQUIRED':
+                case "ACTION_REQUIRED":
                     return async () => {
                         let kycActionRequired = new KycActionRequired(executeTradeButton);
                         await kycActionRequired.show();
                     };
-                case 'REJECTED':
-                    return this.showModal('Application was rejected', "Your application has been rejected during KYC process.<br /><br />" +
+                case "REJECTED":
+                    return this.showModal("Application was rejected", "Your application has been rejected during KYC process.<br /><br />" +
                         "We don't have the information on why that happened, but you can email us at " +
                         "<a target='_blank' href='mailto:info@liminal.market?subject=My application was rejected&body=Hi, can you help me to find out what the problem is? My name is _______ and I used the email _______ to register at liminal.market'>info@liminal.market</a>" +
                         " and we can find out, and we should be able to solve it together.");
-                case 'DISABLED':
-                    return this.showModal('Application was disabled', "Your account has been disabled.<br /><br />" +
+                case "DISABLED":
+                    return this.showModal("Application was disabled", "Your account has been disabled.<br /><br />" +
                         "We don't have the information on why that happened, but you can email us at " +
                         "<a target='_blank' href='mailto:info@liminal.market?subject=My application was disabled&body=Hi, can you help me to find out what the problem is? My name is _______ and I used the email _______ to register at liminal.market'>info@liminal.market</a>" +
                         " and we can find out, and we should be able to solve it together.");
-                case 'ACCOUNT_CLOSED':
-                    return this.showModal('Application was closed', "Your account has been closed.<br /><br />" +
+                case "ACCOUNT_CLOSED":
+                    return this.showModal("Application was closed", "Your account has been closed.<br /><br />" +
                         "We don't have the information on why that happened, but you can email us at " +
                         "<a target='_blank' href='mailto:info@liminal.market?subject=My application was closed&body=Hi, can you help me to find out what the problem is? My name is _______ and I used the email _______ to register at liminal.market'>info@liminal.market</a>" +
                         " and we can find out, and we should be able to solve it together.");
-                case 'ACCOUNT_UPDATED':
-                case 'ACTIVE':
-                    return this.showModal('Account soon ready', 'Your account has been approved...<br /><br/>' +
-                        '..but, after we approve your account, we write the information to the blockchain.' +
-                        ' This usually takes just few(2-3) minutes.<br /><br/> If this is taking longer, ' +
+                case "ACCOUNT_UPDATED":
+                case "ACTIVE":
+                    return this.showModal("Account soon ready", "Your account has been approved...<br /><br/>" +
+                        "..but, after we approve your account, we write the information to the blockchain." +
+                        " This usually takes just few(2-3) minutes.<br /><br/> If this is taking longer, " +
                         'please email us at <a target="_blank" href="mailto:info@liminal.market?subject=KYC is being written to blockchain&body=Hi, can you help me to find out what the problem is? My name is _______ and I used the email _______ to register at liminal.market">info@liminal.market</a>');
             }
             return () => {
@@ -40301,19 +46495,33 @@
         }
     }
 
+    var OrderProgressHtml = "<div id=\"executing-order-progress\" class=\"hidden\">\n  <div id=\"progress-text\"></div>\n  <progress></progress>\n</div>\n";
+
     class OrderProgress {
+        template = undefined;
         progressNr = 0;
         static instance = new OrderProgress();
-        constructor() { }
+        constructor() {
+            this.template = WidgetGlobals.HandlebarsInstance.compile(OrderProgressHtml);
+        }
         static getInstance() {
             return this.instance;
+        }
+        render() {
+            let dom = document.querySelector(".tradeSwitch");
+            if (!dom)
+                return;
+            dom.outerHTML = this.renderToString();
+        }
+        renderToString() {
+            return this.template();
         }
         clearProgressText() {
             let executingOrderProgress = document.getElementById("executing-order-progress");
             executingOrderProgress?.classList.add("hidden");
             this.progressNr = 0;
         }
-        setProgressText(progressNr, text, hash) {
+        setProgressText(progressNr, text, hash, hideInSeconds) {
             console.log("thisNr", this.progressNr, "nr", progressNr, "text", text);
             if (progressNr < this.progressNr)
                 return;
@@ -40333,306 +46541,15 @@
                     '" target="_blank" style="font-size:10px">View</a>';
             executingOrderProgress.classList.remove("hidden");
             this.progressNr = progressNr;
+            if (hideInSeconds) {
+                setTimeout(() => {
+                    this.clearProgressText();
+                }, hideInSeconds * 1000);
+            }
         }
     }
 
-    class ExecuteOrderButton {
-        authenticateService;
-        sellTradeInput;
-        buyTradeInput;
-        template;
-        button;
-        static Instance;
-        constructor(sellTradeInput, buyTradeInput) {
-            this.sellTradeInput = sellTradeInput;
-            this.buyTradeInput = buyTradeInput;
-            this.authenticateService = new AuthenticateService();
-            this.template = WidgetGlobals.HandlebarsInstance.compile(ExecuteOrderButtonHtml);
-            ExecuteOrderButton.Instance = this;
-            this.button = document.getElementById("liminal_market_execute_order");
-        }
-        renderToString() {
-            return this.template(this);
-        }
-        async renderButton() {
-            // if (this.button) {
-            //   this.button.outerHTML = this.button.outerHTML;
-            // }
-            this.button = document.getElementById("liminal_market_execute_order");
-            this.loadingButton(this.button);
-            //wallet connected
-            if (!(await this.walletIsConnected(this.button))) {
-                return;
-            }
-            //user logged in
-            if (!(await this.userIsLoggedIn(this.button))) {
-                return;
-            }
-            //chain id correct
-            if (!this.chainIdIsCorrect(this.button)) {
-                return;
-            }
-            //native token is available
-            if (!(await this.userHasNativeToken(this.button))) {
-                return;
-            }
-            //kyc is done
-            if (!(await this.kycIsDone(this.button))) {
-                return;
-            }
-            //ausd is setup
-            if (!(await this.userHasAUSD(this.button))) {
-                return;
-            }
-            //ausd > buy amount
-            if (!(await this.userHasEnoughQty(this.button))) {
-                return;
-            }
-            if (!this.hasQuantityAndSymbol(this.button)) {
-                return;
-            }
-            if (!(await this.isMarketOpen(this.button))) {
-                return;
-            }
-            this.enableExecuteOrder(this.button);
-        }
-        enableExecuteOrder(button) {
-            //if (this.sellTradeInput.quantity.eq(0)) return;
-            //execute trade can be done
-            button.innerHTML = "Execute trade";
-            button.classList.replace("disabled", "enabled");
-            this.stopLoadingButton(button);
-            button.addEventListener("click", async () => {
-                this.loadingButton(button);
-                button.innerHTML = "Confirm transaction in your wallet";
-                if (this.sellTradeInput.symbol == "aUSD") {
-                    let liminalMarketService = new LiminalMarketService();
-                    let symbolAddress = await liminalMarketService.getSymbolContractAddress(this.buyTradeInput.symbol);
-                    if (symbolAddress === AddressZero) {
-                        let result = await liminalMarketService
-                            .createToken(this.buyTradeInput.symbol, () => {
-                            button.innerHTML = "Creating token. Give it few seconds";
-                        })
-                            .finally(() => {
-                            this.stopLoadingButton(button);
-                            button.innerHTML = "Execute trade";
-                        });
-                        if (result instanceof BlockchainError) {
-                            showBar("Error:" + result.message);
-                            console.error(result);
-                            return;
-                        }
-                        symbolAddress = result;
-                    }
-                    await this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new AUSDService(), button);
-                }
-                else {
-                    let liminalMarketService = new LiminalMarketService();
-                    let symbolAddress = await liminalMarketService.getSymbolContractAddress(this.sellTradeInput.symbol);
-                    await this.executeTransfer(symbolAddress, this.sellTradeInput.quantity, new SecurityTokenService(), button);
-                }
-            });
-        }
-        async executeTransfer(symbolAddress, quantity, service, button) {
-            await service
-                .transfer(symbolAddress, quantity)
-                .then((transaction) => {
-                button.innerHTML = "Execute trade";
-                if (!transaction)
-                    return;
-                OrderProgress.getInstance().setProgressText(0, "Sending to blockchain", transaction.hash);
-            })
-                .catch((reason) => {
-                let msg = reason.toString();
-                console.log("CATCH - contract.transfer", reason);
-                if (msg.indexOf("Market is closed") != -1) {
-                    this.button.innerHTML = "Market is closed";
-                }
-                else {
-                    button.innerHTML = "Execute trade";
-                }
-            })
-                .finally(() => {
-                this.stopLoadingButton(button);
-            });
-        }
-        loadingButton(button) {
-            button.setAttribute("aria-busy", "true");
-        }
-        stopLoadingButton(button) {
-            button.removeAttribute("aria-busy");
-        }
-        async walletIsConnected(button) {
-            let authenticationService = new AuthenticateService();
-            await authenticationService.isAuthenticated();
-            if (WidgetGlobals.User.provider)
-                return true;
-            button.innerHTML = "Connect wallet";
-            button.addEventListener("click", async (evt) => {
-                let connectWallet = new ConnectWallet();
-                await connectWallet.connectWallet(evt.target);
-            });
-            this.stopLoadingButton(button);
-            return false;
-        }
-        async userIsLoggedIn(button) {
-            if (WidgetGlobals.User.isLoggedIn)
-                return true;
-            button.innerHTML = "Login";
-            button.addEventListener("click", async () => {
-                await this.authenticateService.authenticateUser();
-            });
-            this.stopLoadingButton(button);
-            return false;
-        }
-        chainIdIsCorrect(button) {
-            let chainId = WidgetGlobals.User.chainId;
-            if (chainId === WidgetGlobals.Network.ChainId)
-                return true;
-            let usersWalletNetwork = NetworkInfo.getNetworkInfoByChainId(chainId);
-            if (usersWalletNetwork) {
-                NetworkInfo.setNetworkByChainId(chainId);
-                return true;
-            }
-            button.innerHTML = "Switch Network";
-            button.addEventListener("click", async () => {
-                await WidgetGlobals.Network.addNetworkToWallet();
-            });
-            this.stopLoadingButton(button);
-            return false;
-        }
-        async userHasNativeToken(button) {
-            let networkInfo = WidgetGlobals.Network;
-            let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
-            if (hasEnoughNativeTokens)
-                return true;
-            button.classList.replace("enabled", "disabled");
-            button.innerHTML =
-                "You need " +
-                    networkInfo.NativeCurrencyName +
-                    " tokens. Click me for some tokens";
-            button.addEventListener("click", () => {
-                let nativeTokenNeededModal = new NativeTokenNeeded(() => {
-                    this.renderButton();
-                });
-                nativeTokenNeededModal.show();
-            });
-            this.stopLoadingButton(button);
-            return false;
-        }
-        kycIdDoneTimeout;
-        async kycIsDone(button) {
-            let kycService = new KYCService();
-            let kycResponse = await kycService.hasValidKYC();
-            if (!kycResponse.isValidKyc) {
-                let kycStatusHandler = new KycStatusHandler(kycResponse, this);
-                button.innerHTML = kycStatusHandler.getButtonText();
-                button.addEventListener("click", kycStatusHandler.getButtonClickEvent(this));
-                if (kycResponse.status == "ACTIVE") {
-                    this.loadingButton(button);
-                    this.kycIdDoneTimeout = setInterval(async () => {
-                        kycResponse = await kycService.hasValidKYC();
-                        if (kycResponse.isValidKyc) {
-                            this.hasBuyingPower = kycResponse.hasBuyingPower;
-                            if (!this.hasBuyingPower) {
-                                let kycApproved = new KycApproved();
-                                kycApproved.show();
-                            }
-                            clearInterval(this.kycIdDoneTimeout);
-                            await this.renderButton();
-                        }
-                    }, 30 * 1000);
-                }
-                else {
-                    this.stopLoadingButton(button);
-                }
-                return false;
-            }
-            this.stopLoadingButton(button);
-            return true;
-        }
-        checkBalanceInterval;
-        hasBuyingPower = false;
-        async userHasAUSD(button) {
-            let ausdService = new AUSDService();
-            let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-            if (balance.isGreaterThan(0))
-                return true;
-            if (this.hasBuyingPower) {
-                button.innerHTML = "We are funding your aUSD token";
-                this.checkBalanceInterval = setInterval(async () => {
-                    AUSDService.lastUpdate = undefined;
-                    let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-                    if (balance.isGreaterThan(0)) {
-                        await AUsdBalance.forceLoadAUSDBalanceUI();
-                        clearInterval(this.checkBalanceInterval);
-                        await this.renderButton();
-                    }
-                }, 10 * 1000);
-                return false;
-            }
-            if (WidgetGlobals.Network.TestNetwork) {
-                button.innerHTML = "You need aUSD. Click here to get some";
-            }
-            else {
-                button.innerHTML = "You need aUSD. Click here for instructions";
-            }
-            button.addEventListener("click", () => {
-                let ausdFund = new FakeAUSDFund();
-                ausdFund.showAUSDFakeFund();
-            });
-            this.stopLoadingButton(button);
-            return false;
-        }
-        async userHasEnoughQty(button) {
-            let ausdService = new AUSDService();
-            if (this.sellTradeInput.symbol == "aUSD") {
-                let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-                if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
-                    return true;
-                button.innerHTML = "You don't have enough aUSD. Click for more funding";
-                button.addEventListener("click", () => {
-                    let ausdFund = new FakeAUSDFund();
-                    ausdFund.showAUSDFakeFund();
-                });
-            }
-            else {
-                let securityTokenService = new SecurityTokenService();
-                let userQuantity = await securityTokenService.getQuantityByAddress(this.sellTradeInput.symbol, WidgetGlobals.User.address);
-                if (this.sellTradeInput.quantity <= userQuantity)
-                    return true;
-                button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
-                button.classList.replace("disable", "enable");
-            }
-            this.stopLoadingButton(button);
-            return false;
-        }
-        async isMarketOpen(button) {
-            let userService = new UserService();
-            let isMarketOpen = await userService.isMarketOpenOrUserOffHours();
-            if (isMarketOpen)
-                return true;
-            button.innerHTML = "Market is closed";
-            button.classList.replace("enabled", "disabled");
-            this.stopLoadingButton(button);
-            return false;
-        }
-        hasQuantityAndSymbol(button) {
-            if (this.sellTradeInput.quantity.eq(0)) {
-                button.innerHTML = "Type in quantity";
-                this.stopLoadingButton(button);
-                return false;
-            }
-            if (this.buyTradeInput.name == "") {
-                button.innerHTML = "Select stock to buy";
-                this.stopLoadingButton(button);
-                return false;
-            }
-            return true;
-        }
-    }
-
-    var TradeExecutedHtml = "<article class=\"trade_executed\">\n  <nav>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{sellingLogo}}\"><br>\n        {{sellingSymbol}}<br>\n        {{sellingAmount}}\n      </li>\n    </ul>\n    <ul>\n      <li>----></li>\n    </ul>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{buyingLogo}}\"><br>\n        {{buyingSymbol}}<br>\n        <abbr title=\"{{buyingQuantity}}\" data-tooltip=\"{{buyingQuantity}}\">{{buyingRoundQuantity}}</abbr>\n      </li>\n    </ul>\n  </nav>\n  <div>\n    If you haven't already, add the {{buyingSymbol}} to your wallet.\n    <br><br>\n    <button id=\"addTokenToWallet\" data-address=\"{{tokenAddress}}\">\n      Add {{buyingSymbol}} to wallet\n    </button>\n    <div id=\"addTokenToWalletFailed\" class=\"d-none\">\n      You can copy the address, to import the token\n      <input value=\"{{tokenAddress}}\">\n    </div>\n    <br>\n    Should be visible in your wallet on address {{shortEthAddress}}.\n    <br>\n    <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View portfolio</a>\n    <br><br>\n    <small>You can view the\n      <a href=\"{{blockExplorerLink}}\" target=\"_blank\">block transaction here</a></small>\n  </div>\n</article>\n";
+    var TradeExecutedHtml = "<article class=\"trade_executed\">\n  <nav>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{sellingLogo}}\"><br>\n        {{sellingSymbol}}<br>\n        {{sellingAmount}}\n      </li>\n    </ul>\n    <ul>\n      <li>----></li>\n    </ul>\n    <ul>\n      <li>\n        <img src=\"https://app.liminal.market{{buyingLogo}}\"><br>\n        {{buyingSymbol}}<br>\n        <abbr title=\"{{buyingQuantity}}\" data-tooltip=\"{{buyingQuantity}}\">{{buyingRoundQuantity}}</abbr>\n      </li>\n    </ul>\n  </nav>\n  <div>\n    Should be visible in your wallet on address {{shortEthAddress}}.\n    <br>\n    <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View portfolio</a>\n    <br><br>\n    <small>You can view the\n      <a href=\"{{blockExplorerLink}}\" target=\"_blank\">transaction here</a></small>\n  </div>\n</article>\n";
 
     // canvas-confetti v1.6.0 built on 2022-10-24T21:26:41.619Z
     var module = {};
@@ -41136,10 +47053,6 @@
       }
       return this || {};
     }(), module, false);
-
-    // end source content
-
-    module.exports;
     var create = module.exports.create;
 
     class OrderExecutedModal {
@@ -41221,16 +47134,301 @@
         }
     }
 
+    var ListenerExports = requireListener();
+    var Listener = /*@__PURE__*/getDefaultExportFromCjs(ListenerExports);
+
+    class ExecuteOrderButton {
+        authenticateService;
+        sellTradeInput;
+        buyTradeInput;
+        template;
+        button;
+        static Instance;
+        constructor(sellTradeInput, buyTradeInput) {
+            this.sellTradeInput = sellTradeInput;
+            this.buyTradeInput = buyTradeInput;
+            this.authenticateService = new AuthenticateService();
+            this.template = WidgetGlobals.HandlebarsInstance.compile(ExecuteOrderButtonHtml);
+            ExecuteOrderButton.Instance = this;
+            this.button = document.getElementById("liminal_market_execute_order");
+        }
+        renderToString() {
+            return this.template(this);
+        }
+        async renderButton() {
+            // if (this.button) {
+            //   this.button.outerHTML = this.button.outerHTML;
+            // }
+            this.button = document.getElementById("liminal_market_execute_order");
+            this.loadingButton(this.button);
+            //wallet connected
+            if (!(await this.walletIsConnected(this.button))) {
+                return;
+            }
+            //user logged in
+            if (!(await this.userIsLoggedIn(this.button))) {
+                return;
+            }
+            //chain id correct
+            if (!this.chainIdIsCorrect(this.button)) {
+                return;
+            }
+            //native token is available
+            if (!(await this.userHasNativeToken(this.button))) {
+                return;
+            }
+            //kyc is done
+            if (!(await this.kycIsDone(this.button))) {
+                return;
+            }
+            //ausd is setup
+            if (!(await this.userHasAUSD(this.button))) {
+                return;
+            }
+            //ausd > buy amount
+            if (!(await this.userHasEnoughQty(this.button))) {
+                return;
+            }
+            if (!this.hasQuantityAndSymbol(this.button)) {
+                return;
+            }
+            if (!(await this.isMarketOpen(this.button))) {
+                return;
+            }
+            this.enableExecuteOrder(this.button);
+        }
+        enableExecuteOrder(button) {
+            //if (this.sellTradeInput.quantity.eq(0)) return;
+            //execute trade can be done
+            button.innerHTML = "Execute trade";
+            button.classList.replace("disabled", "enabled");
+            this.stopLoadingButton(button);
+            console.log("service contract", LiminalMarket.ServiceContractAddress);
+            button.addEventListener("click", async () => {
+                this.loadingButton(button);
+                button.innerHTML = "Confirm transaction in your wallet";
+                let symbol = this.buyTradeInput.symbol;
+                let side = "buy";
+                let qtyWei = parseUnits(this.sellTradeInput.quantity.toString(), "ether");
+                if (symbol == "aUSD") {
+                    side = "sell";
+                    symbol = this.sellTradeInput.symbol;
+                }
+                let liminalMarket = WidgetGlobals.User.LiminalMarket;
+                Listener.onOrderExecuted = async (event) => {
+                    let orderExecutedModal = new OrderExecutedModal();
+                    orderExecutedModal.show(event);
+                    OrderProgress.getInstance().clearProgressText();
+                };
+                Listener.onOrderSentToMarket = async (event) => {
+                    OrderProgress.getInstance().setProgressText(0, "Sent to stock market");
+                };
+                Listener.onOrderExecutedWritingToChain = async (event) => {
+                    OrderProgress.getInstance().setProgressText(0, "Order executed writing to blockchain");
+                };
+                await liminalMarket
+                    .executeOrder(side, symbol, qtyWei)
+                    .then((result) => {
+                    button.innerHTML = "Execute trade";
+                    OrderProgress.getInstance().setProgressText(0, "Sending order");
+                })
+                    .catch((reason) => {
+                    OrderProgress.getInstance().setProgressText(100, reason.message, "", 10);
+                    button.innerHTML = "Execute trade";
+                    return;
+                })
+                    .finally(() => {
+                    this.stopLoadingButton(button);
+                });
+            });
+        }
+        loadingButton(button) {
+            button.setAttribute("aria-busy", "true");
+        }
+        stopLoadingButton(button) {
+            button.removeAttribute("aria-busy");
+        }
+        async walletIsConnected(button) {
+            let authenticationService = new AuthenticateService();
+            await authenticationService.isAuthenticated();
+            if (WidgetGlobals.User.provider)
+                return true;
+            button.innerHTML = "Connect wallet";
+            button.addEventListener("click", async (evt) => {
+                let connectWallet = new ConnectWallet();
+                await connectWallet.connectWallet(evt.target);
+            });
+            this.stopLoadingButton(button);
+            return false;
+        }
+        async userIsLoggedIn(button) {
+            if (WidgetGlobals.User.isLoggedIn)
+                return true;
+            button.innerHTML = "Login";
+            button.addEventListener("click", async () => {
+                await this.authenticateService.authenticateUser();
+            });
+            this.stopLoadingButton(button);
+            return false;
+        }
+        chainIdIsCorrect(button) {
+            let chainId = WidgetGlobals.User.chainId;
+            if (chainId === WidgetGlobals.Network.ChainId)
+                return true;
+            let usersWalletNetwork = NetworkInfo.getNetworkInfoByChainId(chainId);
+            if (usersWalletNetwork) {
+                NetworkInfo.setNetworkByChainId(chainId);
+                return true;
+            }
+            button.innerHTML = "Switch Network";
+            button.addEventListener("click", async () => {
+                await WidgetGlobals.Network.addNetworkToWallet();
+            });
+            this.stopLoadingButton(button);
+            return false;
+        }
+        async userHasNativeToken(button) {
+            let networkInfo = WidgetGlobals.Network;
+            let hasEnoughNativeTokens = await networkInfo.hasEnoughNativeTokens();
+            if (hasEnoughNativeTokens)
+                return true;
+            button.classList.replace("enabled", "disabled");
+            button.innerHTML =
+                "You need " +
+                    networkInfo.NativeCurrencyName +
+                    " tokens. Click me for some tokens";
+            button.addEventListener("click", () => {
+                let nativeTokenNeededModal = new NativeTokenNeeded(() => {
+                    this.renderButton();
+                });
+                nativeTokenNeededModal.show();
+            });
+            this.stopLoadingButton(button);
+            return false;
+        }
+        kycIdDoneTimeout;
+        async kycIsDone(button) {
+            let kycResponse = await WidgetGlobals.User.LiminalMarket.kycStatus();
+            if (!kycResponse.isValidKyc) {
+                let kycStatusHandler = new KycStatusHandler(kycResponse, this);
+                button.innerHTML = kycStatusHandler.getButtonText();
+                button.addEventListener("click", kycStatusHandler.getButtonClickEvent(this));
+                if (kycResponse.status == "ACTIVE") {
+                    this.loadingButton(button);
+                    this.kycIdDoneTimeout = setInterval(async () => {
+                        kycResponse = await WidgetGlobals.User.LiminalMarket.kycStatus();
+                        if (kycResponse.isValidKyc) {
+                            this.hasBuyingPower = kycResponse.hasBuyingPower;
+                            if (!this.hasBuyingPower) {
+                                let kycApproved = new KycApproved();
+                                kycApproved.show();
+                            }
+                            clearInterval(this.kycIdDoneTimeout);
+                            await this.renderButton();
+                        }
+                    }, 30 * 1000);
+                }
+                else {
+                    this.stopLoadingButton(button);
+                }
+                return false;
+            }
+            this.stopLoadingButton(button);
+            return true;
+        }
+        checkBalanceInterval;
+        hasBuyingPower = false;
+        async userHasAUSD(button) {
+            let ausdService = new AUSDService();
+            let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
+            if (balance.isGreaterThan(0))
+                return true;
+            if (this.hasBuyingPower) {
+                button.innerHTML = "We are funding your aUSD token";
+                this.checkBalanceInterval = setInterval(async () => {
+                    AUSDService.lastUpdate = undefined;
+                    let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
+                    if (balance.isGreaterThan(0)) {
+                        await AUsdBalance.forceLoadAUSDBalanceUI();
+                        clearInterval(this.checkBalanceInterval);
+                        await this.renderButton();
+                    }
+                }, 10 * 1000);
+                return false;
+            }
+            if (WidgetGlobals.Network.TestNetwork) {
+                button.innerHTML = "You need aUSD. Click here to get some";
+            }
+            else {
+                button.innerHTML = "You need aUSD. Click here for instructions";
+            }
+            button.addEventListener("click", () => {
+                let ausdFund = new FakeAUSDFund();
+                ausdFund.showAUSDFakeFund();
+            });
+            this.stopLoadingButton(button);
+            return false;
+        }
+        async userHasEnoughQty(button) {
+            let ausdService = new AUSDService();
+            if (this.sellTradeInput.symbol == "aUSD") {
+                let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
+                if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
+                    return true;
+                button.innerHTML = "You don't have enough aUSD. Click for more funding";
+                button.addEventListener("click", () => {
+                    let ausdFund = new FakeAUSDFund();
+                    ausdFund.showAUSDFakeFund();
+                });
+            }
+            else {
+                let securityTokenService = new SecurityTokenService();
+                let userQuantity = await securityTokenService.getQuantityByAddress(this.sellTradeInput.symbol, WidgetGlobals.User.address);
+                if (this.sellTradeInput.quantity <= userQuantity)
+                    return true;
+                button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
+                button.classList.replace("disable", "enable");
+            }
+            this.stopLoadingButton(button);
+            return false;
+        }
+        async isMarketOpen(button) {
+            let userService = new UserService();
+            let isMarketOpen = await userService.isMarketOpenOrUserOffHours();
+            if (isMarketOpen)
+                return true;
+            button.innerHTML = "Market is closed";
+            button.classList.replace("enabled", "disabled");
+            this.stopLoadingButton(button);
+            return false;
+        }
+        hasQuantityAndSymbol(button) {
+            if (this.sellTradeInput.quantity.eq(0)) {
+                button.innerHTML = "Type in quantity";
+                this.stopLoadingButton(button);
+                return false;
+            }
+            if (this.buyTradeInput.name == "") {
+                button.innerHTML = "Select stock to buy";
+                this.stopLoadingButton(button);
+                return false;
+            }
+            return true;
+        }
+    }
+
     class EventService {
         static register() {
             UserInfo.onUserLoggedIn.push(async () => {
-                let eventService = new EventService();
-                eventService.listen();
+                console.log("Doing EventService listening");
+                // eventService.listen();
             });
         }
         listen() {
             let network = WidgetGlobals.Network;
-            let eventSource = new EventSource(network.ServerUrl + "/listenForChanges?jwt=" + WidgetGlobals.User.token);
+            let eventSource = new EventSource(network.ServerUrl +
+                "/listenForChanges?jwt=" +
+                WidgetGlobals.User.LiminalMarket.account.token);
             eventSource.onmessage = async (e) => {
                 let data = e.data;
                 console.log(e);
@@ -41241,10 +47439,7 @@
                     console.log("data is not json:", data);
                     return;
                 }
-                if (obj.methodName == "OrderExecuted") {
-                    let orderExecutedModal = new OrderExecutedModal();
-                    orderExecutedModal.show(obj);
-                }
+                if (obj.methodName == "OrderExecuted") ;
                 else if (obj.methodName == "SendingToExchange") {
                     await OrderProgress.getInstance().setProgressText(1, "Received order, sending to stock exchange", obj.hash);
                 }
@@ -41958,35 +48153,637 @@
         }
     }
 
+    var slugifyExports = {};
+    var slugify$1 = {
+      get exports(){ return slugifyExports; },
+      set exports(v){ slugifyExports = v; },
+    };
+
+    (function (module, exports) {
+      (function (name, root, factory) {
+        {
+          module.exports = factory();
+          module.exports['default'] = factory();
+        }
+      })('slugify', commonjsGlobal, function () {
+        var charMap = JSON.parse('{"$":"dollar","%":"percent","&":"and","<":"less",">":"greater","|":"or","¢":"cent","£":"pound","¤":"currency","¥":"yen","©":"(c)","ª":"a","®":"(r)","º":"o","À":"A","Á":"A","Â":"A","Ã":"A","Ä":"A","Å":"A","Æ":"AE","Ç":"C","È":"E","É":"E","Ê":"E","Ë":"E","Ì":"I","Í":"I","Î":"I","Ï":"I","Ð":"D","Ñ":"N","Ò":"O","Ó":"O","Ô":"O","Õ":"O","Ö":"O","Ø":"O","Ù":"U","Ú":"U","Û":"U","Ü":"U","Ý":"Y","Þ":"TH","ß":"ss","à":"a","á":"a","â":"a","ã":"a","ä":"a","å":"a","æ":"ae","ç":"c","è":"e","é":"e","ê":"e","ë":"e","ì":"i","í":"i","î":"i","ï":"i","ð":"d","ñ":"n","ò":"o","ó":"o","ô":"o","õ":"o","ö":"o","ø":"o","ù":"u","ú":"u","û":"u","ü":"u","ý":"y","þ":"th","ÿ":"y","Ā":"A","ā":"a","Ă":"A","ă":"a","Ą":"A","ą":"a","Ć":"C","ć":"c","Č":"C","č":"c","Ď":"D","ď":"d","Đ":"DJ","đ":"dj","Ē":"E","ē":"e","Ė":"E","ė":"e","Ę":"e","ę":"e","Ě":"E","ě":"e","Ğ":"G","ğ":"g","Ģ":"G","ģ":"g","Ĩ":"I","ĩ":"i","Ī":"i","ī":"i","Į":"I","į":"i","İ":"I","ı":"i","Ķ":"k","ķ":"k","Ļ":"L","ļ":"l","Ľ":"L","ľ":"l","Ł":"L","ł":"l","Ń":"N","ń":"n","Ņ":"N","ņ":"n","Ň":"N","ň":"n","Ō":"O","ō":"o","Ő":"O","ő":"o","Œ":"OE","œ":"oe","Ŕ":"R","ŕ":"r","Ř":"R","ř":"r","Ś":"S","ś":"s","Ş":"S","ş":"s","Š":"S","š":"s","Ţ":"T","ţ":"t","Ť":"T","ť":"t","Ũ":"U","ũ":"u","Ū":"u","ū":"u","Ů":"U","ů":"u","Ű":"U","ű":"u","Ų":"U","ų":"u","Ŵ":"W","ŵ":"w","Ŷ":"Y","ŷ":"y","Ÿ":"Y","Ź":"Z","ź":"z","Ż":"Z","ż":"z","Ž":"Z","ž":"z","Ə":"E","ƒ":"f","Ơ":"O","ơ":"o","Ư":"U","ư":"u","ǈ":"LJ","ǉ":"lj","ǋ":"NJ","ǌ":"nj","Ș":"S","ș":"s","Ț":"T","ț":"t","ə":"e","˚":"o","Ά":"A","Έ":"E","Ή":"H","Ί":"I","Ό":"O","Ύ":"Y","Ώ":"W","ΐ":"i","Α":"A","Β":"B","Γ":"G","Δ":"D","Ε":"E","Ζ":"Z","Η":"H","Θ":"8","Ι":"I","Κ":"K","Λ":"L","Μ":"M","Ν":"N","Ξ":"3","Ο":"O","Π":"P","Ρ":"R","Σ":"S","Τ":"T","Υ":"Y","Φ":"F","Χ":"X","Ψ":"PS","Ω":"W","Ϊ":"I","Ϋ":"Y","ά":"a","έ":"e","ή":"h","ί":"i","ΰ":"y","α":"a","β":"b","γ":"g","δ":"d","ε":"e","ζ":"z","η":"h","θ":"8","ι":"i","κ":"k","λ":"l","μ":"m","ν":"n","ξ":"3","ο":"o","π":"p","ρ":"r","ς":"s","σ":"s","τ":"t","υ":"y","φ":"f","χ":"x","ψ":"ps","ω":"w","ϊ":"i","ϋ":"y","ό":"o","ύ":"y","ώ":"w","Ё":"Yo","Ђ":"DJ","Є":"Ye","І":"I","Ї":"Yi","Ј":"J","Љ":"LJ","Њ":"NJ","Ћ":"C","Џ":"DZ","А":"A","Б":"B","В":"V","Г":"G","Д":"D","Е":"E","Ж":"Zh","З":"Z","И":"I","Й":"J","К":"K","Л":"L","М":"M","Н":"N","О":"O","П":"P","Р":"R","С":"S","Т":"T","У":"U","Ф":"F","Х":"H","Ц":"C","Ч":"Ch","Ш":"Sh","Щ":"Sh","Ъ":"U","Ы":"Y","Ь":"","Э":"E","Ю":"Yu","Я":"Ya","а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ж":"zh","з":"z","и":"i","й":"j","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"c","ч":"ch","ш":"sh","щ":"sh","ъ":"u","ы":"y","ь":"","э":"e","ю":"yu","я":"ya","ё":"yo","ђ":"dj","є":"ye","і":"i","ї":"yi","ј":"j","љ":"lj","њ":"nj","ћ":"c","ѝ":"u","џ":"dz","Ґ":"G","ґ":"g","Ғ":"GH","ғ":"gh","Қ":"KH","қ":"kh","Ң":"NG","ң":"ng","Ү":"UE","ү":"ue","Ұ":"U","ұ":"u","Һ":"H","һ":"h","Ә":"AE","ә":"ae","Ө":"OE","ө":"oe","Ա":"A","Բ":"B","Գ":"G","Դ":"D","Ե":"E","Զ":"Z","Է":"E\'","Ը":"Y\'","Թ":"T\'","Ժ":"JH","Ի":"I","Լ":"L","Խ":"X","Ծ":"C\'","Կ":"K","Հ":"H","Ձ":"D\'","Ղ":"GH","Ճ":"TW","Մ":"M","Յ":"Y","Ն":"N","Շ":"SH","Չ":"CH","Պ":"P","Ջ":"J","Ռ":"R\'","Ս":"S","Վ":"V","Տ":"T","Ր":"R","Ց":"C","Փ":"P\'","Ք":"Q\'","Օ":"O\'\'","Ֆ":"F","և":"EV","ء":"a","آ":"aa","أ":"a","ؤ":"u","إ":"i","ئ":"e","ا":"a","ب":"b","ة":"h","ت":"t","ث":"th","ج":"j","ح":"h","خ":"kh","د":"d","ذ":"th","ر":"r","ز":"z","س":"s","ش":"sh","ص":"s","ض":"dh","ط":"t","ظ":"z","ع":"a","غ":"gh","ف":"f","ق":"q","ك":"k","ل":"l","م":"m","ن":"n","ه":"h","و":"w","ى":"a","ي":"y","ً":"an","ٌ":"on","ٍ":"en","َ":"a","ُ":"u","ِ":"e","ْ":"","٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9","پ":"p","چ":"ch","ژ":"zh","ک":"k","گ":"g","ی":"y","۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9","฿":"baht","ა":"a","ბ":"b","გ":"g","დ":"d","ე":"e","ვ":"v","ზ":"z","თ":"t","ი":"i","კ":"k","ლ":"l","მ":"m","ნ":"n","ო":"o","პ":"p","ჟ":"zh","რ":"r","ს":"s","ტ":"t","უ":"u","ფ":"f","ქ":"k","ღ":"gh","ყ":"q","შ":"sh","ჩ":"ch","ც":"ts","ძ":"dz","წ":"ts","ჭ":"ch","ხ":"kh","ჯ":"j","ჰ":"h","Ṣ":"S","ṣ":"s","Ẁ":"W","ẁ":"w","Ẃ":"W","ẃ":"w","Ẅ":"W","ẅ":"w","ẞ":"SS","Ạ":"A","ạ":"a","Ả":"A","ả":"a","Ấ":"A","ấ":"a","Ầ":"A","ầ":"a","Ẩ":"A","ẩ":"a","Ẫ":"A","ẫ":"a","Ậ":"A","ậ":"a","Ắ":"A","ắ":"a","Ằ":"A","ằ":"a","Ẳ":"A","ẳ":"a","Ẵ":"A","ẵ":"a","Ặ":"A","ặ":"a","Ẹ":"E","ẹ":"e","Ẻ":"E","ẻ":"e","Ẽ":"E","ẽ":"e","Ế":"E","ế":"e","Ề":"E","ề":"e","Ể":"E","ể":"e","Ễ":"E","ễ":"e","Ệ":"E","ệ":"e","Ỉ":"I","ỉ":"i","Ị":"I","ị":"i","Ọ":"O","ọ":"o","Ỏ":"O","ỏ":"o","Ố":"O","ố":"o","Ồ":"O","ồ":"o","Ổ":"O","ổ":"o","Ỗ":"O","ỗ":"o","Ộ":"O","ộ":"o","Ớ":"O","ớ":"o","Ờ":"O","ờ":"o","Ở":"O","ở":"o","Ỡ":"O","ỡ":"o","Ợ":"O","ợ":"o","Ụ":"U","ụ":"u","Ủ":"U","ủ":"u","Ứ":"U","ứ":"u","Ừ":"U","ừ":"u","Ử":"U","ử":"u","Ữ":"U","ữ":"u","Ự":"U","ự":"u","Ỳ":"Y","ỳ":"y","Ỵ":"Y","ỵ":"y","Ỷ":"Y","ỷ":"y","Ỹ":"Y","ỹ":"y","–":"-","‘":"\'","’":"\'","“":"\\\"","”":"\\\"","„":"\\\"","†":"+","•":"*","…":"...","₠":"ecu","₢":"cruzeiro","₣":"french franc","₤":"lira","₥":"mill","₦":"naira","₧":"peseta","₨":"rupee","₩":"won","₪":"new shequel","₫":"dong","€":"euro","₭":"kip","₮":"tugrik","₯":"drachma","₰":"penny","₱":"peso","₲":"guarani","₳":"austral","₴":"hryvnia","₵":"cedi","₸":"kazakhstani tenge","₹":"indian rupee","₺":"turkish lira","₽":"russian ruble","₿":"bitcoin","℠":"sm","™":"tm","∂":"d","∆":"delta","∑":"sum","∞":"infinity","♥":"love","元":"yuan","円":"yen","﷼":"rial","ﻵ":"laa","ﻷ":"laa","ﻹ":"lai","ﻻ":"la"}');
+        var locales = JSON.parse('{"bg":{"Й":"Y","Ц":"Ts","Щ":"Sht","Ъ":"A","Ь":"Y","й":"y","ц":"ts","щ":"sht","ъ":"a","ь":"y"},"de":{"Ä":"AE","ä":"ae","Ö":"OE","ö":"oe","Ü":"UE","ü":"ue","ß":"ss","%":"prozent","&":"und","|":"oder","∑":"summe","∞":"unendlich","♥":"liebe"},"es":{"%":"por ciento","&":"y","<":"menor que",">":"mayor que","|":"o","¢":"centavos","£":"libras","¤":"moneda","₣":"francos","∑":"suma","∞":"infinito","♥":"amor"},"fr":{"%":"pourcent","&":"et","<":"plus petit",">":"plus grand","|":"ou","¢":"centime","£":"livre","¤":"devise","₣":"franc","∑":"somme","∞":"infini","♥":"amour"},"pt":{"%":"porcento","&":"e","<":"menor",">":"maior","|":"ou","¢":"centavo","∑":"soma","£":"libra","∞":"infinito","♥":"amor"},"uk":{"И":"Y","и":"y","Й":"Y","й":"y","Ц":"Ts","ц":"ts","Х":"Kh","х":"kh","Щ":"Shch","щ":"shch","Г":"H","г":"h"},"vi":{"Đ":"D","đ":"d"},"da":{"Ø":"OE","ø":"oe","Å":"AA","å":"aa","%":"procent","&":"og","|":"eller","$":"dollar","<":"mindre end",">":"større end"},"nb":{"&":"og","Å":"AA","Æ":"AE","Ø":"OE","å":"aa","æ":"ae","ø":"oe"},"it":{"&":"e"},"nl":{"&":"en"},"sv":{"&":"och","Å":"AA","Ä":"AE","Ö":"OE","å":"aa","ä":"ae","ö":"oe"}}');
+        function replace(string, options) {
+          if (typeof string !== 'string') {
+            throw new Error('slugify: string argument expected');
+          }
+          options = typeof options === 'string' ? {
+            replacement: options
+          } : options || {};
+          var locale = locales[options.locale] || {};
+          var replacement = options.replacement === undefined ? '-' : options.replacement;
+          var trim = options.trim === undefined ? true : options.trim;
+          var slug = string.normalize().split('')
+          // replace characters based on charMap
+          .reduce(function (result, ch) {
+            var appendChar = locale[ch];
+            if (appendChar === undefined) appendChar = charMap[ch];
+            if (appendChar === undefined) appendChar = ch;
+            if (appendChar === replacement) appendChar = ' ';
+            return result + appendChar
+            // remove not allowed characters
+            .replace(options.remove || /[^\w\s$*_+~.()'"!\-:@]+/g, '');
+          }, '');
+          if (options.strict) {
+            slug = slug.replace(/[^A-Za-z0-9\s]/g, '');
+          }
+          if (trim) {
+            slug = slug.trim();
+          }
+
+          // Replace spaces with replacement character, treating multiple consecutive
+          // spaces as a single space.
+          slug = slug.replace(/\s+/g, replacement);
+          if (options.lower) {
+            slug = slug.toLowerCase();
+          }
+          return slug;
+        }
+        replace.extend = function (customMap) {
+          Object.assign(charMap, customMap);
+        };
+        return replace;
+      });
+    })(slugify$1);
+
+    var escaperExports = {};
+    var escaper$1 = {
+      get exports(){ return escaperExports; },
+      set exports(v){ escaperExports = v; },
+    };
+
+    /*!
+     * Escaper v2.5.3
+     * https://github.com/kobezzza/Escaper
+     *
+     * Released under the MIT license
+     * https://github.com/kobezzza/Escaper/blob/master/LICENSE
+     *
+     * Date: Tue, 23 Jan 2018 15:58:45 GMT
+     */
+    (function (module, exports) {
+      (function (global, factory) {
+        factory(exports) ;
+      })(commonjsGlobal, function (exports) {
+
+        var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+          return typeof obj;
+        } : function (obj) {
+          return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        };
+        var Escaper = void 0;
+        var escaper = Escaper = {
+          VERSION: [2, 5, 3],
+          content: [],
+          cache: {},
+          snakeskinRgxp: null,
+          symbols: null,
+          replace: replace,
+          paste: paste
+        };
+        var stringLiterals = {
+          '"': true,
+          '\'': true,
+          '`': true
+        };
+        var literals = {
+          '/': true
+        };
+        for (var key in stringLiterals) {
+          if (!stringLiterals.hasOwnProperty(key)) {
+            break;
+          }
+          literals[key] = true;
+        }
+        var singleComments = {
+          '//': true,
+          '//*': true,
+          '//!': true,
+          '//#': true,
+          '//@': true,
+          '//$': true
+        };
+        var multComments = {
+          '/*': true,
+          '/**': true,
+          '/*!': true,
+          '/*#': true,
+          '/*@': true,
+          '/*$': true
+        };
+        var keyArr = [];
+        var finalMap = {};
+        for (var _key in literals) {
+          if (!literals.hasOwnProperty(_key)) {
+            break;
+          }
+          keyArr.push(_key);
+          finalMap[_key] = true;
+        }
+        for (var _key2 in singleComments) {
+          if (!singleComments.hasOwnProperty(_key2)) {
+            break;
+          }
+          keyArr.push(_key2);
+          finalMap[_key2] = true;
+        }
+        for (var _key3 in multComments) {
+          if (!multComments.hasOwnProperty(_key3)) {
+            break;
+          }
+          keyArr.push(_key3);
+          finalMap[_key3] = true;
+        }
+        var rgxpFlags = [];
+        var rgxpFlagsMap = {
+          'g': true,
+          'm': true,
+          'i': true,
+          'y': true,
+          'u': true
+        };
+        for (var _key4 in rgxpFlagsMap) {
+          if (!rgxpFlagsMap.hasOwnProperty(_key4)) {
+            break;
+          }
+          rgxpFlags.push(_key4);
+        }
+        var escapeEndMap = {
+          '-': true,
+          '+': true,
+          '*': true,
+          '%': true,
+          '~': true,
+          '>': true,
+          '<': true,
+          '^': true,
+          ',': true,
+          ';': true,
+          '=': true,
+          '|': true,
+          '&': true,
+          '!': true,
+          '?': true,
+          ':': true,
+          '(': true,
+          '{': true,
+          '[': true
+        };
+        var escapeEndWordMap = {
+          'return': true,
+          'yield': true,
+          'await': true,
+          'typeof': true,
+          'void': true,
+          'instanceof': true,
+          'delete': true,
+          'in': true,
+          'new': true,
+          'of': true
+        };
+
+        /**
+         * @param {!Object} obj
+         * @param {!Object} p
+         * @param {(boolean|number)} val
+         */
+        function mix(obj, p, val) {
+          for (var _key5 in obj) {
+            if (!obj.hasOwnProperty(_key5)) {
+              break;
+            }
+            if (_key5 in p === false) {
+              p[_key5] = val;
+            }
+          }
+        }
+        var symbols = void 0;
+        var snakeskinRgxp = void 0;
+        var uSRgxp = /[^\s/]/;
+        var wRgxp = /[a-z]/;
+        var sRgxp = /\s/;
+        var nRgxp = /[\r\n]/;
+        var posRgxp = /\${pos}/g;
+        var objMap = {
+          'object': true,
+          'function': true
+        };
+
+        /**
+         * Replaces all found blocks ' ... ', " ... ", ` ... `, / ... /, // ..., /* ... *\/ to
+         * __ESCAPER_QUOT__number_ in a string and returns a new string
+         *
+         * @param {string} str - source string
+         * @param {(Object<string, boolean>|boolean)=} [opt_withCommentsOrParams=false] - parameters:
+         *
+         *     (if a parameter value is set to -1, then all found matches will be removed from the final string,
+         *          or if the value will be set to true/false they will be included/excluded)
+         *
+         *     *) @label    - template for replacement, e.g. __ESCAPER_QUOT__${pos}_
+         *     *) @all      - replaces all found matches
+         *     *) @comments - replaces all kinds of comments
+         *     *) @strings  - replaces all kinds of string literals
+         *     *) @literals - replaces all kinds of string literals and regular expressions
+         *     *) `
+         *     *) '
+         *     *) "
+         *     *) /
+         *     *) //
+         *     *) //*
+         *     *) //!
+         *     *) //#
+         *     *) //@
+         *     *) //$
+         *     *) /*
+         *     *) /**
+         *     *) /*!
+         *     *) /*#
+         *     *) /*@
+         *     *) /*$
+         *
+         *     OR if the value is boolean, then will be replaced all found comments (true) / literals (false)
+         *
+         * @param {Array=} [opt_content=Escaper.content] - array for matches
+         * @param {?boolean=} [opt_snakeskin] - private parameter for using with Snakeskin
+         * @return {string}
+         */
+        function replace(str, opt_withCommentsOrParams, opt_content, opt_snakeskin) {
+          symbols = symbols || Escaper.symbols || 'a-z';
+          snakeskinRgxp = snakeskinRgxp || Escaper.snakeskinRgxp || new RegExp('[!$' + symbols + '_]', 'i');
+          var _Escaper = Escaper,
+            cache = _Escaper.cache,
+            content = _Escaper.content;
+          var isObj = Boolean(opt_withCommentsOrParams && objMap[typeof opt_withCommentsOrParams === 'undefined' ? 'undefined' : _typeof(opt_withCommentsOrParams)]);
+          var p = isObj ? Object(opt_withCommentsOrParams) : {};
+          function mark(pos) {
+            if (p['@label']) {
+              return p['@label'].replace(posRgxp, pos);
+            }
+            return '__ESCAPER_QUOT__' + pos + '_';
+          }
+          var withComments = false;
+          if (typeof opt_withCommentsOrParams === 'boolean') {
+            withComments = Boolean(opt_withCommentsOrParams);
+          }
+          if ('@comments' in p) {
+            mix(multComments, p, p['@comments']);
+            mix(singleComments, p, p['@comments']);
+            delete p['@comments'];
+          }
+          if ('@strings' in p) {
+            mix(stringLiterals, p, p['@strings']);
+            delete p['@strings'];
+          }
+          if ('@literals' in p) {
+            mix(literals, p, p['@literals']);
+            delete p['@literals'];
+          }
+          if ('@all' in p) {
+            mix(finalMap, p, p['@all']);
+            delete p['@all'];
+          }
+          var cacheKey = '';
+          for (var i = -1; ++i < keyArr.length;) {
+            var el = keyArr[i];
+            if (multComments[el] || singleComments[el]) {
+              p[el] = withComments || p[el];
+            } else {
+              p[el] = p[el] || !isObj;
+            }
+            cacheKey += p[el] + ',';
+          }
+          var initStr = str,
+            stack = opt_content || content;
+          if (stack === content && cache[cacheKey] && cache[cacheKey][initStr]) {
+            return cache[cacheKey][initStr];
+          }
+          var begin = false,
+            end = true;
+          var escape = false,
+            comment = false;
+          var selectionStart = 0,
+            block = false;
+          var templateVar = 0,
+            filterStart = false;
+          var cut = void 0,
+            label = void 0;
+          var part = '',
+            rPart = '';
+          for (var _i = -1; ++_i < str.length;) {
+            var _el = str.charAt(_i);
+            var next = str.charAt(_i + 1),
+              word = str.substr(_i, 2),
+              extWord = str.substr(_i, 3);
+            if (!comment) {
+              if (!begin) {
+                if (_el === '/') {
+                  if (singleComments[word] || multComments[word]) {
+                    if (singleComments[extWord] || multComments[extWord]) {
+                      comment = extWord;
+                    } else {
+                      comment = word;
+                    }
+                  }
+                  if (comment) {
+                    selectionStart = _i;
+                    continue;
+                  }
+                }
+                if (escapeEndMap[_el] || escapeEndWordMap[rPart]) {
+                  end = true;
+                  rPart = '';
+                } else if (uSRgxp.test(_el)) {
+                  end = false;
+                }
+                if (wRgxp.test(_el)) {
+                  part += _el;
+                } else {
+                  rPart = part;
+                  part = '';
+                }
+                var skip = false;
+                if (opt_snakeskin) {
+                  if (_el === '|' && snakeskinRgxp.test(next)) {
+                    filterStart = true;
+                    end = false;
+                    skip = true;
+                  } else if (filterStart && sRgxp.test(_el)) {
+                    filterStart = false;
+                    end = true;
+                    skip = true;
+                  }
+                }
+                if (!skip) {
+                  if (escapeEndMap[_el]) {
+                    end = true;
+                  } else if (uSRgxp.test(_el)) {
+                    end = false;
+                  }
+                }
+              }
+
+              // [] inside RegExp
+              if (begin === '/' && !escape) {
+                if (_el === '[') {
+                  block = true;
+                } else if (_el === ']') {
+                  block = false;
+                }
+              }
+              if (!begin && templateVar) {
+                if (_el === '}') {
+                  templateVar--;
+                } else if (_el === '{') {
+                  templateVar++;
+                }
+                if (!templateVar) {
+                  _el = '`';
+                }
+              }
+              if (begin === '`' && !escape && word === '${') {
+                _el = '`';
+                _i++;
+                templateVar++;
+              }
+              if (finalMap[_el] && (_el !== '/' || end) && !begin) {
+                begin = _el;
+                selectionStart = _i;
+              } else if (begin && (_el === '\\' || escape)) {
+                escape = !escape;
+              } else if (finalMap[_el] && begin === _el && !escape && (begin !== '/' || !block)) {
+                if (_el === '/') {
+                  for (var j = -1; ++j < rgxpFlags.length;) {
+                    if (rgxpFlagsMap[str.charAt(_i + 1)]) {
+                      _i++;
+                    }
+                  }
+                }
+                begin = false;
+                end = false;
+                if (p[_el]) {
+                  cut = str.substring(selectionStart, _i + 1);
+                  if (p[_el] === -1) {
+                    label = '';
+                  } else {
+                    label = mark(stack.length);
+                    stack.push(cut);
+                  }
+                  str = str.substring(0, selectionStart) + label + str.substring(_i + 1);
+                  _i += label.length - cut.length;
+                }
+              }
+            } else if (nRgxp.test(next) && singleComments[comment] || multComments[_el + str.charAt(_i - 1)] && _i - selectionStart > 2 && multComments[comment]) {
+              if (p[comment]) {
+                cut = str.substring(selectionStart, _i + 1);
+                if (p[comment] === -1) {
+                  label = '';
+                } else {
+                  label = mark(stack.length);
+                  stack.push(cut);
+                }
+                str = str.substring(0, selectionStart) + label + str.substring(_i + 1);
+                _i += label.length - cut.length;
+              }
+              comment = false;
+            }
+          }
+          if (stack === content) {
+            cache[cacheKey] = cache[cacheKey] || {};
+            cache[cacheKey][initStr] = str;
+          }
+          return str;
+        }
+        var pasteRgxp = /__ESCAPER_QUOT__(\d+)_/g;
+
+        /**
+         * Replaces all found blocks __ESCAPER_QUOT__number_ to real content in a string
+         * and returns a new string
+         *
+         * @param {string} str - source string
+         * @param {Array=} [opt_content=Escaper.content] - array of matches
+         * @param {RegExp=} [opt_rgxp] - RegExp for searching, e.g. /__ESCAPER_QUOT__(\d+)_/g
+         * @return {string}
+         */
+        function paste(str, opt_content, opt_rgxp) {
+          return str.replace(opt_rgxp || pasteRgxp, function (str, pos) {
+            return (opt_content || Escaper.content)[pos];
+          });
+        }
+        exports['default'] = escaper;
+        exports.replace = replace;
+        exports.paste = paste;
+        Object.defineProperty(exports, '__esModule', {
+          value: true
+        });
+      });
+    })(escaper$1, escaperExports);
+
+    var isRegexp = function (re) {
+      return Object.prototype.toString.call(re) === '[object RegExp]';
+    };
+
+    var isRegExp = isRegexp;
+    var stripCssComments = function (str, opts) {
+      str = str.toString();
+      opts = opts || {};
+      var preserveFilter;
+      var comment = '';
+      var currentChar = '';
+      var insideString = false;
+      var preserveImportant = !(opts.preserve === false || opts.all === true);
+      var ret = '';
+      if (typeof opts.preserve === 'function') {
+        preserveImportant = false;
+        preserveFilter = opts.preserve;
+      } else if (isRegExp(opts.preserve)) {
+        preserveImportant = false;
+        preserveFilter = function (comment) {
+          return opts.preserve.test(comment);
+        };
+      }
+      for (var i = 0; i < str.length; i++) {
+        currentChar = str[i];
+        if (str[i - 1] !== '\\') {
+          if (currentChar === '"' || currentChar === '\'') {
+            if (insideString === currentChar) {
+              insideString = false;
+            } else if (!insideString) {
+              insideString = currentChar;
+            }
+          }
+        }
+
+        // find beginning of /* type comment
+        if (!insideString && currentChar === '/' && str[i + 1] === '*') {
+          // ignore important comment when configured to preserve comments using important syntax: /*!
+          if (!(preserveImportant && str[i + 2] === '!')) {
+            var j = i + 2;
+
+            // iterate over comment
+            for (; j < str.length; j++) {
+              // find end of comment
+              if (str[j] === '*' && str[j + 1] === '/') {
+                if (preserveFilter) {
+                  // evaluate comment text
+                  ret = preserveFilter(comment) ? ret + ('/*' + comment + '*/') : ret;
+                  comment = '';
+                }
+                break;
+              }
+
+              // store comment text to be evaluated by the filter when the end of the comment is reached
+              if (preserveFilter) {
+                comment += str[j];
+              }
+            }
+
+            // resume iteration over CSS string from the end of the comment
+            i = j + 1;
+            continue;
+          }
+        }
+        ret += currentChar;
+      }
+      return ret;
+    };
+
+    var slugify = slugifyExports;
+    var escaper = escaperExports;
+    var stripComments = stripCssComments;
+    var scopeCss = scope;
+    scope.replace = replace;
+    function scope(css, parent, o) {
+      if (!css) return css;
+      if (!parent) return css;
+      if (typeof o === 'string') o = {
+        keyframes: o
+      };
+      if (!o) o = {
+        keyframes: false
+      };
+      css = replace(css, parent + ' $1$2');
+
+      //regexp.escape
+      var parentRe = parent.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+      //replace self-selectors
+      css = css.replace(new RegExp('(' + parentRe + ')\\s*\\1(?=[\\s\\r\\n,{])', 'g'), '$1');
+
+      //replace `:host` with parent
+      css = css.replace(new RegExp('(' + parentRe + ')\\s*:host', 'g'), '$1');
+
+      //revoke wrongly replaced @ statements, like @supports, @import, @media etc.
+      css = css.replace(new RegExp('(' + parentRe + ')\\s*@', 'g'), '@');
+
+      //revoke wrongly replaced :root blocks
+      css = css.replace(new RegExp('(' + parentRe + ')\\s*:root', 'g'), ':root');
+
+      //animations: prefix animation anmes
+      var animations = [],
+        animationNameRe = /@keyframes\s+([a-zA-Z0-9_-]+)\s*{/g,
+        match;
+      while ((match = animationNameRe.exec(css)) !== null) {
+        if (animations.indexOf(match[1]) < 0) animations.push(match[1]);
+      }
+      var slug = slugify(parent);
+      animations.forEach(function (name) {
+        var newName = (o.keyframes === true ? slug + '-' : typeof o.keyframes === 'string' ? o.keyframes : '') + name;
+        css = css.replace(new RegExp('(@keyframes\\s+)' + name + '(\\s*{)', 'g'), '$1' + newName + '$2');
+        css = css.replace(new RegExp('(animation(?:-name)?\\s*:[^;]*\\s*)' + name + '([\\s;}])', 'g'), '$1' + newName + '$2');
+      });
+      //animation: revoke wrongly replaced keyframes
+      css = css.replace(new RegExp('(' + parentRe + ' )(\\s*(?:to|from|[+-]?(?:(?:\\.\\d+)|(?:\\d+(?:\\.\\d*)?))%))(?=[\\s\\r\\n,{])', 'g'), '$2');
+      return css;
+    }
+    function replace(css, replacer) {
+      var arr = [];
+      css = stripComments(css);
+
+      // escape strings etc.
+      css = escaper.replace(css, true, arr);
+      css = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, replacer);
+
+      // insert comments, strings etc. back
+      css = escaper.paste(css, arr);
+      return css;
+    }
+    var scopeCss$1 = scopeCss;
+
     class TradePanel {
         quantity;
         constructor() {
             this.quantity = 0;
         }
-        importStylesheet() {
+        async loadStyle(elementSelector) {
+            console.log(elementSelector);
             const existingLinkTag = document.getElementById("liminal-market-css");
             if (!existingLinkTag) {
+                let picoStream = await (await fetch("https://app.liminal.market/css/pico/pico.min.css")).text();
+                let picoCss = scopeCss$1(picoStream, elementSelector)
+                    .replace(/:root/g, `:is(${elementSelector} > *)`);
+                let liminalStream = await (await fetch("https://app.liminal.market/css/style.css")).text();
+                let liminalCss = scopeCss$1(liminalStream, elementSelector)
+                    .replace(/:root/g, `:is(${elementSelector} > *)`);
+                console.log(liminalCss);
                 document.head.insertAdjacentHTML("beforeend", `
-          <link
-            id="liminal-market-css"
-            rel="stylesheet"
-            href="https://app.liminal.market/css/style.css"
-            type="text/css"
-          />
-          <link
-            id="pico-css"
-            rel="stylesheet"
-            href="https://app.liminal.market/css/pico/pico.min.css"
-            type="text/css"
-          />
+          <style>
+             ${picoCss}
+             ${liminalCss}
+          </style>
         `);
             }
         }
         async render(elementSelector, symbol, name, logo, address) {
+            WidgetGlobals.elementSelector = elementSelector;
             let element = document.querySelector(elementSelector);
             if (!element)
                 return;
-            this.importStylesheet();
+            await this.loadStyle(elementSelector);
             let contractInfo = ContractInfo.getContractInfo(WidgetGlobals.Network.Name);
             let sellTradeInput = new TradePanelInput("aUSD", "aUSD at Broker", "/img/ausd.png", contractInfo.AUSD_ADDRESS, TradeType.Sell);
             let buyTradeInput;
@@ -42000,12 +48797,19 @@
             buyTradeInput.setOtherTradePanelInput(sellTradeInput);
             let tradeSwitch = new TradeSwitch();
             let executeOrderButton = new ExecuteOrderButton(sellTradeInput, buyTradeInput);
+            let orderProgress = OrderProgress.getInstance();
             let sellInput = sellTradeInput.renderToString();
             let buyInput = buyTradeInput.renderToString();
             let switchHtml = tradeSwitch.renderToString();
             let executeOrderButtonHtml = executeOrderButton.renderToString();
+            let orderProgressHtml = orderProgress.renderToString();
             element.innerHTML =
-                sellInput + switchHtml + buyInput + switchHtml + executeOrderButtonHtml;
+                sellInput +
+                    switchHtml +
+                    buyInput +
+                    switchHtml +
+                    executeOrderButtonHtml +
+                    orderProgressHtml;
             await sellTradeInput.loadBalance();
             await buyTradeInput.loadBalance();
             if (symbol) {

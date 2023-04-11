@@ -1,0 +1,36 @@
+name: Tradepanel - Publish Package To NPMJS
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: cypress/included:9.4.1
+    steps:
+      # Checkout project repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Setup Node.js environment
+      - name: Setup Node.js
+        run: |
+          ./javascript/tradepanel/test/docker-run-test.sh
+  deploy-packages:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
+      - name: Build and Publish
+        run: |
+          npm install
+          npm run build
+          npm publish
+        working-directory: javascript/tradepanel
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_ACCESS_TOKEN }}

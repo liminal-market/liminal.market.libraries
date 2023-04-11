@@ -1,13 +1,28 @@
+import OrderProgressHtml from "../../../html/elements/tradepanel/OrderProgress.html";
 import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class OrderProgress {
+  template: any = undefined;
   progressNr: number = 0;
   private static instance: OrderProgress = new OrderProgress();
 
-  private constructor() {}
+  private constructor() {
+    this.template = WidgetGlobals.HandlebarsInstance.compile(OrderProgressHtml);
+  }
 
   public static getInstance() {
     return this.instance;
+  }
+
+  public render() {
+    let dom = document.querySelector(".tradeSwitch");
+    if (!dom) return;
+
+    dom.outerHTML = this.renderToString();
+  }
+
+  public renderToString() {
+    return this.template();
   }
 
   public clearProgressText() {
@@ -18,7 +33,12 @@ export default class OrderProgress {
     this.progressNr = 0;
   }
 
-  public setProgressText(progressNr: number, text: string, hash: string) {
+  public setProgressText(
+    progressNr: number,
+    text: string,
+    hash?: string,
+    hideInSeconds?: number
+  ) {
     console.log("thisNr", this.progressNr, "nr", progressNr, "text", text);
     if (progressNr < this.progressNr) return;
 
@@ -40,5 +60,11 @@ export default class OrderProgress {
       '" target="_blank" style="font-size:10px">View</a>';
     executingOrderProgress.classList.remove("hidden");
     this.progressNr = progressNr;
+
+    if (hideInSeconds) {
+      setTimeout(() => {
+        this.clearProgressText();
+      }, hideInSeconds * 1000);
+    }
   }
 }

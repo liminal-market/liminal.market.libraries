@@ -38,9 +38,13 @@ export default class Modal {
     let html = template(obj);
 
     if (modalDiv) {
-      document.body.removeChild(modalDiv);
+      document
+        .querySelector(WidgetGlobals.elementSelector)
+        ?.removeChild(modalDiv);
     }
-    document.body.insertAdjacentHTML("beforeend", html);
+    document
+      .querySelector(WidgetGlobals.elementSelector)
+      ?.insertAdjacentHTML("beforeend", html);
 
     modalDiv = document.getElementById(this.modalId)!;
     modalDiv.setAttribute("open", "");

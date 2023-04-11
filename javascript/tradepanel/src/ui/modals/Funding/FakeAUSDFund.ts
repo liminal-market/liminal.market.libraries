@@ -1,4 +1,4 @@
-import FakeFundingHtml from "../../../html/modal/funding/FakeFunding.html";
+import FakeFundingHtml from "../../../html/modal/Funding/FakeFunding.html";
 import Modal from "../Modal";
 import WalletHelper from "../../../util/WalletHelper";
 import ContractInfo from "../../../contracts/ContractInfo";
@@ -70,10 +70,11 @@ export default class FakeAUSDFund {
     requestFakeAUSD?.addEventListener("click", async (evt) => {
       requestFakeAUSD!.setAttribute("aria-busy", "true");
 
-      let fundingService = new FundingService();
-      let result = await fundingService.requestFakeFunding().catch((reason) => {
-        this.errorWhileFunding({});
-      });
+      let result = await WidgetGlobals.User.LiminalMarket!.fundSandboxAccount(
+        async (obj) => {
+          console.log("Funding is done", obj);
+        }
+      );
       if (!result) return;
 
       if (!result.success) {
