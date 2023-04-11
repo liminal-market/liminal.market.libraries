@@ -17,7 +17,7 @@ export default abstract class Network {
     MARKET_CALENDAR_ADDRESS = "";
     LM_ADDRESS = '';
     SERVICE_CONTRACT_ADDRESS = '';
-    NO_FEE_CONTRACT_ADDRESS = "0x0d82EF4e843c1ca7bd2aa9B2Aa4239bd70b306df";
+    NO_FEE_SERVICE_CONTRACT_ADDRESS = "0x0d82EF4e843c1ca7bd2aa9B2Aa4239bd70b306df";
 
 
     static RpcUrl = '';

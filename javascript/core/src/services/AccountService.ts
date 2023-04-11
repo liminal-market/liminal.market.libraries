@@ -2,6 +2,7 @@ import KycStatus from "../dto/KycStatus";
 import HttpRequest from "../http/HttpRequest";
 import {Account} from "../dto/Account";
 import LiminalMarket from "../index";
+import Helper from "../Helper";
 
 export default class AccountService {
     private signInMessage = "You are logging into Liminal.market.\n\nNonce:";
@@ -31,7 +32,7 @@ export default class AccountService {
         let account = await this.autoLogin();
         if (account) return account;
 
-        let response = await this.httpRequest.post('/me/nonce', {address: LiminalMarket.WalletAddress})
+        let response = await this.httpRequest.post('/me/nonce', {address: LiminalMarket.WalletAddress});
         let signingMessage = this.signInMessage + response.nonce;
 
         let signedMessage = await LiminalMarket.Signer.signMessage(signingMessage)
@@ -49,6 +50,9 @@ export default class AccountService {
         }
         LiminalMarket.Bearer = account.token;
 
+        let base64 = btoa(JSON.stringify(account.token))
+        Helper.setCookie('validate', base64);
+
         return account;
     }
 
@@ -59,7 +63,7 @@ export default class AccountService {
         return await this.httpRequest.postAuth('/fundUser')
     }
 
-    public async createSandboxAccount(firstName: string, lastName: string, email: string, accountReadyEvent?: (event : any) => Promise<void> | undefined): Promise<void> {
+    public async createSandboxAccount(firstName: string, lastName: string, email: string, accountReadyEvent?: (event : any) => Promise<void> | undefined): Promise<string> {
         let response = await this.httpRequest.postAuth("sandboxCreateAccount", {
             given_name: firstName,
             family_name: lastName,
@@ -76,22 +80,22 @@ export default class AccountService {
 
     private async autoLogin() {
         try {
-            let validate = document.cookie.match('(^|;)\\s*validate\\s*=\\s*([^;]+)')?.pop() || '';
+            let validate = Helper.getCookieValue('validate');
             if (validate) {
-                let obj = JSON.parse(atob(validate));
-                LiminalMarket.Bearer = obj.token;
+                let token = JSON.parse(atob(validate));
+                LiminalMarket.Bearer = token;
                 let result = await this.httpRequest.post('/me/jwt');
                 if (result.jwt) {
                     let account = {} as Account;
                     account.brokerId = result.alpacaId;
                     account.chainId = result.chainId;
-                    account.token = obj.token;
+                    account.token = token;
                     account.address = result.address;
                     return account;
                 }
             }
         } catch (e : any) {
-            document.cookie = "validate=0; expires=Mon, 2 Dec 2020 12:00:00 UTC;path=/";
+            Helper.deleteCookie('validate')
         }
         return;
     }
