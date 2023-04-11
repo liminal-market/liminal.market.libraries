@@ -1,6 +1,6 @@
 {
   "name": "liminal.market",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Main package for liminal.market. Use this package to register and trade securities",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
