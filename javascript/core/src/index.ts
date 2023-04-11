@@ -126,7 +126,7 @@ export default class LiminalMarket {
      * @param {function} accountReadyEvent - function is called when the account is ready
      */
     public async createSandboxAccount(firstName : string, lastName : string, email : string,
-                                      accountReadyEvent? : () => Promise<void> | undefined) : Promise<void> {
+                                      accountReadyEvent? : () => Promise<void> | undefined) : Promise<string> {
         return await this.accountService.createSandboxAccount(firstName, lastName, email, accountReadyEvent);
     }
 

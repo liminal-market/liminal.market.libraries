@@ -63,7 +63,7 @@ export default class AccountService {
         return await this.httpRequest.postAuth('/fundUser')
     }
 
-    public async createSandboxAccount(firstName: string, lastName: string, email: string, accountReadyEvent?: (event : any) => Promise<void> | undefined): Promise<void> {
+    public async createSandboxAccount(firstName: string, lastName: string, email: string, accountReadyEvent?: (event : any) => Promise<void> | undefined): Promise<string> {
         let response = await this.httpRequest.postAuth("sandboxCreateAccount", {
             given_name: firstName,
             family_name: lastName,

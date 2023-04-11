@@ -5,7 +5,7 @@ import MumbaiNetwork from "./MumbaiNetwork";
 export default class NetworkType {
     static Networks : any = [LocalhostNetwork, MumbaiNetwork];
 
-    public static getInstance(chainId : any) {
+    public static getInstance(chainId : any) : Network | undefined {
         let networkInfo: Network | undefined = undefined;
 
         NetworkType.Networks.forEach((networkInfoType : any) => {
