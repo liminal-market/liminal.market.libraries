@@ -1,4 +1,3 @@
-import MarketService from "../broker/MarketService";
 import KycResult from "../../dto/KycResult";
 import { BankRelationship } from "../../dto/alpaca/BankRelationship";
 import { Transfer } from "../../dto/alpaca/Transfer";
@@ -17,9 +16,7 @@ export default class UserService extends BaseService {
   }
 
   public async isMarketOpenOrUserOffHours(): Promise<boolean> {
-    let marketService = new MarketService();
-    let response = await marketService.isMarketOpen();
-    return response.marketIsOpen;
+    return await WidgetGlobals.LiminalMarket.isMarketOpen();
   }
 
   public getUser() {

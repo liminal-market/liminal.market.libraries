@@ -1,4 +1,4 @@
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
 export declare const showContainer: (id: string) => void;
 export declare const roundNumber: (number: number) => number;
 export declare const roundNumberDecimal: (number: number, decimal: number) => number;

@@ -2,12 +2,10 @@ import FakeFundingHtml from "../../../html/modal/Funding/FakeFunding.html";
 import Modal from "../Modal";
 import WalletHelper from "../../../util/WalletHelper";
 import ContractInfo from "../../../contracts/ContractInfo";
-import FundingService from "../../../services/broker/FundingService";
-import AUSDService from "../../../services/blockchain/AUSDService";
 import UserService from "../../../services/backend/UserService";
 import { roundBigNumber } from "../../../util/Helper";
-import BigNumber from "bignumber.js";
 import AUSDFund from "./AUSDFund";
+import { BigNumber } from "ethers";
 import WidgetGlobals from "../../../WidgetGlobals";
 
 export default class FakeAUSDFund {
@@ -15,7 +13,7 @@ export default class FakeAUSDFund {
   modal: Modal;
 
   constructor() {
-    this.currentBalance = new BigNumber(-1);
+    this.currentBalance = BigNumber.from(-1);
     this.modal = new Modal();
   }
 
@@ -106,14 +104,12 @@ export default class FakeAUSDFund {
     let currentAUSDBalance = document.getElementById("currentAUSDBalance");
     if (!currentAUSDBalance) return;
 
-    let aUSDService = new AUSDService();
     let userService = new UserService();
     let ethAddress = userService.getEthAddress();
 
-    let amount = new BigNumber(0);
+    let amount = BigNumber.from(0);
     if (ethAddress) {
-      AUSDService.lastUpdate = undefined;
-      amount = await aUSDService.getAUSDBalanceOf(ethAddress);
+      amount = await WidgetGlobals.LiminalMarket.getAUSDBalance(ethAddress);
     }
     currentAUSDBalance.innerHTML = "$" + roundBigNumber(amount).toString();
 

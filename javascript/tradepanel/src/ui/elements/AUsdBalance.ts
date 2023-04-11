@@ -1,4 +1,3 @@
-import AUSDService from "../../services/blockchain/AUSDService";
 import { roundBigNumber } from "../../util/Helper";
 import FakeAUSDFund from "../modals/Funding/FakeAUSDFund";
 import AUSDFund from "../modals/Funding/AUSDFund";
@@ -9,14 +8,14 @@ import Modal from "../modals/Modal";
 import AddToWalletHtml from "../../html/elements/AddToWallet.html";
 import WidgetGlobals from "../../WidgetGlobals";
 import AuthenticateService from "../../services/backend/AuthenticateService";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 
 export default class AUsdBalance {
   constructor() {}
 
   public static async forceLoadAUSDBalanceUI() {
     let ui = new AUsdBalance();
-    AUSDService.lastUpdate = undefined;
     await ui.loadAUSDBalanceUI();
   }
 
@@ -25,9 +24,7 @@ export default class AUsdBalance {
       await AuthenticateService.enableWeb3();
       if (!WidgetGlobals.User.ether) return;
     }
-
-    let aUSDService = new AUSDService();
-    let aUsdValueWei = await aUSDService.getAUSDBalanceOf(
+    let aUsdValueWei = await WidgetGlobals.LiminalMarket.getAUSDBalance(
       WidgetGlobals.User.address
     );
 
@@ -93,12 +90,12 @@ export default class AUsdBalance {
 
     let balance_value = document.querySelector(".balance_value") as HTMLElement;
     if (balance_value) {
-      balance_value.innerHTML = "$" + aUsdValue.toFixed();
-      balance_value.title = aUsdValueWei.toFixed();
-      balance_value.dataset["tooltip"] = aUsdValueWei.toFixed();
+      balance_value.innerHTML = "$" + parseFloat(formatUnits(aUsdValue));
+      balance_value.title = formatUnits(aUsdValueWei);
+      balance_value.dataset["tooltip"] = formatUnits(aUsdValueWei);
     }
 
-    if (aUsdValue.isLessThan(10)) {
+    if (aUsdValue.lt(10)) {
       let frontpage_fund_account = document.getElementById(
         "frontpage_fund_account"
       );

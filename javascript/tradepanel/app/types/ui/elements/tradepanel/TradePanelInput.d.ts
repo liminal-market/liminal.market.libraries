@@ -1,5 +1,5 @@
 import { TradeType } from "../../../enums/TradeType";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
 export default class TradePanelInput {
     symbol: string;
     name: string;

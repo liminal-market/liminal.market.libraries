@@ -1,7 +1,5 @@
 import RegistrationHtml from "../../../html/modal/Sandbox/Registration.html";
 import Modal from "../Modal";
-import KYCService from "../../../services/blockchain/KYCService";
-import StringHelper from "../../../util/StringHelper";
 import FormValidator from "../../../util/FormValidator";
 import Waiting from "./Waiting";
 import WidgetGlobals from "../../../WidgetGlobals";
@@ -43,18 +41,20 @@ export default class Registration {
       let lastName = document.querySelector("#family_name") as HTMLInputElement;
       let email = document.querySelector("#email_address") as HTMLInputElement;
 
-      let kycService = new KYCService();
-      let alpacaId = await kycService
-        .sandboxCreateAccount(firstName.value, lastName.value, email.value)
-        .catch((reason) => {
-          let error = JSON.parse(reason.message);
-          if (error.serverError) {
-            this.showError(error.serverError);
-          } else {
-            this.showError(error);
-          }
-          LoadingHelper.removeLoading();
-        });
+      const alpacaId = await WidgetGlobals.LiminalMarket.createSandboxAccount(
+        firstName.value,
+        lastName.value,
+        email.value
+      ).catch((reason) => {
+        let error = JSON.parse(reason.message);
+        if (error.serverError) {
+          this.showError(error.serverError);
+        } else {
+          this.showError(error);
+        }
+        LoadingHelper.removeLoading();
+      });
+
       if (alpacaId) {
         WidgetGlobals.User.alpacaId = alpacaId;
 

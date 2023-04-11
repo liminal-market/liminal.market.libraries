@@ -2,9 +2,7 @@ import NetworkInfo from "../../../networks/NetworkInfo";
 import UserService from "../../../services/backend/UserService";
 import AuthenticateService from "../../../services/backend/AuthenticateService";
 import ConnectWallet from "../ConnectWallet";
-import AUSDService from "../../../services/blockchain/AUSDService";
 import FakeAUSDFund from "../../modals/Funding/FakeAUSDFund";
-import SecurityTokenService from "../../../services/blockchain/SecurityTokenService";
 import TradePanelInput from "./TradePanelInput";
 import ExecuteOrderButtonHtml from "../../../html/elements/tradepanel/ExecuteOrderButton.html";
 import NativeTokenNeeded from "../../modals/NativeTokenNeeded";
@@ -278,21 +276,18 @@ export default class ExecuteOrderButton {
   hasBuyingPower = false;
 
   private async userHasAUSD(button: HTMLElement): Promise<boolean> {
-    let ausdService = new AUSDService();
-    let balance = await ausdService.getAUSDBalanceOf(
+    let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(
       WidgetGlobals.User.address
     );
-    if (balance.isGreaterThan(0)) return true;
+    if (balance.gt(0)) return true;
 
     if (this.hasBuyingPower) {
       button.innerHTML = "We are funding your aUSD token";
       this.checkBalanceInterval = setInterval(async () => {
-        AUSDService.lastUpdate = undefined;
-
-        let balance = await ausdService.getAUSDBalanceOf(
+        let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(
           WidgetGlobals.User.address
         );
-        if (balance.isGreaterThan(0)) {
+        if (balance.gt(0)) {
           await AUsdBalance.forceLoadAUSDBalanceUI();
 
           clearInterval(this.checkBalanceInterval);
@@ -318,13 +313,11 @@ export default class ExecuteOrderButton {
   }
 
   private async userHasEnoughQty(button: HTMLElement) {
-    let ausdService = new AUSDService();
     if (this.sellTradeInput.symbol == "aUSD") {
-      let balance = await ausdService.getAUSDBalanceOf(
+      let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(
         WidgetGlobals.User.address
       );
-      if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
-        return true;
+      if (balance.gte(this.sellTradeInput.quantity)) return true;
 
       button.innerHTML = "You don't have enough aUSD. Click for more funding";
       button.addEventListener("click", () => {
@@ -332,12 +325,12 @@ export default class ExecuteOrderButton {
         ausdFund.showAUSDFakeFund();
       });
     } else {
-      let securityTokenService = new SecurityTokenService();
-      let userQuantity = await securityTokenService.getQuantityByAddress(
-        this.sellTradeInput.symbol,
-        WidgetGlobals.User.address
-      );
-      if (this.sellTradeInput.quantity <= userQuantity) return true;
+      let userQuantity =
+        await WidgetGlobals.LiminalMarket.getSecurityTokenQuantity(
+          this.sellTradeInput.symbol,
+          WidgetGlobals.User.address
+        );
+      if (this.sellTradeInput.quantity.lte(userQuantity)) return true;
 
       button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
       button.classList.replace("disable", "enable");

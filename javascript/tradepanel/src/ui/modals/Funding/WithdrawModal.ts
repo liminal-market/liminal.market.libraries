@@ -1,13 +1,12 @@
 import WithdrawModalHtml from "../../../html/modal/Funding/WithdrawModal.html";
 import Modal from "../Modal";
-import AUSDService from "../../../services/blockchain/AUSDService";
 import UserService from "../../../services/backend/UserService";
 import { BankRelationship } from "../../../dto/alpaca/BankRelationship";
 import StringHelper from "../../../util/StringHelper";
 import { isJSON, roundNumber } from "../../../util/Helper";
 import TransfersList from "./TransfersList";
 import { TransferDirectionEnum } from "../../../enums/TransferDirectionEnum";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
 import WidgetGlobals from "src/WidgetGlobals";
 
 export default class WithdrawModal {
@@ -45,11 +44,11 @@ export default class WithdrawModal {
       transfers
     );
     let ethAddress = this.userService.getEthAddress();
-
-    let ausdService = new AUSDService();
-    this.currentBalance = new BigNumber(0);
+    this.currentBalance = BigNumber.from(0);
     if (ethAddress) {
-      this.currentBalance = await ausdService.getAUSDBalanceOf(ethAddress);
+      this.currentBalance = await WidgetGlobals.LiminalMarket.getAUSDBalance(
+        ethAddress
+      );
     }
 
     if (this.currentBalance.eq(0)) {

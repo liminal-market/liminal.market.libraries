@@ -180,16 +180,16 @@
 
     var base$2 = {};
 
-    var utils$b = {};
+    var utils$c = {};
 
-    utils$b.__esModule = true;
-    utils$b.extend = extend;
-    utils$b.indexOf = indexOf;
-    utils$b.escapeExpression = escapeExpression;
-    utils$b.isEmpty = isEmpty;
-    utils$b.createFrame = createFrame;
-    utils$b.blockParams = blockParams;
-    utils$b.appendContextPath = appendContextPath;
+    utils$c.__esModule = true;
+    utils$c.extend = extend;
+    utils$c.indexOf = indexOf;
+    utils$c.escapeExpression = escapeExpression;
+    utils$c.isEmpty = isEmpty;
+    utils$c.createFrame = createFrame;
+    utils$c.blockParams = blockParams;
+    utils$c.appendContextPath = appendContextPath;
     var escape = {
       '&': '&amp;',
       '<': '&lt;',
@@ -215,7 +215,7 @@
       return obj;
     }
     var toString$1 = Object.prototype.toString;
-    utils$b.toString = toString$1;
+    utils$c.toString = toString$1;
     // Sourced from lodash
     // https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
     /* eslint-disable func-style */
@@ -225,11 +225,11 @@
     // fallback for older versions of Chrome and Safari
     /* istanbul ignore next */
     if (isFunction$1(/x/)) {
-      utils$b.isFunction = isFunction$1 = function (value) {
+      utils$c.isFunction = isFunction$1 = function (value) {
         return typeof value === 'function' && toString$1.call(value) === '[object Function]';
       };
     }
-    utils$b.isFunction = isFunction$1;
+    utils$c.isFunction = isFunction$1;
 
     /* eslint-enable func-style */
 
@@ -237,7 +237,7 @@
     var isArray$2 = Array.isArray || function (value) {
       return value && typeof value === 'object' ? toString$1.call(value) === '[object Array]' : false;
     };
-    utils$b.isArray = isArray$2;
+    utils$c.isArray = isArray$2;
     // Older IE versions do not directly support indexOf so we must implement our own, sadly.
 
     function indexOf(array, value) {
@@ -366,7 +366,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$b;
+      var _utils = utils$c;
       exports['default'] = function (instance) {
         instance.registerHelper('blockHelperMissing', function (context, options) {
           var inverse = options.inverse,
@@ -415,7 +415,7 @@
           'default': obj
         };
       }
-      var _utils = utils$b;
+      var _utils = utils$c;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -546,7 +546,7 @@
           'default': obj
         };
       }
-      var _utils = utils$b;
+      var _utils = utils$c;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -647,7 +647,7 @@
           'default': obj
         };
       }
-      var _utils = utils$b;
+      var _utils = utils$c;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
       exports['default'] = function (instance) {
@@ -730,7 +730,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$b;
+      var _utils = utils$c;
       exports['default'] = function (instance) {
         instance.registerDecorator('inline', function (fn, props, container, options) {
           var ret = fn;
@@ -776,7 +776,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$b;
+      var _utils = utils$c;
       var logger = {
         methodMap: ['debug', 'info', 'warn', 'error'],
         level: 'info',
@@ -819,7 +819,7 @@
 
     createNewLookupObject$1.__esModule = true;
     createNewLookupObject$1.createNewLookupObject = createNewLookupObject;
-    var _utils$4 = utils$b;
+    var _utils$4 = utils$c;
 
     /**
      * Create a new object with "null"-prototype to avoid truthy results on prototype properties.
@@ -917,7 +917,7 @@
         'default': obj
       };
     }
-    var _utils$3 = utils$b;
+    var _utils$3 = utils$c;
     var _exception$3 = exceptionExports;
     var _exception2$3 = _interopRequireDefault$5(_exception$3);
     var _helpers$2 = helpers$1;
@@ -1077,7 +1077,7 @@
         return newObj;
       }
     }
-    var _utils$2 = utils$b;
+    var _utils$2 = utils$c;
     var Utils = _interopRequireWildcard$1(_utils$2);
     var _exception$2 = exceptionExports;
     var _exception2$2 = _interopRequireDefault$4(_exception$2);
@@ -1444,7 +1444,7 @@
       var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
       var _handlebarsException = exceptionExports;
       var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
-      var _handlebarsUtils = utils$b;
+      var _handlebarsUtils = utils$c;
       var Utils = _interopRequireWildcard(_handlebarsUtils);
       var _handlebarsRuntime = runtime;
       var runtime$1 = _interopRequireWildcard(_handlebarsRuntime);
@@ -4336,7 +4336,7 @@
     var _whitespaceControl2 = _interopRequireDefault$2(_whitespaceControl);
     var _helpers = helpers;
     var Helpers = _interopRequireWildcard(_helpers);
-    var _utils$1 = utils$b;
+    var _utils$1 = utils$c;
     base$1.parser = _parser2['default'];
     var yy = {};
     _utils$1.extend(yy, Helpers);
@@ -4376,7 +4376,7 @@
     }
     var _exception = exceptionExports;
     var _exception2 = _interopRequireDefault$1(_exception);
-    var _utils = utils$b;
+    var _utils = utils$c;
     var _ast = astExports;
     var _ast2 = _interopRequireDefault$1(_ast);
     var slice = [].slice;
@@ -7763,7 +7763,7 @@
     (function (module, exports) {
 
       exports.__esModule = true;
-      var _utils = utils$b;
+      var _utils = utils$c;
       var SourceNode = undefined;
       try {
         /* istanbul ignore next */
@@ -7921,7 +7921,7 @@
       var _base = base$2;
       var _exception = exceptionExports;
       var _exception2 = _interopRequireDefault(_exception);
-      var _utils = utils$b;
+      var _utils = utils$c;
       var _codeGen = codeGenExports;
       var _codeGen2 = _interopRequireDefault(_codeGen);
       function Literal(value) {
@@ -9146,7 +9146,7 @@
         default: empty
     });
 
-    var require$$2 = /*@__PURE__*/getAugmentedNamespace(empty$1);
+    var require$$2$1 = /*@__PURE__*/getAugmentedNamespace(empty$1);
 
     // USAGE:
     // var handlebars = require('handlebars');
@@ -9162,7 +9162,7 @@
 
     // Publish a Node.js require() handler for .handlebars and .hbs files
     function extension(module, filename) {
-      var fs = require$$2;
+      var fs = require$$2$1;
       var templateString = fs.readFileSync(filename, 'utf8');
       module.exports = handlebars.compile(templateString);
     }
@@ -11362,7 +11362,7 @@
         kMaxLength: _kMaxLength
     });
 
-    var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
+    var require$$0$3 = /*@__PURE__*/getAugmentedNamespace(bufferEs6);
 
     (function (module) {
       (function (module, exports) {
@@ -11414,7 +11414,7 @@
           if (typeof window !== 'undefined' && typeof window.Buffer !== 'undefined') {
             Buffer = window.Buffer;
           } else {
-            Buffer = require$$0$2.Buffer;
+            Buffer = require$$0$3.Buffer;
           }
         } catch (e) {}
         BN.isBN = function isBN(num) {
@@ -14664,6 +14664,13 @@
     Logger.errors = ErrorCode;
     Logger.levels = LogLevel;
 
+    var lib_esm$l = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        get ErrorCode () { return ErrorCode; },
+        get LogLevel () { return LogLevel; },
+        Logger: Logger
+    });
+
     const version$p = "bytes/5.7.0";
 
     const logger$J = new Logger(version$p);
@@ -15049,6 +15056,26 @@
       signature = splitSignature(signature);
       return hexlify(concat([signature.r, signature.s, signature.recoveryParam ? "0x1c" : "0x1b"]));
     }
+
+    var lib_esm$k = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        arrayify: arrayify,
+        concat: concat,
+        hexConcat: hexConcat,
+        hexDataLength: hexDataLength,
+        hexDataSlice: hexDataSlice,
+        hexStripZeros: hexStripZeros,
+        hexValue: hexValue,
+        hexZeroPad: hexZeroPad,
+        hexlify: hexlify,
+        isBytes: isBytes,
+        isBytesLike: isBytesLike,
+        isHexString: isHexString,
+        joinSignature: joinSignature,
+        splitSignature: splitSignature,
+        stripZeros: stripZeros,
+        zeroPad: zeroPad
+    });
 
     const version$o = "bignumber/5.7.0";
 
@@ -15846,6 +15873,17 @@
         }
       }
     }
+
+    var lib_esm$j = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        Description: Description,
+        checkProperties: checkProperties,
+        deepCopy: deepCopy,
+        defineReadOnly: defineReadOnly,
+        getStatic: getStatic,
+        resolveProperties: resolveProperties,
+        shallowCopy: shallowCopy
+    });
 
     const version$m = "abi/5.7.0";
 
@@ -17711,6 +17749,11 @@
       return '0x' + sha3.keccak_256(arrayify(data));
     }
 
+    var lib_esm$i = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        keccak256: keccak256$1
+    });
+
     const version$k = "rlp/5.7.0";
 
     const logger$D = new Logger(version$k);
@@ -17836,7 +17879,7 @@
       return decoded.result;
     }
 
-    var index$3 = /*#__PURE__*/Object.freeze({
+    var lib_esm$h = /*#__PURE__*/Object.freeze({
         __proto__: null,
         decode: decode$2,
         encode: encode$2
@@ -17967,6 +18010,15 @@
       }
       return getAddress(hexDataSlice(keccak256$1(concat(["0xff", getAddress(from), salt, initCodeHash])), 12));
     }
+
+    var lib_esm$g = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        getAddress: getAddress,
+        getContractAddress: getContractAddress,
+        getCreate2Address: getCreate2Address,
+        getIcapAddress: getIcapAddress,
+        isAddress: isAddress
+    });
 
     class AddressCoder extends Coder {
       constructor(localName) {
@@ -18306,7 +18358,7 @@
     // NFKC (composed)             // (decomposed)
     const EtherSymbol = "\u039e"; // "\uD835\uDF63";
 
-    var index$2 = /*#__PURE__*/Object.freeze({
+    var index$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         AddressZero: AddressZero$1,
         EtherSymbol: EtherSymbol,
@@ -18968,6 +19020,20 @@
       return name;
     }
 
+    var lib_esm$f = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        get UnicodeNormalizationForm () { return UnicodeNormalizationForm; },
+        Utf8ErrorFuncs: Utf8ErrorFuncs,
+        get Utf8ErrorReason () { return Utf8ErrorReason; },
+        _toEscapedUtf8String: _toEscapedUtf8String,
+        formatBytes32String: formatBytes32String,
+        nameprep: nameprep,
+        parseBytes32String: parseBytes32String,
+        toUtf8Bytes: toUtf8Bytes,
+        toUtf8CodePoints: toUtf8CodePoints,
+        toUtf8String: toUtf8String
+    });
+
     class StringCoder extends DynamicBytesCoder {
       constructor(localName) {
         super("string", localName);
@@ -19147,7 +19213,7 @@
       return btoa(textData);
     }
 
-    var index$1 = /*#__PURE__*/Object.freeze({
+    var lib_esm$e = /*#__PURE__*/Object.freeze({
         __proto__: null,
         decode: decode$1,
         encode: encode$1
@@ -19607,6 +19673,9 @@
       }
       comps.push(checkComponent(bytes.slice(last)));
       return comps;
+    }
+    function ensNormalize(name) {
+      return ensNameSplit(name).map(comp => toUtf8String(comp)).join(".");
     }
     function isValidName(name) {
       try {
@@ -20110,6 +20179,18 @@
         };
       }
     }
+
+    var lib_esm$d = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        _TypedDataEncoder: TypedDataEncoder,
+        dnsEncode: dnsEncode,
+        ensNormalize: ensNormalize,
+        hashMessage: hashMessage,
+        id: id,
+        isValidName: isValidName,
+        messagePrefix: messagePrefix,
+        namehash: namehash
+    });
 
     const logger$w = new Logger(version$m);
     class LogDescription extends Description {}
@@ -20705,6 +20786,24 @@
       }
     }
 
+    var lib_esm$c = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        AbiCoder: AbiCoder,
+        ConstructorFragment: ConstructorFragment,
+        ErrorFragment: ErrorFragment,
+        EventFragment: EventFragment,
+        FormatTypes: FormatTypes,
+        Fragment: Fragment,
+        FunctionFragment: FunctionFragment,
+        Indexed: Indexed,
+        Interface: Interface,
+        LogDescription: LogDescription,
+        ParamType: ParamType,
+        TransactionDescription: TransactionDescription,
+        checkResultErrors: checkResultErrors,
+        defaultAbiCoder: defaultAbiCoder
+    });
+
     const version$g = "abstract-provider/5.7.0";
 
     var __awaiter$d = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -21095,7 +21194,7 @@
 
     var hash = {};
 
-    var utils$a = {};
+    var utils$b = {};
 
     var minimalisticAssert$1 = assert$b;
     function assert$b(val, msg) {
@@ -21636,7 +21735,7 @@
         log: log
     });
 
-    var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(util$1);
+    var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(util$1);
 
     var inherits_browserExports = {};
     var inherits_browser$1 = {
@@ -21680,7 +21779,7 @@
 
     (function (module) {
       try {
-        var util = require$$0$1;
+        var util = require$$0$2;
         /* istanbul ignore next */
         if (typeof util.inherits !== 'function') throw '';
         module.exports = util.inherits;
@@ -21692,7 +21791,7 @@
 
     var assert$a = minimalisticAssert$1;
     var inherits = inheritsExports;
-    utils$a.inherits = inherits;
+    utils$b.inherits = inherits;
     function isSurrogatePair(msg, i) {
       if ((msg.charCodeAt(i) & 0xFC00) !== 0xD800) {
         return false;
@@ -21742,18 +21841,18 @@
       }
       return res;
     }
-    utils$a.toArray = toArray;
+    utils$b.toArray = toArray;
     function toHex(msg) {
       var res = '';
       for (var i = 0; i < msg.length; i++) res += zero2(msg[i].toString(16));
       return res;
     }
-    utils$a.toHex = toHex;
+    utils$b.toHex = toHex;
     function htonl(w) {
       var res = w >>> 24 | w >>> 8 & 0xff00 | w << 8 & 0xff0000 | (w & 0xff) << 24;
       return res >>> 0;
     }
-    utils$a.htonl = htonl;
+    utils$b.htonl = htonl;
     function toHex32(msg, endian) {
       var res = '';
       for (var i = 0; i < msg.length; i++) {
@@ -21763,15 +21862,15 @@
       }
       return res;
     }
-    utils$a.toHex32 = toHex32;
+    utils$b.toHex32 = toHex32;
     function zero2(word) {
       if (word.length === 1) return '0' + word;else return word;
     }
-    utils$a.zero2 = zero2;
+    utils$b.zero2 = zero2;
     function zero8(word) {
       if (word.length === 7) return '0' + word;else if (word.length === 6) return '00' + word;else if (word.length === 5) return '000' + word;else if (word.length === 4) return '0000' + word;else if (word.length === 3) return '00000' + word;else if (word.length === 2) return '000000' + word;else if (word.length === 1) return '0000000' + word;else return word;
     }
-    utils$a.zero8 = zero8;
+    utils$b.zero8 = zero8;
     function join32(msg, start, end, endian) {
       var len = end - start;
       assert$a(len % 4 === 0);
@@ -21783,7 +21882,7 @@
       }
       return res;
     }
-    utils$a.join32 = join32;
+    utils$b.join32 = join32;
     function split32(msg, endian) {
       var res = new Array(msg.length * 4);
       for (var i = 0, k = 0; i < msg.length; i++, k += 4) {
@@ -21802,31 +21901,31 @@
       }
       return res;
     }
-    utils$a.split32 = split32;
+    utils$b.split32 = split32;
     function rotr32$1(w, b) {
       return w >>> b | w << 32 - b;
     }
-    utils$a.rotr32 = rotr32$1;
+    utils$b.rotr32 = rotr32$1;
     function rotl32$2(w, b) {
       return w << b | w >>> 32 - b;
     }
-    utils$a.rotl32 = rotl32$2;
+    utils$b.rotl32 = rotl32$2;
     function sum32$3(a, b) {
       return a + b >>> 0;
     }
-    utils$a.sum32 = sum32$3;
+    utils$b.sum32 = sum32$3;
     function sum32_3$1(a, b, c) {
       return a + b + c >>> 0;
     }
-    utils$a.sum32_3 = sum32_3$1;
+    utils$b.sum32_3 = sum32_3$1;
     function sum32_4$2(a, b, c, d) {
       return a + b + c + d >>> 0;
     }
-    utils$a.sum32_4 = sum32_4$2;
+    utils$b.sum32_4 = sum32_4$2;
     function sum32_5$2(a, b, c, d, e) {
       return a + b + c + d + e >>> 0;
     }
-    utils$a.sum32_5 = sum32_5$2;
+    utils$b.sum32_5 = sum32_5$2;
     function sum64$1(buf, pos, ah, al) {
       var bh = buf[pos];
       var bl = buf[pos + 1];
@@ -21835,18 +21934,18 @@
       buf[pos] = hi >>> 0;
       buf[pos + 1] = lo;
     }
-    utils$a.sum64 = sum64$1;
+    utils$b.sum64 = sum64$1;
     function sum64_hi$1(ah, al, bh, bl) {
       var lo = al + bl >>> 0;
       var hi = (lo < al ? 1 : 0) + ah + bh;
       return hi >>> 0;
     }
-    utils$a.sum64_hi = sum64_hi$1;
+    utils$b.sum64_hi = sum64_hi$1;
     function sum64_lo$1(ah, al, bh, bl) {
       var lo = al + bl;
       return lo >>> 0;
     }
-    utils$a.sum64_lo = sum64_lo$1;
+    utils$b.sum64_lo = sum64_lo$1;
     function sum64_4_hi$1(ah, al, bh, bl, ch, cl, dh, dl) {
       var carry = 0;
       var lo = al;
@@ -21859,12 +21958,12 @@
       var hi = ah + bh + ch + dh + carry;
       return hi >>> 0;
     }
-    utils$a.sum64_4_hi = sum64_4_hi$1;
+    utils$b.sum64_4_hi = sum64_4_hi$1;
     function sum64_4_lo$1(ah, al, bh, bl, ch, cl, dh, dl) {
       var lo = al + bl + cl + dl;
       return lo >>> 0;
     }
-    utils$a.sum64_4_lo = sum64_4_lo$1;
+    utils$b.sum64_4_lo = sum64_4_lo$1;
     function sum64_5_hi$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
       var carry = 0;
       var lo = al;
@@ -21879,35 +21978,35 @@
       var hi = ah + bh + ch + dh + eh + carry;
       return hi >>> 0;
     }
-    utils$a.sum64_5_hi = sum64_5_hi$1;
+    utils$b.sum64_5_hi = sum64_5_hi$1;
     function sum64_5_lo$1(ah, al, bh, bl, ch, cl, dh, dl, eh, el) {
       var lo = al + bl + cl + dl + el;
       return lo >>> 0;
     }
-    utils$a.sum64_5_lo = sum64_5_lo$1;
+    utils$b.sum64_5_lo = sum64_5_lo$1;
     function rotr64_hi$1(ah, al, num) {
       var r = al << 32 - num | ah >>> num;
       return r >>> 0;
     }
-    utils$a.rotr64_hi = rotr64_hi$1;
+    utils$b.rotr64_hi = rotr64_hi$1;
     function rotr64_lo$1(ah, al, num) {
       var r = ah << 32 - num | al >>> num;
       return r >>> 0;
     }
-    utils$a.rotr64_lo = rotr64_lo$1;
+    utils$b.rotr64_lo = rotr64_lo$1;
     function shr64_hi$1(ah, al, num) {
       return ah >>> num;
     }
-    utils$a.shr64_hi = shr64_hi$1;
+    utils$b.shr64_hi = shr64_hi$1;
     function shr64_lo$1(ah, al, num) {
       var r = ah << 32 - num | al >>> num;
       return r >>> 0;
     }
-    utils$a.shr64_lo = shr64_lo$1;
+    utils$b.shr64_lo = shr64_lo$1;
 
     var common$5 = {};
 
-    var utils$9 = utils$a;
+    var utils$a = utils$b;
     var assert$9 = minimalisticAssert$1;
     function BlockHash$4() {
       this.pending = null;
@@ -21923,7 +22022,7 @@
     common$5.BlockHash = BlockHash$4;
     BlockHash$4.prototype.update = function update(msg, enc) {
       // Convert message to array, pad it, and join into 32bit blocks
-      msg = utils$9.toArray(msg, enc);
+      msg = utils$a.toArray(msg, enc);
       if (!this.pending) this.pending = msg;else this.pending = this.pending.concat(msg);
       this.pendingTotal += msg.length;
 
@@ -21935,7 +22034,7 @@
         var r = msg.length % this._delta8;
         this.pending = msg.slice(msg.length - r, msg.length);
         if (this.pending.length === 0) this.pending = null;
-        msg = utils$9.join32(msg, 0, msg.length - r, this.endian);
+        msg = utils$a.join32(msg, 0, msg.length - r, this.endian);
         for (var i = 0; i < msg.length; i += this._delta32) this._update(msg, i, i + this._delta32);
       }
       return this;
@@ -21983,8 +22082,8 @@
 
     var common$4 = {};
 
-    var utils$8 = utils$a;
-    var rotr32 = utils$8.rotr32;
+    var utils$9 = utils$b;
+    var rotr32 = utils$9.rotr32;
     function ft_1$1(s, x, y, z) {
       if (s === 0) return ch32$1(x, y, z);
       if (s === 1 || s === 3) return p32(x, y, z);
@@ -22020,12 +22119,12 @@
     }
     common$4.g1_256 = g1_256$1;
 
-    var utils$7 = utils$a;
+    var utils$8 = utils$b;
     var common$3 = common$5;
     var shaCommon$1 = common$4;
-    var rotl32$1 = utils$7.rotl32;
-    var sum32$2 = utils$7.sum32;
-    var sum32_5$1 = utils$7.sum32_5;
+    var rotl32$1 = utils$8.rotl32;
+    var sum32$2 = utils$8.sum32;
+    var sum32_5$1 = utils$8.sum32_5;
     var ft_1 = shaCommon$1.ft_1;
     var BlockHash$3 = common$3.BlockHash;
     var sha1_K = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6];
@@ -22035,7 +22134,7 @@
       this.h = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
       this.W = new Array(80);
     }
-    utils$7.inherits(SHA1, BlockHash$3);
+    utils$8.inherits(SHA1, BlockHash$3);
     var _1 = SHA1;
     SHA1.blockSize = 512;
     SHA1.outSize = 160;
@@ -22066,16 +22165,16 @@
       this.h[4] = sum32$2(this.h[4], e);
     };
     SHA1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$7.toHex32(this.h, 'big');else return utils$7.split32(this.h, 'big');
+      if (enc === 'hex') return utils$8.toHex32(this.h, 'big');else return utils$8.split32(this.h, 'big');
     };
 
-    var utils$6 = utils$a;
+    var utils$7 = utils$b;
     var common$2 = common$5;
     var shaCommon = common$4;
     var assert$8 = minimalisticAssert$1;
-    var sum32$1 = utils$6.sum32;
-    var sum32_4$1 = utils$6.sum32_4;
-    var sum32_5 = utils$6.sum32_5;
+    var sum32$1 = utils$7.sum32;
+    var sum32_4$1 = utils$7.sum32_4;
+    var sum32_5 = utils$7.sum32_5;
     var ch32 = shaCommon.ch32;
     var maj32 = shaCommon.maj32;
     var s0_256 = shaCommon.s0_256;
@@ -22091,7 +22190,7 @@
       this.k = sha256_K;
       this.W = new Array(64);
     }
-    utils$6.inherits(SHA256$1, BlockHash$2);
+    utils$7.inherits(SHA256$1, BlockHash$2);
     var _256 = SHA256$1;
     SHA256$1.blockSize = 512;
     SHA256$1.outSize = 256;
@@ -22132,17 +22231,17 @@
       this.h[7] = sum32$1(this.h[7], h);
     };
     SHA256$1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$6.toHex32(this.h, 'big');else return utils$6.split32(this.h, 'big');
+      if (enc === 'hex') return utils$7.toHex32(this.h, 'big');else return utils$7.split32(this.h, 'big');
     };
 
-    var utils$5 = utils$a;
+    var utils$6 = utils$b;
     var SHA256 = _256;
     function SHA224() {
       if (!(this instanceof SHA224)) return new SHA224();
       SHA256.call(this);
       this.h = [0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4];
     }
-    utils$5.inherits(SHA224, SHA256);
+    utils$6.inherits(SHA224, SHA256);
     var _224 = SHA224;
     SHA224.blockSize = 512;
     SHA224.outSize = 224;
@@ -22150,23 +22249,23 @@
     SHA224.padLength = 64;
     SHA224.prototype._digest = function digest(enc) {
       // Just truncate output
-      if (enc === 'hex') return utils$5.toHex32(this.h.slice(0, 7), 'big');else return utils$5.split32(this.h.slice(0, 7), 'big');
+      if (enc === 'hex') return utils$6.toHex32(this.h.slice(0, 7), 'big');else return utils$6.split32(this.h.slice(0, 7), 'big');
     };
 
-    var utils$4 = utils$a;
+    var utils$5 = utils$b;
     var common$1 = common$5;
     var assert$7 = minimalisticAssert$1;
-    var rotr64_hi = utils$4.rotr64_hi;
-    var rotr64_lo = utils$4.rotr64_lo;
-    var shr64_hi = utils$4.shr64_hi;
-    var shr64_lo = utils$4.shr64_lo;
-    var sum64 = utils$4.sum64;
-    var sum64_hi = utils$4.sum64_hi;
-    var sum64_lo = utils$4.sum64_lo;
-    var sum64_4_hi = utils$4.sum64_4_hi;
-    var sum64_4_lo = utils$4.sum64_4_lo;
-    var sum64_5_hi = utils$4.sum64_5_hi;
-    var sum64_5_lo = utils$4.sum64_5_lo;
+    var rotr64_hi = utils$5.rotr64_hi;
+    var rotr64_lo = utils$5.rotr64_lo;
+    var shr64_hi = utils$5.shr64_hi;
+    var shr64_lo = utils$5.shr64_lo;
+    var sum64 = utils$5.sum64;
+    var sum64_hi = utils$5.sum64_hi;
+    var sum64_lo = utils$5.sum64_lo;
+    var sum64_4_hi = utils$5.sum64_4_hi;
+    var sum64_4_lo = utils$5.sum64_4_lo;
+    var sum64_5_hi = utils$5.sum64_5_hi;
+    var sum64_5_lo = utils$5.sum64_5_lo;
     var BlockHash$1 = common$1.BlockHash;
     var sha512_K = [0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd, 0xb5c0fbcf, 0xec4d3b2f, 0xe9b5dba5, 0x8189dbbc, 0x3956c25b, 0xf348b538, 0x59f111f1, 0xb605d019, 0x923f82a4, 0xaf194f9b, 0xab1c5ed5, 0xda6d8118, 0xd807aa98, 0xa3030242, 0x12835b01, 0x45706fbe, 0x243185be, 0x4ee4b28c, 0x550c7dc3, 0xd5ffb4e2, 0x72be5d74, 0xf27b896f, 0x80deb1fe, 0x3b1696b1, 0x9bdc06a7, 0x25c71235, 0xc19bf174, 0xcf692694, 0xe49b69c1, 0x9ef14ad2, 0xefbe4786, 0x384f25e3, 0x0fc19dc6, 0x8b8cd5b5, 0x240ca1cc, 0x77ac9c65, 0x2de92c6f, 0x592b0275, 0x4a7484aa, 0x6ea6e483, 0x5cb0a9dc, 0xbd41fbd4, 0x76f988da, 0x831153b5, 0x983e5152, 0xee66dfab, 0xa831c66d, 0x2db43210, 0xb00327c8, 0x98fb213f, 0xbf597fc7, 0xbeef0ee4, 0xc6e00bf3, 0x3da88fc2, 0xd5a79147, 0x930aa725, 0x06ca6351, 0xe003826f, 0x14292967, 0x0a0e6e70, 0x27b70a85, 0x46d22ffc, 0x2e1b2138, 0x5c26c926, 0x4d2c6dfc, 0x5ac42aed, 0x53380d13, 0x9d95b3df, 0x650a7354, 0x8baf63de, 0x766a0abb, 0x3c77b2a8, 0x81c2c92e, 0x47edaee6, 0x92722c85, 0x1482353b, 0xa2bfe8a1, 0x4cf10364, 0xa81a664b, 0xbc423001, 0xc24b8b70, 0xd0f89791, 0xc76c51a3, 0x0654be30, 0xd192e819, 0xd6ef5218, 0xd6990624, 0x5565a910, 0xf40e3585, 0x5771202a, 0x106aa070, 0x32bbd1b8, 0x19a4c116, 0xb8d2d0c8, 0x1e376c08, 0x5141ab53, 0x2748774c, 0xdf8eeb99, 0x34b0bcb5, 0xe19b48a8, 0x391c0cb3, 0xc5c95a63, 0x4ed8aa4a, 0xe3418acb, 0x5b9cca4f, 0x7763e373, 0x682e6ff3, 0xd6b2b8a3, 0x748f82ee, 0x5defb2fc, 0x78a5636f, 0x43172f60, 0x84c87814, 0xa1f0ab72, 0x8cc70208, 0x1a6439ec, 0x90befffa, 0x23631e28, 0xa4506ceb, 0xde82bde9, 0xbef9a3f7, 0xb2c67915, 0xc67178f2, 0xe372532b, 0xca273ece, 0xea26619c, 0xd186b8c7, 0x21c0c207, 0xeada7dd6, 0xcde0eb1e, 0xf57d4f7f, 0xee6ed178, 0x06f067aa, 0x72176fba, 0x0a637dc5, 0xa2c898a6, 0x113f9804, 0xbef90dae, 0x1b710b35, 0x131c471b, 0x28db77f5, 0x23047d84, 0x32caab7b, 0x40c72493, 0x3c9ebe0a, 0x15c9bebc, 0x431d67c4, 0x9c100d4c, 0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a, 0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817];
     function SHA512$1() {
@@ -22176,7 +22275,7 @@
       this.k = sha512_K;
       this.W = new Array(160);
     }
-    utils$4.inherits(SHA512$1, BlockHash$1);
+    utils$5.inherits(SHA512$1, BlockHash$1);
     var _512 = SHA512$1;
     SHA512$1.blockSize = 1024;
     SHA512$1.outSize = 512;
@@ -22266,7 +22365,7 @@
       sum64(this.h, 14, hh, hl);
     };
     SHA512$1.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$4.toHex32(this.h, 'big');else return utils$4.split32(this.h, 'big');
+      if (enc === 'hex') return utils$5.toHex32(this.h, 'big');else return utils$5.split32(this.h, 'big');
     };
     function ch64_hi(xh, xl, yh, yl, zh) {
       var r = xh & yh ^ ~xh & zh;
@@ -22357,21 +22456,21 @@
       return r;
     }
 
-    var utils$3 = utils$a;
+    var utils$4 = utils$b;
     var SHA512 = _512;
     function SHA384() {
       if (!(this instanceof SHA384)) return new SHA384();
       SHA512.call(this);
       this.h = [0xcbbb9d5d, 0xc1059ed8, 0x629a292a, 0x367cd507, 0x9159015a, 0x3070dd17, 0x152fecd8, 0xf70e5939, 0x67332667, 0xffc00b31, 0x8eb44a87, 0x68581511, 0xdb0c2e0d, 0x64f98fa7, 0x47b5481d, 0xbefa4fa4];
     }
-    utils$3.inherits(SHA384, SHA512);
+    utils$4.inherits(SHA384, SHA512);
     var _384 = SHA384;
     SHA384.blockSize = 1024;
     SHA384.outSize = 384;
     SHA384.hmacStrength = 192;
     SHA384.padLength = 128;
     SHA384.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$3.toHex32(this.h.slice(0, 12), 'big');else return utils$3.split32(this.h.slice(0, 12), 'big');
+      if (enc === 'hex') return utils$4.toHex32(this.h.slice(0, 12), 'big');else return utils$4.split32(this.h.slice(0, 12), 'big');
     };
 
     sha.sha1 = _1;
@@ -22382,12 +22481,12 @@
 
     var ripemd = {};
 
-    var utils$2 = utils$a;
+    var utils$3 = utils$b;
     var common = common$5;
-    var rotl32 = utils$2.rotl32;
-    var sum32 = utils$2.sum32;
-    var sum32_3 = utils$2.sum32_3;
-    var sum32_4 = utils$2.sum32_4;
+    var rotl32 = utils$3.rotl32;
+    var sum32 = utils$3.sum32;
+    var sum32_3 = utils$3.sum32_3;
+    var sum32_4 = utils$3.sum32_4;
     var BlockHash = common.BlockHash;
     function RIPEMD160() {
       if (!(this instanceof RIPEMD160)) return new RIPEMD160();
@@ -22395,7 +22494,7 @@
       this.h = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
       this.endian = 'little';
     }
-    utils$2.inherits(RIPEMD160, BlockHash);
+    utils$3.inherits(RIPEMD160, BlockHash);
     ripemd.ripemd160 = RIPEMD160;
     RIPEMD160.blockSize = 512;
     RIPEMD160.outSize = 160;
@@ -22434,7 +22533,7 @@
       this.h[0] = T;
     };
     RIPEMD160.prototype._digest = function digest(enc) {
-      if (enc === 'hex') return utils$2.toHex32(this.h, 'little');else return utils$2.split32(this.h, 'little');
+      if (enc === 'hex') return utils$3.toHex32(this.h, 'little');else return utils$3.split32(this.h, 'little');
     };
     function f$1(j, x, y, z) {
       if (j <= 15) return x ^ y ^ z;else if (j <= 31) return x & y | ~x & z;else if (j <= 47) return (x | ~y) ^ z;else if (j <= 63) return x & z | y & ~z;else return x ^ (y | ~z);
@@ -22450,7 +22549,7 @@
     var s$1 = [11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8, 7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12, 11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5, 11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12, 9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6];
     var sh = [8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6, 9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11, 9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5, 15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8, 8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11];
 
-    var utils$1 = utils$a;
+    var utils$2 = utils$b;
     var assert$6 = minimalisticAssert$1;
     function Hmac(hash, key, enc) {
       if (!(this instanceof Hmac)) return new Hmac(hash, key, enc);
@@ -22459,7 +22558,7 @@
       this.outSize = hash.outSize / 8;
       this.inner = null;
       this.outer = null;
-      this._init(utils$1.toArray(key, enc));
+      this._init(utils$2.toArray(key, enc));
     }
     var hmac = Hmac;
     Hmac.prototype._init = function init(key) {
@@ -22487,7 +22586,7 @@
 
     (function (exports) {
       var hash = exports;
-      hash.utils = utils$a;
+      hash.utils = utils$b;
       hash.common = common$5;
       hash.sha = sha;
       hash.ripemd = ripemd;
@@ -24472,6 +24571,13 @@
       return logger$t.throwArgumentError("invalid public or private key", "key", "[REDACTED]");
     }
 
+    var lib_esm$b = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        SigningKey: SigningKey,
+        computePublicKey: computePublicKey,
+        recoverPublicKey: recoverPublicKey
+    });
+
     const version$d = "transactions/5.7.0";
 
     const logger$s = new Logger(version$d);
@@ -24846,6 +24952,16 @@
         transactionType: payload[0]
       });
     }
+
+    var lib_esm$a = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        get TransactionTypes () { return TransactionTypes; },
+        accessListify: accessListify,
+        computeAddress: computeAddress,
+        parse: parse,
+        recoverAddress: recoverAddress,
+        serialize: serialize$1
+    });
 
     const version$c = "contracts/5.7.0";
 
@@ -25998,10 +26114,17 @@
         return arrayify(new Uint8Array(bytes.reverse()));
       }
     }
-    new BaseX("abcdefghijklmnopqrstuvwxyz234567");
+    const Base32 = new BaseX("abcdefghijklmnopqrstuvwxyz234567");
     const Base58 = new BaseX("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
     //console.log(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj"))
     //console.log(Base58.encode(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj")))
+
+    var lib_esm$9 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        Base32: Base32,
+        Base58: Base58,
+        BaseX: BaseX
+    });
 
     var SupportedAlgorithm;
     (function (SupportedAlgorithm) {
@@ -26030,6 +26153,15 @@
       }
       return "0x" + hash.hmac(hash[algorithm], arrayify(key)).update(arrayify(data)).digest("hex");
     }
+
+    var lib_esm$8 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        get SupportedAlgorithm () { return SupportedAlgorithm; },
+        computeHmac: computeHmac,
+        ripemd160: ripemd160,
+        sha256: sha256$1,
+        sha512: sha512
+    });
 
     function pbkdf2$1(password, salt, iterations, keylen, hashAlgorithm) {
       password = arrayify(password);
@@ -26442,6 +26574,17 @@
       return `m/44'/60'/${index}'/0/0`;
     }
 
+    var lib_esm$7 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        HDNode: HDNode,
+        defaultPath: defaultPath,
+        entropyToMnemonic: entropyToMnemonic,
+        getAccountPath: getAccountPath,
+        isValidMnemonic: isValidMnemonic,
+        mnemonicToEntropy: mnemonicToEntropy,
+        mnemonicToSeed: mnemonicToSeed
+    });
+
     const version$8 = "random/5.7.0";
 
     const logger$n = new Logger(version$8);
@@ -26491,6 +26634,12 @@
       }
       return array;
     }
+
+    var lib_esm$6 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        randomBytes: randomBytes,
+        shuffled: shuffled
+    });
 
     var aesJsExports = {};
     var aesJs = {
@@ -28086,6 +28235,19 @@
       throw new Error("invalid JSON wallet");
     }
 
+    var lib_esm$5 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        decryptCrowdsale: decrypt$1,
+        decryptJsonWallet: decryptJsonWallet,
+        decryptJsonWalletSync: decryptJsonWalletSync,
+        decryptKeystore: decrypt,
+        decryptKeystoreSync: decryptSync,
+        encryptKeystore: encrypt,
+        getJsonWalletAddress: getJsonWalletAddress,
+        isCrowdsaleWallet: isCrowdsaleWallet,
+        isKeystoreWallet: isKeystoreWallet
+    });
+
     const version$6 = "wallet/5.7.0";
 
     var __awaiter$9 = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -28269,6 +28431,13 @@
     function verifyTypedData(domain, types, value, signature) {
       return recoverAddress(TypedDataEncoder.hash(domain, types, value), signature);
     }
+
+    var lib_esm$4 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        Wallet: Wallet,
+        verifyMessage: verifyMessage,
+        verifyTypedData: verifyTypedData
+    });
 
     const version$5 = "networks/5.7.1";
 
@@ -29054,6 +29223,13 @@
         check();
       });
     }
+
+    var lib_esm$3 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        _fetchData: _fetchData,
+        fetchJson: fetchJson,
+        poll: poll
+    });
 
     var ALPHABET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 
@@ -34741,6 +34917,13 @@
       return sha256$1(pack(types, values));
     }
 
+    var lib_esm$2 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        keccak256: keccak256,
+        pack: pack,
+        sha256: sha256
+    });
+
     const version$1 = "units/5.7.0";
 
     const logger$1 = new Logger(version$1);
@@ -34814,7 +34997,16 @@
       return parseUnits(ether, 18);
     }
 
-    var utils = /*#__PURE__*/Object.freeze({
+    var lib_esm$1 = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        commify: commify,
+        formatEther: formatEther,
+        formatUnits: formatUnits,
+        parseEther: parseEther,
+        parseUnits: parseUnits
+    });
+
+    var utils$1 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         AbiCoder: AbiCoder,
         ConstructorFragment: ConstructorFragment,
@@ -34829,7 +35021,7 @@
         LogDescription: LogDescription,
         Logger: Logger,
         ParamType: ParamType,
-        RLP: index$3,
+        RLP: lib_esm$h,
         SigningKey: SigningKey,
         get SupportedAlgorithm () { return SupportedAlgorithm; },
         TransactionDescription: TransactionDescription,
@@ -34843,7 +35035,7 @@
         accessListify: accessListify,
         arrayify: arrayify,
         base58: Base58,
-        base64: index$1,
+        base64: lib_esm$e,
         checkProperties: checkProperties,
         checkResultErrors: checkResultErrors,
         commify: commify,
@@ -34932,12 +35124,12 @@
         VoidSigner: VoidSigner,
         Wallet: Wallet,
         Wordlist: Wordlist,
-        constants: index$2,
+        constants: index$1,
         get errors () { return ErrorCode; },
         getDefaultProvider: getDefaultProvider,
         logger: logger,
         providers: index,
-        utils: utils,
+        utils: utils$1,
         version: version,
         wordlists: wordlists
     });
@@ -34960,13 +35152,13 @@
         VoidSigner: VoidSigner,
         Wallet: Wallet,
         Wordlist: Wordlist,
-        constants: index$2,
+        constants: index$1,
         get errors () { return ErrorCode; },
         ethers: ethers,
         getDefaultProvider: getDefaultProvider,
         logger: logger,
         providers: index,
-        utils: utils,
+        utils: utils$1,
         version: version,
         wordlists: wordlists
     });
@@ -38769,7 +38961,7 @@
 
     var dist = {};
 
-    var require$$0 = /*@__PURE__*/getAugmentedNamespace(lib_esm);
+    var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(lib_esm);
 
     var HttpRequest = {};
 
@@ -39040,12 +39232,16 @@
     });
     const MumbaiNetworkDefaults_1 = __importDefault$1(MumbaiNetworkDefaults$1);
     class MumbaiNetwork extends MumbaiNetworkDefaults_1.default {
+      constructor() {
+        super();
+      }
       KYC_ADDRESS = "0xA5C844558a93590A32D1110D7031531A0bBf0773";
       AUSD_ADDRESS = "0xc4d1f8D35DB0f0d3E91a3fc8485792F4Df60C387";
       LIMINAL_MARKET_ADDRESS = "0x0D8c3D4F4B29EfC3c54172803dA8a7f1CA2E6189";
       MARKET_CALENDAR_ADDRESS = "0x67Dad7E344C6137DF922924a0aAb26bba862BFDe";
       LM_ADDRESS = "0x808C2F1bBE4C7fE72F77e84F57C346603E63291e";
       SERVICE_CONTRACT_ADDRESS = "0x0827C71852ba59661aAd9f1fab25B377B3f39C40";
+      NO_FEE_SERVICE_CONTRACT_ADDRESS = "0x3BBc034e9dC74749000fE384eD504E7d58281065";
     }
     MumbaiNetwork$1.default = MumbaiNetwork;
 
@@ -39218,7 +39414,7 @@
       Object.defineProperty(BlockchainService$1, "__esModule", {
         value: true
       });
-      const ethers_1 = require$$0;
+      const ethers_1 = require$$0$1;
       const index_1 = __importDefault(requireDist());
       const HttpRequest_1 = __importDefault(requireHttpRequest());
       class BlockchainService {
@@ -39455,7 +39651,7 @@ Time:${time.toISOString()}
       Object.defineProperty(dist, "__esModule", {
         value: true
       });
-      const ethers_1 = require$$0;
+      const ethers_1 = require$$0$1;
       const HttpRequest_1 = __importDefault(requireHttpRequest());
       const NetworkType_1 = __importDefault(NetworkType$1);
       const TestNetwork_1 = __importDefault(TestNetwork$2);
@@ -42797,24 +42993,13 @@ Time:${time.toISOString()}
         }
     }
 
-    class MarketService extends BaseService {
-        constructor() {
-            super();
-        }
-        async isMarketOpen() {
-            return await this.get('isOpen');
-        }
-    }
-
     class UserService extends BaseService {
         static signedMessage = "signedMessage";
         constructor() {
             super();
         }
         async isMarketOpenOrUserOffHours() {
-            let marketService = new MarketService();
-            let response = await marketService.isMarketOpen();
-            return response.marketIsOpen;
+            return await WidgetGlobals.LiminalMarket.isMarketOpen();
         }
         getUser() {
             let cookieHelper = new CookieHelper(document);
@@ -42896,19 +43081,708 @@ Time:${time.toISOString()}
 
     var UserInfoElement = "<div id=\"userMenuPanel\">\n    <a href=\"#\" id=\"userInfoAction\" aria-expanded=\"false\">\n        <img src=\"https://effigy.im/a/{{ethAddress}}.png\" width=\"24\">\n        <span id=\"user_info_ethAddress\">{{shortEthAddress}}</span>\n    </a>\n\n    <div id=\"userInfoDropdown\" class=\"d-none\">\n        <div class=\"grid account_info\">\n            <h6>Account</h6>\n            <a id=\"disconnectFromNetwork\" href=\"#\">Disconnect</a>\n\n        </div>\n        <div class=\"edit_account\">\n            <a id=\"editName\" href=\"#\">Edit name</a><br>\n            <a id=\"editContact\" href=\"#\">Edit contact info</a><br>\n            <a id=\"editTrustedContact\" href=\"#\">Edit trusted contact</a>\n        </div>\n        <hr>\n        <div class=\"grid\">\n            <div>\n                <img src=\"https://effigy.im/a/{{ethAddress}}.png\">\n            </div>\n            <div>\n                <strong class=\"d-block\"><a href=\"{{blockchainExplorer}}{{ethAddress}}\" target=\"_blank\">{{shortEthAddress}}</a></strong>\n                <br>\n                {{#if isMagic}}\n                <a href=\"#\" id=\"wallet\">Open my wallet</a>\n                {{/if}}\n                <a href=\"https://info.liminal.market/#/chain/{{chainId}}/{{ethAddress}}\" target=\"_blank\">View\n                    positions</a>\n            </div>\n        </div>\n        <hr>\n        <div class=\"hidden\" id=\"userInfoAUsdBalance\">\n            <div class=\"grid\">\n                <div><img src=\"https://app.liminal.market/img/ausd.png\"></div>\n                <div>\n                    <strong class=\"d-block\">aUSD <span id=\"user_info_ausd_balance\"></span></strong>\n                    <a href=\"\" class=\"add_aUSD_to_wallet\">Add aUSD to wallet</a>\n                </div>\n            </div>\n            <div id=\"fund_account_options\">\n                <h6>Fund your account</h6>\n                <div class=\"grid\">\n                    <a href=\"#\" class=\"fund_account\">Fund my account</a>\n                    <!--\n                    <a href=\"#\" id=\"withdraw_from_account\">Withdraw from account</a>\n                    -->\n                </div>\n            </div>\n            <hr>\n        </div>\n        <div class=\"grid\">\n            <strong class=\"d-block\">Network</strong>\n            <small>{{networkName}}<br>\n                <!--\n                <a href=\"#\" id=\"switch_network\">Change network</a>\n                -->\n            </small>\n        </div>\n\n    </div>\n\n</div>";
 
+    var utils = {};
+
+    var require$$0 = /*@__PURE__*/getAugmentedNamespace(lib_esm$c);
+
+    var require$$1 = /*@__PURE__*/getAugmentedNamespace(lib_esm$g);
+
+    var require$$2 = /*@__PURE__*/getAugmentedNamespace(lib_esm$e);
+
+    var require$$3 = /*@__PURE__*/getAugmentedNamespace(lib_esm$9);
+
+    var require$$4 = /*@__PURE__*/getAugmentedNamespace(lib_esm$k);
+
+    var require$$5 = /*@__PURE__*/getAugmentedNamespace(lib_esm$d);
+
+    var require$$6 = /*@__PURE__*/getAugmentedNamespace(lib_esm$7);
+
+    var require$$7 = /*@__PURE__*/getAugmentedNamespace(lib_esm$5);
+
+    var require$$8 = /*@__PURE__*/getAugmentedNamespace(lib_esm$i);
+
+    var require$$9 = /*@__PURE__*/getAugmentedNamespace(lib_esm$l);
+
+    var require$$10 = /*@__PURE__*/getAugmentedNamespace(lib_esm$8);
+
+    var require$$11 = /*@__PURE__*/getAugmentedNamespace(lib_esm$2);
+
+    var require$$12 = /*@__PURE__*/getAugmentedNamespace(lib_esm$6);
+
+    var require$$13 = /*@__PURE__*/getAugmentedNamespace(lib_esm$j);
+
+    var require$$14 = /*@__PURE__*/getAugmentedNamespace(lib_esm$h);
+
+    var require$$15 = /*@__PURE__*/getAugmentedNamespace(lib_esm$b);
+
+    var require$$16 = /*@__PURE__*/getAugmentedNamespace(lib_esm$f);
+
+    var require$$17 = /*@__PURE__*/getAugmentedNamespace(lib_esm$a);
+
+    var require$$18 = /*@__PURE__*/getAugmentedNamespace(lib_esm$1);
+
+    var require$$19 = /*@__PURE__*/getAugmentedNamespace(lib_esm$4);
+
+    var require$$20 = /*@__PURE__*/getAugmentedNamespace(lib_esm$3);
+
+    (function (exports) {
+
+      var __createBinding = commonjsGlobal && commonjsGlobal.__createBinding || (Object.create ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function () {
+            return m[k];
+          }
+        });
+      } : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+      var __setModuleDefault = commonjsGlobal && commonjsGlobal.__setModuleDefault || (Object.create ? function (o, v) {
+        Object.defineProperty(o, "default", {
+          enumerable: true,
+          value: v
+        });
+      } : function (o, v) {
+        o["default"] = v;
+      });
+      var __importStar = commonjsGlobal && commonjsGlobal.__importStar || function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+        __setModuleDefault(result, mod);
+        return result;
+      };
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.formatBytes32String = exports.Utf8ErrorFuncs = exports.toUtf8String = exports.toUtf8CodePoints = exports.toUtf8Bytes = exports._toEscapedUtf8String = exports.nameprep = exports.hexDataSlice = exports.hexDataLength = exports.hexZeroPad = exports.hexValue = exports.hexStripZeros = exports.hexConcat = exports.isHexString = exports.hexlify = exports.base64 = exports.base58 = exports.TransactionDescription = exports.LogDescription = exports.Interface = exports.SigningKey = exports.HDNode = exports.defaultPath = exports.isBytesLike = exports.isBytes = exports.zeroPad = exports.stripZeros = exports.concat = exports.arrayify = exports.shallowCopy = exports.resolveProperties = exports.getStatic = exports.defineReadOnly = exports.deepCopy = exports.checkProperties = exports.poll = exports.fetchJson = exports._fetchData = exports.RLP = exports.Logger = exports.checkResultErrors = exports.FormatTypes = exports.ParamType = exports.FunctionFragment = exports.EventFragment = exports.ErrorFragment = exports.ConstructorFragment = exports.Fragment = exports.defaultAbiCoder = exports.AbiCoder = void 0;
+      exports.Indexed = exports.Utf8ErrorReason = exports.UnicodeNormalizationForm = exports.SupportedAlgorithm = exports.mnemonicToSeed = exports.isValidMnemonic = exports.entropyToMnemonic = exports.mnemonicToEntropy = exports.getAccountPath = exports.verifyTypedData = exports.verifyMessage = exports.recoverPublicKey = exports.computePublicKey = exports.recoverAddress = exports.computeAddress = exports.getJsonWalletAddress = exports.TransactionTypes = exports.serializeTransaction = exports.parseTransaction = exports.accessListify = exports.joinSignature = exports.splitSignature = exports.soliditySha256 = exports.solidityKeccak256 = exports.solidityPack = exports.shuffled = exports.randomBytes = exports.sha512 = exports.sha256 = exports.ripemd160 = exports.keccak256 = exports.computeHmac = exports.commify = exports.parseUnits = exports.formatUnits = exports.parseEther = exports.formatEther = exports.isAddress = exports.getCreate2Address = exports.getContractAddress = exports.getIcapAddress = exports.getAddress = exports._TypedDataEncoder = exports.id = exports.isValidName = exports.namehash = exports.hashMessage = exports.dnsEncode = exports.parseBytes32String = void 0;
+      var abi_1 = require$$0;
+      Object.defineProperty(exports, "AbiCoder", {
+        enumerable: true,
+        get: function () {
+          return abi_1.AbiCoder;
+        }
+      });
+      Object.defineProperty(exports, "checkResultErrors", {
+        enumerable: true,
+        get: function () {
+          return abi_1.checkResultErrors;
+        }
+      });
+      Object.defineProperty(exports, "ConstructorFragment", {
+        enumerable: true,
+        get: function () {
+          return abi_1.ConstructorFragment;
+        }
+      });
+      Object.defineProperty(exports, "defaultAbiCoder", {
+        enumerable: true,
+        get: function () {
+          return abi_1.defaultAbiCoder;
+        }
+      });
+      Object.defineProperty(exports, "ErrorFragment", {
+        enumerable: true,
+        get: function () {
+          return abi_1.ErrorFragment;
+        }
+      });
+      Object.defineProperty(exports, "EventFragment", {
+        enumerable: true,
+        get: function () {
+          return abi_1.EventFragment;
+        }
+      });
+      Object.defineProperty(exports, "FormatTypes", {
+        enumerable: true,
+        get: function () {
+          return abi_1.FormatTypes;
+        }
+      });
+      Object.defineProperty(exports, "Fragment", {
+        enumerable: true,
+        get: function () {
+          return abi_1.Fragment;
+        }
+      });
+      Object.defineProperty(exports, "FunctionFragment", {
+        enumerable: true,
+        get: function () {
+          return abi_1.FunctionFragment;
+        }
+      });
+      Object.defineProperty(exports, "Indexed", {
+        enumerable: true,
+        get: function () {
+          return abi_1.Indexed;
+        }
+      });
+      Object.defineProperty(exports, "Interface", {
+        enumerable: true,
+        get: function () {
+          return abi_1.Interface;
+        }
+      });
+      Object.defineProperty(exports, "LogDescription", {
+        enumerable: true,
+        get: function () {
+          return abi_1.LogDescription;
+        }
+      });
+      Object.defineProperty(exports, "ParamType", {
+        enumerable: true,
+        get: function () {
+          return abi_1.ParamType;
+        }
+      });
+      Object.defineProperty(exports, "TransactionDescription", {
+        enumerable: true,
+        get: function () {
+          return abi_1.TransactionDescription;
+        }
+      });
+      var address_1 = require$$1;
+      Object.defineProperty(exports, "getAddress", {
+        enumerable: true,
+        get: function () {
+          return address_1.getAddress;
+        }
+      });
+      Object.defineProperty(exports, "getCreate2Address", {
+        enumerable: true,
+        get: function () {
+          return address_1.getCreate2Address;
+        }
+      });
+      Object.defineProperty(exports, "getContractAddress", {
+        enumerable: true,
+        get: function () {
+          return address_1.getContractAddress;
+        }
+      });
+      Object.defineProperty(exports, "getIcapAddress", {
+        enumerable: true,
+        get: function () {
+          return address_1.getIcapAddress;
+        }
+      });
+      Object.defineProperty(exports, "isAddress", {
+        enumerable: true,
+        get: function () {
+          return address_1.isAddress;
+        }
+      });
+      var base64 = __importStar(require$$2);
+      exports.base64 = base64;
+      var basex_1 = require$$3;
+      Object.defineProperty(exports, "base58", {
+        enumerable: true,
+        get: function () {
+          return basex_1.Base58;
+        }
+      });
+      var bytes_1 = require$$4;
+      Object.defineProperty(exports, "arrayify", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.arrayify;
+        }
+      });
+      Object.defineProperty(exports, "concat", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.concat;
+        }
+      });
+      Object.defineProperty(exports, "hexConcat", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexConcat;
+        }
+      });
+      Object.defineProperty(exports, "hexDataSlice", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexDataSlice;
+        }
+      });
+      Object.defineProperty(exports, "hexDataLength", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexDataLength;
+        }
+      });
+      Object.defineProperty(exports, "hexlify", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexlify;
+        }
+      });
+      Object.defineProperty(exports, "hexStripZeros", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexStripZeros;
+        }
+      });
+      Object.defineProperty(exports, "hexValue", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexValue;
+        }
+      });
+      Object.defineProperty(exports, "hexZeroPad", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.hexZeroPad;
+        }
+      });
+      Object.defineProperty(exports, "isBytes", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.isBytes;
+        }
+      });
+      Object.defineProperty(exports, "isBytesLike", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.isBytesLike;
+        }
+      });
+      Object.defineProperty(exports, "isHexString", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.isHexString;
+        }
+      });
+      Object.defineProperty(exports, "joinSignature", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.joinSignature;
+        }
+      });
+      Object.defineProperty(exports, "zeroPad", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.zeroPad;
+        }
+      });
+      Object.defineProperty(exports, "splitSignature", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.splitSignature;
+        }
+      });
+      Object.defineProperty(exports, "stripZeros", {
+        enumerable: true,
+        get: function () {
+          return bytes_1.stripZeros;
+        }
+      });
+      var hash_1 = require$$5;
+      Object.defineProperty(exports, "_TypedDataEncoder", {
+        enumerable: true,
+        get: function () {
+          return hash_1._TypedDataEncoder;
+        }
+      });
+      Object.defineProperty(exports, "dnsEncode", {
+        enumerable: true,
+        get: function () {
+          return hash_1.dnsEncode;
+        }
+      });
+      Object.defineProperty(exports, "hashMessage", {
+        enumerable: true,
+        get: function () {
+          return hash_1.hashMessage;
+        }
+      });
+      Object.defineProperty(exports, "id", {
+        enumerable: true,
+        get: function () {
+          return hash_1.id;
+        }
+      });
+      Object.defineProperty(exports, "isValidName", {
+        enumerable: true,
+        get: function () {
+          return hash_1.isValidName;
+        }
+      });
+      Object.defineProperty(exports, "namehash", {
+        enumerable: true,
+        get: function () {
+          return hash_1.namehash;
+        }
+      });
+      var hdnode_1 = require$$6;
+      Object.defineProperty(exports, "defaultPath", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.defaultPath;
+        }
+      });
+      Object.defineProperty(exports, "entropyToMnemonic", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.entropyToMnemonic;
+        }
+      });
+      Object.defineProperty(exports, "getAccountPath", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.getAccountPath;
+        }
+      });
+      Object.defineProperty(exports, "HDNode", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.HDNode;
+        }
+      });
+      Object.defineProperty(exports, "isValidMnemonic", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.isValidMnemonic;
+        }
+      });
+      Object.defineProperty(exports, "mnemonicToEntropy", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.mnemonicToEntropy;
+        }
+      });
+      Object.defineProperty(exports, "mnemonicToSeed", {
+        enumerable: true,
+        get: function () {
+          return hdnode_1.mnemonicToSeed;
+        }
+      });
+      var json_wallets_1 = require$$7;
+      Object.defineProperty(exports, "getJsonWalletAddress", {
+        enumerable: true,
+        get: function () {
+          return json_wallets_1.getJsonWalletAddress;
+        }
+      });
+      var keccak256_1 = require$$8;
+      Object.defineProperty(exports, "keccak256", {
+        enumerable: true,
+        get: function () {
+          return keccak256_1.keccak256;
+        }
+      });
+      var logger_1 = require$$9;
+      Object.defineProperty(exports, "Logger", {
+        enumerable: true,
+        get: function () {
+          return logger_1.Logger;
+        }
+      });
+      var sha2_1 = require$$10;
+      Object.defineProperty(exports, "computeHmac", {
+        enumerable: true,
+        get: function () {
+          return sha2_1.computeHmac;
+        }
+      });
+      Object.defineProperty(exports, "ripemd160", {
+        enumerable: true,
+        get: function () {
+          return sha2_1.ripemd160;
+        }
+      });
+      Object.defineProperty(exports, "sha256", {
+        enumerable: true,
+        get: function () {
+          return sha2_1.sha256;
+        }
+      });
+      Object.defineProperty(exports, "sha512", {
+        enumerable: true,
+        get: function () {
+          return sha2_1.sha512;
+        }
+      });
+      var solidity_1 = require$$11;
+      Object.defineProperty(exports, "solidityKeccak256", {
+        enumerable: true,
+        get: function () {
+          return solidity_1.keccak256;
+        }
+      });
+      Object.defineProperty(exports, "solidityPack", {
+        enumerable: true,
+        get: function () {
+          return solidity_1.pack;
+        }
+      });
+      Object.defineProperty(exports, "soliditySha256", {
+        enumerable: true,
+        get: function () {
+          return solidity_1.sha256;
+        }
+      });
+      var random_1 = require$$12;
+      Object.defineProperty(exports, "randomBytes", {
+        enumerable: true,
+        get: function () {
+          return random_1.randomBytes;
+        }
+      });
+      Object.defineProperty(exports, "shuffled", {
+        enumerable: true,
+        get: function () {
+          return random_1.shuffled;
+        }
+      });
+      var properties_1 = require$$13;
+      Object.defineProperty(exports, "checkProperties", {
+        enumerable: true,
+        get: function () {
+          return properties_1.checkProperties;
+        }
+      });
+      Object.defineProperty(exports, "deepCopy", {
+        enumerable: true,
+        get: function () {
+          return properties_1.deepCopy;
+        }
+      });
+      Object.defineProperty(exports, "defineReadOnly", {
+        enumerable: true,
+        get: function () {
+          return properties_1.defineReadOnly;
+        }
+      });
+      Object.defineProperty(exports, "getStatic", {
+        enumerable: true,
+        get: function () {
+          return properties_1.getStatic;
+        }
+      });
+      Object.defineProperty(exports, "resolveProperties", {
+        enumerable: true,
+        get: function () {
+          return properties_1.resolveProperties;
+        }
+      });
+      Object.defineProperty(exports, "shallowCopy", {
+        enumerable: true,
+        get: function () {
+          return properties_1.shallowCopy;
+        }
+      });
+      var RLP = __importStar(require$$14);
+      exports.RLP = RLP;
+      var signing_key_1 = require$$15;
+      Object.defineProperty(exports, "computePublicKey", {
+        enumerable: true,
+        get: function () {
+          return signing_key_1.computePublicKey;
+        }
+      });
+      Object.defineProperty(exports, "recoverPublicKey", {
+        enumerable: true,
+        get: function () {
+          return signing_key_1.recoverPublicKey;
+        }
+      });
+      Object.defineProperty(exports, "SigningKey", {
+        enumerable: true,
+        get: function () {
+          return signing_key_1.SigningKey;
+        }
+      });
+      var strings_1 = require$$16;
+      Object.defineProperty(exports, "formatBytes32String", {
+        enumerable: true,
+        get: function () {
+          return strings_1.formatBytes32String;
+        }
+      });
+      Object.defineProperty(exports, "nameprep", {
+        enumerable: true,
+        get: function () {
+          return strings_1.nameprep;
+        }
+      });
+      Object.defineProperty(exports, "parseBytes32String", {
+        enumerable: true,
+        get: function () {
+          return strings_1.parseBytes32String;
+        }
+      });
+      Object.defineProperty(exports, "_toEscapedUtf8String", {
+        enumerable: true,
+        get: function () {
+          return strings_1._toEscapedUtf8String;
+        }
+      });
+      Object.defineProperty(exports, "toUtf8Bytes", {
+        enumerable: true,
+        get: function () {
+          return strings_1.toUtf8Bytes;
+        }
+      });
+      Object.defineProperty(exports, "toUtf8CodePoints", {
+        enumerable: true,
+        get: function () {
+          return strings_1.toUtf8CodePoints;
+        }
+      });
+      Object.defineProperty(exports, "toUtf8String", {
+        enumerable: true,
+        get: function () {
+          return strings_1.toUtf8String;
+        }
+      });
+      Object.defineProperty(exports, "Utf8ErrorFuncs", {
+        enumerable: true,
+        get: function () {
+          return strings_1.Utf8ErrorFuncs;
+        }
+      });
+      var transactions_1 = require$$17;
+      Object.defineProperty(exports, "accessListify", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.accessListify;
+        }
+      });
+      Object.defineProperty(exports, "computeAddress", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.computeAddress;
+        }
+      });
+      Object.defineProperty(exports, "parseTransaction", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.parse;
+        }
+      });
+      Object.defineProperty(exports, "recoverAddress", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.recoverAddress;
+        }
+      });
+      Object.defineProperty(exports, "serializeTransaction", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.serialize;
+        }
+      });
+      Object.defineProperty(exports, "TransactionTypes", {
+        enumerable: true,
+        get: function () {
+          return transactions_1.TransactionTypes;
+        }
+      });
+      var units_1 = require$$18;
+      Object.defineProperty(exports, "commify", {
+        enumerable: true,
+        get: function () {
+          return units_1.commify;
+        }
+      });
+      Object.defineProperty(exports, "formatEther", {
+        enumerable: true,
+        get: function () {
+          return units_1.formatEther;
+        }
+      });
+      Object.defineProperty(exports, "parseEther", {
+        enumerable: true,
+        get: function () {
+          return units_1.parseEther;
+        }
+      });
+      Object.defineProperty(exports, "formatUnits", {
+        enumerable: true,
+        get: function () {
+          return units_1.formatUnits;
+        }
+      });
+      Object.defineProperty(exports, "parseUnits", {
+        enumerable: true,
+        get: function () {
+          return units_1.parseUnits;
+        }
+      });
+      var wallet_1 = require$$19;
+      Object.defineProperty(exports, "verifyMessage", {
+        enumerable: true,
+        get: function () {
+          return wallet_1.verifyMessage;
+        }
+      });
+      Object.defineProperty(exports, "verifyTypedData", {
+        enumerable: true,
+        get: function () {
+          return wallet_1.verifyTypedData;
+        }
+      });
+      var web_1 = require$$20;
+      Object.defineProperty(exports, "_fetchData", {
+        enumerable: true,
+        get: function () {
+          return web_1._fetchData;
+        }
+      });
+      Object.defineProperty(exports, "fetchJson", {
+        enumerable: true,
+        get: function () {
+          return web_1.fetchJson;
+        }
+      });
+      Object.defineProperty(exports, "poll", {
+        enumerable: true,
+        get: function () {
+          return web_1.poll;
+        }
+      });
+      ////////////////////////
+      // Enums
+      var sha2_2 = require$$10;
+      Object.defineProperty(exports, "SupportedAlgorithm", {
+        enumerable: true,
+        get: function () {
+          return sha2_2.SupportedAlgorithm;
+        }
+      });
+      var strings_2 = require$$16;
+      Object.defineProperty(exports, "UnicodeNormalizationForm", {
+        enumerable: true,
+        get: function () {
+          return strings_2.UnicodeNormalizationForm;
+        }
+      });
+      Object.defineProperty(exports, "Utf8ErrorReason", {
+        enumerable: true,
+        get: function () {
+          return strings_2.Utf8ErrorReason;
+        }
+      });
+    })(utils);
+
     const roundNumber = function (number) {
         return Math.round(number * 100) / 100;
     };
     const roundNumberDecimal = function (number, decimal) {
-        let hundred = parseInt('1' + '0'.repeat(decimal));
+        let hundred = parseInt("1" + "0".repeat(decimal));
         return Math.round(number * hundred) / hundred;
     };
     const roundBigNumber = function (number) {
-        return new BigNumber$1(Math.round(number.toNumber() * 100) / 100);
+        return BigNumber$2.from(Math.round(parseFloat(utils.formatUnits(number)) * 100) / 100);
     };
     const roundBigNumberDecimal = function (number, decimal) {
-        let hundred = parseInt('1' + '0'.repeat(decimal));
-        return new BigNumber$1(Math.round(number.toNumber() * hundred) / hundred);
+        let hundred = parseInt("1" + "0".repeat(decimal));
+        return BigNumber$2.from(Math.round(parseFloat(utils.formatUnits(number)) * hundred) / hundred);
     };
     const AddressZero = "0x0000000000000000000000000000000000000000";
     const isJSON = function (str) {
@@ -42921,8 +43795,10 @@ Time:${time.toISOString()}
     };
     const shortEth = function (ethAddress) {
         if (!ethAddress)
-            return '';
-        return ethAddress.substring(0, 6) + "..." + ethAddress.substring(ethAddress.length - 4);
+            return "";
+        return (ethAddress.substring(0, 6) +
+            "..." +
+            ethAddress.substring(ethAddress.length - 4));
     };
 
     var KycEditNameHtml = "<fieldset id=\"kycEditName\">\n    <div class=\"warningBar\">\n        <strong>Warning</strong><br>\n        You can only change the name once. Be careful of what you change.\n        <br><br>\n        After you change this information a new KYC process will be started, and you will NOT be able to do any\n        trades\n        until it has been approved.\n    </div>\n    <div>\n        <label for=\"given_name\">Legal First name</label>\n        <input required id=\"given_name\" name=\"given_name\" placeholder=\"Ron\" value=\"{{given_name}}\" autocomplete=\"given-name\">\n    </div>\n    <div>\n        <label for=\"middle_name\">Legal Middle name</label>\n        <input id=\"middle_name\" name=\"middle_name\" placeholder=\"\" value=\"{{middle_name}}\" autocomplete=\"additional-name\">\n    </div>\n    <div>\n        <label for=\"family_name\">Legal Last name</label>\n        <input required id=\"family_name\" name=\"family_name\" placeholder=\"Swanson\" value=\"{{family_name}}\" autocomplete=\"family-name\">\n    </div>\n\n    <div class=\"buttons\">\n        <button id=\"kycEditNameConfirm\">Confirm</button>\n    </div>\n</fieldset>\n\n<fieldset class=\"hidden\" id=\"confirmNameFieldset\">\n    <div class=\"confirm_name\">\n        <label for=\"confirm_name\" id=\"label_confirm_name\">Please type</label>\n        <input name=\"confirm_name\" id=\"confirm_name\">\n    </div>\n\n    <div class=\"input_error\" id=\"kycEditNameError\"></div>\n\n    <div class=\"buttons grid\">\n        <button id=\"kycEditNameBack\">Back</button>\n        <button type=\"submit\" id=\"kycEditNameSave\">Confirm</button>\n    </div>\n</fieldset>";
@@ -43555,63 +44431,6 @@ Time:${time.toISOString()}
         }
     }
 
-    class DateHelper {
-        static isOlderThen(date, minutes) {
-            let currentTime = new Date().getTime();
-            return (currentTime > (date.getTime() + minutes * 60 * 1000));
-        }
-        ;
-        static getWeekday() {
-            const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            const d = new Date();
-            return weekday[d.getDay()];
-        }
-        static getOpenAndCloseHours() {
-            const d = new Date();
-            let openHour = 9 + 4 + (-1 * (d.getTimezoneOffset() / 60));
-            let closeHour = 16 + 4 + (-1 * (d.getTimezoneOffset() / 60));
-            return [openHour + ':30', closeHour + ':00'];
-        }
-    }
-
-    class AUSDService extends BlockchainService {
-        static AUSDInfo;
-        static lastUpdate;
-        static aUSDAmount;
-        static onAUsdLoad = [];
-        constructor() {
-            super();
-        }
-        async getAUSDBalanceOf(ethAddress) {
-            if (AUSDService.lastUpdate &&
-                AUSDService.aUSDAmount &&
-                !DateHelper.isOlderThen(AUSDService.lastUpdate, 5)) {
-                return AUSDService.aUSDAmount;
-            }
-            let balanceOf = await this.getBalanceOf(this.contracts.AUSD_ADDRESS, ethAddress);
-            let amount = formatEther(balanceOf.toString());
-            AUSDService.aUSDAmount = new BigNumber$1(amount);
-            AUSDService.lastUpdate = new Date();
-            for (let i = 0; i < AUSDService.onAUsdLoad.length; i++) {
-                AUSDService.onAUsdLoad[i]();
-            }
-            return AUSDService.aUSDAmount;
-        }
-        async transfer(symbolAddress, qty) {
-            let result = await super.transferInner(this.contracts.AUSD_ADDRESS, symbolAddress, qty);
-            AUSDService.aUSDAmount = undefined;
-            AUSDService.lastUpdate = undefined;
-            return result;
-        }
-        async getAUsdAbi() {
-            if (AUSDService.AUSDInfo)
-                return AUSDService.AUSDInfo.abi;
-            let response = await fetch("https://app.liminal.market/abi/aUSD.json");
-            AUSDService.AUSDInfo = await response.json();
-            return AUSDService.AUSDInfo.abi;
-        }
-    }
-
     var FakeFundingHtml = "<article>\n    <div id=\"beforeFunding\">\n        To use liminal.market you need some aUSD. aUSD is the same value as USD.\n        We can give you some aUSD (this is all fake money), so you can play with the system.\n\n        First, you need to add aUSD to you wallet.\n\n        <button id=\"addTokenToWallet\">Add aUSD to wallet</button>\n        <blockquote id=\"needToCopy\" class=\"d-none\">\n            If the button didn't work, you can copy the address here and import it into your wallet\n            <input value=\"{{aUSDAddress}}\">\n        </blockquote>\n        When you have aUSD to you wallet, you can request some money to trade with.\n\n        <button id=\"requestFakeAUSD\">Request some aUSD</button>\n        <div class=\"warningBar notificationBar d-none\" id=\"fundingError\"></div>\n    </div>\n    <div id=\"afterFunding\" class=\"d-none center\">\n        We have now sending aUSD to your wallet. This usually takes few minutes, so lets wait.\n        <br><br>\n        When you have the aUSD in you wallet, we will tell you.\n        <div>\n            <h3>Current aUSD balance</h3>\n            <div id=\"currentAUSDBalance\"></div>\n        </div>\n        <div class=\"hidden center\" id=\"fake_funding_writing_to_ausd\">\n            <strong aria-busy=\"true\">Writing amount to aUSD token. Few more seconds...</strong>\n        </div>\n    </div>\n    <div id=\"errorAfterTryFunding\" class=\"d-none\">\n        We had an error while trying to fund you. We'll be cracking at the issue soon to fix it.\n        Try again in few minutes. If not, try again in few hours.\n    </div>\n\n</article>";
 
     var SelectFundingTypeHtml = "<p>Setup your bank relationship with Liminal.market. Please choose the type of transfer you want to make</p>\n<ul class=\"funding_type\">\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"ach_transfer\" value=\"1\"> ACH bank transfer (US)</label>\n    </li>\n    <li><label><input type=\"radio\" name=\"bank_transfer\" id=\"wire_transfer\" value=\"2\"> Wire transfer\n        (International)</label></li>\n</ul>\n<div id=\"selectFundingTypeError\" class=\"input_error\"></div>\n<button id=\"next_bank_information\">Next: Bank information</button>\n";
@@ -44106,7 +44925,7 @@ Time:${time.toISOString()}
         currentBalance;
         modal;
         constructor() {
-            this.currentBalance = new BigNumber$1(-1);
+            this.currentBalance = BigNumber$2.from(-1);
             this.modal = new Modal();
         }
         showAUSDFund() {
@@ -44181,13 +45000,11 @@ Time:${time.toISOString()}
             let currentAUSDBalance = document.getElementById("currentAUSDBalance");
             if (!currentAUSDBalance)
                 return;
-            let aUSDService = new AUSDService();
             let userService = new UserService();
             let ethAddress = userService.getEthAddress();
-            let amount = new BigNumber$1(0);
+            let amount = BigNumber$2.from(0);
             if (ethAddress) {
-                AUSDService.lastUpdate = undefined;
-                amount = await aUSDService.getAUSDBalanceOf(ethAddress);
+                amount = await WidgetGlobals.LiminalMarket.getAUSDBalance(ethAddress);
             }
             currentAUSDBalance.innerHTML = "$" + roundBigNumber(amount).toString();
             if (this.currentBalance.eq(-1)) {
@@ -44246,10 +45063,9 @@ Time:${time.toISOString()}
             let transfers = await this.userService.getLatestTransfers(TransferDirectionEnum.Outgoing);
             let transfersHtml = await this.transfersList.render(TransferDirectionEnum.Outgoing, transfers);
             let ethAddress = this.userService.getEthAddress();
-            let ausdService = new AUSDService();
-            this.currentBalance = new BigNumber$1(0);
+            this.currentBalance = BigNumber$2.from(0);
             if (ethAddress) {
-                this.currentBalance = await ausdService.getAUSDBalanceOf(ethAddress);
+                this.currentBalance = await WidgetGlobals.LiminalMarket.getAUSDBalance(ethAddress);
             }
             if (this.currentBalance.eq(0)) {
                 let tmp = WidgetGlobals.HandlebarsInstance.compile("Your current balance is $0. There is nothing to withdraw. {{{transfers}}}");
@@ -44341,7 +45157,6 @@ Time:${time.toISOString()}
         constructor() { }
         static async forceLoadAUSDBalanceUI() {
             let ui = new AUsdBalance();
-            AUSDService.lastUpdate = undefined;
             await ui.loadAUSDBalanceUI();
         }
         async loadAUSDBalanceUI() {
@@ -44350,8 +45165,7 @@ Time:${time.toISOString()}
                 if (!WidgetGlobals.User.ether)
                     return;
             }
-            let aUSDService = new AUSDService();
-            let aUsdValueWei = await aUSDService.getAUSDBalanceOf(WidgetGlobals.User.address);
+            let aUsdValueWei = await WidgetGlobals.LiminalMarket.getAUSDBalance(WidgetGlobals.User.address);
             this.updateUIBalance(aUsdValueWei);
             this.bindEvents();
         }
@@ -44400,11 +45214,11 @@ Time:${time.toISOString()}
             let aUsdValue = roundBigNumber(aUsdValueWei);
             let balance_value = document.querySelector(".balance_value");
             if (balance_value) {
-                balance_value.innerHTML = "$" + aUsdValue.toFixed();
-                balance_value.title = aUsdValueWei.toFixed();
-                balance_value.dataset["tooltip"] = aUsdValueWei.toFixed();
+                balance_value.innerHTML = "$" + parseFloat(utils.formatUnits(aUsdValue));
+                balance_value.title = utils.formatUnits(aUsdValueWei);
+                balance_value.dataset["tooltip"] = utils.formatUnits(aUsdValueWei);
             }
-            if (aUsdValue.isLessThan(10)) {
+            if (aUsdValue.lt(10)) {
                 let frontpage_fund_account = document.getElementById("frontpage_fund_account");
                 frontpage_fund_account?.classList.remove("hidden");
             }
@@ -44781,87 +45595,6 @@ Time:${time.toISOString()}
         }
     }
 
-    class LiminalMarketService extends BlockchainService {
-        static LiminalMarketInfo;
-        constructor() {
-            super();
-        }
-        async getSymbolContractAddress(symbol) {
-            await this.loadEther();
-            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.getSecurityTokenAbi, WidgetGlobals.User.ether);
-            return await contract.getSecurityToken(symbol);
-        }
-        async createToken(symbol, creatingToken) {
-            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.createTokenAbi, WidgetGlobals.User.signer);
-            let result = await contract.createToken(symbol);
-            creatingToken();
-            console.log("createToken result:", result);
-            await result.wait();
-            return await this.getSymbolContractAddress(symbol);
-        }
-        getSecurityTokenAbi = [
-            {
-                inputs: [
-                    {
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                ],
-                name: "getSecurityToken",
-                outputs: [
-                    {
-                        internalType: "address",
-                        name: "",
-                        type: "address",
-                    },
-                ],
-                stateMutability: "view",
-                type: "function",
-            },
-        ];
-        createTokenAbi = [
-            {
-                inputs: [
-                    {
-                        internalType: "string",
-                        name: "symbol",
-                        type: "string",
-                    },
-                ],
-                name: "createToken",
-                outputs: [
-                    {
-                        internalType: "contract SecurityToken",
-                        name: "",
-                        type: "address",
-                    },
-                ],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-        ];
-    }
-
-    class SecurityTokenService extends BlockchainService {
-        static SecurityTokenInfo;
-        constructor() {
-            super();
-        }
-        async getQuantityByAddress(symbol, ethAddress) {
-            let liminalMarketService = new LiminalMarketService();
-            let symbolAddress = await liminalMarketService.getSymbolContractAddress(symbol);
-            if (symbolAddress === AddressZero)
-                return new BigNumber$1(0);
-            let qty = await this.getBalanceOf(symbolAddress, ethAddress);
-            return new BigNumber$1(formatEther(qty.toString()));
-        }
-        async transfer(symbolAddress, qty) {
-            let result = super.transferInner(symbolAddress, this.contracts.AUSD_ADDRESS, qty);
-            return result;
-        }
-    }
-
     var ExecuteOrderButtonHtml = "<button id=\"liminal_market_execute_order\"></button>\n";
 
     var FakeNativeTokenNeededHtml = "You need to have {{symbol}} currency in your wallet. You use {{symbol}} to pay for using the blockchain.\n\nTo get some {{symbol}} currency\n<ol>\n    <li>Copy your address shown below\n        <input value=\"{{ethAddress}}\">\n    </li>\n    <li>Open <a href=\"{{faucetUrl}}\" id=\"getNativeTokens\" target=\"_blank\">{{faucetUrl}}</a></li>\n    <li>Paste in your address you just copied and click the submit button</li>\n</ol>\n\n<div class=\"infoBar d-none\" id=\"waitingForNativeToken\">Waiting for {{symbol}}. Window will close when you have some in\n    you wallet.\n    It might take few minutes after you requested it.\n    <progress></progress>\n</div>\n\n\n\n\n\n\n\n";
@@ -45145,109 +45878,12 @@ Time:${time.toISOString()}
         }
     }
 
-    var MarketIsClosedHtml = "<div class=\"center\">\n    The stock market is currently closed.<br>\nIt is usually open monday to friday between 9:30 AM and 4:00 PM EST (9:30 - 16:00 EST).\n    <br><br>\nToday is {{dayOfWeek}}\n<br><br>\nYour current time is {{currentTime}} ({{GMT}})\n    <br><br>\nThat means the market is open your time between\n{{openFrom}} - {{openTo}}\n</div>";
-
-    class BlockchainError extends GeneralError {
-        static ErrorFromContract = -1;
-        static UserCancelled = 1;
-        static AddressIsNotValidKYC = 2;
-        static MarketIsClosed = 3;
-        constructor(e) {
-            super(e);
-            this.message = e.toString();
-            if (this.userDeniedTransactionSignature()) {
-                this.code = BlockchainError.UserCancelled;
-            }
-            else if (this.addressIsNotValidKYC()) {
-                this.code = BlockchainError.AddressIsNotValidKYC;
-            }
-            else if (this.isMarketClosed()) {
-                this.code = BlockchainError.MarketIsClosed;
-                this.callback = this.marketIsClosedModal;
-            }
-            if (e.data && e.data.message) {
-                let msg = e.data.message;
-                let searchStr = "reverted with reason string";
-                let idx = msg.indexOf(searchStr) + searchStr.length;
-                if (idx != -1) {
-                    this.message = msg.substring(idx).trim().replace(/'/g, "");
-                    this.code = BlockchainError.ErrorFromContract;
-                }
-            }
-        }
-        userDeniedTransactionSignature() {
-            return this.message.indexOf("denied transaction signature") !== -1;
-        }
-        addressIsNotValidKYC() {
-            return this.message.indexOf("address is not kyc valid") !== -1;
-        }
-        isMarketClosed() {
-            let searchStr = "Market is closed";
-            return this.message.indexOf(searchStr) !== -1;
-        }
-        marketIsClosedModal() {
-            let [openHour, closeHour] = DateHelper.getOpenAndCloseHours();
-            let time = new Date().toTimeString().split(" ");
-            let obj = {
-                currentTime: time[0],
-                GMT: time[1],
-                dayOfWeek: DateHelper.getWeekday(),
-                openFrom: openHour,
-                openTo: closeHour,
-            };
-            let modal = new Modal();
-            let template = WidgetGlobals.HandlebarsInstance.compile(MarketIsClosedHtml);
-            modal.showModal("Market is closed", template(obj));
-        }
-    }
-
     class KYCService extends BlockchainService {
-        static KYCInfo;
-        static KycResponse;
         constructor() {
             super();
         }
-        async getKYCAbi() {
-            if (KYCService.KYCInfo)
-                return KYCService.KYCInfo.abi;
-            const response = await fetch("https://app.liminal.market/abi/KYC.json");
-            KYCService.KYCInfo = await response.json();
-            return KYCService.KYCInfo.abi;
-        }
-        async hasValidKYC() {
-            if (KYCService.KycResponse && KYCService.KycResponse.isValidKyc)
-                return KYCService.KycResponse;
-            KYCService.KycResponse = (await this.get("isValidKyc").catch((reason) => {
-                let blockchainError = new BlockchainError(reason);
-                if (blockchainError.addressIsNotValidKYC()) {
-                    return false;
-                }
-                ErrorInfo.report(blockchainError);
-                return false;
-            }));
-            if (KYCService.KycResponse.alpacaId) {
-                WidgetGlobals.User.alpacaId = KYCService.KycResponse.alpacaId;
-                let aUsdBalance = new AUsdBalance();
-                await aUsdBalance.loadAUSDBalanceUI();
-            }
-            return KYCService.KycResponse;
-        }
-        async sandboxCreateAccount(firstName, lastName, email) {
-            return await this.post("sandboxCreateAccount", {
-                given_name: firstName,
-                family_name: lastName,
-                email_address: email,
-            });
-        }
         async saveKYCInfo(data) {
             return await this.post("kycRegistration", data);
-        }
-        async updateKYCInfo(data) {
-            return await this.post("updateAccount", data);
-        }
-        isValidAccountId(str) {
-            const regex = new RegExp("^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$");
-            return regex.test(str);
         }
         async updateDocuments(params) {
             return await this.post("kycActionRequiredUpdate", params);
@@ -46260,10 +46896,7 @@ Time:${time.toISOString()}
                 let firstName = document.querySelector("#given_name");
                 let lastName = document.querySelector("#family_name");
                 let email = document.querySelector("#email_address");
-                let kycService = new KYCService();
-                let alpacaId = await kycService
-                    .sandboxCreateAccount(firstName.value, lastName.value, email.value)
-                    .catch((reason) => {
+                const alpacaId = await WidgetGlobals.LiminalMarket.createSandboxAccount(firstName.value, lastName.value, email.value).catch((reason) => {
                     let error = JSON.parse(reason.message);
                     if (error.serverError) {
                         this.showError(error.serverError);
@@ -47114,7 +47747,7 @@ Time:${time.toISOString()}
         getSellSharesObj(object) {
             let ethAddress = object.sender;
             let tokenAddress = object.recipient;
-            let buyingQuantity = new BigNumber$1(object.filled_avg_price).multipliedBy(new BigNumber$1(object.filled_qty));
+            let buyingQuantity = BigNumber$2.from(object.filled_avg_price).mul(BigNumber$2.from(object.filled_qty));
             let sellingAmount = object.filled_qty;
             return {
                 sellingLogo: "/img/logos/" + object.symbol + ".png",
@@ -47122,8 +47755,8 @@ Time:${time.toISOString()}
                 sellingAmount: sellingAmount + " shares",
                 buyingLogo: "/img/logos/aUSD.png",
                 buyingSymbol: "aUSD",
-                buyingQuantity: buyingQuantity.toFixed(),
-                buyingRoundQuantity: "$" + roundBigNumberDecimal(buyingQuantity, 6).toFixed(),
+                buyingQuantity: utils.formatUnits(buyingQuantity),
+                buyingRoundQuantity: "$" + utils.formatUnits(roundBigNumberDecimal(buyingQuantity, 6)),
                 shortEthAddress: shortEth(ethAddress),
                 ethAddress: ethAddress,
                 tokenAddress: tokenAddress,
@@ -47337,16 +47970,14 @@ Time:${time.toISOString()}
         checkBalanceInterval;
         hasBuyingPower = false;
         async userHasAUSD(button) {
-            let ausdService = new AUSDService();
-            let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-            if (balance.isGreaterThan(0))
+            let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(WidgetGlobals.User.address);
+            if (balance.gt(0))
                 return true;
             if (this.hasBuyingPower) {
                 button.innerHTML = "We are funding your aUSD token";
                 this.checkBalanceInterval = setInterval(async () => {
-                    AUSDService.lastUpdate = undefined;
-                    let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-                    if (balance.isGreaterThan(0)) {
+                    let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(WidgetGlobals.User.address);
+                    if (balance.gt(0)) {
                         await AUsdBalance.forceLoadAUSDBalanceUI();
                         clearInterval(this.checkBalanceInterval);
                         await this.renderButton();
@@ -47368,10 +47999,9 @@ Time:${time.toISOString()}
             return false;
         }
         async userHasEnoughQty(button) {
-            let ausdService = new AUSDService();
             if (this.sellTradeInput.symbol == "aUSD") {
-                let balance = await ausdService.getAUSDBalanceOf(WidgetGlobals.User.address);
-                if (balance.isGreaterThanOrEqualTo(this.sellTradeInput.quantity))
+                let balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(WidgetGlobals.User.address);
+                if (balance.gte(this.sellTradeInput.quantity))
                     return true;
                 button.innerHTML = "You don't have enough aUSD. Click for more funding";
                 button.addEventListener("click", () => {
@@ -47380,9 +48010,8 @@ Time:${time.toISOString()}
                 });
             }
             else {
-                let securityTokenService = new SecurityTokenService();
-                let userQuantity = await securityTokenService.getQuantityByAddress(this.sellTradeInput.symbol, WidgetGlobals.User.address);
-                if (this.sellTradeInput.quantity <= userQuantity)
+                let userQuantity = await WidgetGlobals.LiminalMarket.getSecurityTokenQuantity(this.sellTradeInput.symbol, WidgetGlobals.User.address);
+                if (this.sellTradeInput.quantity.lte(userQuantity))
                     return true;
                 button.innerHTML = "You don't have enough " + this.sellTradeInput.symbol;
                 button.classList.replace("disable", "enable");
@@ -47507,6 +48136,68 @@ Time:${time.toISOString()}
     var SecuritiesListHtml = "<figure>\n    <table id=\"liminal_market_securities_table\" role=\"grid\">\n    <thead>\n    <tr>\n        <th colspan=\"2\"><input autocomplete=\"off\" type=\"search\" id=\"search_for_symbol\" placeholder=\"Search for name or symbol in {{securitiesCount}} stocks\"></th>\n    </tr>\n    </thead>\n    <tbody id=\"{{tbodyId}}\">\n    {{>securities}}\n    </tbody>\n</table>\n<span id=\"liminal_market_load_more\"></span>\n</figure>";
 
     var SecurityHtml = "{{#each securities}}\n<tr data-symbol=\"{{{Symbol}}}\" data-logo=\"{{LogoPath}}{{Logo}}\" data-name=\"{{Name}}\">\n  <td class=\"symbol_logo\">\n    <img src=\"https://app.liminal.market{{LogoPath}}{{Logo}}\">\n  </td>\n  <td class=\"security_information\">\n    <strong>{{Name}}</strong><br>\n    <nav class=\"security_extra\">\n      <ul>\n        <li>\n          <a href=\"https://strike.market/stocks/{{Symbol}}\" target=\"_blank\">{{Symbol}}</a>\n        </li>\n      </ul>\n      <ul>\n        <li>\n          <a href=\"\" class=\"getAddress\" data-symbol=\"{{Symbol}}\">Get address</a>\n        </li>\n      </ul>\n      <ul>\n        <li>\n          <a href=\"\" class=\"addToWallet\" data-symbol=\"{{Symbol}}\">Add to wallet</a>\n        </li>\n      </ul>\n    </nav>\n  </td>\n</tr>\n{{/each}}\n";
+
+    class LiminalMarketService extends BlockchainService {
+        static LiminalMarketInfo;
+        constructor() {
+            super();
+        }
+        async getSymbolContractAddress(symbol) {
+            await this.loadEther();
+            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.getSecurityTokenAbi, WidgetGlobals.User.ether);
+            return await contract.getSecurityToken(symbol);
+        }
+        async createToken(symbol, creatingToken) {
+            const contract = new Contract(this.contracts.LIMINAL_MARKET_ADDRESS, this.createTokenAbi, WidgetGlobals.User.signer);
+            let result = await contract.createToken(symbol);
+            creatingToken();
+            console.log("createToken result:", result);
+            await result.wait();
+            return await this.getSymbolContractAddress(symbol);
+        }
+        getSecurityTokenAbi = [
+            {
+                inputs: [
+                    {
+                        internalType: "string",
+                        name: "symbol",
+                        type: "string",
+                    },
+                ],
+                name: "getSecurityToken",
+                outputs: [
+                    {
+                        internalType: "address",
+                        name: "",
+                        type: "address",
+                    },
+                ],
+                stateMutability: "view",
+                type: "function",
+            },
+        ];
+        createTokenAbi = [
+            {
+                inputs: [
+                    {
+                        internalType: "string",
+                        name: "symbol",
+                        type: "string",
+                    },
+                ],
+                name: "createToken",
+                outputs: [
+                    {
+                        internalType: "contract SecurityToken",
+                        name: "",
+                        type: "address",
+                    },
+                ],
+                stateMutability: "nonpayable",
+                type: "function",
+            },
+        ];
+    }
 
     class CopyHelper {
         fallbackCopyTextToClipboard(text) {
@@ -47870,9 +48561,9 @@ Time:${time.toISOString()}
             this.logo = logo;
             this.address = address;
             this.tradeType = tradeType;
-            this.quantity = new BigNumber$1(0);
+            this.quantity = BigNumber$2.from(0);
             this.strQuantity = "";
-            this.balance = new BigNumber$1(0);
+            this.balance = BigNumber$2.from(0);
             this.lastPrice = 0;
             this.qtyPerDollar = 0;
             this.lastTraded = "";
@@ -47959,7 +48650,7 @@ Time:${time.toISOString()}
                 let qtyInput = document.querySelector("." + this.tradeType + "Inputs .trade_input input");
                 if (!qtyInput)
                     return;
-                qtyInput.value = this.balance.toFixed();
+                qtyInput.value = utils.formatUnits(this.balance);
                 this.setQuantity(qtyInput.value);
                 this.loadProgressbar();
                 if (this.otherTradePanelInput)
@@ -47969,26 +48660,22 @@ Time:${time.toISOString()}
             });
         }
         async loadBalance() {
-            this.balance = new BigNumber$1(0);
-            //TODO: check if we need the userService on the widget
-            //   let userService = new UserService();
-            //   let ethAddress = userService.getEthAddress();
+            this.balance = BigNumber$2.from(0);
             let ethAddress = WidgetGlobals.User.address;
             let balanceDom = document.querySelector("." + this.tradeType + "Inputs .balance_value");
             if (!balanceDom)
                 return;
             if (this.symbol === "aUSD") {
                 if (ethAddress) {
-                    let aUsdService = new AUSDService();
-                    this.balance = await aUsdService.getAUSDBalanceOf(ethAddress);
+                    this.balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(ethAddress);
                 }
                 balanceDom.innerHTML = "$" + this.balance;
             }
             else if (this.name !== "") {
-                this.balance = new BigNumber$1(0);
+                this.balance = BigNumber$2.from(0);
                 if (ethAddress) {
-                    let securityTokenService = new SecurityTokenService();
-                    this.balance = await securityTokenService.getQuantityByAddress(this.symbol, ethAddress);
+                    this.balance =
+                        await WidgetGlobals.LiminalMarket.getSecurityTokenQuantity(this.symbol, ethAddress);
                 }
                 balanceDom.innerHTML = this.balance.toString();
             }
@@ -48050,14 +48737,19 @@ Time:${time.toISOString()}
             if (!qtyInput)
                 return;
             if (this.symbol === "aUSD") {
-                qtyInput.value = this.otherTradePanelInput.quantity
-                    .div(this.otherTradePanelInput.qtyPerDollar)
-                    .toString();
+                qtyInput.value =
+                    "" +
+                        (parseFloat(utils.formatUnits(this.otherTradePanelInput.quantity)) /
+                            this.otherTradePanelInput.qtyPerDollar).toFixed(18);
             }
             else {
-                qtyInput.value = this.otherTradePanelInput.quantity
-                    .multipliedBy(this.qtyPerDollar)
-                    .toString();
+                qtyInput.value =
+                    "" +
+                        (parseFloat(utils.formatUnits(this.otherTradePanelInput.quantity)) *
+                            this.qtyPerDollar).toFixed(18);
+            }
+            if (qtyInput.value == "0.000000000000000000") {
+                qtyInput.value = "";
             }
             this.setQuantity(qtyInput.value);
             this.loadProgressbar();
@@ -48070,7 +48762,7 @@ Time:${time.toISOString()}
             let progressDom = document.querySelector("." + this.tradeType + "Inputs .progress");
             if (!progressDom)
                 return;
-            let percentage = this.quantity.div(this.balance).toNumber();
+            let percentage = parseFloat(utils.formatUnits(this.quantity.div(this.balance)));
             progressDom.value = percentage;
             progressDom.classList.remove("d-none");
             let exceedsBalance = document.querySelector("." + this.tradeType + "Inputs .exceeds_wallet_balance");
@@ -48096,9 +48788,10 @@ Time:${time.toISOString()}
             return [sellTradePanelInput, buyTradePanelInput];
         }
         setQuantity(value) {
-            if (value == "" || value == "0")
-                return;
-            this.quantity = new BigNumber$1(value);
+            if (value == "") {
+                value = "0";
+            }
+            this.quantity = utils.parseUnits(value);
             this.strQuantity = value;
         }
         quantityFormatted() {

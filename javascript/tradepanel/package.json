@@ -61,12 +61,11 @@
   },
   "dependencies": {
     "@magic-ext/connect": "^4.0.0",
-    "bignumber.js": "^9.0.2",
     "canvas-confetti": "^1.6.0",
     "ethers": "^5.7.2",
     "handlebars": "^4.7.7",
     "handlebars-fs": "^0.1.1",
-    "liminal.market": "^1.0.2",
+    "liminal.market": "^1.0.3",
     "magic-sdk": "^11.0.0",
     "scope-css": "^1.2.1"
   }

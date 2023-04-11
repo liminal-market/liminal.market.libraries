@@ -2,13 +2,12 @@ import TradeInputHtml from "../../../html/elements/tradepanel/TradeInput.html";
 import { TradeType } from "../../../enums/TradeType";
 import SecuritiesListModal from "../../modals/SecuritiesListModal";
 import LiminalMarketService from "../../../services/blockchain/LiminalMarketService";
-import SecurityTokenService from "../../../services/blockchain/SecurityTokenService";
-import AUSDService from "../../../services/blockchain/AUSDService";
 import { roundNumberDecimal } from "../../../util/Helper";
 import StockPriceService from "../../../services/backend/StockPriceService";
-import BigNumber from "bignumber.js";
 import PricePerShareHtml from "../../../html/elements/tradepanel/PricePerShare.html";
+import { BigNumber } from "ethers";
 import WidgetGlobals from "../../../WidgetGlobals";
+import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
 
 export default class TradePanelInput {
   symbol: string;
@@ -40,9 +39,9 @@ export default class TradePanelInput {
     this.logo = logo;
     this.address = address;
     this.tradeType = tradeType;
-    this.quantity = new BigNumber(0);
+    this.quantity = BigNumber.from(0);
     this.strQuantity = "";
-    this.balance = new BigNumber(0);
+    this.balance = BigNumber.from(0);
     this.lastPrice = 0;
     this.qtyPerDollar = 0;
     this.lastTraded = "";
@@ -163,7 +162,7 @@ export default class TradePanelInput {
       ) as HTMLInputElement;
       if (!qtyInput) return;
 
-      qtyInput.value = this.balance.toFixed();
+      qtyInput.value = formatUnits(this.balance);
       this.setQuantity(qtyInput.value);
       this.loadProgressbar();
 
@@ -173,11 +172,7 @@ export default class TradePanelInput {
   }
 
   public async loadBalance() {
-    this.balance = new BigNumber(0);
-
-    //TODO: check if we need the userService on the widget
-    //   let userService = new UserService();
-    //   let ethAddress = userService.getEthAddress();
+    this.balance = BigNumber.from(0);
     let ethAddress = WidgetGlobals.User.address;
 
     let balanceDom = document.querySelector(
@@ -187,18 +182,19 @@ export default class TradePanelInput {
 
     if (this.symbol === "aUSD") {
       if (ethAddress) {
-        let aUsdService = new AUSDService();
-        this.balance = await aUsdService.getAUSDBalanceOf(ethAddress);
+        this.balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(
+          ethAddress
+        );
       }
       balanceDom.innerHTML = "$" + this.balance;
     } else if (this.name !== "") {
-      this.balance = new BigNumber(0);
+      this.balance = BigNumber.from(0);
       if (ethAddress) {
-        let securityTokenService = new SecurityTokenService();
-        this.balance = await securityTokenService.getQuantityByAddress(
-          this.symbol,
-          ethAddress
-        );
+        this.balance =
+          await WidgetGlobals.LiminalMarket.getSecurityTokenQuantity(
+            this.symbol,
+            ethAddress
+          );
       }
       balanceDom.innerHTML = this.balance.toString();
     }
@@ -274,14 +270,25 @@ export default class TradePanelInput {
     ) as HTMLInputElement;
     if (!qtyInput) return;
     if (this.symbol === "aUSD") {
-      qtyInput.value = this.otherTradePanelInput.quantity
-        .div(this.otherTradePanelInput.qtyPerDollar)
-        .toString();
+      qtyInput.value =
+        "" +
+        (
+          parseFloat(formatUnits(this.otherTradePanelInput.quantity)) /
+          this.otherTradePanelInput.qtyPerDollar
+        ).toFixed(18);
     } else {
-      qtyInput.value = this.otherTradePanelInput.quantity
-        .multipliedBy(this.qtyPerDollar)
-        .toString();
+      qtyInput.value =
+        "" +
+        (
+          parseFloat(formatUnits(this.otherTradePanelInput.quantity)) *
+          this.qtyPerDollar
+        ).toFixed(18);
     }
+
+    if (qtyInput.value == "0.000000000000000000") {
+      qtyInput.value = "";
+    }
+
     this.setQuantity(qtyInput.value);
     this.loadProgressbar();
   }
@@ -299,7 +306,7 @@ export default class TradePanelInput {
     ) as HTMLProgressElement;
     if (!progressDom) return;
 
-    let percentage = this.quantity.div(this.balance).toNumber();
+    let percentage = parseFloat(formatUnits(this.quantity.div(this.balance)));
     progressDom.value = percentage;
     progressDom.classList.remove("d-none");
 
@@ -338,8 +345,10 @@ export default class TradePanelInput {
   }
 
   public setQuantity(value: string) {
-    if (value == "" || value == "0") return;
-    this.quantity = new BigNumber(value);
+    if (value == "") {
+      value = "0";
+    }
+    this.quantity = parseUnits(value);
     this.strQuantity = value;
   }
   public quantityFormatted() {

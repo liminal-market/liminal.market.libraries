@@ -3,7 +3,6 @@ import {
   roundNumberDecimal,
   shortEth,
 } from "../../../util/Helper";
-import BigNumber from "bignumber.js";
 import AUsdBalance from "../AUsdBalance";
 import ProviderInfo from "../../../wallet/ProviderInfo";
 import WidgetGlobals from "../../../WidgetGlobals";
@@ -12,6 +11,8 @@ import WalletHelper from "../../../util/WalletHelper";
 import TradeExecutedHtml from "../../../html/elements/tradepanel/TradeExecuted.html";
 import OrderProgress from "./OrderProgress";
 import * as confetti from "canvas-confetti";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
 
 export default class OrderExecutedModal {
   public async show(object: any) {
@@ -86,8 +87,8 @@ export default class OrderExecutedModal {
   public getSellSharesObj(object: any): any {
     let ethAddress = object.sender;
     let tokenAddress = object.recipient;
-    let buyingQuantity = new BigNumber(object.filled_avg_price).multipliedBy(
-      new BigNumber(object.filled_qty)
+    let buyingQuantity = BigNumber.from(object.filled_avg_price).mul(
+      BigNumber.from(object.filled_qty)
     );
     let sellingAmount = object.filled_qty;
 
@@ -97,9 +98,9 @@ export default class OrderExecutedModal {
       sellingAmount: sellingAmount + " shares",
       buyingLogo: "/img/logos/aUSD.png",
       buyingSymbol: "aUSD",
-      buyingQuantity: buyingQuantity.toFixed(),
+      buyingQuantity: formatUnits(buyingQuantity),
       buyingRoundQuantity:
-        "$" + roundBigNumberDecimal(buyingQuantity, 6).toFixed(),
+        "$" + formatUnits(roundBigNumberDecimal(buyingQuantity, 6)),
       shortEthAddress: shortEth(ethAddress),
       ethAddress: ethAddress,
       tokenAddress: tokenAddress,
