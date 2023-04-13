@@ -47857,6 +47857,7 @@ Time:${time.toISOString()}
                 Listener.onOrderExecutedWritingToChain = async (event) => {
                     OrderProgress.getInstance().setProgressText(0, "Order executed writing to blockchain");
                 };
+                console.log("OUT ", qtyWei.toString());
                 await liminalMarket
                     .executeOrder(side, symbol, qtyWei)
                     .then((result) => {

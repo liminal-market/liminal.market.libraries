@@ -1,10 +1,5 @@
-import ErrorInfo from "../../errors/ErrorInfo";
-import GeneralError from "../../errors/GeneralError";
-import NetworkInfo from "../../networks/NetworkInfo";
 import AuthenticateService from "../backend/AuthenticateService";
 import BaseService from "../backend/BaseService";
-import User from "../../dto/User";
-import UserService from "../backend/UserService";
 import WidgetGlobals from "../../WidgetGlobals";
 import { ethers } from "ethers";
 import ContractInfo from "../../contracts/ContractInfo";
