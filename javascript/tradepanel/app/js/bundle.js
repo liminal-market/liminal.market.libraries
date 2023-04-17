@@ -40118,14 +40118,21 @@ class BlockchainService extends BaseService {
         this.network = WidgetGlobals.Network;
         this.contracts = ContractInfo.getContractInfo(this.network.Name);
     }
-    async getBalanceOf(tokenAddress, ethAddress) {
-        await this.loadEther();
-        if (!WidgetGlobals.User.ether) {
-            return BigNumber.from(0);
-        }
-        const contract = new Contract(tokenAddress, this.balanceOfAbi, WidgetGlobals.User.ether);
-        return await contract.balanceOf(ethAddress);
-    }
+    // protected async getBalanceOf(
+    //   tokenAddress: any,
+    //   ethAddress: string
+    // ): Promise<BigNumber> {
+    //   await this.loadEther();
+    //   if (!WidgetGlobals.User.ether) {
+    //     return BigNumber.from(0);
+    //   }
+    //   const contract = new ethers.Contract(
+    //     tokenAddress,
+    //     this.balanceOfAbi,
+    //     WidgetGlobals.User.ether
+    //   );
+    //   return await contract.balanceOf(ethAddress);
+    // }
     async transferInner(tokenAddress, to, qty) {
         await this.loadEther();
         let qtyWei = parseUnits(qty.toString(), "ether");
