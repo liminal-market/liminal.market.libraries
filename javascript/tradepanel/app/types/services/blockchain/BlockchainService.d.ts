@@ -1,7 +1,7 @@
 import BaseService from "../backend/BaseService";
+import { BigNumber } from "ethers";
 import Network from "../../networks/Network";
 import ContractAddresses from "../../contracts/ContractAddresses";
-import BigNumber from "bignumber.js";
 export default class BlockchainService extends BaseService {
     network: Network;
     contracts: ContractAddresses;

@@ -1,11 +1,10 @@
 import AuthenticateService from "../backend/AuthenticateService";
 import BaseService from "../backend/BaseService";
 import WidgetGlobals from "../../WidgetGlobals";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import ContractInfo from "../../contracts/ContractInfo";
 import Network from "../../networks/Network";
 import ContractAddresses from "../../contracts/ContractAddresses";
-import BigNumber from "bignumber.js";
 import EventService from "./EventService";
 
 export default class BlockchainService extends BaseService {
@@ -25,7 +24,7 @@ export default class BlockchainService extends BaseService {
     await this.loadEther();
 
     if (!WidgetGlobals.User.ether) {
-      return new BigNumber(0);
+      return BigNumber.from(0);
     }
 
     const contract = new ethers.Contract(

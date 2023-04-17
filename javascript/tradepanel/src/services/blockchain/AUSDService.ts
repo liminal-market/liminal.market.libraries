@@ -1,4 +1,4 @@
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
 import BlockchainService from "./BlockchainService";
 
 type ListenerAction = (...args: Array<any>) => void;

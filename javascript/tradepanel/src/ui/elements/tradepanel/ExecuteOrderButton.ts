@@ -108,10 +108,9 @@ export default class ExecuteOrderButton {
 
       let symbol = this.buyTradeInput.symbol;
       let side = "buy";
-      let qtyWei = ethers.utils.parseUnits(
-        this.sellTradeInput.quantity.toString(),
-        "ether"
-      );
+
+      let qtyWei = this.sellTradeInput.quantity.toString();
+
       if (symbol == "aUSD") {
         side = "sell";
         symbol = this.sellTradeInput.symbol;
@@ -135,6 +134,8 @@ export default class ExecuteOrderButton {
           "Order executed writing to blockchain"
         );
       };
+
+      console.log("execute order", side, symbol, qtyWei.toString());
 
       await liminalMarket
         .executeOrder(side, symbol, qtyWei)

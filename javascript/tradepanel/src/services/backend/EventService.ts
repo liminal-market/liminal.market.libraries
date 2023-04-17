@@ -10,8 +10,7 @@ import OrderExecutedModal from "../../ui/elements/tradepanel/OrderExecutedModal"
 import OrderProgress from "../../ui/elements/tradepanel/OrderProgress";
 import FakeAUSDFund from "../../ui/modals/Funding/FakeAUSDFund";
 import AUsdBalance from "../../ui/elements/AUsdBalance";
-import BigNumber from "bignumber.js";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 export default class EventService {
   public static register() {
@@ -76,7 +75,7 @@ export default class EventService {
         }
         let aUsdBalance = new AUsdBalance();
         let balance = ethers.utils.formatEther(obj.balance);
-        aUsdBalance.updateUIBalance(new BigNumber(balance));
+        aUsdBalance.updateUIBalance(BigNumber.from(balance));
         ExecuteOrderButton.Instance?.renderButton();
       } else if (obj.methodName == "AccountValidated") {
         if (WidgetGlobals.Network.TestNetwork) {

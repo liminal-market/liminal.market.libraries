@@ -1,8 +1,7 @@
 import LiminalMarketService from "./LiminalMarketService";
 import { AddressZero } from "../../util/Helper";
-import BigNumber from "bignumber.js";
 import BlockchainService from "./BlockchainService";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 export default class SecurityTokenService extends BlockchainService {
   constructor() {

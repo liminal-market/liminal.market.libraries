@@ -345,10 +345,12 @@ export default class TradePanelInput {
   }
 
   public setQuantity(value: string) {
+    console.log("setQuantity", value);
+
     if (value == "") {
       value = "0";
     }
-    this.quantity = parseUnits(value);
+    this.quantity = parseEther(value);
     this.strQuantity = value;
   }
   public quantityFormatted() {

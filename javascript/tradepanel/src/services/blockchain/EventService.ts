@@ -1,7 +1,6 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import ContractAddresses from "../../contracts/ContractAddresses";
 import ContractInfo from "../../contracts/ContractInfo";
-import BigNumber from "bignumber.js";
 import WidgetGlobals from "../../WidgetGlobals";
 
 export default class EventService {
