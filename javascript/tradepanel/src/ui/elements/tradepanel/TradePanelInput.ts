@@ -7,7 +7,12 @@ import StockPriceService from "../../../services/backend/StockPriceService";
 import PricePerShareHtml from "../../../html/elements/tradepanel/PricePerShare.html";
 import { BigNumber } from "ethers";
 import WidgetGlobals from "../../../WidgetGlobals";
-import { formatUnits, parseEther, parseUnits } from "ethers/lib/utils";
+import {
+  formatEther,
+  formatUnits,
+  parseEther,
+  parseUnits,
+} from "ethers/lib/utils";
 
 export default class TradePanelInput {
   symbol: string;
@@ -173,11 +178,13 @@ export default class TradePanelInput {
 
   public async loadBalance() {
     this.balance = BigNumber.from(0);
+
     let ethAddress = WidgetGlobals.User.address;
 
     let balanceDom = document.querySelector(
       "." + this.tradeType + "Inputs .balance_value"
     ) as HTMLElement;
+
     if (!balanceDom) return;
 
     if (this.symbol === "aUSD") {
@@ -186,7 +193,8 @@ export default class TradePanelInput {
           ethAddress
         );
       }
-      balanceDom.innerHTML = "$" + this.balance;
+      balanceDom.innerHTML =
+        "$" + parseFloat(formatEther(this.balance)).toFixed(2);
     } else if (this.name !== "") {
       this.balance = BigNumber.from(0);
       if (ethAddress) {
@@ -196,10 +204,12 @@ export default class TradePanelInput {
             ethAddress
           );
       }
-      balanceDom.innerHTML = this.balance.toString();
+      balanceDom.innerHTML =
+        "" + parseFloat(formatEther(this.balance)).toFixed(2);
     }
-    balanceDom.dataset.tooltip = this.balance.toString();
-    balanceDom.title = this.balance.toString();
+    balanceDom.dataset.tooltip = "" + parseFloat(formatEther(this.balance));
+
+    balanceDom.title = "" + parseFloat(formatEther(this.balance));
 
     this.loadProgressbar();
     this.toggleMaxBalanceLink();

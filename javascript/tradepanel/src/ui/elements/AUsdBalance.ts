@@ -9,7 +9,7 @@ import AddToWalletHtml from "../../html/elements/AddToWallet.html";
 import WidgetGlobals from "../../WidgetGlobals";
 import AuthenticateService from "../../services/backend/AuthenticateService";
 import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatEther, formatUnits } from "ethers/lib/utils";
 
 export default class AUsdBalance {
   constructor() {}
@@ -90,9 +90,10 @@ export default class AUsdBalance {
 
     let balance_value = document.querySelector(".balance_value") as HTMLElement;
     if (balance_value) {
-      balance_value.innerHTML = "$" + parseFloat(formatUnits(aUsdValue));
-      balance_value.title = formatUnits(aUsdValueWei);
-      balance_value.dataset["tooltip"] = formatUnits(aUsdValueWei);
+      alert("balance_value " + aUsdValue.toString());
+      balance_value.innerHTML = "$" + parseFloat(formatEther(aUsdValue));
+      balance_value.title = formatEther(aUsdValueWei);
+      balance_value.dataset["tooltip"] = formatEther(aUsdValueWei);
     }
 
     if (aUsdValue.lt(10)) {

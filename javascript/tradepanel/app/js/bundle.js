@@ -42591,9 +42591,10 @@ class AUsdBalance {
         let aUsdValue = roundBigNumber(aUsdValueWei);
         let balance_value = document.querySelector(".balance_value");
         if (balance_value) {
-            balance_value.innerHTML = "$" + parseFloat(utils.formatUnits(aUsdValue));
-            balance_value.title = utils.formatUnits(aUsdValueWei);
-            balance_value.dataset["tooltip"] = utils.formatUnits(aUsdValueWei);
+            alert("balance_value " + aUsdValue.toString());
+            balance_value.innerHTML = "$" + parseFloat(utils.formatEther(aUsdValue));
+            balance_value.title = utils.formatEther(aUsdValueWei);
+            balance_value.dataset["tooltip"] = utils.formatEther(aUsdValueWei);
         }
         if (aUsdValue.lt(10)) {
             let frontpage_fund_account = document.getElementById("frontpage_fund_account");
@@ -46047,7 +46048,8 @@ class TradePanelInput {
             if (ethAddress) {
                 this.balance = await WidgetGlobals.LiminalMarket.getAUSDBalance(ethAddress);
             }
-            balanceDom.innerHTML = "$" + this.balance;
+            balanceDom.innerHTML =
+                "$" + parseFloat(utils.formatEther(this.balance)).toFixed(2);
         }
         else if (this.name !== "") {
             this.balance = BigNumber.from(0);
@@ -46055,10 +46057,11 @@ class TradePanelInput {
                 this.balance =
                     await WidgetGlobals.LiminalMarket.getSecurityTokenQuantity(this.symbol, ethAddress);
             }
-            balanceDom.innerHTML = this.balance.toString();
+            balanceDom.innerHTML =
+                "" + parseFloat(utils.formatEther(this.balance)).toFixed(2);
         }
-        balanceDom.dataset.tooltip = this.balance.toString();
-        balanceDom.title = this.balance.toString();
+        balanceDom.dataset.tooltip = "" + parseFloat(utils.formatEther(this.balance));
+        balanceDom.title = "" + parseFloat(utils.formatEther(this.balance));
         this.loadProgressbar();
         this.toggleMaxBalanceLink();
     }
@@ -46912,6 +46915,8 @@ class TradePanelWidget {
         EventService.register();
     }
     async render(elementSelector, symbol, name, logo, address) {
+        let authenticationService = new AuthenticateService();
+        await authenticationService.isAuthenticated();
         new TradePanel().render(elementSelector, symbol, name, logo, address);
     }
 }

@@ -57,7 +57,6 @@ export default class AuthenticateService extends BaseService {
       "0x19d5ABE7854b01960D4911e6536b26F8A38C3a18"
     );
     if (liminalMarket.account.token == "") return false;
-
     WidgetGlobals.LiminalMarket = liminalMarket;
     WidgetGlobals.User.address = liminalMarket.account.address;
     WidgetGlobals.User.alpacaId = liminalMarket.account.brokerId;

@@ -1,5 +1,6 @@
 import User from "./dto/User";
 import NetworkInfo from "./networks/NetworkInfo";
+import AuthenticateService from "./services/backend/AuthenticateService";
 import EventService from "./services/backend/EventService";
 import TradePanel from "./ui/elements/TradePanel";
 import WidgetGlobals from "./WidgetGlobals";
@@ -20,6 +21,9 @@ export default class TradePanelWidget {
     logo?: string,
     address?: string
   ) {
+    let authenticationService = new AuthenticateService();
+    await authenticationService.isAuthenticated();
+
     new TradePanel().render(elementSelector, symbol, name, logo, address);
   }
 }
