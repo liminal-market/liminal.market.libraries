@@ -40118,21 +40118,14 @@ class BlockchainService extends BaseService {
         this.network = WidgetGlobals.Network;
         this.contracts = ContractInfo.getContractInfo(this.network.Name);
     }
-    // protected async getBalanceOf(
-    //   tokenAddress: any,
-    //   ethAddress: string
-    // ): Promise<BigNumber> {
-    //   await this.loadEther();
-    //   if (!WidgetGlobals.User.ether) {
-    //     return BigNumber.from(0);
-    //   }
-    //   const contract = new ethers.Contract(
-    //     tokenAddress,
-    //     this.balanceOfAbi,
-    //     WidgetGlobals.User.ether
-    //   );
-    //   return await contract.balanceOf(ethAddress);
-    // }
+    async getBalanceOf(tokenAddress, ethAddress) {
+        await this.loadEther();
+        if (!WidgetGlobals.User.ether) {
+            return BigNumber.from(0);
+        }
+        const contract = new Contract(tokenAddress, this.balanceOfAbi, WidgetGlobals.User.ether);
+        return await contract.balanceOf(ethAddress);
+    }
     async transferInner(tokenAddress, to, qty) {
         await this.loadEther();
         let qtyWei = parseUnits(qty.toString(), "ether");
@@ -42595,15 +42588,13 @@ class AUsdBalance {
         });
     }
     updateUIBalance(aUsdValueWei) {
-        let aUsdValue = roundBigNumber(aUsdValueWei);
         let balance_value = document.querySelector(".balance_value");
         if (balance_value) {
-            alert("balance_value " + aUsdValue.toString());
-            balance_value.innerHTML = "$" + parseFloat(utils.formatEther(aUsdValue));
+            balance_value.innerHTML = "$" + parseFloat(utils.formatEther(aUsdValueWei));
             balance_value.title = utils.formatEther(aUsdValueWei);
             balance_value.dataset["tooltip"] = utils.formatEther(aUsdValueWei);
         }
-        if (aUsdValue.lt(10)) {
+        if (aUsdValueWei.lt(10)) {
             let frontpage_fund_account = document.getElementById("frontpage_fund_account");
             frontpage_fund_account?.classList.remove("hidden");
         }
@@ -42619,10 +42610,10 @@ class AUsdBalance {
         }
         let frontpageAUSDBalance = document.getElementById("front_page_aUSD_balance");
         if (frontpageAUSDBalance)
-            frontpageAUSDBalance.innerHTML = "$" + aUsdValue.toString();
+            frontpageAUSDBalance.innerHTML = "$" + aUsdValueWei.toString();
         let user_info_ausd_balance = document.getElementById("user_info_ausd_balance");
         if (user_info_ausd_balance)
-            user_info_ausd_balance.innerHTML = "$" + aUsdValue.toString();
+            user_info_ausd_balance.innerHTML = "$" + aUsdValueWei.toString();
     }
 }
 
@@ -45475,8 +45466,7 @@ class EventService {
                     }
                 }
                 let aUsdBalance = new AUsdBalance();
-                let balance = formatEther(obj.balance);
-                aUsdBalance.updateUIBalance(BigNumber.from(balance));
+                aUsdBalance.updateUIBalance(BigNumber.from(obj.balance));
                 ExecuteOrderButton.Instance?.renderButton();
             }
             else if (obj.methodName == "AccountValidated") {

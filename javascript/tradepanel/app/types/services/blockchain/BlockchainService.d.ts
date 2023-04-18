@@ -6,6 +6,7 @@ export default class BlockchainService extends BaseService {
     network: Network;
     contracts: ContractAddresses;
     constructor();
+    protected getBalanceOf(tokenAddress: any, ethAddress: string): Promise<BigNumber>;
     protected transferInner(tokenAddress: string, to: string, qty: BigNumber): Promise<any>;
     protected loadEther(): Promise<void>;
     getNativeBalance(): Promise<string>;

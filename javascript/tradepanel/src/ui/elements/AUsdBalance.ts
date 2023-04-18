@@ -86,17 +86,14 @@ export default class AUsdBalance {
   }
 
   public updateUIBalance(aUsdValueWei: BigNumber) {
-    let aUsdValue = roundBigNumber(aUsdValueWei);
-
     let balance_value = document.querySelector(".balance_value") as HTMLElement;
     if (balance_value) {
-      alert("balance_value " + aUsdValue.toString());
-      balance_value.innerHTML = "$" + parseFloat(formatEther(aUsdValue));
+      balance_value.innerHTML = "$" + parseFloat(formatEther(aUsdValueWei));
       balance_value.title = formatEther(aUsdValueWei);
       balance_value.dataset["tooltip"] = formatEther(aUsdValueWei);
     }
 
-    if (aUsdValue.lt(10)) {
+    if (aUsdValueWei.lt(10)) {
       let frontpage_fund_account = document.getElementById(
         "frontpage_fund_account"
       );
@@ -117,12 +114,12 @@ export default class AUsdBalance {
       "front_page_aUSD_balance"
     );
     if (frontpageAUSDBalance)
-      frontpageAUSDBalance.innerHTML = "$" + aUsdValue.toString();
+      frontpageAUSDBalance.innerHTML = "$" + aUsdValueWei.toString();
 
     let user_info_ausd_balance = document.getElementById(
       "user_info_ausd_balance"
     );
     if (user_info_ausd_balance)
-      user_info_ausd_balance.innerHTML = "$" + aUsdValue.toString();
+      user_info_ausd_balance.innerHTML = "$" + aUsdValueWei.toString();
   }
 }
