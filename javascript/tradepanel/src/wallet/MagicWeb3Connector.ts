@@ -1,8 +1,6 @@
 /* global window */
 import { ethers } from "ethers";
 import AbstractWeb3Connector from "./AbstractWeb3Connector";
-import { Magic } from "magic-sdk";
-import { ConnectExtension } from "@magic-ext/connect";
 import WidgetGlobals from "../WidgetGlobals";
 
 export default class MagicWeb3Connector extends AbstractWeb3Connector {
@@ -12,22 +10,7 @@ export default class MagicWeb3Connector extends AbstractWeb3Connector {
 
   async activate() {
     let networkInfo = WidgetGlobals.Network;
-    let network = {
-      rpcUrl: networkInfo.RpcUrl,
-      chainId: networkInfo.ChainId,
-    } as any;
-    if (networkInfo.ChainId == 80001) {
-      // @ts-ignore
-      await window.ethereum.enable();
-      // @ts-ignore
-      this.ether = new ethers.providers.Web3Provider(window.ethereum);
-    } else {
-      this.magic = new Magic("pk_live_EA9DDC458FE21B24", {
-        extensions: [new ConnectExtension()],
-        network: network,
-      });
-      this.ether = new ethers.providers.Web3Provider(this.magic.rpcProvider);
-    }
+    this.ether = new ethers.providers.Web3Provider(WidgetGlobals.User.ether);
     let accounts = await this.ether.listAccounts();
     console.log("accounts after new Magic", accounts);
     // Assign Constants

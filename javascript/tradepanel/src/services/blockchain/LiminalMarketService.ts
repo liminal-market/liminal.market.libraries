@@ -1,11 +1,8 @@
-import BlockchainError from "../../errors/BlockchainError";
 import BlockchainService from "./BlockchainService";
 import { ethers } from "ethers";
 import WidgetGlobals from "../../WidgetGlobals";
 
 export default class LiminalMarketService extends BlockchainService {
-  private static LiminalMarketInfo: any;
-
   constructor() {
     super();
   }
@@ -19,25 +16,6 @@ export default class LiminalMarketService extends BlockchainService {
       WidgetGlobals.User.ether
     );
     return await contract.getSecurityToken(symbol);
-  }
-
-  public async createToken(
-    symbol: string,
-    creatingToken: () => void
-  ): Promise<string | BlockchainError> {
-    const contract = new ethers.Contract(
-      this.contracts.LIMINAL_MARKET_ADDRESS,
-      this.createTokenAbi,
-      WidgetGlobals.User.signer
-    );
-    let result = await contract.createToken(symbol);
-
-    creatingToken();
-
-    console.log("createToken result:", result);
-    await result.wait();
-
-    return await this.getSymbolContractAddress(symbol);
   }
 
   getSecurityTokenAbi = [

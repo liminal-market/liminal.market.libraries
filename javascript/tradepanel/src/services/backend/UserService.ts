@@ -42,22 +42,6 @@ export default class UserService extends BaseService {
     return WidgetGlobals.User;
   }
 
-  public async load(address: string) {
-    let response = await fetch("https://app.liminal.market/user", {
-      body: address,
-    });
-    let json = await response.json();
-  }
-
-  public async getAlpacaId(): Promise<string> {
-    let user = await this.getUser();
-    if (user.alpacaId) return user.alpacaId;
-
-    let result = (await fetch("https://app.liminal.market/")) as any;
-    user.alpacaId = result.alpacaId;
-    return user.alpacaId!;
-  }
-
   public async getAccount() {
     return await this.get("account");
   }

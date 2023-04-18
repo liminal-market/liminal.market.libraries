@@ -1,6 +1,5 @@
 import ProviderInfo from "../wallet/ProviderInfo";
 import CookieHelper from "../util/CookieHelper";
-import LiminalMarket from "liminal.market";
 
 export default class User {
   provider: any;

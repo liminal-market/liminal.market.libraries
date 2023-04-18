@@ -5,7 +5,6 @@ import { BigNumber, ethers } from "ethers";
 import ContractInfo from "../../contracts/ContractInfo";
 import Network from "../../networks/Network";
 import ContractAddresses from "../../contracts/ContractAddresses";
-import EventService from "./EventService";
 
 export default class BlockchainService extends BaseService {
   network: Network;
@@ -33,34 +32,6 @@ export default class BlockchainService extends BaseService {
       WidgetGlobals.User.ether
     );
     return await contract.balanceOf(ethAddress);
-  }
-
-  protected async transferInner(
-    tokenAddress: string,
-    to: string,
-    qty: BigNumber
-  ) {
-    await this.loadEther();
-
-    let qtyWei = ethers.utils.parseUnits(qty.toString(), "ether");
-
-    console.log("transferInner", qtyWei.toString(), tokenAddress, to);
-    const contract = new ethers.Contract(
-      tokenAddress,
-      this.transferAbi,
-      WidgetGlobals.User.signer
-    );
-    let result = await contract.transfer(to, qtyWei);
-
-    let eventService = new EventService();
-    if (tokenAddress == this.contracts.AUSD_ADDRESS) {
-      eventService.subscribeToBuy(result.hash);
-    } else {
-      eventService.subscribeToSell(result.hash);
-    }
-
-    console.log("transfer result", result);
-    return result;
   }
 
   protected async loadEther() {
