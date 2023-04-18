@@ -9,7 +9,7 @@ import AddToWalletHtml from "../../html/elements/AddToWallet.html";
 import WidgetGlobals from "../../WidgetGlobals";
 import AuthenticateService from "../../services/backend/AuthenticateService";
 import { BigNumber } from "ethers";
-import { formatEther, formatUnits } from "ethers/lib/utils";
+import { formatEther } from "ethers/lib/utils";
 
 export default class AUsdBalance {
   constructor() {}

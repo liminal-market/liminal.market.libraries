@@ -7,12 +7,7 @@ import StockPriceService from "../../../services/backend/StockPriceService";
 import PricePerShareHtml from "../../../html/elements/tradepanel/PricePerShare.html";
 import { BigNumber } from "ethers";
 import WidgetGlobals from "../../../WidgetGlobals";
-import {
-  formatEther,
-  formatUnits,
-  parseEther,
-  parseUnits,
-} from "ethers/lib/utils";
+import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
 
 export default class TradePanelInput {
   symbol: string;

@@ -1,7 +1,7 @@
 import AuthenticateService from "../backend/AuthenticateService";
 import BaseService from "../backend/BaseService";
 import WidgetGlobals from "../../WidgetGlobals";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import ContractInfo from "../../contracts/ContractInfo";
 import Network from "../../networks/Network";
 import ContractAddresses from "../../contracts/ContractAddresses";
@@ -14,24 +14,6 @@ export default class BlockchainService extends BaseService {
     super();
     this.network = WidgetGlobals.Network;
     this.contracts = ContractInfo.getContractInfo(this.network.Name);
-  }
-
-  protected async getBalanceOf(
-    tokenAddress: any,
-    ethAddress: string
-  ): Promise<BigNumber> {
-    await this.loadEther();
-
-    if (!WidgetGlobals.User.ether) {
-      return BigNumber.from(0);
-    }
-
-    const contract = new ethers.Contract(
-      tokenAddress,
-      this.balanceOfAbi,
-      WidgetGlobals.User.ether
-    );
-    return await contract.balanceOf(ethAddress);
   }
 
   protected async loadEther() {

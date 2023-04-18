@@ -11,7 +11,6 @@ import AUsdBalance from "../AUsdBalance";
 import KycApproved from "../../modals/KYC/KycApproved";
 import OrderProgress from "./OrderProgress";
 import LiminalMarket from "liminal.market";
-import { ethers } from "ethers";
 import OrderExecutedModal from "./OrderExecutedModal";
 import Listener from "liminal.market/dist/services/Listener";
 import WidgetGlobals from "../../../WidgetGlobals";

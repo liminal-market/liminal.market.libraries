@@ -4,9 +4,6 @@ import GeneralError from "../errors/GeneralError";
 import Network from "../networks/Network";
 import AuthenticateService from "../services/backend/AuthenticateService";
 import NetworkInfo from "../networks/NetworkInfo";
-import ProviderInfo from "../wallet/ProviderInfo";
-import { WalletType } from "../enums/WalletType";
-import UserService from "../services/backend/UserService";
 import WidgetGlobals from "../WidgetGlobals";
 
 export default class WalletHelper {

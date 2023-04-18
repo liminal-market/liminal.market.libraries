@@ -1,10 +1,6 @@
 import AUSDFund from "./AUSDFund";
 import TransferNotificationHtml from "../../../html/modal/Funding/TransferNotification.html";
-import MoneyTransferredHtml from "../../../html/modal/Funding/FirstTransferSetup/MoneyTransferred.html";
 import { BankRelationship } from "../../../dto/alpaca/BankRelationship";
-import StringHelper from "../../../util/StringHelper";
-import UserService from "../../../services/backend/UserService";
-import LoadingHelper from "../../../util/LoadingHelper";
 import { TransferDirectionEnum } from "../../../enums/TransferDirectionEnum";
 import TransfersList from "./TransfersList";
 import { Transfer } from "../../../dto/alpaca/Transfer";
