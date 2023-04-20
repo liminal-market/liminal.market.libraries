@@ -2,3 +2,4 @@
 /javascript/example/node_modules/
 /javascript/core/dist/
 .idea
+/javascript/core/.env

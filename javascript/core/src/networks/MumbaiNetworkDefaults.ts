@@ -1,7 +1,7 @@
 import TestNetwork from "./TestNetwork";
 
-export default class MumbaiNetworkDefaults extends TestNetwork {
-    constructor() {
+export default  abstract class MumbaiNetworkDefaults extends TestNetwork {
+    protected constructor() {
         super();
 
         this.Name = "mumbai";

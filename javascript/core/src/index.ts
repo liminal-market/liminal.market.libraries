@@ -2,7 +2,6 @@ import Network from "./networks/Network";
 import {BigNumber, BigNumberish, ethers, Signer, Wallet} from "ethers";
 import HttpRequest from "./http/HttpRequest";
 import NetworkType from "./networks/NetworkType";
-import TestNetwork from "./networks/TestNetwork";
 import {Account} from "./dto/Account";
 import KycStatus from "./dto/KycStatus";
 import AccountService from "./services/AccountService";
@@ -11,6 +10,13 @@ import Abis from "./abis";
 import {Provider} from "@ethersproject/abstract-provider";
 import ExecuteOrderResult from "./dto/ExecuteOrderResult";
 import Listener from "./services/Listener";
+import MumbaiNetwork from "./networks/MumbaiNetwork";
+import Helper from "./Helper";
+
+/*
+The main class to use for LiminalMarket. User should use this to communicate with Liminal.market.
+For testing use Mumbai network, chain id 80001
+ */
 export default class LiminalMarket {
     httpRequest : HttpRequest;
     blockchainService : BlockchainService;
@@ -31,7 +37,7 @@ export default class LiminalMarket {
     }
 
     public static async getInstanceUsingPrivateKey(privateKey : string, chainId : number, serviceContractAddress? : string | undefined){
-        LiminalMarket.Network = NetworkType.getInstance(chainId) ?? new TestNetwork();
+        LiminalMarket.Network = NetworkType.getInstance(chainId) ?? new MumbaiNetwork();
         if (LiminalMarket.Network.ChainId == 0) {
             throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
         }
@@ -72,33 +78,15 @@ export default class LiminalMarket {
         return await this.load(wallet.address,  wallet.provider,  wallet as any as Signer, chainId, serviceContractAddress);
     }
 
-    private static async load(walletAddress : string, provider : Provider, signer : Signer, chainId : number, serviceContractAddress : string | undefined) {
-        LiminalMarket.Provider = provider;
-        LiminalMarket.Signer = signer;
 
-        LiminalMarket.Network = NetworkType.getInstance(chainId) ?? new TestNetwork();
-        if (LiminalMarket.Network.ChainId == 0) {
-            throw new Error('Network is not supported. Using chainId ' + chainId + '. Try switching to different network, e.g. Mumbai');
-        }
 
-        LiminalMarket.ServiceContractAddress = (serviceContractAddress) ? serviceContractAddress : LiminalMarket.Network.NO_FEE_SERVICE_CONTRACT_ADDRESS;
-
-        if (!LiminalMarket.ServiceContractAddress) {
-            throw new Error('ServiceContractAddress cannot be empty. You can get service contract address by signing contract at https://liminal.market/contract. No cost (except gas)')
-        }
-
-        if (LiminalMarket.ServiceContractAddress == LiminalMarket.Network.NO_FEE_SERVICE_CONTRACT_ADDRESS) {
-            console.debug('No service contract address set. You will not receive any service fee. Check out https://liminal.market/contract/')
-        }
-
-        LiminalMarket.WalletAddress = walletAddress;
+    private static async  load(walletAddress : string, provider : Provider, signer : Signer, chainId : number, serviceContractAddress : string | undefined) {
+        await Helper.loadLiminalMarket(walletAddress, provider, signer, chainId, serviceContractAddress)
 
         let liminalMarket = new LiminalMarket();
         liminalMarket.account = await liminalMarket.accountService.login();
 
         this.Instance = liminalMarket;
-
-        return liminalMarket;
     }
 
     public static get Listener() : Listener {

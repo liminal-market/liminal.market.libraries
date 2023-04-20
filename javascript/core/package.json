@@ -1,13 +1,20 @@
 {
   "name": "liminal.market",
   "version": "1.0.3",
-  "description": "Main package for liminal.market. Use this package to register and trade securities",
+  "description": "Main package for liminal.market. Use this package to register user, trade securities, get symbols, prices and positions",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc --watch",
     "start": "npx ts-node .\\tests\\test.ts"
+  },
+  "repository": {
+    "url": "https://github.com/liminal-market/liminal.market.libraries/tree/main/javascript/core"
+  },
+  "homepage": "https://liminal.market",
+  "bugs": {
+    "url": "https://github.com/liminal-market/liminal.market.libraries/issues"
   },
   "author": "",
   "license": "ISC",

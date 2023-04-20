@@ -1,8 +1,8 @@
 import Network from "./Network";
 
-export default class MainNetwork extends Network {
+export default abstract class MainNetwork extends Network {
 
-    constructor() {
+    protected constructor() {
         super();
 
         this.ServerUrl = "https://mainnet.liminal.market";

@@ -1,7 +1,7 @@
 import TestNetwork from "./TestNetwork";
 //localhost
-export default class LocalhostNetworkDefaults extends TestNetwork {
-    constructor() {
+export default abstract class LocalhostNetworkDefaults extends TestNetwork {
+    protected constructor() {
         super();
 
         this.ChainId = LocalhostNetworkDefaults.ChainId;
