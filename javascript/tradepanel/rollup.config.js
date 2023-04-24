@@ -23,9 +23,6 @@ export default {
     {
       file: "./app/js/bundle.umd.js",
       format: "umd",
-      umdNamedDefine: true,
-      library: "TradePanel",
-      libraryExport: "default",
       strict: true,
       name: "TradePanel",
     },

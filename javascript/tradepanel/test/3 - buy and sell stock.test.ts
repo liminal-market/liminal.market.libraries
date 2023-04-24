@@ -30,7 +30,7 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        console.warn("::warning ::Market is closed");
+        console.warn("::warning title=Incomplete test run. ::Market is closed");
       } catch (error) {
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
@@ -92,7 +92,7 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        console.warn("::warning ::Market is closed");
+        console.warn("::warning title=Incomplete test run. ::Market is closed");
       } catch (error) {
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
