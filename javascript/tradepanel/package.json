@@ -6,6 +6,7 @@
   "type": "module",
   "sideEffects": false,
   "devDependencies": {
+    "@actions/github": "^5.1.1",
     "@chainsafe/dappeteer": "^3.0.0",
     "@jest/globals": "^29.4.3",
     "@johanblumenberg/ts-mockito": "^1.0.32",
