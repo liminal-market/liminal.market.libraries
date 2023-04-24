@@ -1,6 +1,6 @@
 import { it, describe, beforeEach } from "@jest/globals";
 import { setDefaultOptions } from "expect-puppeteer";
-import { warnPullRequest } from "./utils/github";
+import { warnAnnotation, infoAnnotation } from "./utils/github";
 
 setDefaultOptions({ timeout: global.actionTimeout });
 
@@ -31,9 +31,9 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        warnPullRequest({ message: "Incomplete test run - Market is closed" });
+        warnAnnotation({ message: "Incomplete test run - Market is closed" });
       } catch (error) {
-        warnPullRequest({ message: "Market is open" });
+        infoAnnotation({ message: "Market is open" });
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
@@ -94,9 +94,9 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        warnPullRequest({ message: "Incomplete test run - Market is closed" });
+        warnAnnotation({ message: "Incomplete test run - Market is closed" });
       } catch (error) {
-        warnPullRequest({ message: "Market is open" });
+        infoAnnotation({ message: "Market is open" });
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
