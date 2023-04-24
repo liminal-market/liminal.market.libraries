@@ -10,6 +10,7 @@
     "@chainsafe/dappeteer": "^3.0.0",
     "@jest/globals": "^29.4.3",
     "@johanblumenberg/ts-mockito": "^1.0.32",
+    "@octokit/action": "^5.0.2",
     "@rollup/plugin-alias": "^4.0.3",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
