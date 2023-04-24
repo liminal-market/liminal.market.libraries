@@ -22,35 +22,49 @@ describe("Buys and sell transactions", () => {
       });
       await expect(global.page).toFill(".SellInputs .trade_input input", "1");
       await new Promise((r) => setTimeout(r, 5000));
-      await expect(global.page).toClick("button#liminal_market_execute_order", {
-        text: "Execute trade",
-      });
 
       try {
-        await new Promise((r) => setTimeout(r, 5000));
-        console.log("Sign..."); //sometimes it needs to be signed twice
-        await global.metamask.sign();
-        console.log("Sign..."); //sometimes it needs to be signed twice
-        await new Promise((r) => setTimeout(r, 5000));
-        await global.metamask.sign();
-      } catch (error) {}
+        await expect(global.page).toClick(
+          "button#liminal_market_execute_order",
+          {
+            text: "Market is closed",
+          }
+        );
+        console.warn("::warning ::Market is closed");
+      } catch (error) {
+        await expect(global.page).toClick(
+          "button#liminal_market_execute_order",
+          {
+            text: "Execute trade",
+          }
+        );
 
-      await global.page.bringToFront();
-      await new Promise((r) => setTimeout(r, 1000));
+        try {
+          await new Promise((r) => setTimeout(r, 5000));
+          console.log("Sign..."); //sometimes it needs to be signed twice
+          await global.metamask.sign();
+          console.log("Sign..."); //sometimes it needs to be signed twice
+          await new Promise((r) => setTimeout(r, 5000));
+          await global.metamask.sign();
+        } catch (error) {}
 
-      await expect(global.page).toMatchElement("div#progress-text", {
-        text: /Sent to stock market.*/,
-        timeout: global.defaultScenatioTimeout * 2,
-      });
+        await global.page.bringToFront();
+        await new Promise((r) => setTimeout(r, 1000));
 
-      ////uncomment this up to test the trade execution result
-      // await expect(global.page).toMatchElement(
-      //   "dialog#liminal_market_modal_div span",
-      //   {
-      //     text: "Trade executed",
-      //     timeout: global.defaultScenatioTimeout * 2,
-      //   }
-      // );
+        await expect(global.page).toMatchElement("div#progress-text", {
+          text: /Sent to stock market.*/,
+          timeout: global.defaultScenatioTimeout * 2,
+        });
+
+        ////uncomment this up to test the trade execution result
+        // await expect(global.page).toMatchElement(
+        //   "dialog#liminal_market_modal_div span",
+        //   {
+        //     text: "Trade executed",
+        //     timeout: global.defaultScenatioTimeout * 2,
+        //   }
+        // );
+      }
     },
     global.defaultScenatioTimeout * 2
   );
@@ -70,35 +84,49 @@ describe("Buys and sell transactions", () => {
         "0.01"
       );
       await new Promise((r) => setTimeout(r, 5000));
-      await expect(global.page).toClick("button#liminal_market_execute_order", {
-        text: "Execute trade",
-      });
 
       try {
-        await new Promise((r) => setTimeout(r, 5000));
-        console.log("Sign..."); //sometimes it needs to be signed twice
-        await global.metamask.sign();
-        console.log("Sign..."); //sometimes it needs to be signed twice
-        await new Promise((r) => setTimeout(r, 5000));
-        await global.metamask.sign();
-      } catch (error) {}
+        await expect(global.page).toClick(
+          "button#liminal_market_execute_order",
+          {
+            text: "Market is closed",
+          }
+        );
+        console.warn("::warning ::Market is closed");
+      } catch (error) {
+        await expect(global.page).toClick(
+          "button#liminal_market_execute_order",
+          {
+            text: "Execute trade",
+          }
+        );
 
-      await global.page.bringToFront();
-      await new Promise((r) => setTimeout(r, 1000));
+        try {
+          await new Promise((r) => setTimeout(r, 5000));
+          console.log("Sign..."); //sometimes it needs to be signed twice
+          await global.metamask.sign();
+          console.log("Sign..."); //sometimes it needs to be signed twice
+          await new Promise((r) => setTimeout(r, 5000));
+          await global.metamask.sign();
+        } catch (error) {}
 
-      await expect(global.page).toMatchElement("div#progress-text", {
-        text: /Sent to stock market.*/,
-        timeout: global.defaultScenatioTimeout * 2,
-      });
+        await global.page.bringToFront();
+        await new Promise((r) => setTimeout(r, 1000));
 
-      ////uncomment this up to test the trade execution result
-      // await expect(global.page).toMatchElement(
-      //   "dialog#liminal_market_modal_div span",
-      //   {
-      //     text: "Trade executed",
-      //     timeout: global.defaultScenatioTimeout * 2,
-      //   }
-      // );
+        await expect(global.page).toMatchElement("div#progress-text", {
+          text: /Sent to stock market.*/,
+          timeout: global.defaultScenatioTimeout * 2,
+        });
+
+        ////uncomment this up to test the trade execution result
+        // await expect(global.page).toMatchElement(
+        //   "dialog#liminal_market_modal_div span",
+        //   {
+        //     text: "Trade executed",
+        //     timeout: global.defaultScenatioTimeout * 2,
+        //   }
+        // );
+      }
     },
     global.defaultScenatioTimeout * 3
   );
