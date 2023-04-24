@@ -1,5 +1,6 @@
 import { beforeAll, it, describe, beforeEach } from "@jest/globals";
 import { setDefaultOptions } from "expect-puppeteer";
+import * as core from "@actions/core";
 
 setDefaultOptions({ timeout: global.actionTimeout });
 
@@ -30,7 +31,7 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        console.warn("::warning title=Incomplete test run. ::Market is closed");
+        core.warning("Incomplete test run - Market is closed");
       } catch (error) {
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
@@ -92,7 +93,7 @@ describe("Buys and sell transactions", () => {
             text: "Market is closed",
           }
         );
-        console.warn("::warning title=Incomplete test run. ::Market is closed");
+        core.warning("Incomplete test run - Market is closed");
       } catch (error) {
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
