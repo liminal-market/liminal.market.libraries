@@ -36,10 +36,6 @@ describe("Buys and sell transactions", () => {
           message: "Market is closed",
         });
       } catch (error) {
-        warnWithNewCheck({
-          title: "This is just a test",
-          message: "Market is open",
-        });
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
@@ -105,10 +101,6 @@ describe("Buys and sell transactions", () => {
           message: "Market is closed",
         });
       } catch (error) {
-        warnWithNewCheck({
-          title: "This is just a test",
-          message: "Market is open",
-        });
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
