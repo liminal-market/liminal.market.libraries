@@ -33,7 +33,7 @@ describe("Buys and sell transactions", () => {
         );
         core.warning("Incomplete test run - Market is closed");
       } catch (error) {
-        core.notice("Market is open");
+        core.warning("Market is open");
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
@@ -96,7 +96,7 @@ describe("Buys and sell transactions", () => {
         );
         core.warning("Incomplete test run - Market is closed");
       } catch (error) {
-        core.notice("Market is open");
+        core.warning("Market is open");
         await expect(global.page).toClick(
           "button#liminal_market_execute_order",
           {
