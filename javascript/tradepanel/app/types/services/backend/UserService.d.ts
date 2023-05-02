@@ -9,8 +9,6 @@ export default class UserService extends BaseService {
     constructor();
     isMarketOpenOrUserOffHours(): Promise<boolean>;
     getUser(): User;
-    load(address: string): Promise<void>;
-    getAlpacaId(): Promise<string>;
     getAccount(): Promise<any>;
     getEthAddress(): string | undefined;
     kycActionRequired(): Promise<KycResult>;

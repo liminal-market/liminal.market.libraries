@@ -1,5 +1,6 @@
 import Security from "./Security";
 import BaseService from "../backend/BaseService";
+import WidgetGlobals from "src/WidgetGlobals";
 
 export default class SecuritiesService extends BaseService {
   securities = new Map<string, Security>();
@@ -55,9 +56,7 @@ export default class SecuritiesService extends BaseService {
   public async getSecurities() {
     if (this.securities.size != 0) return this.securities;
 
-    const results = await (
-      await fetch("https://app.liminal.market/securities/securities.json")
-    ).json();
+    const results = await WidgetGlobals.LiminalMarket.getSymbols();
 
     for (let i = 0; i < results.length; i++) {
       this.securities.set(

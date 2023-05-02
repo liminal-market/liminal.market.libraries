@@ -13,3 +13,6 @@ jobs:
       - name: Setup Node.js
         run: |
           ./javascript/tradepanel/test/docker-run-test.sh
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

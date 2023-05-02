@@ -1,4 +1,3 @@
-import MarketService from "../broker/MarketService";
 import KycResult from "../../dto/KycResult";
 import { BankRelationship } from "../../dto/alpaca/BankRelationship";
 import { Transfer } from "../../dto/alpaca/Transfer";
@@ -17,9 +16,7 @@ export default class UserService extends BaseService {
   }
 
   public async isMarketOpenOrUserOffHours(): Promise<boolean> {
-    let marketService = new MarketService();
-    let response = await marketService.isMarketOpen();
-    return response.marketIsOpen;
+    return await WidgetGlobals.LiminalMarket.isMarketOpen();
   }
 
   public getUser() {
@@ -43,22 +40,6 @@ export default class UserService extends BaseService {
       null
     );
     return WidgetGlobals.User;
-  }
-
-  public async load(address: string) {
-    let response = await fetch("https://app.liminal.market/user", {
-      body: address,
-    });
-    let json = await response.json();
-  }
-
-  public async getAlpacaId(): Promise<string> {
-    let user = await this.getUser();
-    if (user.alpacaId) return user.alpacaId;
-
-    let result = (await fetch("https://app.liminal.market/")) as any;
-    user.alpacaId = result.alpacaId;
-    return user.alpacaId!;
   }
 
   public async getAccount() {

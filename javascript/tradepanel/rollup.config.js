@@ -23,9 +23,6 @@ export default {
     {
       file: "./app/js/bundle.umd.js",
       format: "umd",
-      umdNamedDefine: true,
-      library: "TradePanel",
-      libraryExport: "default",
       strict: true,
       name: "TradePanel",
     },
@@ -49,7 +46,7 @@ export default {
     globals(),
     babel({
       babelHelpers: "bundled",
-      // exclude: "node_modules/**",
+      exclude: "node_modules/**",
     }),
     multi(),
     typescript({

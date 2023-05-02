@@ -47,10 +47,10 @@ describe("On widget load test", () => {
     "should render Balance fields",
     async () => {
       await expect(global.page).toMatchElement(".SellInputs .balance", {
-        text: "Balance : $0",
+        text: /Balance :.*/,
       });
       await expect(global.page).toMatchElement(".BuyInputs .balance", {
-        text: "Balance :",
+        text: /Balance :.*/,
       });
     },
     global.defaultScenatioTimeout

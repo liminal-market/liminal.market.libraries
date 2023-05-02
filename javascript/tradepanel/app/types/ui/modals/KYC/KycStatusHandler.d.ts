@@ -1,5 +1,5 @@
-import KycStatus from "../../../dto/KycStatus";
 import ExecuteOrderButton from "../../elements/tradepanel/ExecuteOrderButton";
+import KycStatus from "liminal.market/dist/dto/KycStatus";
 export default class KycStatusHandler {
     kycResponse: KycStatus;
     executeTradeButton: ExecuteOrderButton;

@@ -2,7 +2,6 @@ import localhostContractAddresses from "./localhost-contract-addresses";
 import mumbaiContractAddresses from "./mumbai-contract-addresses";
 import fujiContractAddresses from "./fuji-contract-addresses";
 import ContractAddresses from "./ContractAddresses";
-import NetworkInfo from "../networks/NetworkInfo";
 import polygonContractAddresses from "./polygon-contract-addresses";
 import WidgetGlobals from "../WidgetGlobals";
 

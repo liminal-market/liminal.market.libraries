@@ -1,10 +1,7 @@
-import BlockchainError from "../../errors/BlockchainError";
 import BlockchainService from "./BlockchainService";
 export default class LiminalMarketService extends BlockchainService {
-    private static LiminalMarketInfo;
     constructor();
     getSymbolContractAddress(symbol: string): Promise<string>;
-    createToken(symbol: string, creatingToken: () => void): Promise<string | BlockchainError>;
     getSecurityTokenAbi: {
         inputs: {
             internalType: string;

@@ -3,7 +3,6 @@ import AuthenticateService from "../../services/backend/AuthenticateService";
 import walletButton from "../../html/elements/ConnectWalletButton.html";
 import ProviderInfo from "../../wallet/ProviderInfo";
 import ErrorInfo from "../../errors/ErrorInfo";
-// import TradePage from "../pages/TradePage"; //TODO: check what to do...
 import LoadingHelper from "../../util/LoadingHelper";
 
 export default class ConnectWallet {

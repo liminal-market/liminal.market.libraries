@@ -1,8 +1,8 @@
-import KycStatus from "../../../dto/KycStatus";
 import KycActionRequired from "./KycActionRequired";
 import ExecuteOrderButton from "../../elements/tradepanel/ExecuteOrderButton";
 import Modal from "../Modal";
 import KYCForm from "../KYCForm";
+import KycStatus from "liminal.market/dist/dto/KycStatus";
 
 export default class KycStatusHandler {
   kycResponse: KycStatus;

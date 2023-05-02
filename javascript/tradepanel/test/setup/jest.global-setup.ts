@@ -63,11 +63,15 @@ module.exports = async function () {
     });
 
     const page = await browser.newPage();
+    await new Promise((r) => setTimeout(r, 5000));
     await page.goto("https://localhost");
 
     console.log("Approving metamask...");
     await new Promise((r) => setTimeout(r, 5000));
     await metamask.approve();
+
+    await new Promise((r) => setTimeout(r, 5000));
+    await page.goto("https://localhost");
 
     console.log("Sign...");
     await new Promise((r) => setTimeout(r, 5000));

@@ -1,5 +1,5 @@
 import Modal from "../Modal";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "ethers";
 export default class FakeAUSDFund {
     currentBalance: BigNumber;
     modal: Modal;

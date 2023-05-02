@@ -34,3 +34,4 @@ jobs:
         working-directory: javascript/tradepanel
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

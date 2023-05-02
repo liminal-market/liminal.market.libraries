@@ -1,20 +1,14 @@
+export {};
 import https from "https";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-//   const __filename = fileURLToPath(import.meta.url);
-//   const __dirname = path.dirname(__filename);
 
 const options = {
-  key: fs.readFileSync(__dirname + "/key.pem"),
-  cert: fs.readFileSync(__dirname + "/cert.pem"),
+  key: fs.readFileSync(process.cwd() + "/test/server/key.pem"),
+  cert: fs.readFileSync(process.cwd() + "/test/server/cert.pem"),
 };
 
 export const startServer = () => {
   let handleRequest = (request: any, response: any) => {
-    // console.log(request.url);
-
     switch (request.url) {
       case "/":
         processRequest(response, "/test/server/index.html", "text/html");

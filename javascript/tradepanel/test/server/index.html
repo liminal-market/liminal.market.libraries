@@ -7,7 +7,8 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script> -->
     <script type="module">
       import "/app/js/bundle.umd.js";
-      const tradePanel = new TradePanel.TradePanelWidget();
+      window.ethereum.enable();
+      const tradePanel = new TradePanel.TradePanelWidget(window.ethereum);
       tradePanel.render("#root");
     </script>
     <title>Test Index</title>
